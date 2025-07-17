@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS kustom untuk wave divider */
+.wave-divider {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* Sesuaikan lebar dan transform untuk bentuk kurva yang lebih mirip */
+    width: 200px;
+    height: 100%;
+    background-color: #FFFFFF; /* Warna putih latar belakang form */
+    transform: translateX(100px); /* Geser sepenuhnya ke kanan untuk membuat kurva penuh */
+    border-top-left-radius: 50% 50%; /* Radius atas kiri */
+    border-bottom-left-radius: 50% 50%; /* Radius bawah kiri */
+    z-index: 10;
+    /* Bayangan yang lebih lembut dan tersebar */
+    box-shadow: -15px 0px 30px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    overflow: hidden; /* Mencegah scrollbar muncul */
+}
+
+/* Penyesuaian khusus untuk input field dengan ikon di kanan */
+.input-field-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-field-wrapper input {
+    /* Padding untuk memberi ruang ikon */
+    padding-right: 2.75rem; /* Menyesuaikan dengan ukuran ikon yang lebih kecil */
+    padding-left: 1rem; /* Padding kiri standar */
+}
+
+.input-field-wrapper .input-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem; /* Posisi ikon dari kanan */
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none; /* Agar tidak menghalangi klik input */
+    color: #6B7280; /* Warna ikon sesuai light-gray-text */
+    font-size: 1.25rem; /* Ukuran ikon, jika menggunakan font icon */
+}
+
+/* Untuk ikon mata (eye icon) yang bisa diklik */
+.input-field-wrapper .input-icon.clickable {
+    pointer-events: auto; /* Memungkinkan klik */
+    cursor: pointer;
+}
+
+/* Custom checkbox style */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #D1D5DB; /* Border color */
+    border-radius: 0.125rem; /* Sudut lebih tajam */
+    background-color: #FFFFFF; /* Latar belakang putih */
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    transition: all 0.15s ease-in-out;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #1A2C49; /* Warna saat dicentang (dark-blue-text) */
+    border-color: #1A2C49;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.3rem; /* Ukuran centang */
+    height: 0.6rem;
+    border: solid #FFFFFF; /* Warna centang */
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(26, 44, 73, 0.3); /* Ring focus dengan warna tombol */
+}

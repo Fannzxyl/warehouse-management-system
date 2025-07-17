@@ -1,0 +1,20 @@
+{
+  "name": "warehouse-management-system",
+  "version": "1.0.0",
+  "description": "Warehouse Management System with Figma Design Implementation",
+  "main": "dashboard.html",
+  "scripts": {
+    "build-css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css",
+    "dev": "npm run build-css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0"
+  },
+  "keywords": ["warehouse", "management", "tailwind", "javascript"],
+  "author": "Developer",
+  "license": "MIT"
+}
