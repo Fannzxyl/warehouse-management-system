@@ -1,177 +1,483 @@
-    <!DOCTYPE html>
-    <html lang="en" class="font-inter">
-    <head>
+<!DOCTYPE html>
+<html lang="en" class="font-inter">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login Page - WISE</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        .wave-divider {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 150px;
-        height: 100%;
-        background-color: #FFFFFF;
-        transform: translateX(65px);
-        border-top-left-radius: 60% 50%;
-        border-bottom-left-radius: 60% 50%;
-        z-index: 10;
-        box-shadow: -10px 0px 30px rgba(0, 0, 0, 0.08);
-        }
+        /* Custom CSS for the input fields */
+        /* Wave divider dihapus */
 
         .input-field-wrapper {
-        position: relative;
+            position: relative;
         }
 
         .input-icon {
-        position: absolute;
-        top: 50%;
-        right: 1rem;
-        transform: translateY(-50%);
-        color: #6B6764;
-        cursor: pointer;
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            color: #6B7280;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .input-icon:hover {
+            color: #374151;
         }
 
         input[type="checkbox"] {
-        appearance: none;
-        width: 1rem;
-        height: 1rem;
-        border: 1.5px solid #E0E0E0;
-        border-radius: 0.25rem;
-        background-color: #F8F8F8;
-        cursor: pointer;
-        position: relative;
-        transition: all 0.2s ease-in-out;
+            appearance: none;
+            width: 1.125rem;
+            height: 1.125rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 0.375rem;
+            background-color: #F9FAFB;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
         }
 
         input[type="checkbox"]:checked {
-        background-color: #6B6764;
-        border-color: #6B6764;
+            background-color: #374151;
+            border-color: #374151;
         }
 
         input[type="checkbox"]:checked::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0.35rem;
-        height: 0.6rem;
-        border: solid #FFFFFF;
-        border-width: 0 2px 2px 0;
-        transform: translate(-50%, -60%) rotate(45deg);
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0.375rem;
+            height: 0.625rem;
+            border: solid #FFFFFF;
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -60%) rotate(45deg);
         }
 
-        body {
-        overflow: hidden;
+        input[type="checkbox"]:hover {
+            border-color: #9CA3AF;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .form-input {
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #374151;
+            box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+        }
+
+        .form-input:hover {
+            border-color: #9CA3AF;
+        }
+
+        .btn-login {
+            transition: all 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #1F2937;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-box.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .message-box.success {
+            background-color: #D1FAE5; /* green-100 */
+            color: #065F46; /* green-800 */
+            border: 1px solid #34D399; /* green-400 */
+        }
+
+        .message-box.error {
+            background-color: #FEE2E2; /* red-100 */
+            color: #991B1B; /* red-800 */
+            border: 1px solid #F87171; /* red-400 */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            /* .wave-divider dihapus */
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            /* .wave-divider dihapus */
+            
+            .image-section {
+                height: 40vh;
+                flex: none;
+            }
+            
+            .form-section {
+                width: 100%;
+                flex: 1;
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .image-section {
+                height: 30vh;
+            }
+            
+            .form-section {
+                padding: 1.5rem 1rem;
+            }
         }
     </style>
-    </head>
-    <body class="h-screen flex font-inter">
+</head>
+<body class="login-container flex font-inter bg-gray-50">
     <!-- Left Image Section -->
-    <div class="relative flex-1 bg-cover bg-center" style="background-image: url('./public/images/warehouse.png');">
-        <div class="absolute inset-0 bg-black opacity-40"></div>
-        <div class="wave-divider"></div>
+    <div class="image-section relative flex-1 bg-cover bg-no-repeat overflow-hidden" style="background-image: url('./public/images/warehouse.png'); background-position: center; background-size: cover;">
+        <div class="absolute inset-0 bg-gradient-to-br from-black/50 to-black/30"></div>
+        <!-- .wave-divider dihapus -->
+        <div class="absolute inset-y-0 right-0 w-px bg-gray-300"></div> <!-- Garis pemisah vertikal -->
+        
+        <!-- Content overlay on image (dihapus) -->
+        <!-- Teks "WISE Warehouse Management System" telah dihapus dari sini -->
     </div>
 
     <!-- Right Login Section -->
-    <div class="w-[450px] bg-white flex flex-col justify-center items-center px-12 py-8 shadow-lg z-20">
-        <div class="mb-10 text-center">
-        <h2 class="text-4xl font-extrabold text-gray-800 mb-2">LOGIN TO WISE</h2>
-        <p class="text-lg text-gray-600">Welcome Back.. User</p>
-        </div>
-
-        <form class="space-y-6 w-full max-w-sm" onsubmit="handleLogin(event)">
-        <!-- Username -->
-        <div>
-            <label for="username" class="block text-base font-semibold text-gray-600 mb-2">Username or email</label>
-            <div class="input-field-wrapper">
-            <input type="text" id="username" required
-                class="w-full h-12 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-1 focus:ring-gray-600 outline-none text-base">
-            <div class="input-icon pointer-events-none">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                </svg>
+    <div class="form-section w-full lg:w-[480px] bg-white flex flex-col justify-center items-center px-8 py-12 shadow-2xl z-20">
+        <div class="w-full max-w-sm">
+            <!-- Header -->
+            <div class="mb-8 text-center">
+                <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-800 mb-3">LOGIN TO WISE</h2>
+                <p class="text-base lg:text-lg text-gray-600">Welcome Back, User</p>
             </div>
-            </div>
-        </div>
 
-        <!-- Password -->
-        <div>
-            <label for="password" class="block text-base font-semibold text-gray-600 mb-2">Password</label>
-            <div class="input-field-wrapper">
-            <input type="password" id="password" required
-                class="w-full h-12 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-1 focus:ring-gray-600 outline-none text-base">
-            <div class="input-icon" onclick="togglePasswordVisibility()">
-                <!-- Eye Open -->
-                <svg id="eye-open" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                <path fill-rule="evenodd"
-                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                    clip-rule="evenodd" />
-                </svg>
-                <!-- Eye Closed -->
-                <svg id="eye-closed" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3.27 2L2 3.27l4.59 4.59C5.22 9.01 4 11.39 4 12c0 .38 2.3 5.33 8 5.33 1.49 0 2.85-.34 4.05-.9l3.68 3.68 1.27-1.27L3.27 2zM12 14a2 2 0 01-2-2c0-.25.05-.49.13-.71l2.58 2.58c-.22.08-.46.13-.71.13zM9.17 6.34l1.69 1.69A2 2 0 0114 10c0 .25-.05.49-.13.71l1.45 1.45c.43-.7.68-1.5.68-2.16 0-.61-1.23-2.99-5.33-2.99-.74 0-1.46.11-2.14.31z" />
-                </svg>
-            </div>
-            </div>
-        </div>
+            <!-- Custom Message Box -->
+            <div id="message-box" class="message-box hidden"></div>
 
-        <div class="flex justify-end text-sm">
-            <a href="#" class="text-gray-600 hover:underline">Forget password?</a>
-        </div>
+            <form class="space-y-6 w-full" id="loginForm">
+                <!-- Username -->
+                <div>
+                    <label for="username" class="block text-base font-semibold text-gray-700 mb-2">
+                        Username or email
+                    </label>
+                    <div class="input-field-wrapper">
+                        <input type="text" id="username" required
+                            class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-gray-600 outline-none text-base"
+                            placeholder="Enter your email or username"
+                            autocomplete="username">
+                        <div class="input-icon pointer-events-none">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Login Button -->
-        <button type="submit"
-            class="w-full h-12 bg-gray-800 text-white text-lg font-semibold rounded-lg hover:bg-gray-700 transition">
-            Log In
-        </button>
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-base font-semibold text-gray-700 mb-2">
+                        Password
+                    </label>
+                    <div class="input-field-wrapper">
+                        <input type="password" id="password" required minlength="6"
+                            class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-gray-600 outline-none text-base"
+                            placeholder="Enter your password"
+                            autocomplete="current-password">
+                        <div class="input-icon" onclick="togglePasswordVisibility()">
+                            <!-- Eye Open -->
+                            <svg id="eye-open" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                <path fill-rule="evenodd"
+                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <!-- Eye Closed -->
+                            <svg id="eye-closed" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M3.27 2L2 3.27l4.59 4.59C5.22 9.01 4 11.39 4 12c0 .38 2.3 5.33 8 5.33 1.49 0 2.85-.34 4.05-.9l3.68 3.68 1.27-1.27L3.27 2zM12 14a2 2 0 01-2-2c0-.25.05-.49.13-.71l2.58 2.58c-.22.08-.46.13-.71.13zM9.17 6.34l1.69 1.69A2 2 0 0114 10c0 .25-.05.49-.13.71l1.45 1.45c.43-.7.68-1.5.68-2.16 0-.61-1.23-2.99-5.33-2.99-.74 0-1.46.11-2.14.31z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="flex justify-center pt-4">
-            <label class="flex items-center">
-            <input type="checkbox" id="remember-me">
-            <span class="ml-2 text-sm text-gray-600">Remember me?</span>
-            </label>
+                <!-- Forget Password -->
+                <div class="flex justify-end text-sm">
+                    <a href="#" class="text-gray-600 hover:underline">Forget password?</a>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" id="loginButton"
+                    class="btn-login w-full h-12 bg-gray-800 text-white text-base font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-offset-2">
+                    <span id="loginText">Log In</span>
+                    <span id="loadingSpinner" class="loading-spinner hidden ml-2"></span>
+                </button>
+
+                <!-- Remember Me -->
+                <div class="flex justify-center pt-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="remember-me">
+                        <span class="ml-3 text-sm text-gray-600">Remember me</span>
+                    </label>
+                </div>
+            </form>
         </div>
-        </form>
     </div>
 
     <script>
-        function handleLogin(event) {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+        const loginText = document.getElementById('loginText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const messageBox = document.getElementById('message-box'); // Custom message box element
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
 
-        const correctUsername = 'admin@gmail.com';
-        const correctPassword = '123456';
+        // Login credentials
+        const LOGIN_CREDENTIALS = {
+            'admin@gmail.com': '123456',
+            'user@wise.com': 'password123',
+            'demo@wise.com': 'demo123'
+        };
 
-        if (username === correctUsername && password === correctPassword) {
-            alert('Login berhasil! Selamat datang, ' + username);
-            window.location.href = 'dashboard.html';
-        } else {
-            alert('Login gagal. Username atau password salah.');
+        // Show/Hide messages using custom message box
+        function showMessage(type, message) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'success', 'error'); // Clear previous states
+            messageBox.classList.add(type, 'show'); // Add new type and show class
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                hideMessage();
+            }, 5000);
         }
+
+        function hideMessage() {
+            messageBox.classList.remove('show');
+            messageBox.classList.add('hidden');
         }
 
+        // Loading state management
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginButton.disabled = true;
+                loginText.textContent = 'Logging in...';
+                loadingSpinner.classList.remove('hidden');
+            } else {
+                loginButton.disabled = false;
+                loginText.textContent = 'Log In';
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+
+        // Form validation
+        function validateForm(username, password) {
+            const errors = [];
+
+            if (!username.trim()) {
+                errors.push('Username/email is required');
+            }
+
+            if (!password.trim()) {
+                errors.push('Password is required');
+            } else if (password.length < 6) {
+                errors.push('Password must be at least 6 characters');
+            }
+
+            return errors;
+        }
+
+        // Login handler
+        async function handleLogin(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Prevent multiple submissions
+            if (loginButton.disabled) {
+                return;
+            }
+
+            hideMessage(); // Hide any existing messages
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Validate form
+            const validationErrors = validateForm(username, password);
+            if (validationErrors.length > 0) {
+                showMessage('error', validationErrors[0]);
+                return;
+            }
+
+            // Set loading state
+            setLoading(true);
+
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                // Check credentials
+                const isValidCredentials = LOGIN_CREDENTIALS[username] === password;
+
+                if (isValidCredentials) {
+                    // Success
+                    showMessage('success', `Welcome back, ${username}!`);
+                    
+                    // Store login info if remember me is checked
+                    if (rememberMe) {
+                        localStorage.setItem('rememberedUser', username);
+                        localStorage.setItem('rememberMe', 'true');
+                    } else {
+                        localStorage.removeItem('rememberedUser');
+                        localStorage.removeItem('rememberMe');
+                    }
+
+                    // Store session
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('currentUser', username);
+
+                    // Redirect after success message
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+
+                } else {
+                    // Error
+                    showMessage('error', 'Invalid username/email or password. Please try again.');
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('error', 'An error occurred during login. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Password visibility toggle
         function togglePasswordVisibility() {
-        const input = document.getElementById('password');
-        const eyeOpen = document.getElementById('eye-open');
-        const eyeClosed = document.getElementById('eye-closed');
+            const passwordInput = document.getElementById('password');
+            const eyeOpen = document.getElementById('eye-open');
+            const eyeClosed = document.getElementById('eye-closed');
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            eyeOpen.classList.add('hidden');
-            eyeClosed.classList.remove('hidden');
-        } else {
-            input.type = 'password';
-            eyeOpen.classList.remove('hidden');
-            eyeClosed.classList.add('hidden');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeOpen.classList.add('hidden');
+                eyeClosed.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeOpen.classList.remove('hidden');
+                eyeClosed.classList.add('hidden');
+            }
         }
+
+        // Initialize form
+        function initializeForm() {
+            // Check if user should be remembered
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            const shouldRemember = localStorage.getItem('rememberMe') === 'true';
+
+            if (rememberedUser && shouldRemember) {
+                usernameInput.value = rememberedUser;
+                document.getElementById('remember-me').checked = true;
+            }
+
+            // Focus on appropriate field
+            if (!usernameInput.value) {
+                usernameInput.focus();
+            } else {
+                passwordInput.focus();
+            }
         }
+
+        // Event listeners
+        loginForm.addEventListener('submit', handleLogin);
+
+        // Clear messages when user starts typing
+        usernameInput.addEventListener('input', hideMessage);
+        passwordInput.addEventListener('input', hideMessage);
+
+        // Enter key handling for better UX
+        usernameInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                passwordInput.focus();
+            }
+        });
+
+        passwordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (!loginButton.disabled) {
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeForm);
+
+        // Responsive handling
+        window.addEventListener('resize', function() {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                document.body.style.overflow = 'auto';
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+        });
     </script>
-    </body>
-    </html>
+</body>
+</html>

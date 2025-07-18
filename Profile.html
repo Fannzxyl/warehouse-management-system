@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Warehouse Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for easy theme management */
+        :root {
+            --primary-color: #1A2C49; /* Dark blue for primary actions/accents (from previous iteration) */
+            --primary-dark: #0D1B2A; /* Darker primary for hover */
+            --secondary-color: #607D8B; /* Muted blue-gray for secondary text */
+            --secondary-dark: #4A5C6C; /* Darker secondary for hover */
+            --text-dark: #2F4050; /* Dark text for headings for better contrast */
+            --text-light: #4A5C6C; /* Lighter text for content */
+            --background-main: #ECF0F4; /* Light gray background */
+            --card-background: #ffffff;
+            --border-color: #E0E4E8; /* Clean, light border */
+            --shadow-light: rgba(0, 0, 0, 0.05); /* Lighter shadow for cards */
+            --shadow-medium: rgba(0, 0, 0, 0.12); /* Stronger shadow for hover/modal */
+            --success-color: #28A745;
+            --success-dark: #218838;
+            --danger-color: #DC3545;
+            --danger-dark: #C82333;
+            --info-item-bg-hover: #F8FAFC; /* Very light hover background */
+            --activity-item-bg-hover: #F8FAFC; /* Very light hover background */
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins */
+            background-color: var(--background-main); /* Using single background color variable */
+            min-height: 100vh;
+            padding: 2.5rem 1.25rem; /* Responsive padding */
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2.5rem; /* Adjusted margin */
+        }
+
+        .page-header h1 {
+            color: var(--text-dark);
+            font-size: 2.25rem; /* Slightly smaller for compactness */
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--secondary-color);
+            font-size: 0.95rem; /* Slightly smaller */
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            cursor: pointer;
+            transition: color 0.2s ease;
+            font-size: 0.85rem; /* Slightly smaller */
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .breadcrumb:hover {
+            color: var(--primary-color);
+        }
+
+        /* Profile Container (Grid Layout) */
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Adjusted ratio for main content */
+            gap: 1.5rem; /* Adjusted gap */
+        }
+
+        /* Profile Card Styling */
+        .profile-card {
+            background: var(--card-background);
+            border-radius: 0.75rem; /* Slightly softer corners */
+            padding: 2rem; /* Adjusted padding */
+            box-shadow: 0 4px 20px var(--shadow-light); /* Lighter initial shadow */
+            transition: all 0.25s ease-out; /* Smoother transition */
+            border: 1px solid var(--border-color);
+            opacity: 0; /* For animation */
+            transform: translateY(15px); /* For animation */
+        }
+
+        .profile-card:hover {
+            transform: translateY(-4px); /* Slightly more pronounced lift */
+            box-shadow: 0 8px 30px var(--shadow-medium); /* More pronounced hover shadow */
+        }
+
+        /* Profile Header inside card */
+        .profile-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem; /* Adjusted gap */
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-avatar {
+            width: 5.5rem; /* Adjusted size */
+            height: 5.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #3a5c8e 100%); /* Consistent gradient with brand color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15); /* Adjusted shadow */
+        }
+
+        .profile-avatar i {
+            font-size: 2.25rem; /* Adjusted icon size */
+        }
+
+        .profile-details h2 {
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            font-size: 1.6rem; /* Slightly smaller */
+            font-weight: 700;
+        }
+
+        /* Admin Badge */
+        .admin-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem; /* Adjusted padding */
+            border-radius: 1.25rem; /* More rounded */
+            font-size: 0.75rem; /* Smaller font */
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-badge::before {
+            content: '\f0ad'; /* Font Awesome building icon for warehouse role */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.65rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem; /* Adjusted gap */
+            margin-bottom: 1.5rem;
+            justify-content: flex-start;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem; /* Adjusted padding */
+            border: none;
+            border-radius: 0.5rem; /* Consistent border-radius */
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.25s ease-out;
+            font-size: 0.9rem; /* Adjusted font size */
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .btn-primary {
+            background: var(--primary-color); /* Single color, no gradient for consistency with CSS vars */
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Info Sections */
+        .info-section h3 {
+            color: var(--text-dark);
+            margin-bottom: 1rem; /* Adjusted margin */
+            font-size: 1.2rem; /* Adjusted font size */
+            font-weight: 600;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0; /* Adjusted padding */
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.25s ease-out;
+            border-left: 4px solid transparent; /* Subtle left border */
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item:hover {
+            background: var(--info-item-bg-hover);
+            border-left-color: var(--primary-color);
+            padding-left: 0.5rem; /* Slight shift to highlight border */
+            padding-right: -0.5rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--secondary-color);
+            font-size: 0.85rem; /* Smaller font */
+            min-width: 100px; /* Reduced min-width */
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem; /* Smaller font */
+            flex-grow: 1;
+            text-align: right;
+            word-break: break-word; /* Ensure long text wraps */
+        }
+
+        /* Activity Section */
+        .activity-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background-color: var(--card-background); /* Ensures consistent background */
+        }
+
+        .activity-section .info-section h3 {
+            margin-bottom: 0;
+            padding: 1.25rem 2rem 1rem 2rem; /* Adjusted padding for header inside activity section */
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.85rem 1.25rem; /* Adjusted padding */
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.25s ease-out;
+            background-color: var(--card-background);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: var(--activity-item-bg-hover);
+            box-shadow: inset 4px 0 0 0 var(--primary-color); /* Left border hover effect */
+        }
+
+        .activity-text {
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.85rem; /* Smaller font */
+            flex-grow: 1;
+            padding-right: 0.75rem; /* Reduced padding */
+        }
+
+        .activity-time {
+            font-size: 0.75rem; /* Smaller font */
+            color: var(--secondary-color);
+            background-color: #EBF2F7; /* Light background for time badge */
+            padding: 0.2rem 0.6rem; /* Adjusted padding */
+            border-radius: 0.4rem; /* Rounded corners */
+            white-space: nowrap;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            backdrop-filter: blur(6px); /* Adjusted blur for better performance/visuals */
+            -webkit-backdrop-filter: blur(6px); /* For Safari compatibility */
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-background);
+            border-radius: 1rem; /* Softer rounded corners */
+            padding: 2.5rem; /* Generous padding */
+            width: 90%;
+            max-width: 580px; /* Slightly wider modal */
+            box-shadow: 0 15px 50px var(--shadow-medium); /* Stronger modal shadow */
+            animation: fadeInScale 0.3s ease-out forwards;
+            position: relative;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(20px); /* More subtle scale and slide */
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-content h3 {
+            color: var(--text-dark);
+            margin-bottom: 1.8rem; /* Adjusted margin */
+            text-align: center;
+            font-size: 1.6rem; /* Adjusted font size */
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem; /* Adjusted margin */
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.85rem; /* Adjusted label font size */
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem; /* Adjusted padding */
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem; /* Consistent border-radius */
+            background: #F8F9FA; /* Slightly off-white background for inputs */
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-size: 0.95rem; /* Adjusted font size */
+        }
+
+        /* Remove default arrow for inputs */
+        .form-group input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: none; /* Remove custom arrow for inputs */
+        }
+
+        /* Keep custom arrow for selects only */
+        .form-group select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23607D8B" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center; /* Adjusted position */
+            background-size: 1.1rem; /* Adjusted size */
+            cursor: pointer;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 44, 73, 0.2); /* Adjusted focus shadow */
+        }
+
+        .form-group input::placeholder {
+            color: #AAB8C2; /* Lighter placeholder text */
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem; /* Adjusted gap */
+            margin-top: 1.8rem; /* Adjusted margin */
+        }
+        
+        /* Close button for modal */
+        .close-modal-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.75rem; /* Larger icon */
+            color: #9AA6B2; /* Muted color */
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-modal-icon:hover {
+            color: var(--danger-color); /* Red on hover */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+            .action-buttons {
+                justify-content: center;
+            }
+            .profile-card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-avatar {
+                margin-bottom: 1rem;
+            }
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.4rem;
+                padding: 0.75rem 0;
+            }
+            .info-label {
+                min-width: unset;
+            }
+            .info-value {
+                text-align: left;
+            }
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .activity-time {
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 1.5rem 0.75rem;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .profile-card {
+                padding: 1.5rem;
+            }
+            .profile-avatar {
+                width: 4.5rem;
+                height: 4.5rem;
+                font-size: 2rem;
+            }
+            .profile-details h2 {
+                font-size: 1.3rem;
+            }
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-content h3 {
+                font-size: 1.4rem;
+            }
+            .form-group input,
+            .form-group select {
+                font-size: 0.85rem;
+                padding: 0.6rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb" onclick="goToDashboard()">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </div>
+
+        <div class="page-header">
+            <h1>User Profile</h1>
+            <p>Manage your account information and preferences</p>
+        </div>
+
+        <div class="profile-layout">
+            <div class="profile-card">
+                <div class="profile-card-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h2 id="usernameDisplay">Warehouse User</h2>
+                        <div class="admin-badge">Warehouse Staff</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="editProfileButton"><i class="fas fa-edit"></i> Edit Profile</button>
+                </div>
+
+                <div class="info-section">
+                    <h3>Personal Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value" id="emailDisplay">user@warehouse.com</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone Number</span>
+                        <span class="info-value" id="phoneDisplay">+62 812 3456 7890</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Employee ID</span>
+                        <span class="info-value" id="employeeIdDisplay">WH-EMP-12345</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Join Date</span>
+                        <span class="info-value" id="joinDateDisplay">January 15, 2024</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Shift</span>
+                        <span class="info-value" id="shiftDisplay">Morning Shift (08:00 - 16:00)</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Location</span>
+                        <span class="info-value" id="locationDisplay">Warehouse A, Block 3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <div class="info-section">
+                    <h3 class="py-0 px-0">Recent Activity</h3> <div class="activity-section">
+                        <div class="activity-item">
+                            <span class="activity-text">50 Transactions This Month</span>
+                            <span class="activity-time">Today</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">1,200 Items Handled</span>
+                            <span class="activity-time">This week</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">Present (Last Clock-in: 07:55 AM)</span>
+                            <span class="activity-time">Current</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">Scanned Barcode #707</span>
+                            <span class="activity-time">3 days ago</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">Completed Training Module</span>
+                            <span class="activity-time">1 week ago</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-text">Updated Profile Information</span>
+                            <span class="activity-time">2 weeks ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal-icon" onclick="closeEditModal()"></i>
+            <h3>Edit Profile</h3>
+            <div class="form-group">
+                <label for="editUsername">Username</label>
+                <input type="text" id="editUsername" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="editPhone">Phone Number</label>
+                <input type="text" id="editPhone" placeholder="Enter phone number">
+            </div>
+            <div class="form-group">
+                <label for="editShift">Shift</label>
+                <select id="editShift">
+                    <option value="">Select Shift</option>
+                    <option value="Morning Shift (08:00 - 16:00)">Morning Shift (08:00 - 16:00)</option>
+                    <option value="Afternoon Shift (16:00 - 00:00)">Afternoon Shift (16:00 - 00:00)</option>
+                    <option value="Night Shift (00:00 - 08:00)">Night Shift (00:00 - 08:00)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editLocation">Location</label>
+                <select id="editLocation">
+                    <option value="">Select Location</option>
+                    <option value="Warehouse A, Block 1">Warehouse A, Block 1</option>
+                    <option value="Warehouse A, Block 2">Warehouse A, Block 2</option>
+                    <option value="Warehouse A, Block 3">Warehouse A, Block 3</option>
+                    <option value="Warehouse B, Block 1">Warehouse B, Block 1</option>
+                    <option value="Warehouse B, Block 2">Warehouse B, Block 2</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const emailDisplay = document.getElementById('emailDisplay');
+        const phoneDisplay = document.getElementById('phoneDisplay');
+        const employeeIdDisplay = document.getElementById('employeeIdDisplay');
+        const joinDateDisplay = document.getElementById('joinDateDisplay');
+        const shiftDisplay = document.getElementById('shiftDisplay');
+        const locationDisplay = document.getElementById('locationDisplay');
+
+        const editProfileButton = document.getElementById('editProfileButton');
+
+        const editModal = document.getElementById('editModal');
+        const editUsernameInput = document.getElementById('editUsername');
+        const editEmailInput = document.getElementById('editEmail');
+        const editPhoneInput = document.getElementById('editPhone');
+        const editShiftSelect = document.getElementById('editShift');
+        const editLocationSelect = document.getElementById('editLocation');
+
+        // Initial User Data (can be fetched from an API in a real application)
+        let userData = {
+            username: "Warehouse User",
+            email: "user@warehouse.com",
+            phone: "+62 812 3456 7890",
+            employeeId: "WH-EMP-12345",
+            joinDate: "January 15, 2024",
+            shift: "Morning Shift (08:00 - 16:00)",
+            location: "Warehouse A, Block 3"
+        };
+
+        // Function to populate display fields from userData
+        function renderProfileData() {
+            usernameDisplay.textContent = userData.username;
+            emailDisplay.textContent = userData.email;
+            phoneDisplay.textContent = userData.phone;
+            employeeIdDisplay.textContent = userData.employeeId;
+            joinDateDisplay.textContent = userData.joinDate;
+            shiftDisplay.textContent = userData.shift;
+            locationDisplay.textContent = userData.location;
+        }
+
+        // Function to navigate to dashboard
+        function goToDashboard() {
+            window.location.href = 'dashboard.html'; // Mengarahkan ke dashboard.html
+        }
+
+        // Function to open the edit modal
+        function openEditModal() {
+            // Populate modal fields with current data
+            editUsernameInput.value = userData.username;
+            editEmailInput.value = userData.email;
+            editPhoneInput.value = userData.phone;
+            
+            // Set selected option for Shift dropdown
+            editShiftSelect.value = userData.shift;
+            
+            // Set selected option for Location dropdown
+            editLocationSelect.value = userData.location;
+
+            editModal.style.display = 'flex';
+        }
+
+        // Function to close the edit modal
+        function closeEditModal() {
+            editModal.style.display = 'none';
+        }
+
+        // Function to save changes from the modal
+        function saveChanges() {
+            // Update userData object with values from modal inputs
+            userData.username = editUsernameInput.value.trim() || 'Warehouse User';
+            userData.email = editEmailInput.value.trim() || 'user@warehouse.com';
+            userData.phone = editPhoneInput.value.trim() || '+62 XXXX XXXX XXXX';
+            
+            // Get selected value from Shift dropdown
+            userData.shift = editShiftSelect.value || 'Not specified';
+            
+            // Get selected value from Location dropdown
+            userData.location = editLocationSelect.value || 'Not specified';
+
+            // Re-render the profile display with updated data
+            renderProfileData();
+            closeEditModal();
+            alert('Profile updated successfully!');
+        }
+
+        // Event listener for the "Edit Profile" button
+        editProfileButton.addEventListener('click', openEditModal);
+
+        // Close modal when clicking outside of modal content
+        window.onclick = function(event) {
+            if (event.target === editModal) {
+                closeEditModal();
+            }
+        };
+
+        // Initial load and animation
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProfileData(); // Display initial data
+
+            // Card animation on load
+            const cards = document.querySelectorAll('.profile-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 180); // Staggered animation
+            });
+        });
+    </script>
+</body>
+</html>

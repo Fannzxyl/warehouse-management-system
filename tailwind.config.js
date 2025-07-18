@@ -1,15 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './login.html',       // Untuk login.html di root
-    './dashboard.html',   // Untuk dashboard.html jika ada
-    './public/**/*.html', // Jika ada file HTML lain di dalam public atau subfolder lainnya
-    './src/**/*.{html,js,ts,jsx,tsx}', // Pastikan ini juga mencakup file HTML di src jika ada
+    './login.html',
+    './dashboard.html',
+    './public/**/*.html',
+    './Profile.html',
+    './src/**/*.{html,js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'], // Changed from 'inter' to 'poppins'
       },
       colors: {
         'dark-blue-text': '#1A2C49',
@@ -20,8 +21,8 @@ module.exports = {
         'button-text-white': '#FFFFFF',
         'gray-overlay': 'rgba(0, 0, 0, 0.2)',
       },
-      // Anda bisa biarkan ini dikomentari jika menggunakan style inline di HTML
-      // Atau jika Anda ingin menggunakannya, pastikan path-nya benar
+      // You can leave this commented out if using inline styles in HTML
+      // Or if you want to use it, make sure the path is correct
       // backgroundImage: {
       //   'warehouse-bg': "url('/public/images/warehouse.png')",
       // }

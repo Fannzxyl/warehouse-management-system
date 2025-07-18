@@ -36,12 +36,12 @@
     </style>
     <script>
         tailwind.config = {
-            darkMode: 'class', // Enable dark mode based on 'dark' class
+            darkMode: 'class', // Mengaktifkan mode gelap berdasarkan kelas 'dark'
             theme: {
                 extend: {
                     colors: {
                         wise: {
-                            'light-gray': '#FAFAFA', /* Changed to FAFAFA */
+                            'light-gray': '#FAFAFA', /* Diubah menjadi FAFAFA */
                             'gray': '#6B7280',
                             'dark-gray': '#1F2937',
                             'border': '#E5E7EB',
@@ -74,12 +74,12 @@
                             'emerald': {
                                 500: '#10B981',
                             },
-                            // Dark mode specific colors
-                            'dark-bg': '#1A202C', // A dark background color
-                            'dark-card': '#2D3748', // A slightly lighter dark for cards
-                            'dark-border': '#4A5568', // Darker border
-                            'dark-text-primary': '#E2E8F0', // Light text on dark background
-                            'dark-text-secondary': '#A0AEC0', // Slightly darker light text
+                            // Warna khusus mode gelap
+                            'dark-bg': '#1A202C', // Warna latar belakang gelap
+                            'dark-card': '#2D3748', // Warna gelap sedikit lebih terang untuk kartu
+                            'dark-border': '#4A5568', // Border lebih gelap
+                            'dark-text-primary': '#E2E8F0', // Teks terang di latar belakang gelap
+                            'dark-text-secondary': '#A0AEC0', // Teks terang sedikit lebih gelap
                         }
                     }
                 }
@@ -91,26 +91,30 @@
     <!-- Header -->
     <header class="bg-white dark:bg-gray-900 border-b border-wise-border dark:border-wise-dark-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm">
         <div class="flex items-center justify-between w-full">
-            <!-- Left: WISE Logo -->
-            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary text-xl font-bold">WISE</span>
-
-            <!-- Center: Search Bar (always visible) -->
-            <div class="flex items-center bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border overflow-hidden shadow-sm flex-1 mx-4 max-w-lg">
-                <input 
-                    type="text" 
-                    id="search-input"
-                    placeholder="Search now..."
-                    class="flex-1 px-4 py-2 focus:outline-none text-sm placeholder-wise-gray dark:placeholder-wise-dark-text-secondary bg-white dark:bg-wise-dark-card text-wise-dark-gray dark:text-wise-dark-text-primary"
-                    oninput="handleSearch(this.value)"
-                />
-                <button class="bg-wise-dark-gray text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 transition-colors duration-200 rounded-r-xl">
-                    Search
-                </button>
+            <!-- Kiri: Logo WISE -->
+            <div class="flex-1 flex justify-start">
+                <span class="text-wise-dark-gray dark:text-wise-dark-text-primary text-xl font-bold">WISE</span>
             </div>
 
-            <!-- Right: User Info and Dropdown -->
-            <div class="relative flex items-center space-x-3 md:space-x-4">
-                <!-- Dark Mode Toggle -->
+            <!-- Tengah: Bilah Pencarian (selalu terlihat dan di tengah) -->
+            <div class="flex-1 flex justify-center">
+                <div class="flex items-center bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border overflow-hidden shadow-sm w-full max-w-lg">
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Cari sekarang..."
+                        class="flex-1 px-4 py-2 focus:outline-none text-sm placeholder-wise-gray dark:placeholder-wise-dark-text-secondary bg-white dark:bg-wise-dark-card text-wise-dark-gray dark:text-wise-dark-text-primary"
+                        oninput="handleSearch(this.value)"
+                    />
+                    <button class="bg-wise-dark-gray text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 transition-colors duration-200 rounded-r-xl">
+                        Cari
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kanan: Info Pengguna dan Dropdown -->
+            <div class="flex-1 flex justify-end items-center relative"> <!-- Added items-center here -->
+                <!-- Toggle Mode Gelap -->
                 <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleDarkMode()">
                     <svg id="sun-icon" class="w-5 h-5 text-gray-600 dark:text-gray-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.325 6.325l-.707.707M6.325 6.325l-.707-.707m12.728 0l-.707-.707M6.325 17.675l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -120,355 +124,325 @@
                     </svg>
                 </button>
 
-                <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm md:text-base hidden md:block">Welcome, <span id="username-display">SuperAdmin</span></span>
-                <div class="w-7 h-7 md:w-8 md:h-8 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center shadow-md cursor-pointer" onclick="toggleUserDropdown()">
+                <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm md:text-base hidden md:block ml-3">Selamat Datang, <span id="username-display">SuperAdmin</span></span>
+                <div class="w-7 h-7 md:w-8 md:h-8 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center shadow-md cursor-pointer ml-3" onclick="toggleUserDropdown()">
                     <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a4 4 0 00-4 4v1a2 2 0 002 2h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4z" clip-rule="evenodd"></path>
                     </svg>
                 </div>
-                <!-- User Dropdown -->
+                <!-- Dropdown Pengguna -->
                 <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-wise-border dark:border-wise-dark-border hidden z-50">
-                    <a href="#" class="block px-4 py-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700" onclick="alert('Navigasi ke halaman Profil')">Profil</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700" onclick="navigateToProfile()">Profil</a>
                     <a href="#" class="block px-4 py-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700" onclick="handleLogout()">Log Out</a>
                 </div>
             </div>
         </div>
-        <!-- Search Filters/Tags - Initially hidden, shown on search input -->
+        <!-- Filter/Tag Pencarian - Awalnya tersembunyi, ditampilkan saat input pencarian -->
         <div id="search-filters" class="flex items-center space-x-2 mt-2 ml-20 hidden">
-            <span class="text-wise-gray dark:text-wise-dark-text-secondary">Filters:</span>
+            <span class="text-wise-gray dark:text-wise-dark-text-secondary">Filter:</span>
             <span id="filter-articles" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
-                Articles <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('articles')">&times;</button>
+                Artikel <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('articles')">&times;</button>
             </span>
             <span id="filter-photography" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
-                Photography <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('photography')">&times;</button>
+                Fotografi <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('photography')">&times;</button>
             </span>
-            <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllFilters()">Remove all</button>
+            <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllFilters()">Hapus semua</button>
         </div>
-        <!-- Search Results Dropdown - Positioned relative to the header, centered -->
+        <!-- Dropdown Hasil Pencarian - Diposisikan relatif terhadap header, di tengah -->
         <div id="search-results" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-gray-800 border border-wise-border dark:border-wise-dark-border rounded-xl shadow-xl z-40 max-h-80 overflow-y-auto w-11/12 md:w-1/2">
             <div id="search-results-content" class="p-2">
-                <!-- Search results will be populated here -->
-            </div>
+                </div>
         </div>
     </header>
 
-    <div class="flex flex-1 pt-28 md:pt-24"> <!-- Adjusted pt to account for single header row -->
+    <div class="flex flex-1 pt-28 md:pt-24"> <!-- pt disesuaikan untuk satu baris header -->
         <!-- Sidebar -->
-        <div id="sidebar" class="w-64 bg-white dark:bg-gray-900 border-r border-wise-border dark:border-wise-dark-border h-screen overflow-y-auto fixed left-0 top-14 md:top-24 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
-            <div class="p-4">
+        <div id="sidebar" class="w-64 bg-white dark:bg-gray-900 border-r border-wise-border dark:border-wise-dark-border h-screen overflow-y-auto fixed left-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-4 pt-20 md:pt-4"> <!-- Adjusted pt for sidebar content -->
                 <div class="space-y-1">
                     <!-- Dashboard -->
-                    <div id="sidebar-dashboard" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Dashboard</span>
-                            <svg id="dashboard-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-dashboard" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="selectCategory('dashboard')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                             </svg>
                         </div>
-                        <div id="dashboard-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-summary')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Summary</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-reports')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Reports</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-alerts')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Alerts</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Dashboard</span>
+                        <!-- Panah dihapus dari sini -->
+                    </div>
+                    <div id="dashboard-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-summary')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Ringkasan</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-reports')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Laporan</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-alerts')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Peringatan</span>
                         </div>
                     </div>
                     
                     <!-- Yard Management -->
-                    <div id="sidebar-yard-management" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('yard-management')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Yard Management</span>
-                            <svg id="yard-management-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-yard-management" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('yard-management')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1"></path>
                             </svg>
                         </div>
-                        <div id="yard-management-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-vehicles')" onmouseenter="showPreview('yard-vehicles', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Vehicles</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-equipment')" onmouseenter="showPreview('yard-equipment', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Equipment</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-personnel')" onmouseenter="showPreview('yard-personnel', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Personnel</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Manajemen Halaman</span>
+                        <svg id="yard-management-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="yard-management-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-vehicles')" onmouseenter="showPreview('yard-vehicles', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Kendaraan</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-equipment')" onmouseenter="showPreview('yard-equipment', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Peralatan</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard-personnel')" onmouseenter="showPreview('yard-personnel', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Personel</span>
                         </div>
                     </div>
                     
                     <!-- Receiving -->
-                    <div id="sidebar-receiving" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('receiving')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0-8V4m0 4h.01M12 4h.01M16 4h.01M12 12h.01M16 12h.01M12 16h.01M16 16h.01M12 20h.01M16 20h.01M12 20v-8"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Receiving</span>
-                            <svg id="receiving-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-receiving" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('receiving')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0-8V4m0 4h.01M12 4h.01M16 4h.01M12 12h.01M16 12h.01M12 16h.01M16 16h.01M12 20h.01M16 20h.01M12 20v-8"></path>
                             </svg>
                         </div>
-                        <div id="receiving-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-deliveries')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Deliveries</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-returns')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Returns</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-vendors')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Vendors</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Receiving</span>
+                        <svg id="receiving-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="receiving-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-deliveries')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pengiriman</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-returns')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pengembalian</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('receiving-vendors')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Vendor</span>
                         </div>
                     </div>
                     
                     <!-- Order Planning -->
-                    <div id="sidebar-order" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('order')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Order Planning</span>
-                            <svg id="order-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-order" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('order')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                             </svg>
                         </div>
-                        <div id="order-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-new')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">New Orders</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-pending')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pending Orders</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-history')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Order History</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Order Planning</span>
+                        <svg id="order-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="order-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-new')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pesanan Baru</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-pending')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pesanan Tertunda</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('order-history')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Riwayat Pesanan</span>
                         </div>
                     </div>
                     
                     <!-- Work -->
-                    <div id="sidebar-work" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('work')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 12h.01M16 12h.01"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Work</span>
-                            <svg id="work-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-work" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('work')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M12 12h.01M16 12h.01"></path>
                             </svg>
                         </div>
-                        <div id="work-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-tasks')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tasks</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-schedule')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Schedule</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-teams')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Teams</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Work</span>
+                        <svg id="work-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="work-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-tasks')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tugas</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-schedule')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Jadwal</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('work-teams')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tim</span>
                         </div>
                     </div>
                     
                     <!-- Cross Application -->
-                    <div id="sidebar-cross-application" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('cross-application')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Cross Application</span>
-                            <svg id="cross-application-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-cross-application" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('cross-application')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div id="cross-application-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-integrations')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Integrations</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-data-sync')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Data Sync</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-api')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">API Management</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Cross Application</span>
+                        <svg id="cross-application-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="cross-application-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-integrations')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Integrasi</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-data-sync')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Sinkronisasi Data</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('cross-app-api')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Manajemen API</span>
                         </div>
                     </div>
                     
                     <!-- Inventory -->
-                    <div id="sidebar-inventory" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('inventory')">
-                        <div class="flex items-center justify-between space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Inventory</span>
-                            <svg id="inventory-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-inventory" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('inventory')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                             </svg>
                         </div>
-                        <!-- Children -->
-                        <div id="inventory-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard')" onmouseenter="showPreview('yard', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Yard</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('warehouse')" onmouseenter="showPreview('warehouse', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Warehouse</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('storage')" onmouseenter="showPreview('storage', event)">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Storage</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Inventaris</span>
+                        <svg id="inventory-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <!-- Children -->
+                    <div id="inventory-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard')" onmouseenter="showPreview('yard', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Halaman</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('warehouse')" onmouseenter="showPreview('warehouse', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Gudang</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('storage')" onmouseenter="showPreview('storage', event)">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Penyimpanan</span>
                         </div>
                     </div>
                     
                     <!-- Performance Management -->
-                    <div id="sidebar-performance" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('performance')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    <div id="sidebar-performance" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('performance')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
                         </div>
-                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Performance Management</span>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Manajemen Kinerja</span>
                         <svg id="performance-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
+                    </div>
+                    <div id="performance-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-kpis')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">KPI</span>
                         </div>
-                        <div id="performance-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-kpis')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">KPIs</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-analytics')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Analytics</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-goals')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Goals</span>
-                            </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-analytics')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Analitik</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('performance-goals')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Sasaran</span>
                         </div>
                     </div>
                     
                     <!-- Setting Optimization -->
-                    <div id="sidebar-setting" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('setting')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path>
+                    <div id="sidebar-setting" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('setting')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
-                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Setting Optimization</span>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Optimasi Pengaturan</span>
                         <svg id="setting-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
+                    </div>
+                    <div id="setting-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-general')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Umum</span>
                         </div>
-                        <div id="setting-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-general')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">General</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-security')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Security</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-notifications')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Notifications</span>
-                            </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-security')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Keamanan</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-notifications')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Notifikasi</span>
                         </div>
                     </div>
                     
                     <!-- System Management -->
-                    <div id="sidebar-system" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('system')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3H15l3-2V8l-3-2H9L6 8v7l3 2z"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">System Management</span>
-                            <svg id="system-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-system" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('system')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3H15l3-2V8l-3-2H9L6 8v7l3 2z"></path>
                             </svg>
                         </div>
-                        <div id="system-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-users')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Users</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-logs')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Logs</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-backup')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Backup</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Manajemen Sistem</span>
+                        <svg id="system-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="system-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-users')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Pengguna</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-logs')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Log</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('system-backup')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Cadangan</span>
                         </div>
                     </div>
                     
                     <!-- Data Archiving -->
-                    <div id="sidebar-archive" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleChildren('archive')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                                </svg>
-                            </div>
-                            <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Data Archiving</span>
-                            <svg id="archive-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <div id="sidebar-archive" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('archive')">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
                             </svg>
                         </div>
-                        <div id="archive-children" class="ml-9 mt-2 space-y-1 hidden">
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-documents')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Documents</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-media')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Media</span>
-                            </div>
-                            <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-financial')">
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Financial</span>
-                            </div>
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Pengarsipan Data</span>
+                        <svg id="archive-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div id="archive-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-documents')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Dokumen</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-media')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Media</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('archive-financial')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Keuangan</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all duration-300 ease-in-out">
-            <!-- Default Content Area (full width, not split) -->
             <div id="default-content-area" class="bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray dark:text-wise-dark-text-primary">
-                <!-- Content will be populated by JS for default views -->
-            </div>
+                </div>
 
-            <!-- Search Overlay (initially hidden) -->
             <div id="search-overlay" class="hidden fixed inset-0 bg-white dark:bg-wise-dark-bg bg-opacity-95 z-50 flex items-center justify-center p-4">
                 <div class="bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col">
-                    <!-- Search Bar inside overlay -->
                     <div class="flex items-center bg-white dark:bg-wise-dark-card rounded-t-xl border-b border-wise-border dark:border-wise-dark-border overflow-hidden p-4">
                         <input 
                             type="text" 
                             id="overlay-search-input"
-                            placeholder="Search now..."
+                            placeholder="Cari sekarang..."
                             class="flex-1 px-4 py-2 focus:outline-none text-sm placeholder-wise-gray dark:placeholder-wise-dark-text-secondary bg-white dark:bg-wise-dark-card text-wise-dark-gray dark:text-wise-dark-text-primary"
                             oninput="handleOverlaySearch(this.value)"
                         />
                         <button class="bg-wise-dark-gray text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 transition-colors duration-200 rounded-r-xl">
-                            Search
+                            Cari
                         </button>
                         <button class="ml-2 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="closeSearchOverlay()">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -476,24 +450,20 @@
                             </svg>
                         </button>
                     </div>
-                    <!-- Search Filters/Tags inside overlay -->
                     <div id="overlay-search-filters" class="flex items-center space-x-2 mt-2 ml-4 text-xs hidden">
-                        <span class="text-wise-gray dark:text-wise-dark-text-secondary">Filters:</span>
+                        <span class="text-wise-gray dark:text-wise-dark-text-secondary">Filter:</span>
                         <span id="overlay-filter-articles" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
-                            Articles <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeOverlayFilter('articles')">&times;</button>
+                            Artikel <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeOverlayFilter('articles')">&times;</button>
                         </span>
                         <span id="overlay-filter-photography" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
-                            Photography <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeOverlayFilter('photography')">&times;</button>
+                            Fotografi <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('photography')">&times;</button>
                         </span>
-                        <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllOverlayFilters()">Remove all</button>
+                        <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllOverlayFilters()">Hapus semua</button>
                     </div>
-                    <!-- Search Results Panels inside overlay -->
                     <div class="flex flex-1 overflow-hidden">
                         <div id="overlay-search-results-list-panel" class="w-1/3 border-r border-wise-border dark:border-wise-dark-border p-4 overflow-y-auto text-wise-dark-gray dark:text-wise-dark-text-primary">
-                            <!-- Overlay search results list will be populated here -->
-                        </div>
+                            </div>
                         <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-wise-dark-gray dark:text-wise-dark-text-primary">
-                            <!-- Overlay detail content will be populated here -->
                             <p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>
                         </div>
                     </div>
@@ -503,60 +473,60 @@
     </div>
     
     <script>
-        // Mock data for content and search
+        // Data mock untuk konten dan pencarian
         const contentData = {
             dashboard: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Dashboard Overview</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Welcome to your dashboard. Here's a quick summary of your operations.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Ikhtisar Dashboard</h2>
+                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Selamat datang di dashboard Anda. Berikut ringkasan singkat operasi Anda.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Total Bookings</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Total Pemesanan</h3>
                             <p class="text-3xl font-bold text-wise-blue-500">1,250</p>
-                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Last 30 days</p>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">30 hari terakhir</p>
                         </div>
                         <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Active Crews</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Kru Aktif</h3>
                             <p class="text-3xl font-bold text-wise-teal-500">85</p>
-                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Currently working</p>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Sedang bekerja</p>
                         </div>
                         <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Inventory Value</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Nilai Inventaris</h3>
                             <p class="text-3xl font-bold text-wise-green-500">$2.5M</p>
-                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Total assets</p>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Total aset</p>
                         </div>
                     </div>
                     <div class="mt-8">
-                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-3">Recent Activities</h3>
+                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-3">Aktivitas Terbaru</h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray dark:bg-gray-800 rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">New booking for Project Alpha</h4>
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">5 minutes ago</span>
+                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">Pemesanan baru untuk Proyek Alpha</h4>
+                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">5 menit yang lalu</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray dark:bg-gray-800 rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">Crew #123 completed task</h4>
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">1 hour ago</span>
+                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">Kru #123 menyelesaikan tugas</h4>
+                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">1 jam yang lalu</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray dark:bg-gray-800 rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">Inventory update: 10 units added to Warehouse</h4>
-                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">3 hours ago</span>
+                                <h4 class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium">Pembaruan inventaris: 10 unit ditambahkan ke Gudang</h4>
+                                <span class="text-wise-gray dark:text-wise-dark-text-secondary text-xs md:text-sm">3 jam yang lalu</span>
                             </div>
                         </div>
                     </div>
                 `,
             },
             'dashboard-summary': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Dashboard Summary</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ringkasan singkat metrik dashboard utama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Data terakhir diperbarui: Sekarang</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Ringkasan Dashboard</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ringkasan singkat metrik dashboard utama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Data terakhir diperbarui: Sekarang</p>`,
             },
             'dashboard-reports': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Dashboard Reports</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Laporan kinerja dan aktivitas dashboard terperinci.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Laporan terbaru: Q2 2025</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Laporan Dashboard</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Laporan kinerja dan aktivitas dashboard terperinci.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Laporan terbaru: Q2 2025</p>`,
             },
             'dashboard-alerts': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Dashboard Alerts</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar peringatan dan notifikasi penting.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Peringatan aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Peringatan Dashboard</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar peringatan dan notifikasi penting.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Peringatan aktif: 3</p>`,
             },
             'yard-management': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Yard Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Halaman</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola sumber daya dan peralatan halaman Anda di sini. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Ikhtisar</h3>
@@ -566,18 +536,18 @@
                 `,
             },
             'yard-vehicles': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Yard - Kendaraan (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh kendaraan.</p>`,
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Yard - Kendaraan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 35 unit</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Halaman - Kendaraan (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh kendaraan.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Halaman - Kendaraan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 35 unit</p>`,
             },
             'yard-equipment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Yard - Peralatan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 80 unit</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Halaman - Peralatan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 80 unit</p>`,
             },
             'yard-personnel': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Yard - Personel</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 15 orang</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Halaman - Personel</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah: 15 orang</p>`,
             },
             receiving: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Receiving Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Penerimaan</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Lacak dan kelola semua pengiriman dan kiriman yang masuk. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Penerimaan Tertunda</h3>
@@ -589,17 +559,17 @@
                 `,
             },
             'receiving-deliveries': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Receiving - Pengiriman</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah pengiriman: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Penerimaan - Pengiriman</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah pengiriman: 5</p>`,
             },
             'receiving-returns': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Receiving - Pengembalian</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah pengembalian: 2</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Penerimaan - Pengembalian</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah pengembalian: 2</p>`,
             },
             'receiving-vendors': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Receiving - Vendor</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah vendor aktif: 10</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Penerimaan - Vendor</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah vendor aktif: 10</p>`,
             },
             order: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Order Planning</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Rencanakan dan optimalkan pesanan Anda. Lacak status pesanan, kelola pengiriman, dan perkiraan permintaan. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Pesanan Tertunda</h3>
@@ -611,17 +581,18 @@
                 `,
             },
             'order-new': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Order Planning - Pesanan Baru</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pesanan baru: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Pesanan Baru</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pesanan baru: 7</p>`,
             },
             'order-pending': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Order Planning - Pesanan Tertunda</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar pesanan yang sedang dalam proses atau menunggu tindakan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pesanan tertunda: 12</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar pesanan yang sedang dalam proses atau menunggu tindakan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pesanan tertunda: 12</p>`,
             },
             'order-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Order Planning - Riwayat Pesanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pesanan selesai: 500</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Riwayat Pesanan (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Riwayat Pesanan. Berisi semua detail pesanan yang telah selesai, termasuk tanggal, pelanggan, dan status pengiriman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh riwayat pesanan.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pesanan selesai: 500</p>`,
             },
             work: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Work Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Pekerjaan</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Tetapkan tugas, lacak kemajuan, dan kelola tenaga kerja Anda secara efisien. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Ikhtisar</h3>
@@ -633,17 +604,18 @@
                 `,
             },
             'work-tasks': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Work - Tugas</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Tugas aktif: 8</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Tugas (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Tugas Pekerjaan. Berisi daftar lengkap tugas, status, dan penugasan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh tugas.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Tugas</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Tugas aktif: 8</p>`,
             },
             'work-schedule': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Work - Jadwal</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jadwal hari ini: Penuh</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Jadwal</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jadwal hari ini: Penuh</p>`,
             },
             'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Work - Tim</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah tim: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah tim: 5</p>`,
             },
             'cross-application': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cross Application Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Lintas Aplikasi</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola integrasi dan aliran data antar aplikasi yang berbeda. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Sistem Terhubung</h3>
@@ -655,17 +627,17 @@
                 `,
             },
             'cross-app-integrations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cross Application - Integrasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Integrasi aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Lintas Aplikasi - Integrasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Integrasi aktif: 3</p>`,
             },
             'cross-app-data-sync': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cross Application - Sinkronisasi Data</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sinkronisasi terakhir: 10 menit lalu</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Lintas Aplikasi - Sinkronisasi Data</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
             },
             'cross-app-api': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cross Application - Manajemen API</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Kunci API aktif: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Lintas Aplikasi - Manajemen API</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Kunci API aktif: 7</p>`,
             },
             inventory: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventory Overview</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Ikhtisar Inventaris</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Pilih lokasi inventaris dari sidebar untuk melihat detailnya.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Ringkasan</h3>
@@ -675,17 +647,18 @@
                 `,
             },
             yard: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventory - Yard</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 150</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Halaman (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Halaman. Berisi daftar lengkap item, status, dan riwayat pergerakan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh inventaris halaman.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Halaman</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 150</p>`,
             },
             warehouse: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventory - Warehouse</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 1000</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Gudang</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 1000</p>`,
             },
             storage: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventory - Storage</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 350</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Penyimpanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 350</p>`,
             },
             performance: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Performance Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Kinerja</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Pantau dan analisis metrik kinerja untuk berbagai operasi dan personel. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Indikator Kinerja Utama (KPI)</h3>
@@ -697,17 +670,17 @@
                 `,
             },
             'performance-kpis': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Performance - KPIs</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat metrik kinerja utama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">KPIs: 5 aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Kinerja - KPI</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat metrik kinerja utama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">KPI: 5 aktif</p>`,
             },
             'performance-analytics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Performance - Analisis</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Analisis data kinerja terperinci.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Laporan terakhir: Hari ini</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Kinerja - Analitik</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Analisis data kinerja terperinci.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Laporan terakhir: Hari ini</p>`,
             },
             'performance-goals': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Performance - Sasaran</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sasaran aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sasaran aktif: 3</p>`,
             },
             setting: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Setting Optimization</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Optimasi Pengaturan</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Konfigurasi pengaturan sistem dan optimalkan parameter untuk efisiensi yang lebih baik. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Konfigurasi Sistem</h3>
@@ -719,17 +692,17 @@
                 `,
             },
             'setting-general': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Setting - Umum</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Pengaturan umum aplikasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Bahasa Default: Indonesia</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Umum</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Pengaturan umum aplikasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Bahasa Default: Indonesia</p>`,
             },
             'setting-security': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Setting - Keamanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Konfigurasi pengaturan keamanan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">MFA: Aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Keamanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Konfigurasi pengaturan keamanan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">MFA: Aktif</p>`,
             },
             'setting-notifications': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Setting - Notifikasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Sesuaikan preferensi notifikasi Anda untuk berbagai peristiwa sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Notifikasi Email: Aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Notifikasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Sesuaikan preferensi notifikasi Anda untuk berbagai peristiwa sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Notifikasi Email: Aktif</p>`,
             },
             system: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">System Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Sistem</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola akun pengguna, peran, dan kontrol akses seluruh sistem. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Akun Pengguna</h3>
@@ -742,17 +715,17 @@
                 `,
             },
             'system-users': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">System - Pengguna</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola akun dan peran pengguna.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pengguna: 20</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Pengguna</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola akun dan peran pengguna.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pengguna: 20</p>`,
             },
             'system-logs': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Log Sistem</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat log sistem untuk melacak aktivitas dan memecahkan masalah.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Log terakhir: 5 menit lalu</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Log</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat log sistem untuk melacak aktivitas dan memecahkan masalah.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Log terakhir: 5 menit yang lalu</p>`,
             },
             'system-backup': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cadangan Sistem</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola cadangan sistem dan pemulihan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Cadangan terakhir: Kemarin</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Cadangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola cadangan sistem dan pemulihan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Cadangan terakhir: Kemarin</p>`,
             },
             archive: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Data Archiving</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengarsipan Data</h2>
                     <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola pengarsipan data lama untuk kepatuhan dan optimasi penyimpanan. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Catatan Diarsipkan</h3>
@@ -764,422 +737,13 @@
                 `,
             },
             'archive-documents': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Dokumen</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola dokumen yang diarsipkan, termasuk kontrak lama dan laporan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Dokumen: 500</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Dokumen</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola dokumen yang diarsipkan, termasuk kontrak lama dan laporan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Dokumen: 500</p>`,
             },
             'archive-media': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Media</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola aset media yang diarsipkan, seperti gambar dan video lama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah File Media: 200</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Media</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola aset media yang diarsipkan, seperti gambar dan video lama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah File Media: 200</p>`,
             },
             'archive-financial': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Keuangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola catatan keuangan yang diarsipkan untuk tujuan kepatuhan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Catatan Keuangan: 150</p>`,
-            },
-            // Detailed content for search results/list items (these will only be shown in the overlay)
-            'recent-booking': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pemesanan Baru untuk Proyek Alpha</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail pemesanan baru untuk Proyek Alpha. Ini termasuk informasi klien, tanggal pemesanan, dan sumber daya yang ditugaskan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Status: Dikonfirmasi | Dipesan oleh: Admin | Tanggal: 2025-07-18</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pemesanan Baru untuk Proyek Alpha (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk pemesanan baru Proyek Alpha. Semua detail terkait proyek, jadwal, dan alokasi sumber daya disajikan di sini.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Klien: Perusahaan X</li>
-                        <li>Tanggal Mulai: 2025-07-20</li>
-                        <li>Tanggal Selesai: 2025-07-25</li>
-                        <li>Sumber Daya: Loader Berat A, Kru #123</li>
-                        <li>Catatan: Membutuhkan persetujuan manajer.</li>
-                    </ul>
-                `
-            },
-            'crew-task': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Tugas Kru #123 Selesai</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail penyelesaian tugas untuk Kru #123. Tugas tersebut melibatkan persiapan lokasi di lokasi XYZ.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">ID Tugas: TSK-005 | Waktu Selesai: 10:30 AM | Pemimpin Kru: John Doe</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Tugas Kru #123 Selesai (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk tugas yang diselesaikan oleh Kru #123. Termasuk laporan kemajuan, masalah yang dihadapi, dan waktu yang dihabiskan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Lokasi: Lokasi Konstruksi XYZ</li>
-                        <li>Deskripsi Tugas: Persiapan lokasi, pembersihan puing.</li>
-                        <li>Waktu Mulai: 08:00 AM</li>
-                        <li>Waktu Selesai: 10:30 AM</li>
-                        <li>Masalah: Tidak ada</li>
-                    </ul>
-                `
-            },
-            'inventory-update': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pembaruan Inventaris: 10 Unit Ditambahkan ke Gudang</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail pembaruan inventaris terbaru. 10 unit 'Produk Z' ditambahkan ke Gudang A, Bagian 3.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Produk: Produk Z | Kuantitas: 10 | Lokasi: Gudang A | Tanggal: 2025-07-17</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pembaruan Inventaris: 10 Unit Ditambahkan ke Gudang (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk pembaruan inventaris ini. Termasuk riwayat transaksi, pemasok, dan nilai total.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>ID Transaksi: INV-UP-001</li>
-                        <li>Pemasok: Global Supplies</li>
-                        <li>Nilai Unit: $50</li>
-                        <li>Total Nilai: $500</li>
-                        <li>Petugas: Admin Inventaris</li>
-                    </ul>
-                `
-            },
-            'vehicle-a': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Loader Berat A</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Informasi terperinci tentang Loader Berat A, termasuk riwayat perawatan, status saat ini, dan jadwal servis berikutnya.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Model: HL-500 | Servis Terakhir: 2025-06-01 | Jam: 1250</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Loader Berat A (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Loader Berat A. Termasuk semua spesifikasi teknis, riwayat penggunaan, dan jadwal perawatan yang akan datang.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Nomor Seri: HL500-XYZ</li>
-                        <li>Kapasitas: 10 Ton</li>
-                        <li>Tahun Pembelian: 2022</li>
-                        <li>Servis Berikutnya: 2025-09-01</li>
-                        <li>Riwayat Perbaikan: Ganti ban (2024-03-10)</li>
-                    </ul>
-                `
-            },
-            'vehicle-b': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Forklift B</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Informasi terperinci tentang Forklift B, termasuk status operasional, masa pakai baterai, dan operator yang ditugaskan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Model: FL-200 | Baterai: 85% | Operator: Jane Smith</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Forklift B (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Forklift B. Termasuk semua spesifikasi, riwayat pengisian daya, dan daftar operator yang berwenang.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Nomor Seri: FL200-ABC</li>
-                        <li>Jenis Baterai: Lithium-ion</li>
-                        <li>Siklus Pengisian Daya: 500</li>
-                        <li>Operator Utama: Jane Smith</li>
-                        <li>Lokasi Terakhir: Gudang A</li>
-                    </ul>
-                `
-            },
-            'delivery-x': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pengiriman X dari Pemasok A</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk pengiriman masuk X. Berisi item: Baut (1000 unit), Mur (1000 unit).</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pemasok: Pemasok A | Diharapkan: 2025-07-18 | PO: P0-9876</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pengiriman X dari Pemasok A (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Pengiriman X. Termasuk daftar item lengkap, informasi pengiriman, dan status penerimaan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Nomor Pelacakan: TRK-12345</li>
-                        <li>Tanggal Pesanan: 2025-07-10</li>
-                        <li>Metode Pengiriman: Darat</li>
-                        <li>Status: Dalam Perjalanan</li>
-                        <li>Penerima: Tim Penerimaan</li>
-                    </ul>
-                `
-            },
-            'delivery-y': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pengiriman Y dari Pemasok B</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk pengiriman Y yang sudah diperiksa. Berisi item: Balok Baja (50 unit), Campuran Beton (20 kantong).</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pemasok: Pemasok B | Diterima: 2025-07-16 | PO: PO-5432</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pengiriman Y dari Pemasok B (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Pengiriman Y. Termasuk semua item yang diterima, kondisi, dan lokasi penyimpanan awal.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Nomor Pelacakan: TRK-67890</li>
-                        <li>Tanggal Penerimaan: 2025-07-16</li>
-                        <li>Kondisi: Baik</li>
-                        <li>Disimpan di: Gudang Utama</li>
-                        <li>Petugas: Jane Doe</li>
-                    </ul>
-                `
-            },
-            'order-123': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pesanan Pelanggan #123</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk pesanan pelanggan #123. Item: Produk A (5 unit), Produk B (2 unit).</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pelanggan: ABC Corp | Tanggal Pesanan: 2025-07-15 | Status: Baru</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Pesanan Pelanggan #123 (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Pesanan Pelanggan #123. Termasuk informasi penagihan, alamat pengiriman, dan riwayat status pesanan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Alamat Pengiriman: Jl. Contoh No. 123</li>
-                        <li>Metode Pembayaran: Transfer Bank</li>
-                        <li>Status Pembayaran: Lunas</li>
-                        <li>Jadwal Pengiriman: 2025-07-20</li>
-                        <li>Catatan: Prioritas tinggi.</li>
-                    </ul>
-                `
-            },
-            'order-456': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Transfer Internal #456</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk transfer internal #456. Mentransfer 10 unit Komponen C dari Gudang ke Halaman.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Dari: Gudang | Ke: Halaman | Status: Menunggu Persetujuan</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Transfer Internal #456 (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Transfer Internal #456. Termasuk alasan transfer, petugas yang menyetujui, dan tanggal eksekusi.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Alasan: Kebutuhan Proyek Baru</li>
-                        <li>Disetujui oleh: Manajer Operasi</li>
-                        <li>Tanggal Eksekusi: 2025-07-18</li>
-                        <li>Status: Disetujui</li>
-                        <li>Catatan: Segera dipindahkan.</li>
-                    </ul>
-                `
-            },
-            'task-inspection': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Tugas Inspeksi Lokasi</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk tugas inspeksi lokasi. Lokasi: Lokasi Konstruksi 1. Personel yang dibutuhkan: 2.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Ditugaskan Kepada: Kru 5 | Tanggal Jatuh Tempo: 2025-07-20 | Status: Dalam Proses</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Tugas Inspeksi Lokasi (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Tugas Inspeksi Lokasi. Termasuk daftar periksa inspeksi, temuan, dan tindakan perbaikan yang direkomendasikan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Area Inspeksi: Struktur Utama, Keamanan.</li>
-                        <li>Temuan: Retakan kecil pada pondasi.</li>
-                        <li>Rekomendasi: Perbaikan segera.</li>
-                        <li>Petugas Inspeksi: Budi Santoso</li>
-                        <li>Tanggal Inspeksi: 2025-07-17</li>
-                    </ul>
-                `
-            },
-            'task-maintenance': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Tugas Pemeliharaan Peralatan</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk tugas pemeliharaan peralatan. Peralatan: Ekskavator E-1. Jenis: Pemeliharaan Pencegahan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Ditugaskan Kepada: Tim Pemeliharaan | Tanggal Jatuh Tempo: 2025-07-22 | Status: Terjadwal</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Tugas Pemeliharaan Peralatan (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Tugas Pemeliharaan Peralatan. Termasuk daftar periksa perawatan, suku cadang yang digunakan, dan catatan teknisi.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Suku Cadang Digunakan: Filter oli, oli mesin.</li>
-                        <li>Catatan Teknisi: Performa mesin optimal setelah servis.</li>
-                        <li>Biaya: $250</li>
-                        <li>Tanggal Selesai: Belum selesai</li>
-                        <li>Prioritas: Tinggi</li>
-                    </ul>
-                `
-            },
-            'integration-crm': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Status Integrasi CRM</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Status terkini integrasi sistem CRM. Semua titik data sinkron dengan benar.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sinkronisasi Terakhir: 2025-07-17 1:00 PM | Status: Operasional</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Status Integrasi CRM (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk status integrasi CRM. Termasuk log sinkronisasi, konfigurasi API, dan riwayat kesalahan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Endpoint API: https://crm.example.com/api</li>
-                        <li>Frekuensi Sinkronisasi: Setiap 15 menit</li>
-                        <li>Log Kesalahan: Tidak ada kesalahan dalam 24 jam terakhir</li>
-                        <li>Pengelola: Tim IT</li>
-                    </ul>
-                `
-            },
-            'integration-erp': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Sinkronisasi Data ERP</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail sinkronisasi data ERP terakhir. Tidak ada kesalahan yang dilaporkan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sinkronisasi Terakhir: 2025-07-17 11:00 AM | Status: Berhasil</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Sinkronisasi Data ERP (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk sinkronisasi data ERP. Termasuk volume data yang disinkronkan, waktu proses, dan metrik kinerja.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Volume Data: 10 GB</li>
-                        <li>Waktu Proses: 5 menit</li>
-                        <li>Metrik Keberhasilan: 99.9%</li>
-                        <li>Server: ERP-Prod-01</li>
-                    </ul>
-                `
-            },
-            'item-a': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Item A (Halaman)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah deskripsi terperinci Item A, yang saat ini berlokasi di Halaman. Ini adalah komponen tugas berat yang digunakan dalam konstruksi.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">SKU: YA-001 | Lokasi: Zona 1, Rak 3 | Kondisi: Baik</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Item A (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Item A. Termasuk riwayat pergerakan, tanggal penerimaan, dan nilai persediaan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Tanggal Penerimaan: 2025-06-15</li>
-                        <li>Nilai: $1,200</li>
-                        <li>Pemasok: Konstruksi Jaya</li>
-                        <li>Riwayat Peminjaman: Proyek X (2025-07-01)</li>
-                    </ul>
-                `
-            },
-            'item-b': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Item B (Halaman)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk Item B, item lain yang disimpan di Halaman. Ini adalah alat khusus untuk perbaikan kendaraan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">SKU: YA-002 | Lokasi: Zona 2, Rak 5 | Kondisi: Cukup</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Item B (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Item B. Termasuk jadwal kalibrasi, riwayat penggunaan, dan catatan perbaikan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Tanggal Kalibrasi Terakhir: 2025-05-20</li>
-                        <li>Penggunaan Terakhir: Perbaikan Forklift (2025-07-10)</li>
-                        <li>Teknisi: Ahmad</li>
-                        <li>Status: Siap Digunakan</li>
-                    </ul>
-                `
-            },
-            'product-x': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Produk X (Gudang)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Informasi terperinci untuk Produk X, item permintaan tinggi di Gudang. Digunakan dalam proses manufaktur.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">SKU: WH-001 | Lokasi: Lorong 5, Teluk 10 | Stok: 100 unit</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Produk X (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Produk X. Termasuk data batch, tanggal kedaluwarsa, dan riwayat pengiriman.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Batch: BATCH-202507A</li>
-                        <li>Tanggal Kedaluwarsa: 2026-07-17</li>
-                        <li>Pengiriman Terakhir: 50 unit ke Pabrik C</li>
-                        <li>Suhu Penyimpanan: 20°C</li>
-                    </ul>
-                `
-            },
-            'component-y': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Komponen Y (Gudang)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk Komponen Y, komponen penting yang disimpan di Gudang. Penting untuk perakitan.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">SKU: WH-002 | Lokasi: Bin 12, Level 2 | Stok: 300 unit</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Komponen Y (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Komponen Y. Termasuk spesifikasi teknis, kompatibilitas, dan riwayat pesanan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Spesifikasi: Baja Karbon Tinggi</li>
-                        <li>Kompatibilitas: Mesin Model A, Model B</li>
-                        <li>Pesanan Minimum: 100 unit</li>
-                        <li>Produsen: XYZ Parts</li>
-                    </ul>
-                `
-            },
-            'archived-docs': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Kotak Dokumen Diarsipkan (Penyimpanan)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Informasi tentang kotak dokumen yang diarsipkan. Berisi catatan keuangan dari 2020-2022.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Referensi: DOC-ARC-001 | Lokasi: Lampiran A, Baris 1 | Waktu Pengambilan: 24 jam</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Kotak Dokumen Diarsipkan (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk kotak dokumen yang diarsipkan. Termasuk daftar isi, tanggal pengarsipan, dan kebijakan retensi.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Isi: Laporan Tahunan, Faktur, Kontrak</li>
-                        <li>Tanggal Pengarsipan: 2023-01-05</li>
-                        <li>Kebijakan Retensi: 7 tahun</li>
-                        <li>Petugas: Arsiparis A</li>
-                    </ul>
-                `
-            },
-            'seasonal-equip': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Peralatan Musiman (Penyimpanan)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Detail untuk peralatan musiman yang disimpan untuk periode di luar puncak. Termasuk bajak salju dan mesin pemotong rumput.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jenis: Peralatan Pemeliharaan | Lokasi: Penyimpanan Dingin, Teluk 7 | Penggunaan Berikutnya: Musim Dingin 2025</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Peralatan Musiman (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk peralatan musiman. Termasuk jadwal perawatan pra-musim, kondisi saat ini, dan riwayat penggunaan.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Kondisi: Siap Pakai</li>
-                        <li>Perawatan Terakhir: 2025-04-01</li>
-                        <li>Penggunaan Terakhir: Musim Dingin 2024</li>
-                        <li>Catatan: Perlu pemeriksaan oli sebelum digunakan.</li>
-                    </ul>
-                `
-            },
-            'report-q1': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Laporan Kinerja Q1</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Laporan komprehensif tentang kinerja Q1, mencakup efisiensi operasional, pemanfaatan sumber daya, dan pencapaian utama.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Periode: Jan-Mar 2025 | Sorotan Utama: Peningkatan produktivitas 10%.</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Laporan Kinerja Q1 (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Laporan Kinerja Q1. Termasuk grafik, analisis mendalam, dan rekomendasi strategis.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Analisis Penjualan: Meningkat 15%</li>
-                        <li>Biaya Operasional: Menurun 5%</li>
-                        <li>Kepuasan Pelanggan: 92%</li>
-                        <li>Rekomendasi: Investasi pada otomatisasi.</li>
-                    </ul>
-                `
-            },
-            'report-monthly': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Laporan Efisiensi Bulanan</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Rincian bulanan efisiensi operasional, mengidentifikasi area untuk perbaikan dan inisiatif yang berhasil.</p>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Periode: Juni 2025 | Fokus: Mengurangi waktu idle alat berat.</p>
-                `,
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Laporan Efisiensi Bulanan (Halaman Penuh)</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary">Tampilan halaman penuh untuk Laporan Efisiensi Bulanan. Termasuk metrik waktu kerja, penggunaan sumber daya, dan analisis deviasi.</p>
-                    <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                        <li>Waktu Kerja Efektif: 85%</li>
-                        <li>Pemanfaatan Peralatan: 70%</li>
-                        <li>Deviasi Anggaran: +2%</li>
-                        <li>Tindakan Korektif: Pelatihan ulang operator.</li>
-                    </ul>
-                `
-            },
-            'setting-general': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan Umum</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Konfigurasi pengaturan umum aplikasi, seperti bahasa dan tema.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Bahasa Default: Indonesia</p>`,
-            },
-            'setting-security': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan Keamanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Konfigurasi pengaturan keamanan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">MFA: Aktif</p>`,
-            },
-            'setting-notifications': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan Notifikasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Sesuaikan preferensi notifikasi Anda untuk berbagai peristiwa sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Notifikasi Email: Aktif</p>`,
-            },
-            'system-users': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Pengguna Sistem</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola akun dan peran pengguna.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pengguna: 20</p>`,
-            },
-            'system-logs': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Log Sistem</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat log sistem untuk melacak aktivitas dan memecahkan masalah.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Log terakhir: 5 menit lalu</p>`,
-            },
-            'system-backup': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Cadangan Sistem</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola cadangan sistem dan pemulihan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Cadangan terakhir: Kemarin</p>`,
-            },
-            archive: {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Data Archiving</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola pengarsipan data lama untuk kepatuhan dan optimasi penyimpanan. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Catatan Diarsipkan</h3>
-                        <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                            <li>Laporan Keuangan 2023</li>
-                            <li>Data Historis Proyek Alpha</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'archive-documents': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Dokumen</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola dokumen yang diarsipkan, termasuk kontrak lama dan laporan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Dokumen: 500</p>`,
-            },
-            'archive-media': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Media</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola aset media yang diarsipkan, seperti gambar dan video lama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah File Media: 200</p>`,
-            },
-            'archive-financial': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip Keuangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola catatan keuangan yang diarsipkan untuk tujuan kepatuhan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Catatan Keuangan: 150</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Keuangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola catatan keuangan yang diarsipkan untuk tujuan kepatuhan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Catatan Keuangan: 150</p>`,
             },
             'article a': {
                 detail: `
@@ -1205,83 +769,100 @@
         };
 
         const searchItems = [
-            { id: 'article a', title: 'Article A', category: 'General', lastUpdated: '2 hours ago' },
-            { id: 'paragraph b', title: 'Paragraph B', category: 'Documentation', lastUpdated: '1 hour ago' },
-            { id: 'method c', title: 'Method C', category: 'Technical', lastUpdated: '30 minutes ago' },
-            { id: 'recent-booking', title: 'New booking for Project Alpha', category: 'Booking', lastUpdated: '5 minutes ago' },
-            { id: 'crew-task', title: 'Crew #123 completed task', category: 'Work', lastUpdated: '1 hour ago' },
-            { id: 'inventory-update', title: 'Inventory update: 10 units added to Warehouse', category: 'Inventory', lastUpdated: '3 hours ago' },
-            { id: 'vehicle-a', title: 'Heavy Loader A', category: 'Yard Management', lastUpdated: '1 day ago' },
-            { id: 'delivery-x', title: 'Delivery X from Supplier A', category: 'Receiving', lastUpdated: '4 hours ago' },
-            { id: 'order-123', title: 'Customer Order #123', category: 'Order Planning', lastUpdated: '1 day ago' },
-            { id: 'integration-crm', title: 'CRM Integration Status', category: 'Cross Application', lastUpdated: '1 hour ago' },
-            { id: 'report-q1', title: 'Q1 Performance Report', category: 'Performance', lastUpdated: '2 weeks ago' },
-            { id: 'setting-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
-            { id: 'log-errors', title: 'Error Logs', category: 'System Management', lastUpdated: '5 minutes ago' },
-            { id: 'archive-finance', title: '2023 Financial Reports', category: 'Data Archiving', lastUpdated: 'Jan 2024' },
-            // Add search items for new children
-            { id: 'dashboard-summary', title: 'Dashboard Summary', category: 'Dashboard', lastUpdated: 'Now' },
-            { id: 'dashboard-reports', title: 'Dashboard Reports', category: 'Dashboard', lastUpdated: 'Q2 2025' },
-            { id: 'dashboard-alerts', title: 'Dashboard Alerts', category: 'Dashboard', lastUpdated: '3 active' },
-            { id: 'yard-vehicles', title: 'Yard Vehicles', category: 'Yard Management', lastUpdated: 'Recently updated' },
-            { id: 'yard-equipment', title: 'Yard Equipment', category: 'Yard Management', lastUpdated: 'Recently updated' },
-            { id: 'yard-personnel', title: 'Yard Personnel', category: 'Yard Management', lastUpdated: 'Recently updated' },
-            { id: 'receiving-deliveries', title: 'Receiving Deliveries', category: 'Receiving', lastUpdated: 'Today' },
-            { id: 'receiving-returns', title: 'Receiving Returns', category: 'Receiving', lastUpdated: 'Last week' },
-            { id: 'receiving-vendors', title: 'Receiving Vendors', category: 'Receiving', lastUpdated: 'Monthly' },
-            { id: 'order-new', title: 'New Orders', category: 'Order Planning', lastUpdated: 'Today' },
-            { id: 'order-pending', title: 'Pending Orders', category: 'Order Planning', lastUpdated: 'Ongoing' },
-            { id: 'order-history', title: 'Order History', category: 'Order Planning', lastUpdated: 'All time' },
-            { id: 'work-tasks', title: 'Work Tasks', category: 'Work', lastUpdated: 'Active' },
-            { id: 'work-schedule', title: 'Work Schedule', category: 'Work', lastUpdated: 'Daily' },
-            { id: 'work-teams', title: 'Work Teams', category: 'Work', lastUpdated: 'Active' },
-            { id: 'cross-app-integrations', title: 'Cross App Integrations', category: 'Cross Application', lastUpdated: 'Active' },
-            { id: 'cross-app-data-sync', title: 'Cross App Data Sync', category: 'Cross Application', lastUpdated: 'Recent' },
-            { id: 'cross-app-api', title: 'Cross App API Management', category: 'Cross Application', lastUpdated: 'Active' },
-            { id: 'performance-kpis', title: 'Performance KPIs', category: 'Performance', lastUpdated: 'Live' },
-            { id: 'performance-analytics', title: 'Performance Analytics', category: 'Performance', lastUpdated: 'Daily' },
-            { id: 'performance-goals', title: 'Performance Goals', category: 'Performance', lastUpdated: 'Quarterly' },
-            { id: 'setting-general', title: 'General Settings', category: 'Setting Optimization', lastUpdated: 'Configured' },
-            { id: 'setting-security', title: 'Security Settings', category: 'Setting Optimization', lastUpdated: 'Reviewed' },
-            { id: 'setting-notifications', title: 'Notification Settings', category: 'Setting Optimization', lastUpdated: 'Customized' },
-            { id: 'system-users', title: 'System Users', category: 'System Management', lastUpdated: 'Active' },
-            { id: 'system-logs', title: 'System Logs', category: 'System Management', lastUpdated: 'Recent' },
-            { id: 'system-backup', title: 'System Backup', category: 'System Management', lastUpdated: 'Daily' },
-            { id: 'archive-documents', title: 'Archived Documents', category: 'Data Archiving', lastUpdated: 'Older' },
-            { id: 'archive-media', title: 'Archived Media', category: 'Data Archiving', lastUpdated: 'Older' },
-            { id: 'archive-financial', title: 'Archived Financials', category: 'Data Archiving', lastUpdated: 'Older' },
+            { id: 'article a', title: 'Artikel A', category: 'Umum', lastUpdated: '2 jam yang lalu' },
+            { id: 'paragraph b', title: 'Paragraf B', category: 'Dokumentasi', lastUpdated: '1 jam yang lalu' },
+            { id: 'method c', title: 'Metode C', category: 'Teknis', lastUpdated: '30 menit yang lalu' },
+            { id: 'recent-booking', title: 'Pemesanan baru untuk Proyek Alpha', category: 'Pemesanan', lastUpdated: '5 menit yang lalu' },
+            { id: 'crew-task', title: 'Tugas kru #123 selesai', category: 'Pekerjaan', lastUpdated: '1 jam yang lalu' },
+            { id: 'inventory-update', title: 'Pembaruan inventaris: 10 unit ditambahkan ke Gudang', category: 'Inventaris', lastUpdated: '3 jam yang lalu' },
+            { id: 'vehicle-a', title: 'Loader Berat A', category: 'Manajemen Halaman', lastUpdated: '1 hari yang lalu' },
+            { id: 'delivery-x', title: 'Pengiriman X dari Pemasok A', category: 'Penerimaan', lastUpdated: '4 jam yang lalu' },
+            { id: 'order-123', title: 'Pesanan Pelanggan #123', category: 'Perencanaan Pesanan', lastUpdated: '1 hari yang lalu' },
+            { id: 'integration-crm', title: 'Status Integrasi CRM', category: 'Lintas Aplikasi', lastUpdated: '1 jam yang lalu' },
+            { id: 'report-q1', title: 'Laporan Kinerja Q1', category: 'Kinerja', lastUpdated: '2 minggu yang lalu' },
+            { id: 'setting-notifications', title: 'Preferensi Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Kemarin' },
+            { id: 'log-errors', title: 'Log Kesalahan', category: 'Manajemen Sistem', lastUpdated: '5 menit yang lalu' },
+            { id: 'archive-finance', title: 'Laporan Keuangan 2023', category: 'Pengarsipan Data', lastUpdated: 'Jan 2024' },
+            // Tambahkan item pencarian untuk anak-anak baru
+            { id: 'dashboard-summary', title: 'Ringkasan Dashboard', category: 'Dashboard', lastUpdated: 'Sekarang' },
+            { id: 'dashboard-reports', title: 'Laporan Dashboard', category: 'Dashboard', lastUpdated: 'Q2 2025' },
+            { id: 'dashboard-alerts', title: 'Peringatan Dashboard', category: 'Dashboard', lastUpdated: '3 aktif' },
+            { id: 'yard-vehicles', title: 'Kendaraan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+            { id: 'yard-equipment', title: 'Peralatan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+            { id: 'yard-personnel', title: 'Personel Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+            { id: 'receiving-deliveries', title: 'Pengiriman Penerimaan', category: 'Penerimaan', lastUpdated: 'Hari ini' },
+            { id: 'receiving-returns', title: 'Pengembalian Penerimaan', category: 'Penerimaan', lastUpdated: 'Minggu lalu' },
+            { id: 'receiving-vendors', title: 'Vendor Penerimaan', category: 'Penerimaan', lastUpdated: 'Bulanan' },
+            { id: 'order-new', title: 'Pesanan Baru', category: 'Perencanaan Pesanan', lastUpdated: 'Hari ini' },
+            { id: 'order-pending', title: 'Pesanan Tertunda', category: 'Perencanaan Pesanan', lastUpdated: 'Berlangsung' },
+            { id: 'order-history', title: 'Riwayat Pesanan', category: 'Perencanaan Pesanan', lastUpdated: 'Sepanjang waktu' },
+            { id: 'work-tasks', title: 'Tugas Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
+            { id: 'work-schedule', title: 'Jadwal Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Harian' },
+            { id: 'work-teams', title: 'Tim Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
+            { id: 'cross-app-integrations', title: 'Integrasi Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
+            { id: 'cross-app-data-sync', title: 'Sinkronisasi Data Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Terbaru' },
+            { id: 'cross-app-api', title: 'Manajemen API Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
+            { id: 'performance-kpis', title: 'KPI Kinerja', category: 'Kinerja', lastUpdated: 'Langsung' },
+            { id: 'performance-analytics', title: 'Analitik Kinerja', category: 'Kinerja', lastUpdated: 'Harian' },
+            { id: 'performance-goals', title: 'Sasaran Kinerja', category: 'Kinerja', lastUpdated: 'Triwulanan' },
+            { id: 'setting-general', title: 'Pengaturan Umum', category: 'Optimasi Pengaturan', lastUpdated: 'Dikonfigurasi' },
+            { id: 'setting-security', title: 'Pengaturan Keamanan', category: 'Optimasi Pengaturan', lastUpdated: 'Ditinjau' },
+            { id: 'setting-notifications', title: 'Pengaturan Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Disesuaikan' },
+            { id: 'system-users', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
+            { id: 'system-logs', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
+            { id: 'system-backup', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
+            { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+            { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+            { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
         ];
 
         let currentCategory = 'dashboard';
-        let activeFilters = []; // To store active filters
+        let activeFilters = []; // Untuk menyimpan filter aktif
 
-        // Function to update breadcrumbs (removed as per new header design)
+        // Fungsi untuk memperbarui breadcrumbs (dihapus sesuai desain header baru)
         function updateBreadcrumbs(main, sub = null) {
-            // This function is now largely unused due to the simplified header breadcrumb.
-            // Keeping it as a placeholder in case it's needed for other parts.
-            console.log(`Breadcrumb update requested: Main: ${main}, Sub: ${sub}`);
+            // Fungsi ini sekarang sebagian besar tidak digunakan karena breadcrumb header yang disederhanakan.
+            // Tetap disimpan sebagai placeholder jika diperlukan untuk bagian lain.
+            console.log(`Permintaan pembaruan breadcrumb: Utama: ${main}, Sub: ${sub}`);
         }
 
-        // Function to toggle children for any sidebar item
+        // Mapping untuk membantu menemukan induk kategori anak
+        const parentMapping = {
+            'dashboard-summary': 'dashboard', 'dashboard-reports': 'dashboard', 'dashboard-alerts': 'dashboard',
+            'yard-vehicles': 'yard-management', 'yard-equipment': 'yard-management', 'yard-personnel': 'yard-management',
+            'receiving-deliveries': 'receiving', 'receiving-returns': 'receiving', 'receiving-vendors': 'receiving',
+            'order-new': 'order', 'order-pending': 'order', 'order-history': 'order',
+            'work-tasks': 'work', 'work-schedule': 'work', 'work-teams': 'work',
+            'cross-app-integrations': 'cross-application', 'cross-app-data-sync': 'cross-application', 'cross-app-api': 'cross-application',
+            'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory', // Inventory children
+            'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
+            'setting-general': 'setting', 'setting-security': 'setting', 'setting-notifications': 'setting',
+            'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system',
+            'archive-documents': 'archive', 'archive-media': 'archive', 'archive-financial': 'archive'
+        };
+
+
+        // Fungsi untuk mengaktifkan/menonaktifkan anak untuk item sidebar mana pun
         function toggleChildren(category) {
             const childrenDiv = document.getElementById(`${category}-children`);
             const arrowIcon = document.getElementById(`${category}-arrow`);
             
             if (childrenDiv && arrowIcon) {
                 childrenDiv.classList.toggle('hidden');
+                // Transisi rotasi panah
                 arrowIcon.classList.toggle('rotate-90');
                 arrowIcon.classList.toggle('rotate-0');
             }
 
-            // If a parent is clicked and its children are shown, select the parent category
+            // Jika induk diklik dan anak-anaknya ditampilkan, pilih kategori induk
             if (!childrenDiv.classList.contains('hidden')) {
                 selectCategory(category);
             }
         }
 
-        // Function to select a sidebar category (main or child)
+        // Fungsi untuk memilih kategori sidebar (utama atau anak)
         function selectCategory(category) {
-            // Remove active class from all sidebar items and children
+            // Hapus kelas aktif dari semua item sidebar dan anak-anak
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray', 'dark:bg-gray-700');
             });
@@ -1290,20 +871,33 @@
                 item.classList.add('text-wise-gray', 'dark:text-wise-dark-text-secondary');
             });
 
-            // Add active class to the selected item
+            // Tambahkan kelas aktif ke item yang dipilih
             const selectedItem = document.getElementById(`sidebar-${category}`);
             if (selectedItem) {
                 selectedItem.classList.add('active-sidebar-item', 'bg-wise-light-gray', 'dark:bg-gray-700');
             } else {
-                // If it's a child, highlight the child and its parent
+                // Jika itu anak, sorot anak dan induknya
                 const childElement = document.querySelector(`[onclick="selectCategory('${category}')"]`);
                 if (childElement) {
                     childElement.classList.add('bg-gray-100', 'dark:bg-gray-700', 'font-medium', 'text-wise-dark-gray', 'dark:text-wise-dark-text-primary');
                     childElement.classList.remove('text-wise-gray', 'dark:text-wise-dark-text-secondary');
-                    // Find parent and add active class
-                    let parentDiv = childElement.closest('.sidebar-item');
-                    if (parentDiv) {
-                        parentDiv.classList.add('active-sidebar-item', 'bg-wise-light-gray', 'dark:bg-gray-700');
+                    
+                    const parentCategory = parentMapping[category]; // Temukan induk menggunakan mapping
+                    if (parentCategory) {
+                        const parentSidebarItem = document.getElementById(`sidebar-${parentCategory}`);
+                        if (parentSidebarItem) {
+                            parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray', 'dark:bg-gray-700');
+                        }
+                        // Pastikan anak-anak induk terlihat
+                        const parentChildrenDiv = document.getElementById(`${parentCategory}-children`);
+                        const parentArrowIcon = document.getElementById(`${parentCategory}-arrow`);
+                        if (parentChildrenDiv && parentChildrenDiv.classList.contains('hidden')) {
+                            parentChildrenDiv.classList.remove('hidden');
+                            if (parentArrowIcon) {
+                                parentArrowIcon.classList.remove('rotate-0');
+                                parentArrowIcon.classList.add('rotate-90');
+                            }
+                        }
                     }
                 }
             }
@@ -1313,13 +907,13 @@
             const defaultContentArea = document.getElementById('default-content-area');
             const searchOverlay = document.getElementById('search-overlay');
 
-            // Hide search overlay if visible
+            // Sembunyikan overlay pencarian jika terlihat
             searchOverlay.classList.add('hidden');
 
             if (content && content.full) {
                 defaultContentArea.innerHTML = content.full;
                 defaultContentArea.classList.remove('hidden');
-            } else if (content && content.detail) { // If it's a child with only detail content
+            } else if (content && content.detail) { // Jika itu anak dengan hanya konten detail
                 defaultContentArea.innerHTML = content.detail;
                 defaultContentArea.classList.remove('hidden');
             } else {
@@ -1327,35 +921,35 @@
                 defaultContentArea.classList.remove('hidden');
             }
             
-            // Hide sidebar on mobile after selection
+            // Sembunyikan sidebar di seluler setelah pemilihan
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('-translate-x-full');
             }
         }
 
-        // Function to handle search input from main header
+        // Fungsi untuk menangani input pencarian dari header utama
         function handleSearch(query) {
             const searchOverlay = document.getElementById('search-overlay');
             const overlaySearchInput = document.getElementById('overlay-search-input');
             
             if (query.length > 0) {
                 searchOverlay.classList.remove('hidden');
-                overlaySearchInput.value = query; // Sync query to overlay search input
-                handleOverlaySearch(query); // Trigger search in overlay
+                overlaySearchInput.value = query; // Sinkronkan kueri ke input pencarian overlay
+                handleOverlaySearch(query); // Picu pencarian di overlay
             } else {
                 searchOverlay.classList.add('hidden');
-                // When search input is cleared, revert to current category's content
+                // Saat input pencarian dikosongkan, kembali ke konten kategori saat ini
                 selectCategory(currentCategory);
             }
         }
 
-        // Function to handle search input from overlay
+        // Fungsi untuk menangani input pencarian dari overlay
         function handleOverlaySearch(query) {
             const overlaySearchResultsListPanel = document.getElementById('overlay-search-results-list-panel');
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const overlaySearchFilters = document.getElementById('overlay-search-filters');
 
-            // Clear previous filters first
+            // Hapus filter sebelumnya terlebih dahulu
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
 
@@ -1368,7 +962,7 @@
                     (item.id && item.id.toLowerCase().includes(query.toLowerCase())) 
                 );
 
-                // Apply active filters if any
+                // Terapkan filter aktif jika ada
                 if (activeFilters.length > 0) {
                     filteredResults = filteredResults.filter(item => 
                         activeFilters.some(filter => item.category.toLowerCase().includes(filter))
@@ -1378,15 +972,15 @@
                 overlaySearchResultsListPanel.innerHTML = ''; 
 
                 if (filteredResults.length > 0) {
-                    // Show filters based on mock data or actual categories in results
-                    if (query.toLowerCase().includes('article')) { // Example: if "article" is searched, show "Articles" filter (mock)
+                    // Tampilkan filter berdasarkan data mock atau kategori aktual dalam hasil
+                    if (query.toLowerCase().includes('artikel')) { // Contoh: jika "artikel" dicari, tampilkan filter "Artikel" (mock)
                         document.getElementById('overlay-filter-articles').classList.remove('hidden');
                     }
-                    if (query.toLowerCase().includes('photo')) { // Example: if "photo" is searched, show "Photography" filter (mock)
+                    if (query.toLowerCase().includes('foto')) { // Contoh: jika "foto" dicari, tampilkan filter "Fotografi" (mock)
                         document.getElementById('overlay-filter-photography').classList.remove('hidden');
                     }
-                    // If "yard" is searched, show "Articles" filter as a mock example
-                    if (query.toLowerCase().includes('yard') && !document.getElementById('overlay-filter-articles').classList.contains('hidden')) {
+                    // Jika "halaman" dicari, tampilkan filter "Artikel" sebagai contoh mock
+                    if (query.toLowerCase().includes('halaman') && !document.getElementById('overlay-filter-articles').classList.contains('hidden')) {
                          document.getElementById('overlay-filter-articles').classList.remove('hidden');
                     }
 
@@ -1404,17 +998,17 @@
                     });
                 } else {
                     overlaySearchResultsListPanel.innerHTML = `<p class="p-3 text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tidak ada hasil ditemukan.</p>`;
-                    overlaySearchFilters.classList.add('hidden'); // Hide filters if no results
+                    overlaySearchFilters.classList.add('hidden'); // Sembunyikan filter jika tidak ada hasil
                 }
                 overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
             } else {
                 overlaySearchResultsListPanel.innerHTML = '';
                 overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
-                overlaySearchFilters.classList.add('hidden'); // Hide filters when search is empty
+                overlaySearchFilters.classList.add('hidden'); // Sembunyikan filter saat pencarian kosong
             }
         }
 
-        // Function to show a preview in the overlay's detail panel
+        // Fungsi untuk menampilkan pratinjau di panel detail overlay
         function showPreview(id, event) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const content = contentData[id];
@@ -1422,7 +1016,7 @@
             if (content && content.detail) {
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail}
-                    <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md" onclick="displayContentInMainDashboard('${id}')">
+                    <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="displayContentInMainDashboard('${id}')">
                         Tampilkan Halaman
                     </button>
                 `;
@@ -1431,7 +1025,7 @@
             }
         }
 
-        // Function to display content in the main dashboard area and close overlay
+        // Fungsi untuk menampilkan konten di area dashboard utama dan menutup overlay
         function displayContentInMainDashboard(id) {
             const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
@@ -1444,25 +1038,24 @@
                 defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Tidak ada konten lengkap tersedia.</p>`;
             }
             
-            closeSearchOverlay(); // Close the search overlay
-            // Optionally, update sidebar active state if the displayed content corresponds to a sidebar item
-            // This might require more complex logic if search results don't map directly to sidebar categories.
-            // For now, we'll keep the previously selected sidebar category active.
+            closeSearchOverlay(); // Tutup overlay pencarian
+            // Panggil selectCategory untuk memperbarui status aktif sidebar
+            selectCategory(id); 
         }
 
-        // Function to select a search result from overlay (on click)
+        // Fungsi untuk memilih hasil pencarian dari overlay (saat diklik)
         function selectOverlaySearchResult(id, title, results = null) {
-            // When a search result is clicked, directly show its full content in the main dashboard
+            // Saat hasil pencarian diklik, langsung tampilkan konten lengkapnya di dashboard utama
             displayContentInMainDashboard(id); 
         }
 
-        // Functions for search filters inside overlay (mock functionality)
+        // Fungsi untuk filter pencarian di dalam overlay (fungsionalitas mock)
         function addOverlayFilter(filterName) {
             if (!activeFilters.includes(filterName)) {
                 activeFilters.push(filterName);
-                // Visually show the filter as active
+                // Tampilkan filter secara visual sebagai aktif
                 document.getElementById(`overlay-filter-${filterName}`).classList.remove('hidden');
-                // Re-run search with new filter
+                // Jalankan kembali pencarian dengan filter baru
                 handleOverlaySearch(document.getElementById('overlay-search-input').value);
             }
         }
@@ -1470,54 +1063,54 @@
         function removeOverlayFilter(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName);
             document.getElementById(`overlay-filter-${filterName}`).classList.add('hidden');
-            // Re-run search with filter removed
+            // Jalankan kembali pencarian dengan filter dihapus
             handleOverlaySearch(document.getElementById('overlay-search-input').value);
         }
 
         function removeAllOverlayFilters() {
-            activeFilters = []; // Clear all active filters
+            activeFilters = []; // Hapus semua filter aktif
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
-            // Clear the search input in the overlay and trigger a new search
+            // Hapus input pencarian di overlay dan picu pencarian baru
             document.getElementById('overlay-search-input').value = '';
-            handleOverlaySearch(''); // Clear search results
+            handleOverlaySearch(''); // Hapus hasil pencarian
         }
 
-        // Function to close the search overlay
+        // Fungsi untuk menutup overlay pencarian
         function closeSearchOverlay() {
             document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = ''; // Clear main search input
-            document.getElementById('overlay-search-input').value = ''; // Clear overlay search input
-            activeFilters = []; // Clear active filters
-            document.getElementById('overlay-search-filters').classList.add('hidden'); // Hide filters on overlay
-            document.getElementById('filter-articles').classList.add('hidden'); // Ensure main header filters are hidden
-            document.getElementById('filter-photography').classList.add('hidden'); // Ensure main header filters are hidden
+            document.getElementById('search-input').value = ''; // Hapus input pencarian utama
+            document.getElementById('overlay-search-input').value = ''; // Hapus input pencarian overlay
+            activeFilters = []; // Hapus filter aktif
+            document.getElementById('overlay-search-filters').classList.add('hidden'); // Sembunyikan filter di overlay
+            document.getElementById('filter-articles').classList.add('hidden'); // Pastikan filter header utama tersembunyi
+            document.getElementById('filter-photography').classList.add('hidden'); // Pastikan filter header utama tersembunyi
 
-            selectCategory(currentCategory); // Revert to current category's content
+            selectCategory(currentCategory); // Kembali ke konten kategori saat ini
         }
 
-        // Function to toggle user profile dropdown
+        // Fungsi untuk mengaktifkan/menonaktifkan dropdown profil pengguna
         function toggleUserDropdown() {
             const userDropdown = document.getElementById('user-dropdown');
             userDropdown.classList.toggle('hidden');
         }
 
-        // Close user dropdown if clicked outside
+        // Tutup dropdown pengguna jika diklik di luar
         document.addEventListener('click', function(event) {
-            const userIconContainer = document.querySelector('.header .relative.flex.items-center'); // Container for icon and dropdown
+            const userIconContainer = document.querySelector('header .relative.flex.items-center'); // Kontainer untuk ikon dan dropdown
             const userDropdown = document.getElementById('user-dropdown');
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
         });
 
-        // Function to handle logout
+        // Fungsi untuk menangani logout
         function handleLogout() {
             alert('Anda telah berhasil keluar.');
-            window.location.href = 'login.html'; // Redirect to login page
+            window.location.href = 'login.html'; // Arahkan ke halaman login
         }
 
-        // Function to toggle dark/light mode
+        // Fungsi untuk mengaktifkan/menonaktifkan mode gelap/terang
         function toggleDarkMode() {
             const htmlElement = document.documentElement;
             const sunIcon = document.getElementById('sun-icon');
@@ -1536,27 +1129,32 @@
             }
         }
 
-        // Initialize dashboard on load
+        // Fungsi untuk navigasi ke halaman profil
+        function navigateToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        // Inisialisasi dashboard saat dimuat
         window.onload = function() {
             selectCategory('dashboard');
             
-            // Set username (example, could be dynamic)
+            // Atur nama pengguna (contoh, bisa dinamis)
             const username = "SuperAdmin"; 
             document.getElementById('username-display').textContent = username;
 
-            // Apply saved theme on load
+            // Terapkan tema yang disimpan saat dimuat
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.getElementById('sun-icon').classList.remove('hidden');
                 document.getElementById('moon-icon').classList.add('hidden');
             } else {
-                document.documentElement.classList.add('light'); // Ensure light class is present for consistency
+                document.documentElement.classList.add('light'); // Pastikan kelas light ada untuk konsistensi
                 document.getElementById('sun-icon').classList.add('hidden');
                 document.getElementById('moon-icon').classList.remove('hidden');
             }
 
-            // Adjust main content margin based on sidebar visibility on resize
+            // Sesuaikan margin konten utama berdasarkan visibilitas sidebar saat ukuran diubah
             window.addEventListener('resize', () => {
                 const sidebar = document.getElementById('sidebar');
                 const mainContentArea = document.querySelector('.flex-1');
