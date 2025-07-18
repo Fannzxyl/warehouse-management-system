@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - WISE</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -31,6 +29,7 @@
             }
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
+                border-radius: 10px;
             }
         }
     </style>
@@ -88,16 +87,13 @@
     </script>
 </head>
 <body class="font-inter bg-wise-light-gray dark:bg-wise-dark-bg flex flex-col min-h-screen">
-    <!-- Header -->
     <header class="bg-white dark:bg-gray-900 border-b border-wise-border dark:border-wise-dark-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm">
         <div class="flex items-center justify-between w-full">
-            <!-- Kiri: Logo WISE -->
             <div class="flex-1 flex justify-start">
                 <span class="text-wise-dark-gray dark:text-wise-dark-text-primary text-xl font-bold">WISE</span>
             </div>
 
-            <!-- Tengah: Bilah Pencarian (selalu terlihat dan di tengah) -->
-            <div class="flex-1 flex justify-center">
+            <div class="flex-1 flex justify-center relative">
                 <div class="flex items-center bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border overflow-hidden shadow-sm w-full max-w-lg">
                     <input 
                         type="text" 
@@ -105,16 +101,19 @@
                         placeholder="Cari sekarang..."
                         class="flex-1 px-4 py-2 focus:outline-none text-sm placeholder-wise-gray dark:placeholder-wise-dark-text-secondary bg-white dark:bg-wise-dark-card text-wise-dark-gray dark:text-wise-dark-text-primary"
                         oninput="handleSearch(this.value)"
+                        onfocus="showSearchHistory()"
                     />
                     <button class="bg-wise-dark-gray text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 transition-colors duration-200 rounded-r-xl">
                         Cari
                     </button>
                 </div>
+                <div id="search-history-dropdown" class="absolute top-full mt-2 w-full max-w-lg bg-white dark:bg-gray-800 rounded-md shadow-lg border border-wise-border dark:border-wise-dark-border hidden z-50">
+                    <div class="p-2" id="search-history-content">
+                        </div>
+                </div>
             </div>
 
-            <!-- Kanan: Info Pengguna dan Dropdown -->
-            <div class="flex-1 flex justify-end items-center relative"> <!-- Added items-center here -->
-                <!-- Toggle Mode Gelap -->
+            <div class="flex-1 flex justify-end items-center relative">
                 <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="toggleDarkMode()">
                     <svg id="sun-icon" class="w-5 h-5 text-gray-600 dark:text-gray-300 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.325 6.325l-.707.707M6.325 6.325l-.707-.707m12.728 0l-.707-.707M6.325 17.675l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -130,14 +129,12 @@
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a4 4 0 00-4 4v1a2 2 0 002 2h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4z" clip-rule="evenodd"></path>
                     </svg>
                 </div>
-                <!-- Dropdown Pengguna -->
                 <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-wise-border dark:border-wise-dark-border hidden z-50">
                     <a href="#" class="block px-4 py-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700" onclick="navigateToProfile()">Profil</a>
                     <a href="#" class="block px-4 py-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700" onclick="handleLogout()">Log Out</a>
                 </div>
             </div>
         </div>
-        <!-- Filter/Tag Pencarian - Awalnya tersembunyi, ditampilkan saat input pencarian -->
         <div id="search-filters" class="flex items-center space-x-2 mt-2 ml-20 hidden">
             <span class="text-wise-gray dark:text-wise-dark-text-secondary">Filter:</span>
             <span id="filter-articles" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
@@ -148,19 +145,16 @@
             </span>
             <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllFilters()">Hapus semua</button>
         </div>
-        <!-- Dropdown Hasil Pencarian - Diposisikan relatif terhadap header, di tengah -->
         <div id="search-results" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white dark:bg-gray-800 border border-wise-border dark:border-wise-dark-border rounded-xl shadow-xl z-40 max-h-80 overflow-y-auto w-11/12 md:w-1/2">
             <div id="search-results-content" class="p-2">
-                </div>
+            </div>
         </div>
     </header>
 
-    <div class="flex flex-1 pt-28 md:pt-24"> <!-- pt disesuaikan untuk satu baris header -->
-        <!-- Sidebar -->
+    <div class="flex flex-1 pt-28 md:pt-24">
         <div id="sidebar" class="w-64 bg-white dark:bg-gray-900 border-r border-wise-border dark:border-wise-dark-border h-screen overflow-y-auto fixed left-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
-            <div class="p-4 pt-20 md:pt-4"> <!-- Adjusted pt for sidebar content -->
+            <div class="p-4 pt-20 md:pt-4">
                 <div class="space-y-1">
-                    <!-- Dashboard -->
                     <div id="sidebar-dashboard" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="selectCategory('dashboard')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -168,7 +162,6 @@
                             </svg>
                         </div>
                         <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Dashboard</span>
-                        <!-- Panah dihapus dari sini -->
                     </div>
                     <div id="dashboard-children" class="ml-9 mt-2 space-y-1 hidden">
                         <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('dashboard-summary')">
@@ -182,11 +175,10 @@
                         </div>
                     </div>
                     
-                    <!-- Yard Management -->
                     <div id="sidebar-yard-management" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('yard-management')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1"></path>
                             </svg>
                         </div>
                         <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Manajemen Halaman</span>
@@ -206,7 +198,6 @@
                         </div>
                     </div>
                     
-                    <!-- Receiving -->
                     <div id="sidebar-receiving" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('receiving')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -230,7 +221,6 @@
                         </div>
                     </div>
                     
-                    <!-- Order Planning -->
                     <div id="sidebar-order" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('order')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -254,7 +244,6 @@
                         </div>
                     </div>
                     
-                    <!-- Work -->
                     <div id="sidebar-work" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('work')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -278,7 +267,6 @@
                         </div>
                     </div>
                     
-                    <!-- Cross Application -->
                     <div id="sidebar-cross-application" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('cross-application')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -302,7 +290,6 @@
                         </div>
                     </div>
                     
-                    <!-- Inventory -->
                     <div id="sidebar-inventory" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('inventory')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -314,7 +301,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
-                    <!-- Children -->
                     <div id="inventory-children" class="ml-9 mt-2 space-y-1 hidden">
                         <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('yard')" onmouseenter="showPreview('yard', event)">
                             <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Halaman</span>
@@ -327,7 +313,6 @@
                         </div>
                     </div>
                     
-                    <!-- Performance Management -->
                     <div id="sidebar-performance" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('performance')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -351,32 +336,30 @@
                         </div>
                     </div>
                     
-                    <!-- Setting Optimization -->
-                    <div id="sidebar-setting" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('setting')">
+                    <div id="sidebar-configuration" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('configuration')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </div>
-                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Optimasi Pengaturan</span>
-                        <svg id="setting-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary font-medium text-sm">Configuration</span>
+                        <svg id="configuration-arrow" class="w-4 h-4 text-wise-gray dark:text-wise-dark-text-secondary transform transition-transform duration-200 rotate-0 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
-                    <div id="setting-children" class="ml-9 mt-2 space-y-1 hidden">
-                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-general')">
-                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Umum</span>
+                    <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden">
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('configuration-warehouse')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Warehouse</span>
                         </div>
-                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-security')">
-                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Keamanan</span>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('configuration-zone')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Zone</span>
                         </div>
-                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('setting-notifications')">
-                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Notifikasi</span>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" onclick="selectCategory('configuration-location-type')">
+                            <span class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Location Type</span>
                         </div>
                     </div>
                     
-                    <!-- System Management -->
                     <div id="sidebar-system" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('system')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -400,7 +383,6 @@
                         </div>
                     </div>
                     
-                    <!-- Data Archiving -->
                     <div id="sidebar-archive" class="sidebar-item p-3 rounded-lg cursor-pointer hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-3" onclick="toggleChildren('archive')">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -429,7 +411,7 @@
 
         <div class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all duration-300 ease-in-out">
             <div id="default-content-area" class="bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray dark:text-wise-dark-text-primary">
-                </div>
+            </div>
 
             <div id="search-overlay" class="hidden fixed inset-0 bg-white dark:bg-wise-dark-bg bg-opacity-95 z-50 flex items-center justify-center p-4">
                 <div class="bg-white dark:bg-wise-dark-card rounded-xl border border-wise-border dark:border-wise-dark-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col">
@@ -439,7 +421,7 @@
                             id="overlay-search-input"
                             placeholder="Cari sekarang..."
                             class="flex-1 px-4 py-2 focus:outline-none text-sm placeholder-wise-gray dark:placeholder-wise-dark-text-secondary bg-white dark:bg-wise-dark-card text-wise-dark-gray dark:text-wise-dark-text-primary"
-                            oninput="handleOverlaySearch(this.value)"
+                            oninput="performSearch(this.value, 'overlay')"
                         />
                         <button class="bg-wise-dark-gray text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 transition-colors duration-200 rounded-r-xl">
                             Cari
@@ -456,13 +438,13 @@
                             Artikel <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeOverlayFilter('articles')">&times;</button>
                         </span>
                         <span id="overlay-filter-photography" class="bg-wise-light-gray dark:bg-gray-700 text-wise-dark-gray dark:text-wise-dark-text-primary px-2 py-1 rounded-full flex items-center">
-                            Fotografi <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeFilter('photography')">&times;</button>
+                            Fotografi <button class="ml-1 text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary" onclick="removeOverlayFilter('photography')">&times;</button>
                         </span>
                         <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline" onclick="removeAllOverlayFilters()">Hapus semua</button>
                     </div>
                     <div class="flex flex-1 overflow-hidden">
                         <div id="overlay-search-results-list-panel" class="w-1/3 border-r border-wise-border dark:border-wise-dark-border p-4 overflow-y-auto text-wise-dark-gray dark:text-wise-dark-text-primary">
-                            </div>
+                        </div>
                         <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-wise-dark-gray dark:text-wise-dark-text-primary">
                             <p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>
                         </div>
@@ -587,7 +569,6 @@
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar pesanan yang sedang dalam proses atau menunggu tindakan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Pesanan tertunda: 12</p>`,
             },
             'order-history': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Riwayat Pesanan (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Riwayat Pesanan. Berisi semua detail pesanan yang telah selesai, termasuk tanggal, pelanggan, dan status pengiriman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh riwayat pesanan.</p>`,
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pesanan selesai: 500</p>`,
             },
             work: {
@@ -604,7 +585,6 @@
                 `,
             },
             'work-tasks': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Tugas (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Tugas Pekerjaan. Berisi daftar lengkap tugas, status, dan penugasan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh tugas.</p>`,
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pekerjaan - Tugas</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Tugas aktif: 8</p>`,
             },
             'work-schedule': {
@@ -647,7 +627,6 @@
                 `,
             },
             yard: {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Halaman (Halaman Lengkap)</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Ini adalah tampilan halaman penuh untuk Halaman. Berisi daftar lengkap item, status, dan riwayat pergerakan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Detail penuh inventaris halaman.</p>`,
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Inventaris - Halaman</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah item: 150</p>`,
             },
             warehouse: {
@@ -678,73 +657,424 @@
             'performance-goals': {
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Sasaran aktif: 3</p>`,
             },
-            setting: {
+            
+            // Konfigurasi Baru
+            configuration: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Optimasi Pengaturan</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Konfigurasi pengaturan sistem dan optimalkan parameter untuk efisiensi yang lebih baik. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Konfigurasi Sistem</h3>
-                        <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                            <li>Preferensi Notifikasi</li>
-                            <li>Jadwal Sinkronisasi Data</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Konfigurasi Sistem</h2>
+                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub-kategori dari sidebar untuk mengelola Warehouse, Zone, atau Location Type.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Manajemen Gudang</h3>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-warehouse')">
+                                Kelola Gudang
+                            </button>
+                        </div>
+                        <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Manajemen Zona</h3>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-zone')">
+                                Kelola Zona
+                            </button>
+                        </div>
+                        <div class="bg-wise-light-gray dark:bg-gray-800 p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Manajemen Tipe Lokasi</h3>
+                            <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-location-type')">
+                                Kelola Tipe Lokasi
+                            </button>
+                        </div>
                     </div>
                 `,
             },
-            'setting-general': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Umum</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Pengaturan umum aplikasi.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Bahasa Default: Indonesia</p>`,
-            },
-            'setting-security': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Keamanan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Konfigurasi pengaturan keamanan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">MFA: Aktif</p>`,
-            },
-            'setting-notifications': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengaturan - Notifikasi</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Sesuaikan preferensi notifikasi Anda untuk berbagai peristiwa sistem.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Notifikasi Email: Aktif</p>`,
-            },
-            system: {
+            'configuration-warehouse': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Manajemen Sistem</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola akun pengguna, peran, dan kontrol akses seluruh sistem. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Akun Pengguna</h3>
-                        <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                            <li>SuperAdmin (Aktif)</li>
-                            <li>Manajer (Aktif)</li>
-                            <li>Operator (Aktif)</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Konfigurasi - Gudang </h2>
+                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola gudang yang ada atau tambahkan yang baru. [cite: 8]</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showWarehouseForm('create')">
+                            Buat Gudang Baru [cite: 9]
+                        </button>
+                        <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="filterWarehouseList(this.value)">
+                    </div>
+                    <div id="warehouse-list-container" class="overflow-x-auto">
+                        </div>
+                    <div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl">
+                            <h3 id="warehouse-form-title" class="text-lg font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4"></h3>
+                            <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="warehouse-name" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Warehouse:</label>
+                                        <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                    </div>
+                                    <div>
+                                        <label for="warehouse-description" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Description:</label>
+                                        <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex space-x-2 mb-2">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="warehouse-address">Warehouse Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="returns-address">Returns Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="freight-bill-to-address">Freight Bill to Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="authorized-users">Authorized Users</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="miscellaneous">Miscellaneous</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data">User Defined Data</button>
+                                    </div>
+
+                                    <div id="warehouse-address" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Warehouse Address</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="address1" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 1:</label>
+                                                <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="address2" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 2 (optional):</label>
+                                                <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="address3" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 3 (optional):</label>
+                                                <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <div class="flex-1">
+                                                    <label for="city" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">City, state postal code:</label>
+                                                    <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                </div>
+                                                <div class="w-24">
+                                                    <label for="state" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary hidden">State:</label>
+                                                    <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                        <option value="">--Pilih--</option>
+                                                        <option value="Jawa Barat">Jawa Barat</option>
+                                                        <option value="Jawa Tengah">Jawa Tengah</option>
+                                                        <option value="Jawa Timur">Jawa Timur</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary hidden">Postal Code:</label>
+                                                    <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label for="country" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Country:</label>
+                                                <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Indonesia">Indonesia</option>
+                                                    <option value="USA">USA</option>
+                                                    <option value="Singapore">Singapore</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="fax-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Fax number:</label>
+                                                <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="attention-to" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Attention to:</label>
+                                                <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="phone-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Phone number:</label>
+                                                <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="email-address" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Email address:</label>
+                                                <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">UCC/EAN number:</label>
+                                                <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="returns-address" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Returns Address [cite: 10]</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500" onclick="toggleReturnAddressFields()">
+                                                <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">Same as warehouse address</span>
+                                            </label>
+                                        </div>
+                                        <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="return-name" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Name:</label>
+                                                <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-address1" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 1:</label>
+                                                <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-address2" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 2 (optional):</label>
+                                                <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-address3" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Address 3 (optional):</label>
+                                                <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <div class="flex-1">
+                                                    <label for="return-city" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">City, state postal code:</label>
+                                                    <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                </div>
+                                                <div class="w-24">
+                                                    <label for="return-state" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary hidden">State:</label>
+                                                    <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                        <option value="">--Pilih--</option>
+                                                        <option value="Jawa Barat">Jawa Barat</option>
+                                                        <option value="Jawa Tengah">Jawa Tengah</option>
+                                                        <option value="Jawa Timur">Jawa Timur</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary hidden">Postal Code:</label>
+                                                    <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label for="return-country" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Country:</label>
+                                                <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Indonesia">Indonesia</option>
+                                                    <option value="USA">USA</option>
+                                                    <option value="Singapore">Singapore</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="return-fax-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Fax number:</label>
+                                                <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-attention-to" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Attention to:</label>
+                                                <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-phone-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Phone number:</label>
+                                                <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-email-address" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Email address:</label>
+                                                <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="return-ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">UCC/EAN number:</label>
+                                                <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="freight-bill-to-address" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Freight Bill to Address</h4>
+                                        <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Formulir untuk Freight Bill to Address.</p>
+                                    </div>
+                                    <div id="authorized-users" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Authorized Users [cite: 10]</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500" onclick="toggleAllUsers()">
+                                                <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">Check all</span>
+                                            </label>
+                                        </div>
+                                        <div id="user-checkbox-list" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                                            </div>
+                                    </div>
+                                    <div id="miscellaneous" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">Miscellaneous [cite: 10]</h4>
+                                        <div class="mb-4">
+                                            <label for="slotting-move-file-directory" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Slotting move file download directory:</label>
+                                            <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Default location for unslotted items:</label>
+                                            <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <h5 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mt-4 mb-2">SQL Server Reporting Services</h5>
+                                        <div>
+                                            <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Rendered document pdf file directory:</label>
+                                            <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                    </div>
+                                    <div id="user-defined-data" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">User defined data [cite: 10]</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="user-defined-field1" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 1:</label>
+                                                <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field2" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 2:</label>
+                                                <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field3" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 3:</label>
+                                                <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field4" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 4:</label>
+                                                <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field5" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 5:</label>
+                                                <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field6" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 6:</label>
+                                                <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field7" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 7:</label>
+                                                <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field8" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">User defined field 8:</label>
+                                                <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500">
+                                        <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">Inactive</span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-end space-x-2">
+                                    <button type="button" class="px-4 py-2 border border-wise-border dark:border-wise-dark-border rounded-md text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
+                                    <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 `,
             },
-            'system-users': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Pengguna</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola akun dan peran pengguna.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Total pengguna: 20</p>`,
-            },
-            'system-logs': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Log</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Lihat log sistem untuk melacak aktivitas dan memecahkan masalah.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Log terakhir: 5 menit yang lalu</p>`,
-            },
-            'system-backup': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Sistem - Cadangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola cadangan sistem dan pemulihan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Cadangan terakhir: Kemarin</p>`,
-            },
-            archive: {
+            'configuration-zone': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Pengarsipan Data</h2>
-                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola pengarsipan data lama untuk kepatuhan dan optimasi penyimpanan. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Catatan Diarsipkan</h3>
-                        <ul class="list-disc list-inside text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2 space-y-1">
-                            <li>Laporan Keuangan 2023</li>
-                            <li>Data Historis Proyek Alpha</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Konfigurasi - Zona [cite: 12]</h2>
+                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Kelola tipe zona untuk berbagai area dalam gudang. [cite: 15]</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showZoneForm('create')">
+                            Buat Zona Baru [cite: 13]
+                        </button>
+                        <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="filterZoneList(this.value)">
+                    </div>
+                    <div id="zone-list-container" class="overflow-x-auto">
+                        </div>
+
+                    <div id="zone-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg">
+                            <h3 id="zone-form-title" class="text-lg font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4"></h3>
+                            <form id="zone-form" onsubmit="handleZoneSubmit(event)">
+                                <div class="mb-4">
+                                    <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Identifier:</label>
+                                    <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Record type:</label>
+                                    <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-gray-100 dark:bg-gray-700 dark:text-wise-dark-text-secondary cursor-not-allowed">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Description:</label>
+                                    <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500">
+                                        <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">Inactive</span>
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500 cursor-not-allowed">
+                                        <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">System created</span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-end space-x-2">
+                                    <button type="button" class="px-4 py-2 border border-wise-border dark:border-wise-dark-border rounded-md text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
+                                    <button type="submit" id="zone-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 `,
             },
-            'archive-documents': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Dokumen</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola dokumen yang diarsipkan, termasuk kontrak lama dan laporan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Dokumen: 500</p>`,
+            'configuration-location-type': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Konfigurasi - Tipe Lokasi [cite: 16]</h2>
+                    <p class="text-wise-gray dark:text-wise-dark-text-secondary mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat. [cite: 18]</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocationTypeForm('create')">
+                            Buat Tipe Lokasi Baru
+                        </button>
+                        <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="filterLocationTypeList(this.value)">
+                    </div>
+                    <div id="location-type-list-container" class="overflow-x-auto">
+                        </div>
+
+                    <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg">
+                            <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4"></h3>
+                            <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
+                                <div class="mb-4">
+                                    <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Location type:</label>
+                                    <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                </div>
+                                <div class="flex space-x-2 mb-2">
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="general-location">General</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data-location">User defined data</button>
+                                </div>
+                                <div id="general-location" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md">
+                                    <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">General [cite: 17]</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Length:</label>
+                                            <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">UM:</label>
+                                            <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Width:</label>
+                                            <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Height:</label>
+                                            <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">Maximum weight:</label>
+                                            <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">UM:</label>
+                                            <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border dark:border-wise-dark-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white dark:bg-gray-700 dark:text-wise-dark-text-primary">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="user-defined-data-location" class="tab-content border border-wise-border dark:border-wise-dark-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-2">User Defined Data for Location Type</h4>
+                                    <p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
+                                </div>
+
+                                <div class="mb-4 mt-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500">
+                                        <span class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">Inactive</span>
+                                    </label>
+                                </div>
+                                <div class="flex justify-end space-x-2">
+                                    <button type="button" class="px-4 py-2 border border-wise-border dark:border-wise-dark-border rounded-md text-wise-dark-gray dark:text-wise-dark-text-primary hover:bg-wise-light-gray dark:hover:bg-gray-700 transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
+                                    <button type="submit" id="location-type-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `,
             },
-            'archive-media': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Media</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola aset media yang diarsipkan, seperti gambar dan video lama.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah File Media: 200</p>`,
-            },
-            'archive-financial': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Arsip - Keuangan</h2><p class="text-wise-gray dark:text-wise-dark-text-secondary">Kelola catatan keuangan yang diarsipkan untuk tujuan kepatuhan.</p><p class="text-wise-gray dark:text-wise-dark-text-secondary text-sm mt-2">Jumlah Catatan Keuangan: 150</p>`,
-            },
+            
             'article a': {
                 detail: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray dark:text-wise-dark-text-primary mb-4">Detail Artikel A</h2>
@@ -805,9 +1135,9 @@
             { id: 'performance-kpis', title: 'KPI Kinerja', category: 'Kinerja', lastUpdated: 'Langsung' },
             { id: 'performance-analytics', title: 'Analitik Kinerja', category: 'Kinerja', lastUpdated: 'Harian' },
             { id: 'performance-goals', title: 'Sasaran Kinerja', category: 'Kinerja', lastUpdated: 'Triwulanan' },
-            { id: 'setting-general', title: 'Pengaturan Umum', category: 'Optimasi Pengaturan', lastUpdated: 'Dikonfigurasi' },
-            { id: 'setting-security', title: 'Pengaturan Keamanan', category: 'Optimasi Pengaturan', lastUpdated: 'Ditinjau' },
-            { id: 'setting-notifications', title: 'Pengaturan Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Disesuaikan' },
+            { id: 'configuration-warehouse', title: 'Konfigurasi Gudang', category: 'Configuration', lastUpdated: 'Terbaru' },
+            { id: 'configuration-zone', title: 'Konfigurasi Zona', category: 'Configuration', lastUpdated: 'Terbaru' },
+            { id: 'configuration-location-type', title: 'Konfigurasi Tipe Lokasi', category: 'Configuration', lastUpdated: 'Terbaru' },
             { id: 'system-users', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
             { id: 'system-logs', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
             { id: 'system-backup', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
@@ -818,13 +1148,7 @@
 
         let currentCategory = 'dashboard';
         let activeFilters = []; // Untuk menyimpan filter aktif
-
-        // Fungsi untuk memperbarui breadcrumbs (dihapus sesuai desain header baru)
-        function updateBreadcrumbs(main, sub = null) {
-            // Fungsi ini sekarang sebagian besar tidak digunakan karena breadcrumb header yang disederhanakan.
-            // Tetap disimpan sebagai placeholder jika diperlukan untuk bagian lain.
-            console.log(`Permintaan pembaruan breadcrumb: Utama: ${main}, Sub: ${sub}`);
-        }
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || []; // Muat riwayat dari localStorage
 
         // Mapping untuk membantu menemukan induk kategori anak
         const parentMapping = {
@@ -836,20 +1160,21 @@
             'cross-app-integrations': 'cross-application', 'cross-app-data-sync': 'cross-application', 'cross-app-api': 'cross-application',
             'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory', // Inventory children
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
-            'setting-general': 'setting', 'setting-security': 'setting', 'setting-notifications': 'setting',
+            'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration', // Configuration children
             'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system',
             'archive-documents': 'archive', 'archive-media': 'archive', 'archive-financial': 'archive'
         };
 
-
-        // Fungsi untuk mengaktifkan/menonaktifkan anak untuk item sidebar mana pun
+        /**
+         * Mengaktifkan/menonaktifkan anak untuk item sidebar mana pun.
+         * @param {string} category - ID kategori utama sidebar.
+         */
         function toggleChildren(category) {
             const childrenDiv = document.getElementById(`${category}-children`);
             const arrowIcon = document.getElementById(`${category}-arrow`);
             
             if (childrenDiv && arrowIcon) {
                 childrenDiv.classList.toggle('hidden');
-                // Transisi rotasi panah
                 arrowIcon.classList.toggle('rotate-90');
                 arrowIcon.classList.toggle('rotate-0');
             }
@@ -860,7 +1185,10 @@
             }
         }
 
-        // Fungsi untuk memilih kategori sidebar (utama atau anak)
+        /**
+         * Memilih kategori sidebar (utama atau anak) dan memperbarui tampilan konten.
+         * @param {string} category - ID kategori yang dipilih.
+         */
         function selectCategory(category) {
             // Hapus kelas aktif dari semua item sidebar dan anak-anak
             document.querySelectorAll('.sidebar-item').forEach(item => {
@@ -907,8 +1235,7 @@
             const defaultContentArea = document.getElementById('default-content-area');
             const searchOverlay = document.getElementById('search-overlay');
 
-            // Sembunyikan overlay pencarian jika terlihat
-            searchOverlay.classList.add('hidden');
+            searchOverlay.classList.add('hidden'); // Sembunyikan overlay pencarian jika terlihat
 
             if (content && content.full) {
                 defaultContentArea.innerHTML = content.full;
@@ -921,70 +1248,95 @@
                 defaultContentArea.classList.remove('hidden');
             }
             
+            // Panggil fungsi inisialisasi CRUD jika kategori konfigurasi dipilih
+            if (category === 'configuration-warehouse') {
+                renderWarehouseList();
+                initializeTabButtons('warehouse-form-modal');
+                activateTab('warehouse-address');
+            } else if (category === 'configuration-zone') {
+                renderZoneList();
+                initializeTabButtons('zone-form-modal'); // Tidak ada tab di form zona, tapi jaga fungsi
+            } else if (category === 'configuration-location-type') {
+                renderLocationTypeList();
+                initializeTabButtons('location-type-form-modal');
+                activateTab('general-location');
+            }
+
             // Sembunyikan sidebar di seluler setelah pemilihan
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('-translate-x-full');
             }
         }
 
-        // Fungsi untuk menangani input pencarian dari header utama
+        /**
+         * Menangani input pencarian dari header utama.
+         * Membuka overlay pencarian dan memicu pencarian di dalamnya.
+         * @param {string} query - Query pencarian.
+         */
         function handleSearch(query) {
             const searchOverlay = document.getElementById('search-overlay');
             const overlaySearchInput = document.getElementById('overlay-search-input');
-            
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
             if (query.length > 0) {
                 searchOverlay.classList.remove('hidden');
                 overlaySearchInput.value = query; // Sinkronkan kueri ke input pencarian overlay
-                handleOverlaySearch(query); // Picu pencarian di overlay
+                performSearch(query, 'overlay'); // Picu pencarian di overlay
+                searchHistoryDropdown.classList.add('hidden'); // Sembunyikan riwayat saat mengetik
             } else {
                 searchOverlay.classList.add('hidden');
                 // Saat input pencarian dikosongkan, kembali ke konten kategori saat ini
                 selectCategory(currentCategory);
+                showSearchHistory(); // Tampilkan kembali riwayat saat search bar kosong dan fokus
             }
         }
 
-        // Fungsi untuk menangani input pencarian dari overlay
-        function handleOverlaySearch(query) {
-            const overlaySearchResultsListPanel = document.getElementById('overlay-search-results-list-panel');
-            const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
-            const overlaySearchFilters = document.getElementById('overlay-search-filters');
+        /**
+         * Melakukan pencarian berdasarkan query dan menampilkan hasilnya.
+         * Digunakan oleh search bar utama dan overlay.
+         * @param {string} query - Query pencarian.
+         * @param {string} source - 'main' untuk search bar header, 'overlay' untuk search bar overlay.
+         */
+        function performSearch(query, source) {
+            const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
+            const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null; // Hanya overlay yang punya detail panel terpisah
+            const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
 
-            // Hapus filter sebelumnya terlebih dahulu
+            // Sembunyikan filter sebelumnya terlebih dahulu
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
+            document.getElementById('filter-articles').classList.add('hidden');
+            document.getElementById('filter-photography').classList.add('hidden');
+
 
             if (query.length > 0) {
-                overlaySearchFilters.classList.remove('hidden'); 
+                filtersContainer.classList.remove('hidden');
                 
                 let filteredResults = searchItems.filter(item => 
                     item.title.toLowerCase().includes(query.toLowerCase()) ||
                     item.category.toLowerCase().includes(query.toLowerCase()) ||
-                    (item.id && item.id.toLowerCase().includes(query.toLowerCase())) 
+                    (item.id && item.id.toLowerCase().includes(query.toLowerCase()))
                 );
 
                 // Terapkan filter aktif jika ada
                 if (activeFilters.length > 0) {
                     filteredResults = filteredResults.filter(item => 
-                        activeFilters.some(filter => item.category.toLowerCase().includes(filter))
+                        activeFilters.some(filter => item.category.toLowerCase().includes(filter.toLowerCase()))
                     );
                 }
 
-                overlaySearchResultsListPanel.innerHTML = ''; 
+                resultsPanel.innerHTML = ''; 
 
                 if (filteredResults.length > 0) {
-                    // Tampilkan filter berdasarkan data mock atau kategori aktual dalam hasil
-                    if (query.toLowerCase().includes('artikel')) { // Contoh: jika "artikel" dicari, tampilkan filter "Artikel" (mock)
-                        document.getElementById('overlay-filter-articles').classList.remove('hidden');
+                    // Tampilkan filter berdasarkan kategori yang relevan dalam hasil
+                    // Ini masih mock, idealnya akan dinamis berdasarkan kategori di filteredResults
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
+                        document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
                     }
-                    if (query.toLowerCase().includes('foto')) { // Contoh: jika "foto" dicari, tampilkan filter "Fotografi" (mock)
-                        document.getElementById('overlay-filter-photography').classList.remove('hidden');
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('fotografi') || item.title.toLowerCase().includes('foto'))) {
+                        document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
                     }
-                    // Jika "halaman" dicari, tampilkan filter "Artikel" sebagai contoh mock
-                    if (query.toLowerCase().includes('halaman') && !document.getElementById('overlay-filter-articles').classList.contains('hidden')) {
-                         document.getElementById('overlay-filter-articles').classList.remove('hidden');
-                    }
-
-
+                    
                     filteredResults.forEach(item => {
                         const resultItem = document.createElement('div');
                         resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'dark:bg-gray-800', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'dark:hover:bg-gray-700', 'mb-2');
@@ -993,29 +1345,36 @@
                             <p class="text-wise-gray dark:text-wise-dark-text-secondary text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
                         `;
                         resultItem.onmouseenter = (event) => showPreview(item.id, event); 
-                        resultItem.onclick = () => selectOverlaySearchResult(item.id, item.title, filteredResults);
-                        overlaySearchResultsListPanel.appendChild(resultItem);
+                        resultItem.onclick = () => selectSearchResult(item.id, item.title, query); // Tambahkan query ke selectSearchResult
+                        resultsPanel.appendChild(resultItem);
                     });
                 } else {
-                    overlaySearchResultsListPanel.innerHTML = `<p class="p-3 text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tidak ada hasil ditemukan.</p>`;
-                    overlaySearchFilters.classList.add('hidden'); // Sembunyikan filter jika tidak ada hasil
+                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tidak ada hasil ditemukan.</p>`;
+                    filtersContainer.classList.add('hidden'); // Sembunyikan filter jika tidak ada hasil
                 }
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                if (detailPanel) {
+                    detailPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                }
             } else {
-                overlaySearchResultsListPanel.innerHTML = '';
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
-                overlaySearchFilters.classList.add('hidden'); // Sembunyikan filter saat pencarian kosong
+                resultsPanel.innerHTML = '';
+                if (detailPanel) {
+                    detailPanel.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                }
+                filtersContainer.classList.add('hidden'); // Sembunyikan filter saat pencarian kosong
             }
         }
 
-        // Fungsi untuk menampilkan pratinjau di panel detail overlay
-        function showPreview(id, event) {
+        /**
+         * Menampilkan pratinjau di panel detail overlay.
+         * @param {string} id - ID item konten.
+         */
+        function showPreview(id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const content = contentData[id];
 
-            if (content && content.detail) {
+            if (content && (content.detail || content.full)) {
                 overlayDetailContentPanel.innerHTML = `
-                    ${content.detail}
+                    ${content.detail || content.full}
                     <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="displayContentInMainDashboard('${id}')">
                         Tampilkan Halaman
                     </button>
@@ -1025,7 +1384,21 @@
             }
         }
 
-        // Fungsi untuk menampilkan konten di area dashboard utama dan menutup overlay
+        /**
+         * Memilih hasil pencarian dari overlay (saat diklik).
+         * @param {string} id - ID item yang dipilih.
+         * @param {string} title - Judul item yang dipilih.
+         * @param {string} query - Query pencarian yang menghasilkan item ini.
+         */
+        function selectSearchResult(id, title, query) {
+            addSearchHistory(query); // Tambahkan query ke riwayat pencarian
+            displayContentInMainDashboard(id); // Tampilkan konten lengkapnya di dashboard utama
+        }
+
+        /**
+         * Menampilkan konten di area dashboard utama dan menutup overlay.
+         * @param {string} id - ID konten yang akan ditampilkan.
+         */
         function displayContentInMainDashboard(id) {
             const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
@@ -1039,44 +1412,45 @@
             }
             
             closeSearchOverlay(); // Tutup overlay pencarian
-            // Panggil selectCategory untuk memperbarui status aktif sidebar
-            selectCategory(id); 
+            selectCategory(id); // Panggil selectCategory untuk memperbarui status aktif sidebar
         }
 
-        // Fungsi untuk memilih hasil pencarian dari overlay (saat diklik)
-        function selectOverlaySearchResult(id, title, results = null) {
-            // Saat hasil pencarian diklik, langsung tampilkan konten lengkapnya di dashboard utama
-            displayContentInMainDashboard(id); 
-        }
-
-        // Fungsi untuk filter pencarian di dalam overlay (fungsionalitas mock)
+        /**
+         * Menambahkan filter ke daftar filter aktif dan memicu pencarian ulang.
+         * @param {string} filterName - Nama filter yang akan ditambahkan.
+         */
         function addOverlayFilter(filterName) {
-            if (!activeFilters.includes(filterName)) {
-                activeFilters.push(filterName);
-                // Tampilkan filter secara visual sebagai aktif
-                document.getElementById(`overlay-filter-${filterName}`).classList.remove('hidden');
-                // Jalankan kembali pencarian dengan filter baru
-                handleOverlaySearch(document.getElementById('overlay-search-input').value);
+            if (!activeFilters.includes(filterName.toLowerCase())) {
+                activeFilters.push(filterName.toLowerCase());
+                document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.remove('hidden');
+                performSearch(document.getElementById('overlay-search-input').value, 'overlay');
             }
         }
 
+        /**
+         * Menghapus filter dari daftar filter aktif dan memicu pencarian ulang.
+         * @param {string} filterName - Nama filter yang akan dihapus.
+         */
         function removeOverlayFilter(filterName) {
-            activeFilters = activeFilters.filter(filter => filter !== filterName);
-            document.getElementById(`overlay-filter-${filterName}`).classList.add('hidden');
-            // Jalankan kembali pencarian dengan filter dihapus
-            handleOverlaySearch(document.getElementById('overlay-search-input').value);
+            activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
+            document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
+            performSearch(document.getElementById('overlay-search-input').value, 'overlay');
         }
 
+        /**
+         * Menghapus semua filter aktif dan memicu pencarian ulang.
+         */
         function removeAllOverlayFilters() {
-            activeFilters = []; // Hapus semua filter aktif
+            activeFilters = [];
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
-            // Hapus input pencarian di overlay dan picu pencarian baru
             document.getElementById('overlay-search-input').value = '';
-            handleOverlaySearch(''); // Hapus hasil pencarian
+            performSearch('', 'overlay'); // Hapus hasil pencarian
         }
-
-        // Fungsi untuk menutup overlay pencarian
+        
+        /**
+         * Menutup overlay pencarian.
+         */
         function closeSearchOverlay() {
             document.getElementById('search-overlay').classList.add('hidden');
             document.getElementById('search-input').value = ''; // Hapus input pencarian utama
@@ -1085,11 +1459,13 @@
             document.getElementById('overlay-search-filters').classList.add('hidden'); // Sembunyikan filter di overlay
             document.getElementById('filter-articles').classList.add('hidden'); // Pastikan filter header utama tersembunyi
             document.getElementById('filter-photography').classList.add('hidden'); // Pastikan filter header utama tersembunyi
-
+            document.getElementById('search-history-dropdown').classList.add('hidden'); // Sembunyikan riwayat
             selectCategory(currentCategory); // Kembali ke konten kategori saat ini
         }
 
-        // Fungsi untuk mengaktifkan/menonaktifkan dropdown profil pengguna
+        /**
+         * Mengaktifkan/menonaktifkan dropdown profil pengguna.
+         */
         function toggleUserDropdown() {
             const userDropdown = document.getElementById('user-dropdown');
             userDropdown.classList.toggle('hidden');
@@ -1097,20 +1473,31 @@
 
         // Tutup dropdown pengguna jika diklik di luar
         document.addEventListener('click', function(event) {
-            const userIconContainer = document.querySelector('header .relative.flex.items-center'); // Kontainer untuk ikon dan dropdown
+            const userIconContainer = document.querySelector('header .relative.flex.items-center');
             const userDropdown = document.getElementById('user-dropdown');
+            const searchInput = document.getElementById('search-input');
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
+            // Tutup riwayat pencarian jika klik di luar search input atau riwayat itu sendiri
+            if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+                searchHistoryDropdown.classList.add('hidden');
+            }
         });
 
-        // Fungsi untuk menangani logout
+        /**
+         * Menangani logout.
+         */
         function handleLogout() {
             alert('Anda telah berhasil keluar.');
             window.location.href = 'login.html'; // Arahkan ke halaman login
         }
 
-        // Fungsi untuk mengaktifkan/menonaktifkan mode gelap/terang
+        /**
+         * Mengaktifkan/menonaktifkan mode gelap/terang.
+         */
         function toggleDarkMode() {
             const htmlElement = document.documentElement;
             const sunIcon = document.getElementById('sun-icon');
@@ -1129,9 +1516,794 @@
             }
         }
 
-        // Fungsi untuk navigasi ke halaman profil
+        /**
+         * Menavigasi ke halaman profil.
+         */
         function navigateToProfile() {
             window.location.href = 'profile.html';
+        }
+
+        /**
+         * Menambahkan query ke riwayat pencarian.
+         * @param {string} query - Query pencarian yang akan ditambahkan.
+         */
+        function addSearchHistory(query) {
+            if (query && !searchHistory.includes(query)) {
+                searchHistory.unshift(query); // Tambahkan ke awal array
+                searchHistory = searchHistory.slice(0, 5); // Batasi hingga 5 item terakhir
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
+        }
+
+        /**
+         * Menampilkan riwayat pencarian di dropdown.
+         */
+        function showSearchHistory() {
+            const historyDropdown = document.getElementById('search-history-dropdown');
+            const historyContent = document.getElementById('search-history-content');
+            
+            historyContent.innerHTML = ''; // Bersihkan konten sebelumnya
+
+            if (searchHistory.length > 0) {
+                searchHistory.forEach((item, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.classList.add('flex', 'items-center', 'justify-between', 'px-3', 'py-2', 'cursor-pointer', 'hover:bg-wise-light-gray', 'dark:hover:bg-gray-700', 'rounded-md');
+                    historyItem.innerHTML = `
+                        <span class="text-wise-dark-gray dark:text-wise-dark-text-primary text-sm" onclick="applySearchHistory('${item}')">${item}</span>
+                        <button class="text-wise-gray dark:text-wise-dark-text-secondary hover:text-wise-dark-gray dark:hover:text-wise-dark-text-primary text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
+                    `;
+                    historyContent.appendChild(historyItem);
+                });
+                const clearAllButton = document.createElement('div');
+                clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
+                clearAllButton.innerHTML = `<button class="text-wise-gray dark:text-wise-dark-text-secondary hover:underline text-xs" onclick="clearAllSearchHistory()">Hapus Semua Riwayat</button>`;
+                historyContent.appendChild(clearAllButton);
+
+                historyDropdown.classList.remove('hidden');
+            } else {
+                historyContent.innerHTML = `<p class="p-3 text-wise-gray dark:text-wise-dark-text-secondary text-sm">Tidak ada riwayat pencarian.</p>`;
+                historyDropdown.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Menerapkan item riwayat pencarian ke input pencarian dan memicu pencarian.
+         * @param {string} query - Query dari riwayat yang akan diterapkan.
+         */
+        function applySearchHistory(query) {
+            document.getElementById('search-input').value = query;
+            handleSearch(query);
+            document.getElementById('search-history-dropdown').classList.add('hidden'); // Sembunyikan riwayat setelah memilih
+        }
+
+        /**
+         * Menghapus item individual dari riwayat pencarian.
+         * @param {number} index - Indeks item yang akan dihapus.
+         */
+        function removeSearchHistory(index) {
+            searchHistory.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            showSearchHistory(); // Perbarui tampilan riwayat
+        }
+
+        /**
+         * Menghapus semua riwayat pencarian.
+         */
+        function clearAllSearchHistory() {
+            searchHistory = [];
+            localStorage.removeItem('searchHistory');
+            showSearchHistory(); // Perbarui tampilan riwayat
+        }
+
+        // --- CRUD Data (Client-side simulation) ---
+        let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
+            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] }, // Example data [cite: 10, 11]
+            { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCP', description: 'DC PELABUHAN RATU', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCS', description: 'DC SUMBER', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCT', description: 'DC TEGAL', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+            { id: 'GBG', description: 'DC GEDE BAGE', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        ];
+        
+        let zones = JSON.parse(localStorage.getItem('zones')) || [
+            { id: 'Allocation', identifier: 'Allocation', recordType: 'ZONETYPE', description: 'Allocation', systemValue1: 'Yes', systemCreated: true, active: true }, // Example data [cite: 15]
+            { id: 'Locating', identifier: 'Locating', recordType: 'ZONETYPE', description: 'Locating', systemValue1: 'Yes', systemCreated: true, active: true },
+            { id: 'Work', identifier: 'Work', recordType: 'ZONETYPE', description: 'Work', systemValue1: 'Yes', systemCreated: true, active: true },
+        ];
+
+        let locationTypes = JSON.parse(localStorage.getItem('locationTypes')) || [
+            { id: 'CFLOW RESV TYPE 1', locationType: 'CFLOW RESV TYPE 1', length: 120.00, width: 30.00, height: 120.00, dimensionUM: 'CM', maximumWeight: 1000.00, weightUM: 'KG', active: true, lastUpdated: '01-07-2019 9:46:38 AM User: suhartono' }, // Example data [cite: 17, 18]
+            { id: 'CARTON FLOW', locationType: 'CARTON FLOW', length: 180.00, width: 60.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 100/120/80', locationType: 'CARTON FLOW 100/120/80', length: 100.00, width: 120.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 140/73/40', locationType: 'CARTON FLOW 140/73/40', length: 140.00, width: 73.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 37/130/60', locationType: 'CARTON FLOW 37/130/60', length: 37.00, width: 130.00, height: 60.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 40/18/40', locationType: 'CARTON FLOW 40/18/40', length: 40.00, width: 18.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 40/37/40', locationType: 'CARTON FLOW 40/37/40', length: 40.00, width: 37.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 5 SLOT', locationType: 'CARTON FLOW 5 SLOT', length: 46.00, width: 120.00, height: 88.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 55/70/45', locationType: 'CARTON FLOW 55/70/45', length: 55.00, width: 70.00, height: 45.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 7 SLOT', locationType: 'CARTON FLOW 7 SLOT', length: 32.00, width: 120.00, height: 94.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 70/28/40', locationType: 'CARTON FLOW 70/28/40', length: 70.00, width: 28.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 70/50/40', locationType: 'CARTON FLOW 70/50/40', length: 70.00, width: 50.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CARTON FLOW 80/40/55', locationType: 'CARTON FLOW 80/40/55', length: 80.00, width: 40.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW.TYPE A', locationType: 'CFLOW.TYPE A', length: 82.00, width: 30.00, height: 93.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW.TYPE B', locationType: 'CFLOW.TYPE B', length: 42.00, width: 38.00, height: 50.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESERVE 115cm', locationType: 'CFLOW RESERVE 115cm', length: 239.00, width: 122.00, height: 115.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESERVE 55cm', locationType: 'CFLOW RESERVE 55cm', length: 239.00, width: 122.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESERVE 70cm', locationType: 'CFLOW RESERVE 70cm', length: 239.00, width: 122.00, height: 70.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESERVE 90cm', locationType: 'CFLOW RESERVE 90cm', length: 239.00, width: 122.00, height: 90.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV TYPE A', locationType: 'CFLOW RESV TYPE A', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV TYPE B', locationType: 'CFLOW RESV TYPE B', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV TYPE C', locationType: 'CFLOW RESV TYPE C', length: 37.00, width: 40.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER FACE', locationType: 'CONTAINER FACE', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER PINK 2002', locationType: 'CONTAINER PINK 2002', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER PINK 2004', locationType: 'CONTAINER PINK 2004', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER PINK 2006', locationType: 'CONTAINER PINK 2006', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER PINK 2010', locationType: 'CONTAINER PINK 2010', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CONTAINER PINK 2055', locationType: 'CONTAINER PINK 2055', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'DCB LOADING LANE', locationType: 'DCB LOADING LANE', length: 0.00, width: 0.00, height: 0.00, dimensionUM: 'CM', maximumWeight: 0.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        ];
+
+
+        // Dummy user data for Authorized Users in Warehouse
+        const allUsers = [
+            'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
+            'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
+            'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115',
+            'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'
+        ];
+
+
+        let currentWarehouseId = null; // Untuk melacak gudang yang sedang diedit
+        let currentZoneId = null; // Untuk melacak zona yang sedang diedit
+        let currentLocationTypeId = null; // Untuk melacak tipe lokasi yang sedang diedit
+
+        function generateUniqueId(prefix) {
+            return prefix + Date.now();
+        }
+
+        function saveWarehouses() {
+            localStorage.setItem('warehouses', JSON.stringify(warehouses));
+        }
+
+        function saveZones() {
+            localStorage.setItem('zones', JSON.stringify(zones));
+        }
+
+        function saveLocationTypes() {
+            localStorage.setItem('locationTypes', JSON.stringify(locationTypes));
+        }
+
+        // --- Warehouse CRUD ---
+        function renderWarehouseList(filterQuery = '') {
+            const container = document.getElementById('warehouse-list-container');
+            container.innerHTML = ''; // Clear existing list
+
+            const filteredWarehouses = warehouses.filter(wh =>
+                wh.id.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                wh.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredWarehouses.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary mt-4">Tidak ada gudang ditemukan.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'dark:divide-wise-dark-border', 'mt-4', 'shadow-md', 'rounded-lg', 'overflow-hidden');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Warehouse</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Active</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-wise-border dark:divide-wise-dark-border" id="warehouse-table-body">
+                    </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('warehouse-table-body');
+            filteredWarehouses.forEach(wh => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'dark:hover:bg-gray-700', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">${wh.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${wh.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${wh.active ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showWarehouseForm('edit', '${wh.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 dark:text-wise-blue-400 dark:hover:text-wise-blue-600 mr-3">Edit</button>
+                        <button onclick="deleteWarehouse('${wh.id}')" class="text-wise-red-500 hover:text-wise-red-700 dark:text-wise-red-400 dark:hover:text-wise-red-600">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function showWarehouseForm(mode, id = null) {
+            const modal = document.getElementById('warehouse-form-modal');
+            const title = document.getElementById('warehouse-form-title');
+            const form = document.getElementById('warehouse-form');
+            form.reset(); // Reset form fields
+
+            // Reset tab styles and activate first tab
+            const tabButtons = form.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400'));
+            const firstTabButton = tabButtons[0];
+            if (firstTabButton) {
+                firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400');
+            }
+            const tabContents = form.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            document.getElementById('warehouse-address').classList.remove('hidden');
+
+            document.getElementById('same-as-warehouse-address-return').checked = false;
+            toggleReturnAddressFields(); // Ensure return address fields are enabled by default
+
+            currentWarehouseId = id; // Set current ID for editing
+
+            if (mode === 'create') {
+                title.textContent = 'Buat Gudang Baru';
+                document.getElementById('warehouse-submit-button').textContent = 'Buat';
+                document.getElementById('warehouse-name').disabled = false; // Enable ID for creation
+                document.getElementById('warehouse-inactive').checked = false; // Default new to active
+                renderUserCheckboxes([]); // Render all users for new warehouse
+            } else { // mode === 'edit'
+                title.textContent = 'Edit Gudang';
+                document.getElementById('warehouse-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('warehouse-name').disabled = true; // Disable ID when editing
+
+                const warehouseToEdit = warehouses.find(wh => wh.id === id);
+                if (warehouseToEdit) {
+                    // Populate main fields
+                    document.getElementById('warehouse-name').value = warehouseToEdit.id;
+                    document.getElementById('warehouse-description').value = warehouseToEdit.description;
+                    document.getElementById('warehouse-inactive').checked = !warehouseToEdit.active;
+
+                    // Populate Warehouse Address tab
+                    document.getElementById('address1').value = warehouseToEdit.address1;
+                    document.getElementById('address2').value = warehouseToEdit.address2;
+                    document.getElementById('address3').value = warehouseToEdit.address3;
+                    document.getElementById('city').value = warehouseToEdit.city;
+                    document.getElementById('state').value = warehouseToEdit.state;
+                    document.getElementById('postal-code').value = warehouseToEdit.postalCode;
+                    document.getElementById('country').value = warehouseToEdit.country;
+                    document.getElementById('fax-number').value = warehouseToEdit.faxNumber;
+                    document.getElementById('attention-to').value = warehouseToEdit.attentionTo;
+                    document.getElementById('phone-number').value = warehouseToEdit.phoneNumber;
+                    document.getElementById('email-address').value = warehouseToEdit.emailAddress;
+                    document.getElementById('ucc-ean-number').value = warehouseToEdit.uccEanNumber;
+
+                    // Populate Returns Address tab
+                    document.getElementById('same-as-warehouse-address-return').checked = warehouseToEdit.returnAddressSame;
+                    toggleReturnAddressFields(); // Adjust fields based on checkbox
+                    document.getElementById('return-name').value = warehouseToEdit.returnName;
+                    document.getElementById('return-address1').value = warehouseToEdit.returnAddress1;
+                    document.getElementById('return-address2').value = warehouseToEdit.returnAddress2;
+                    document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
+                    document.getElementById('return-city').value = warehouseToEdit.returnCity;
+                    document.getElementById('return-state').value = warehouseToEdit.returnState;
+                    document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
+                    document.getElementById('return-country').value = warehouseToEdit.returnCountry;
+                    document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
+                    document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
+                    document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
+                    document.getElementById('return-email-address').value = warehouseToEdit.returnEmailAddress;
+                    document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
+
+                    // Populate Miscellaneous tab
+                    document.getElementById('slotting-move-file-directory').value = warehouseToEdit.slottingMoveFileDirectory;
+                    document.getElementById('default-location-for-unslotted-items').value = warehouseToEdit.defaultLocationForUnslottedItems;
+                    document.getElementById('rendered-document-pdf-file-directory').value = warehouseToEdit.renderedDocumentPdfFileDirectory;
+
+                    // Populate User Defined Data tab
+                    document.getElementById('user-defined-field1').value = warehouseToEdit.userDefinedField1;
+                    document.getElementById('user-defined-field2').value = warehouseToEdit.userDefinedField2;
+                    document.getElementById('user-defined-field3').value = warehouseToEdit.userDefinedField3;
+                    document.getElementById('user-defined-field4').value = warehouseToEdit.userDefinedField4;
+                    document.getElementById('user-defined-field5').value = warehouseToEdit.userDefinedField5;
+                    document.getElementById('user-defined-field6').value = warehouseToEdit.userDefinedField6;
+                    document.getElementById('user-defined-field7').value = warehouseToEdit.userDefinedField7;
+                    document.getElementById('user-defined-field8').value = warehouseToEdit.userDefinedField8;
+
+                    renderUserCheckboxes(warehouseToEdit.users || []); // Render users and check selected ones
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex'); // Display as flex to center content
+        }
+
+        function closeWarehouseForm() {
+            document.getElementById('warehouse-form-modal').classList.add('hidden');
+            document.getElementById('warehouse-form-modal').classList.remove('flex');
+            currentWarehouseId = null;
+        }
+
+        function handleWarehouseSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const warehouseId = document.getElementById('warehouse-name').value;
+            const description = document.getElementById('warehouse-description').value;
+            const inactive = document.getElementById('warehouse-inactive').checked;
+            const active = !inactive;
+
+            // Collect address data
+            const address1 = document.getElementById('address1').value;
+            const address2 = document.getElementById('address2').value;
+            const address3 = document.getElementById('address3').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const postalCode = document.getElementById('postal-code').value;
+            const country = document.getElementById('country').value;
+            const faxNumber = document.getElementById('fax-number').value;
+            const attentionTo = document.getElementById('attention-to').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+            const emailAddress = document.getElementById('email-address').value;
+            const uccEanNumber = document.getElementById('ucc-ean-number').value;
+
+            // Collect returns address data
+            const returnAddressSame = document.getElementById('same-as-warehouse-address-return').checked;
+            const returnName = document.getElementById('return-name').value;
+            const returnAddress1 = document.getElementById('return-address1').value;
+            const returnAddress2 = document.getElementById('return-address2').value;
+            const returnAddress3 = document.getElementById('return-address3').value;
+            const returnCity = document.getElementById('return-city').value;
+            const returnState = document.getElementById('return-state').value;
+            const returnPostalCode = document.getElementById('return-postal-code').value;
+            const returnCountry = document.getElementById('return-country').value;
+            const returnFaxNumber = document.getElementById('return-fax-number').value;
+            const returnAttentionTo = document.getElementById('return-attention-to').value;
+            const returnPhoneNumber = document.getElementById('return-phone-number').value;
+            const returnEmailAddress = document.getElementById('return-email-address').value;
+            const returnUccEanNumber = document.getElementById('return-ucc-ean-number').value;
+
+            // Collect miscellaneous data
+            const slottingMoveFileDirectory = document.getElementById('slotting-move-file-directory').value;
+            const defaultLocationForUnslottedItems = document.getElementById('default-location-for-unslotted-items').value;
+            const renderedDocumentPdfFileDirectory = document.getElementById('rendered-document-pdf-file-directory').value;
+
+            // Collect user defined data
+            const userDefinedField1 = document.getElementById('user-defined-field1').value;
+            const userDefinedField2 = document.getElementById('user-defined-field2').value;
+            const userDefinedField3 = document.getElementById('user-defined-field3').value;
+            const userDefinedField4 = document.getElementById('user-defined-field4').value;
+            const userDefinedField5 = document.getElementById('user-defined-field5').value;
+            const userDefinedField6 = document.getElementById('user-defined-field6').value;
+            const userDefinedField7 = document.getElementById('user-defined-field7').value;
+            const userDefinedField8 = document.getElementById('user-defined-field8').value;
+
+            // Collect selected users
+            const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
+                                       .map(checkbox => checkbox.value);
+
+            const newWarehouse = {
+                id: warehouseId,
+                description,
+                active,
+                address1, address2, address3, city, state, postalCode, country, faxNumber, attentionTo, phoneNumber, emailAddress, uccEanNumber,
+                returnAddressSame, returnName, returnAddress1, returnAddress2, returnAddress3, returnCity, returnState, returnPostalCode, returnCountry, returnFaxNumber, returnAttentionTo, returnPhoneNumber, returnEmailAddress, returnUccEanNumber,
+                slottingMoveFileDirectory, defaultLocationForUnslottedItems, renderedDocumentPdfFileDirectory,
+                userDefinedField1, userDefinedField2, userDefinedField3, userDefinedField4, userDefinedField5, userDefinedField6, userDefinedField7, userDefinedField8,
+                users: selectedUsers,
+            };
+
+            if (currentWarehouseId) {
+                // Update existing warehouse
+                const index = warehouses.findIndex(wh => wh.id === currentWarehouseId);
+                if (index !== -1) {
+                    warehouses[index] = { ...warehouses[index], ...newWarehouse }; // Merge existing with new
+                }
+            } else {
+                // Add new warehouse
+                if (warehouses.some(wh => wh.id === warehouseId)) {
+                    alert('Warehouse ID already exists!');
+                    return;
+                }
+                warehouses.push(newWarehouse);
+            }
+            saveWarehouses();
+            renderWarehouseList();
+            closeWarehouseForm();
+        }
+
+        function deleteWarehouse(id) {
+            if (confirm(`Are you sure you want to delete warehouse ${id}?`)) {
+                warehouses = warehouses.filter(wh => wh.id !== id);
+                saveWarehouses();
+                renderWarehouseList();
+            }
+        }
+
+        function filterWarehouseList(query) {
+            renderWarehouseList(query);
+        }
+
+        function toggleReturnAddressFields() {
+            const sameAsCheckbox = document.getElementById('same-as-warehouse-address-return');
+            const returnAddressFields = document.getElementById('return-address-fields');
+            const fields = returnAddressFields.querySelectorAll('input, select');
+
+            if (sameAsCheckbox.checked) {
+                returnAddressFields.classList.add('hidden');
+                fields.forEach(field => field.disabled = true);
+            } else {
+                returnAddressFields.classList.remove('hidden');
+                fields.forEach(field => field.disabled = false);
+            }
+        }
+
+        function renderUserCheckboxes(selectedUsers) {
+            const userListContainer = document.getElementById('user-checkbox-list');
+            userListContainer.innerHTML = ''; // Clear existing checkboxes
+
+            allUsers.forEach(user => {
+                const isChecked = selectedUsers.includes(user);
+                const div = document.createElement('div');
+                div.classList.add('flex', 'items-center');
+                div.innerHTML = `
+                    <input type="checkbox" id="user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border dark:border-wise-dark-border focus:ring-wise-blue-500" ${isChecked ? 'checked' : ''}>
+                    <label for="user-${user}" class="ml-2 text-sm text-wise-dark-gray dark:text-wise-dark-text-primary">${user}</label>
+                `;
+                userListContainer.appendChild(div);
+            });
+            document.getElementById('check-all-users').checked = (selectedUsers.length === allUsers.length && allUsers.length > 0);
+        }
+
+        function toggleAllUsers() {
+            const checkAllCheckbox = document.getElementById('check-all-users');
+            const userCheckboxes = document.querySelectorAll('#user-checkbox-list input[type="checkbox"]');
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = checkAllCheckbox.checked;
+            });
+        }
+
+
+        // --- Zone CRUD ---
+        function renderZoneList(filterQuery = '') {
+            const container = document.getElementById('zone-list-container');
+            container.innerHTML = ''; // Clear existing list
+
+            const filteredZones = zones.filter(zone =>
+                zone.identifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                zone.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredZones.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary mt-4">Tidak ada zona ditemukan.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'dark:divide-wise-dark-border', 'mt-4', 'shadow-md', 'rounded-lg', 'overflow-hidden');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Identifier</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">System created</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Active</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-wise-border dark:divide-wise-dark-border" id="zone-table-body">
+                    </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('zone-table-body');
+            filteredZones.forEach(zone => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'dark:hover:bg-gray-700', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">${zone.identifier}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${zone.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${zone.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${zone.active ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showZoneForm('edit', '${zone.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 dark:text-wise-blue-400 dark:hover:text-wise-blue-600 mr-3">Edit</button>
+                        <button onclick="deleteZone('${zone.id}')" class="text-wise-red-500 hover:text-wise-red-700 dark:text-wise-red-400 dark:hover:text-wise-red-600">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function showZoneForm(mode, id = null) {
+            const modal = document.getElementById('zone-form-modal');
+            const title = document.getElementById('zone-form-title');
+            const form = document.getElementById('zone-form');
+            form.reset(); 
+            currentZoneId = id;
+
+            if (mode === 'create') {
+    title.textContent = 'Buat Zona Baru';
+    document.getElementById('zone-submit-button').textContent = 'Buat';
+    document.getElementById('zone-identifier').disabled = false;
+    document.getElementById('zone-inactive').checked = false;
+    document.getElementById('zone-system-created').checked = false; // New zones are not system created by default
+} else { // mode === 'edit'
+    title.textContent = 'Edit Zona';
+    document.getElementById('zone-submit-button').textContent = 'Simpan Perubahan';
+    document.getElementById('zone-identifier').disabled = true; // Identifier is usually not editable for existing records
+
+                const zoneToEdit = zones.find(z => z.id === id);
+                if (zoneToEdit) {
+                    document.getElementById('zone-identifier').value = zoneToEdit.identifier;
+                    document.getElementById('zone-record-type').value = zoneToEdit.recordType;
+                    document.getElementById('zone-description').value = zoneToEdit.description;
+                    document.getElementById('zone-inactive').checked = !zoneToEdit.active;
+                    document.getElementById('zone-system-created').checked = zoneToEdit.systemCreated;
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeZoneForm() {
+            document.getElementById('zone-form-modal').classList.add('hidden');
+            document.getElementById('zone-form-modal').classList.remove('flex');
+            currentZoneId = null;
+        }
+
+        function handleZoneSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const identifier = document.getElementById('zone-identifier').value;
+            const recordType = document.getElementById('zone-record-type').value;
+            const description = document.getElementById('zone-description').value;
+            const inactive = document.getElementById('zone-inactive').checked;
+            const active = !inactive;
+            const systemCreated = document.getElementById('zone-system-created').checked; // Value from UI, though it's disabled for edit
+
+            const newZone = {
+                id: currentZoneId || identifier, // Use existing ID or new identifier as ID
+                identifier,
+                recordType,
+                description,
+                systemValue1: systemCreated ? 'Yes' : 'No', // Assuming System value 1 is tied to system created
+                systemCreated,
+                active,
+            };
+
+            if (currentZoneId) {
+                // Update existing zone
+                const index = zones.findIndex(z => z.id === currentZoneId);
+                if (index !== -1) {
+                    zones[index] = { ...zones[index], ...newZone };
+                }
+            } else {
+                // Add new zone
+                if (zones.some(z => z.identifier === identifier)) {
+                    alert('Zone Identifier already exists!');
+                    return;
+                }
+                newZone.id = identifier; // For new zones, ID is the identifier
+                zones.push(newZone);
+            }
+            saveZones();
+            renderZoneList();
+            closeZoneForm();
+        }
+
+        function deleteZone(id) {
+            if (confirm(`Are you sure you want to delete zone ${id}?`)) {
+                zones = zones.filter(z => z.id !== id);
+                saveZones();
+                renderZoneList();
+            }
+        }
+
+        function filterZoneList(query) {
+            renderZoneList(query);
+        }
+
+        // --- Location Type CRUD ---
+        function renderLocationTypeList(filterQuery = '') {
+            const container = document.getElementById('location-type-list-container');
+            container.innerHTML = ''; // Clear existing list
+
+            const filteredLocationTypes = locationTypes.filter(lt =>
+                lt.locationType.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredLocationTypes.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray dark:text-wise-dark-text-secondary mt-4">Tidak ada tipe lokasi ditemukan.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'dark:divide-wise-dark-border', 'mt-4', 'shadow-md', 'rounded-lg', 'overflow-hidden');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Location type</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Length</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Width</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Height</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Dimension um</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Maximum weight</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Weight um</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray dark:text-wise-dark-text-secondary uppercase tracking-wider">Active</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-wise-border dark:divide-wise-dark-border" id="location-type-table-body">
+                    </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('location-type-table-body');
+            filteredLocationTypes.forEach(lt => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'dark:hover:bg-gray-700', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray dark:text-wise-dark-text-primary">${lt.locationType}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.length.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.width.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.height.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.dimensionUM}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.maximumWeight.toFixed(2)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.weightUM}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray dark:text-wise-dark-text-secondary">${lt.active ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showLocationTypeForm('edit', '${lt.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 dark:text-wise-blue-400 dark:hover:text-wise-blue-600 mr-3">Edit</button>
+                        <button onclick="deleteLocationType('${lt.id}')" class="text-wise-red-500 hover:text-wise-red-700 dark:text-wise-red-400 dark:hover:text-wise-red-600">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function showLocationTypeForm(mode, id = null) {
+            const modal = document.getElementById('location-type-form-modal');
+            const title = document.getElementById('location-type-form-title');
+            const form = document.getElementById('location-type-form');
+            form.reset();
+            
+            // Reset tab styles and activate first tab
+            const tabButtons = form.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400'));
+            const firstTabButton = tabButtons[0];
+            if (firstTabButton) {
+                firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400');
+            }
+            const tabContents = form.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+            document.getElementById('general-location').classList.remove('hidden');
+
+
+            currentLocationTypeId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Buat Tipe Lokasi Baru';
+                document.getElementById('location-type-submit-button').textContent = 'Buat';
+                document.getElementById('location-type-name').disabled = false;
+                document.getElementById('location-type-inactive').checked = false; // Default new to active
+            } else { // mode === 'edit'
+                title.textContent = 'Edit Tipe Lokasi';
+                document.getElementById('location-type-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('location-type-name').disabled = true; // Location Type is usually not editable for existing records
+
+                const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
+                if (locationTypeToEdit) {
+                    document.getElementById('location-type-name').value = locationTypeToEdit.locationType;
+                    document.getElementById('location-type-length').value = locationTypeToEdit.length;
+                    document.getElementById('location-type-width').value = locationTypeToEdit.width;
+                    document.getElementById('location-type-height').value = locationTypeToEdit.height;
+                    document.getElementById('location-type-length-um').value = locationTypeToEdit.dimensionUM;
+                    document.getElementById('location-type-maximum-weight').value = locationTypeToEdit.maximumWeight;
+                    document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
+                    document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeLocationTypeForm() {
+            document.getElementById('location-type-form-modal').classList.add('hidden');
+            document.getElementById('location-type-form-modal').classList.remove('flex');
+            currentLocationTypeId = null;
+        }
+
+        function handleLocationTypeSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const locationTypeName = document.getElementById('location-type-name').value;
+            const length = parseFloat(document.getElementById('location-type-length').value) || 0;
+            const width = parseFloat(document.getElementById('location-type-width').value) || 0;
+            const height = parseFloat(document.getElementById('location-type-height').value) || 0;
+            const dimensionUM = document.getElementById('location-type-length-um').value;
+            const maximumWeight = parseFloat(document.getElementById('location-type-maximum-weight').value) || 0;
+            const weightUM = document.getElementById('location-type-weight-um').value;
+            const inactive = document.getElementById('location-type-inactive').checked;
+            const active = !inactive;
+
+            const newLocationType = {
+                id: currentLocationTypeId || locationTypeName, // Use existing ID or new name as ID
+                locationType: locationTypeName,
+                length,
+                width,
+                height,
+                dimensionUM,
+                maximumWeight,
+                weightUM,
+                active,
+                lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
+            };
+
+            if (currentLocationTypeId) {
+                // Update existing location type
+                const index = locationTypes.findIndex(lt => lt.id === currentLocationTypeId);
+                if (index !== -1) {
+                    locationTypes[index] = { ...locationTypes[index], ...newLocationType };
+                }
+            } else {
+                // Add new location type
+                if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
+                    alert('Location Type name already exists!');
+                    return;
+                }
+                newLocationType.id = locationTypeName; // For new location types, ID is the name
+                locationTypes.push(newLocationType);
+            }
+            saveLocationTypes();
+            renderLocationTypeList();
+            closeLocationTypeForm();
+        }
+
+        function deleteLocationType(id) {
+            if (confirm(`Are you sure you want to delete location type ${id}?`)) {
+                locationTypes = locationTypes.filter(lt => lt.id !== id);
+                saveLocationTypes();
+                renderLocationTypeList();
+            }
+        }
+
+        function filterLocationTypeList(query) {
+            renderLocationTypeList(query);
+        }
+
+        // --- Tab functionality for forms ---
+        function initializeTabButtons(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            const tabButtons = modal.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.onclick = () => {
+                    const tabId = button.dataset.tab;
+                    activateTab(tabId, modalId);
+                };
+            });
+        }
+
+        function activateTab(tabId, modalId = null) {
+            const parentElement = modalId ? document.getElementById(modalId) : document;
+            
+            parentElement.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            parentElement.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeTabButton = parentElement.querySelector(`.tab-button[data-tab="${tabId}"]`);
+            if (activeTabButton) {
+                activeTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500', 'dark:border-wise-blue-400', 'dark:text-wise-blue-400');
+            }
         }
 
         // Inisialisasi dashboard saat dimuat
@@ -1144,14 +2316,18 @@
 
             // Terapkan tema yang disimpan saat dimuat
             const savedTheme = localStorage.getItem('theme');
+            const htmlElement = document.documentElement;
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
             if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.getElementById('sun-icon').classList.remove('hidden');
-                document.getElementById('moon-icon').classList.add('hidden');
+                htmlElement.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
             } else {
-                document.documentElement.classList.add('light'); // Pastikan kelas light ada untuk konsistensi
-                document.getElementById('sun-icon').classList.add('hidden');
-                document.getElementById('moon-icon').classList.remove('hidden');
+                htmlElement.classList.remove('dark'); // Pastikan kelas 'dark' dihapus jika tema bukan gelap
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
             }
 
             // Sesuaikan margin konten utama berdasarkan visibilitas sidebar saat ukuran diubah
