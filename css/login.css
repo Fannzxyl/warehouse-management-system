@@ -1,0 +1,166 @@
+.input-field-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            color: #6B7280;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .input-icon:hover {
+            color: #374151;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 1.125rem;
+            height: 1.125rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 0.375rem;
+            background-color: #F9FAFB;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #374151;
+            border-color: #374151;
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0.375rem;
+            height: 0.625rem;
+            border: solid #FFFFFF;
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -60%) rotate(45deg);
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: #9CA3AF;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .form-input {
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #374151;
+            box-shadow: 0 0 0 3px rgba(55, 65, 81, 0.1);
+        }
+
+        .form-input:hover {
+            border-color: #9CA3AF;
+        }
+
+        .btn-login {
+            transition: all 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #1F2937;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-box.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .message-box.success {
+            background-color: #D1FAE5; 
+            color: #065F46; /
+            border: 1px solid #34D399; 
+        }
+
+        .message-box.error {
+            background-color: #FEE2E2; 
+            color: #991B1B; 
+            border: 1px solid #F87171; /
+        }
+
+        @media (max-width: 1024px) {
+
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+
+            
+            .image-section {
+                height: 40vh;
+                flex: none;
+            }
+            
+            .form-section {
+                width: 100%;
+                flex: 1;
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .image-section {
+                height: 30vh;
+            }
+            
+            .form-section {
+                padding: 1.5rem 1rem;
+            }
+        }

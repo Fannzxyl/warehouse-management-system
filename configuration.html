@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - WISE</title>
+    <title>Configuration - WISE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Link ke file CSS eksternal -->
-    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/configuration.css">
     <style type="text/tailwindcss">
         @layer base {
             body {
@@ -139,7 +139,7 @@
             </div>
             <nav class="p-4 space-y-1">
                 <!-- Dashboard Link -->
-                <a href="#" class="sidebar-item flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-gray-100" data-page="dashboard-overview">
+                <a href="dashboard.html?page=dashboard-overview" class="sidebar-item flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-gray-100">
                     <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     <span class="font-medium text-sm">Dashboard</span>
                 </a>
@@ -154,10 +154,10 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="yard management/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="yard management/vehicles">Vehicles</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="yard management/equipment">Equipment</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="yard management/personel">Personel</a>
+                        <a href="dashboard.html?page=yard%20management/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=yard%20management/vehicles" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Vehicles</a>
+                        <a href="dashboard.html?page=yard%20management/equipment" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Equipment</a>
+                        <a href="dashboard.html?page=yard%20management/personel" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Personel</a>
                     </div>
                 </div>
 
@@ -171,10 +171,10 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="receiving/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="receiving/deliveries">Deliveries</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="receiving/returns">Returns</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="receiving/vendors">Vendors</a>
+                        <a href="dashboard.html?page=receiving/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=receiving/deliveries" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Deliveries</a>
+                        <a href="dashboard.html?page=receiving/returns" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Returns</a>
+                        <a href="dashboard.html?page=receiving/vendors" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Vendors</a>
                     </div>
                 </div>
 
@@ -188,10 +188,10 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="order planning/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="order planning/new-order">New Orders</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="order planning/pending-order">Pending Orders</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="order planning/order-history">Order History</a>
+                        <a href="dashboard.html?page=order%20planning/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=order%20planning/new-order" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">New Orders</a>
+                        <a href="dashboard.html?page=order%20planning/pending-order" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Pending Orders</a>
+                        <a href="dashboard.html?page=order%20planning/order-history" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Order History</a>
                     </div>
                 </div>
 
@@ -205,10 +205,10 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="work/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="work/tasks">Tasks</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="work/schedule">Schedule</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="work/teams">Teams</a>
+                        <a href="dashboard.html?page=work/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=work/tasks" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Tasks</a>
+                        <a href="dashboard.html?page=work/schedule" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Schedule</a>
+                        <a href="dashboard.html?page=work/teams" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Teams</a>
                     </div>
                 </div>
 
@@ -222,14 +222,14 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="cross application/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="cross application/integrations">Integrations</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="cross application/data-sync">Data Sync</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="cross application/api-management">API Management</a>
+                        <a href="dashboard.html?page=cross%20application/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=cross%20application/integrations" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Integrations</a>
+                        <a href="dashboard.html?page=cross%20application/data-sync" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Data Sync</a>
+                        <a href="dashboard.html?page=cross%20application/api-management" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">API Management</a>
                     </div>
                 </div>
 
-                <!-- Sidebar Group: Inventory -->
+                <!-- Inventory Group -->
                 <div class="sidebar-group">
                     <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
                         <div class="flex items-center space-x-3">
@@ -239,14 +239,14 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="inventory/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="inventory/yard">Yard</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="inventory/warehouse">Warehouse</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="inventory/storage">Storage</a>
+                        <a href="dashboard.html?page=inventory/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=inventory/yard" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Yard</a>
+                        <a href="dashboard.html?page=inventory/warehouse" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Warehouse</a>
+                        <a href="dashboard.html?page=inventory/storage" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Storage</a>
                     </div>
                 </div>
 
-                <!-- Sidebar Group: Performance Management -->
+                <!-- Performance Management Group -->
                 <div class="sidebar-group">
                     <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
                         <div class="flex items-center space-x-3">
@@ -256,16 +256,16 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="performance management/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="performance management/kpis">KPIs</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="performance management/analytics">Analytics</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="performance management/goals">Goals</a>
+                        <a href="dashboard.html?page=performance%20management/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=performance%20management/kpis" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">KPIs</a>
+                        <a href="dashboard.html?page=performance%20management/analytics" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Analytics</a>
+                        <a href="dashboard.html?page=performance%20management/goals" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Goals</a>
                     </div>
                 </div>
 
-                <!-- Sidebar Group: Configuration (Navigasi ke halaman terpisah) -->
+                <!-- Configuration Group (MODIFIED to be a dropdown) -->
                 <div class="sidebar-group">
-                    <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100" data-page="configuration">
                         <div class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path>
@@ -276,14 +276,15 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="configuration.html" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration">Overview</a>
-                        <a href="configuration.html?page=configuration-warehouse" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-warehouse">Warehouse</a>
-                        <a href="configuration.html?page=configuration-zone" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-zone">Zone</a>
-                        <a href="configuration.html?page=configuration-location-type" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-location-type">Location Type</a>
+                        <!-- Links to configuration.html with specific page parameters -->
+                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration">Overview</a>
+                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-warehouse">Warehouse</a>
+                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-zone">Zone</a>
+                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="configuration-location-type">Location Type</a>
                     </div>
                 </div>
                 
-                <!-- Sidebar Group: System Management -->
+                <!-- System Management Group -->
                 <div class="sidebar-group">
                     <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
                         <div class="flex items-center space-x-3">
@@ -293,86 +294,52 @@
                         <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="system management/overview">Overview</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="system management/users">Users</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="system management/logs">Logs</a>
-                        <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="system management/backup">Backup</a>
-                        </div>
-                    </div>
-
-                    <!-- Sidebar Group: Setting Optimization -->
-                    <div class="sidebar-group">
-                        <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
-                            <div class="flex items-center space-x-3">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3H15l3-2V8l-3-2H9L6 8v7l3 2z"></path></svg>
-                                <span class="font-medium text-sm">Setting Optimization</span>
-                            </div>
-                            <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="setting optimazation/overview">Overview</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="setting optimazation/general">General</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="setting optimazation/notifications">Notifications</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="setting optimazation/security">Security</a>
-                        </div>
-                    </div>
-
-                    <!-- Sidebar Group: Data Archiving -->
-                    <div class="sidebar-group">
-                        <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
-                            <div class="flex items-center space-x-3">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-                            <span class="font-medium text-sm">Data Archiving</span>
-                            </div>
-                            <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        <div class="submenu ml-6 mt-1 space-y-1 hidden">
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="data archiving/overview">Overview</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="data archiving/documents">Documents</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="data archiving/media">Media</a>
-                            <a href="#" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100" data-page="data archiving/financial">Financial</a>
-                        </div>
+                        <a href="dashboard.html?page=system%20management/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=system%20management/users" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Users</a>
+                        <a href="dashboard.html?page=system%20management/logs" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Logs</a>
+                        <a href="dashboard.html?page=system%20management/backup" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Backup</a>
                     </div>
                 </div>
-            </nav>
+
+                <!-- Setting Optimization Group -->
+                <div class="sidebar-group">
+                    <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3H15l3-2V8l-3-2H9L6 8v7l3 2z"></path></svg>
+                            <span class="font-medium text-sm">Setting Optimization</span>
+                        </div>
+                        <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="submenu ml-6 mt-1 space-y-1 hidden">
+                        <a href="dashboard.html?page=setting%20optimazation/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=setting%20optimazation/general" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">General</a>
+                        <a href="dashboard.html?page=setting%20optimazation/notifications" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Notifications</a>
+                        <a href="dashboard.html?page=setting%20optimazation/security" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Security</a>
+                    </div>
+                </div>
+
+                <!-- Data Archiving Group -->
+                <div class="sidebar-group">
+                    <button class="sidebar-item w-full flex items-center justify-between p-3 rounded-lg text-gray-600 hover:bg-gray-100">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                            <span class="font-medium text-sm">Data Archiving</span>
+                        </div>
+                        <svg class="submenu-arrow w-4 h-4 transform transition-transform duration-200 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="submenu ml-6 mt-1 space-y-1 hidden">
+                        <a href="dashboard.html?page=data%20archiving/overview" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Overview</a>
+                        <a href="dashboard.html?page=data%20archiving/documents" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Documents</a>
+                        <a href="dashboard.html?page=data%20archiving/media" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Media</a>
+                        <a href="dashboard.html?page=data%20archiving/financial" class="sidebar-child block p-2 rounded-lg text-sm text-gray-500 hover:bg-gray-100">Financial</a>
+                    </div>
+                </div>
+            </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <div class="flex-1 md:ml-64">
-            <!-- Header Utama -->
-            <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-10 p-4 border-b border-gray-200">
-                <div class="flex items-center justify-between w-full">
-                    <div class="flex-1"></div>
-                    <div class="flex-1 flex justify-center relative">
-                        <div class="w-full max-w-lg flex items-center bg-gray-100 rounded-xl shadow-sm border border-gray-200">
-                            <input type="text" id="search-input" placeholder="Cari sekarang..." class="flex-1 px-4 py-2 bg-transparent focus:outline-none text-gray-700 placeholder-gray-500"/>
-                            <button id="search-button" class="bg-gray-800 text-white px-4 py-2 text-sm font-medium hover:bg-gray-700 rounded-r-lg">Cari</button>
-                        </div>
-                        <!-- Dropdown Riwayat Pencarian -->
-                        <div id="search-history-dropdown" class="absolute top-full mt-2 w-full max-w-lg bg-white rounded-md shadow-lg border border-gray-200 hidden z-50">
-                            <div class="p-2" id="search-history-content">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex-1 flex justify-end items-center relative">
-                        <span class="font-medium text-sm hidden md:block ml-3 text-gray-700">Welcome, <span id="username-display">SuperAdmin</span></span>
-                        <div id="user-menu-button" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer ml-3">
-                            <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a4 4 0 00-4 4v1a2 2 0 002 2h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <!-- Dropdown Menu User -->
-                        <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-40 bg-white rounded-md shadow-lg border hidden z-50">
-                            <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                            <a href="#" id="logout-button" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Area Konten Utama yang Bisa di-scroll -->
-            <div id="main-content-scroll-area" class="p-6 overflow-y-auto h-[calc(100vh-100px)]">
-                <main id="main-content" class="bg-white rounded-xl border border-gray-200 min-h-[500px] shadow-lg p-6">
-                    <!-- Konten akan dimuat di sini oleh JavaScript -->
-                </main>
+        <div class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all duration-300 ease-in-out">
+            <div id="main-content" class="bg-white rounded-xl border border-gray-200 min-h-[500px] shadow-lg p-6 text-gray-900">
+                <!-- Konten akan dimuat di sini oleh JavaScript -->
             </div>
 
             <!-- Search Overlay (Pop-up Pencarian) -->
@@ -406,10 +373,8 @@
                         <button id="overlay-remove-all-filters" class="text-gray-500 hover:underline">Hapus semua</button>
                     </div>
                     <div class="flex flex-1 overflow-hidden">
-                        <!-- Panel Hasil Pencarian di Overlay -->
                         <div id="overlay-search-results-list-panel" class="w-1/3 border-r border-gray-200 p-4 overflow-y-auto text-gray-900">
                         </div>
-                        <!-- Panel Detail Konten di Overlay -->
                         <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-gray-700">
                             <p class="text-gray-500 text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>
                         </div>
@@ -419,7 +384,6 @@
         </div>
     </div>
     
-    <!-- Link ke file JavaScript eksternal -->
-    <script src="./js/dashboard.js"></script>
+    <script src="./js/configuration.js"></script>
 </body>
 </html>

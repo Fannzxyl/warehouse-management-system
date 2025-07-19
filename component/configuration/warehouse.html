@@ -1,0 +1,269 @@
+<h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4">Konfigurasi - Gudang <span class="text-gray-600 text-sm"></span></h2>
+<p class="text-gray-600 mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
+<div class="flex justify-between items-center mb-4">
+    <button class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showWarehouseForm('create')">
+        Buat Gudang Baru <span class="text-gray-100 text-xs"></span>
+    </button>
+    <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-gray-900" oninput="filterWarehouseList(this.value)">
+</div>
+<div id="warehouse-list-container" class="overflow-x-auto">
+    </div>
+
+<div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl overflow-y-auto max-h-[90vh]">
+        <h3 id="warehouse-form-title" class="text-lg font-semibold text-gray-900 mb-4"></h3>
+        <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="warehouse-name" class="block text-sm font-medium text-gray-900">Warehouse:</label>
+                    <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                </div>
+                <div>
+                    <label for="warehouse-description" class="block text-sm font-medium text-gray-900">Description:</label>
+                    <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="flex space-x-2 mb-2 overflow-x-auto pb-2">
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="warehouse-address">Warehouse Address</button>
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="returns-address">Returns Address</button>
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="freight-bill-to-address">Freight Bill to Address</button>
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="authorized-users">Authorized Users</button>
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="miscellaneous">Miscellaneous</button>
+                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-gray-600 whitespace-nowrap" data-tab="user-defined-data">User Defined Data</button>
+                </div>
+
+                <div id="warehouse-address" class="tab-content border border-gray-300 p-4 rounded-b-md">
+                    <h4 class="font-semibold text-gray-900 mb-2">Warehouse Address</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="address1" class="block text-sm font-medium text-gray-900">Address 1:</label>
+                            <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="address2" class="block text-sm font-medium text-gray-900">Address 2 (optional):</label>
+                            <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="address3" class="block text-sm font-medium text-gray-900">Address 3 (optional):</label>
+                            <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div class="flex space-x-2">
+                            <div class="flex-1">
+                                <label for="city" class="block text-sm font-medium text-gray-900">City:</label>
+                                <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                            </div>
+                            <div class="w-24">
+                                <label for="state" class="block text-sm font-medium text-gray-900">State:</label>
+                                <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                                    <option value="">--Pilih--</option>
+                                    <option value="Jawa Barat">Jawa Barat</option>
+                                    <option value="Jawa Tengah">Jawa Tengah</option>
+                                    <option value="Jawa Timur">Jawa Timur</option>
+                                </select>
+                            </div>
+                            <div class="flex-1">
+                                <label for="postal-code" class="block text-sm font-medium text-gray-900">Postal Code:</label>
+                                <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="country" class="block text-sm font-medium text-gray-900">Country:</label>
+                            <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                                <option value="">--Pilih--</option>
+                                <option value="Indonesia">Indonesia</option>
+                                <option value="USA">USA</option>
+                                <option value="Singapore">Singapore</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="fax-number" class="block text-sm font-medium text-gray-900">Fax number:</label>
+                            <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="attention-to" class="block text-sm font-medium text-gray-900">Attention to:</label>
+                            <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="phone-number" class="block text-sm font-medium text-gray-900">Phone number:</label>
+                            <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="email-address" class="block text-sm font-medium text-gray-900">Email address:</label>
+                            <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="ucc-ean-number" class="block text-sm font-medium text-gray-900">UCC/EAN number:</label>
+                            <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                    </div>
+                </div>
+                <div id="returns-address" class="tab-content border border-gray-300 p-4 rounded-b-md hidden">
+                    <h4 class="font-semibold text-gray-900 mb-2">Returns Address <span class="text-gray-600 text-sm"></span></h4>
+                    <div class="mb-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500" onclick="toggleReturnAddressFields()">
+                            <span class="ml-2 text-sm text-gray-900">Same as warehouse address</span>
+                        </label>
+                    </div>
+                    <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="return-name" class="block text-sm font-medium text-gray-900">Name:</label>
+                            <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-address1" class="block text-sm font-medium text-gray-900">Address 1:</label>
+                            <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-address2" class="block text-sm font-medium text-gray-900">Address 2 (optional):</label>
+                            <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-address3" class="block text-sm font-medium text-gray-900">Address 3 (optional):</label>
+                            <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div class="flex space-x-2">
+                            <div class="flex-1">
+                                <label for="return-city" class="block text-sm font-medium text-gray-900">City:</label>
+                                <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                            </div>
+                            <div class="w-24">
+                                <label for="return-state" class="block text-sm font-medium text-gray-900">State:</label>
+                                <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                                    <option value="">--Pilih--</option>
+                                    <option value="Jawa Barat">Jawa Barat</option>
+                                    <option value="Jawa Tengah">Jawa Tengah</option>
+                                    <option value="Jawa Timur">Jawa Timur</option>
+                                </select>
+                            </div>
+                            <div class="flex-1">
+                                <label for="return-postal-code" class="block text-sm font-medium text-gray-900">Postal Code:</label>
+                                <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="return-country" class="block text-sm font-medium text-gray-900">Country:</label>
+                            <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                                <option value="">--Pilih--</option>
+                                <option value="Indonesia">Indonesia</option>
+                                <option value="USA">USA</option>
+                                <option value="Singapore">Singapore</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="return-fax-number" class="block text-sm font-medium text-gray-900">Fax number:</label>
+                            <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-attention-to" class="block text-sm font-medium text-gray-900">Attention to:</label>
+                            <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-phone-number" class="block text-sm font-medium text-gray-900">Phone number:</label>
+                            <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-email-address" class="block text-sm font-medium text-gray-900">Email address:</label>
+                            <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="return-ucc-ean-number" class="block text-sm font-medium text-gray-900">UCC/EAN number:</label>
+                            <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                    </div>
+                </div>
+                <div id="freight-bill-to-address" class="tab-content border border-gray-300 p-4 rounded-b-md hidden">
+                    <h4 class="font-semibold text-gray-900 mb-2">Freight Bill to Address</h4>
+                    <p class="text-gray-600 text-sm">Formulir untuk Freight Bill to Address.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="freight-address1" class="block text-sm font-medium text-gray-900">Address 1:</label>
+                            <input type="text" id="freight-address1" name="freightAddress1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="freight-city" class="block text-sm font-medium text-gray-900">City:</label>
+                            <input type="text" id="freight-city" name="freightCity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        </div>
+                </div>
+                <div id="authorized-users" class="tab-content border border-gray-300 p-4 rounded-b-md hidden">
+                    <h4 class="font-semibold text-gray-900 mb-2">Authorized Users <span class="text-gray-600 text-sm"></span></h4>
+                    <div class="mb-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500" onclick="toggleAllUsers()">
+                            <span class="ml-2 text-sm text-gray-900">Check all</span>
+                        </label>
+                    </div>
+                    <div id="user-checkbox-list" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                        </div>
+                </div>
+                <div id="miscellaneous" class="tab-content border border-gray-300 p-4 rounded-b-md hidden">
+                    <h4 class="font-semibold text-gray-900 mb-2">Miscellaneous <span class="text-gray-600 text-sm"></span></h4>
+                    <div class="mb-4">
+                        <label for="slotting-move-file-directory" class="block text-sm font-medium text-gray-900">Slotting move file download directory:</label>
+                        <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                    </div>
+                    <div class="mb-4">
+                        <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-gray-900">Default location for unslotted items:</label>
+                        <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                    </div>
+                    <h5 class="font-semibold text-gray-900 mt-4 mb-2">SQL Server Reporting Services</h5>
+                    <div>
+                        <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-gray-900">Rendered document pdf file directory:</label>
+                        <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                    </div>
+                </div>
+                <div id="user-defined-data" class="tab-content border border-gray-300 p-4 rounded-b-md hidden">
+                    <h4 class="font-semibold text-gray-900 mb-2">User defined data <span class="text-gray-600 text-sm"></span></h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="user-defined-field1" class="block text-sm font-medium text-gray-900">User defined field 1:</label>
+                            <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field2" class="block text-sm font-medium text-gray-900">User defined field 2:</label>
+                            <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field3" class="block text-sm font-medium text-gray-900">User defined field 3:</label>
+                            <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field4" class="block text-sm font-medium text-gray-900">User defined field 4:</label>
+                            <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field5" class="block text-sm font-medium text-gray-900">User defined field 5:</label>
+                            <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field6" class="block text-sm font-medium text-gray-900">User defined field 6:</label>
+                            <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field7" class="block text-sm font-medium text-gray-900">User defined field 7:</label>
+                            <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                        <div>
+                            <label for="user-defined-field8" class="block text-sm font-medium text-gray-900">User defined field 8:</label>
+                            <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white text-gray-900">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-900">Inactive</span>
+                </label>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-gray-900 hover:bg-gray-100 transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
+                <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200 shadow-md">OK</button>
+            </div>
+        </form>
+    </div>
+</div>
