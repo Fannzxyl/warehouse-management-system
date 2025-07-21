@@ -15,10 +15,13 @@
                         'inter': ['Inter', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        'slate': {
-                            850: '#1e293b',
-                            950: '#0f172a'
-                        }
+                        // Menyesuaikan palet warna agar lebih soft dan profesional, mendekati Figma
+                        'primary-blue': '#4F46E5', // Contoh warna biru yang bisa jadi aksen
+                        'soft-gray': '#F8FAFC', // Warna latar belakang yang lebih terang
+                        'text-dark': '#1A202C', // Warna teks yang lebih gelap
+                        'text-light': '#6B7280', // Warna teks abu-abu
+                        'border-light': '#E5E7EB', // Warna border
+                        'accent-purple': '#6D28D9', // Aksen ungu seperti di Figma
                     }
                 }
             }
@@ -28,21 +31,20 @@
         body { font-family: 'Inter', system-ui, sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen font-inter antialiased">
-    <!-- Header Navigation -->
-    <div class="bg-white border-b border-slate-200 shadow-sm">
+<body class="bg-soft-gray min-h-screen font-inter antialiased">
+    <div class="bg-white border-b border-border-light shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
-                    <button onclick="goToDashboard()" class="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors duration-200">
+                    <button id="backToDashboardBtn" class="inline-flex items-center text-text-light hover:text-text-dark transition-colors duration-200">
                         <i class="fas fa-arrow-left w-4 h-4 mr-3"></i>
                         <span class="font-medium">Back to Dashboard</span>
                     </button>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="text-sm text-slate-500">Last updated: Jan 21, 2025</div>
-                    <div class="h-6 w-px bg-slate-300"></div>
-                    <button class="text-slate-400 hover:text-slate-600">
+                    <div class="text-sm text-text-light">Last updated: Jan 21, 2025</div>
+                    <div class="h-6 w-px bg-border-light"></div>
+                    <button class="text-text-light hover:text-text-dark">
                         <i class="fas fa-cog w-5 h-5"></i>
                     </button>
                 </div>
@@ -51,18 +53,17 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
         <div class="mb-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Profile Management</h1>
-                    <p class="mt-2 text-slate-600">Manage your account settings and view system activity</p>
+                    <h1 class="text-3xl font-bold text-text-dark tracking-tight">Profile Management</h1>
+                    <p class="mt-2 text-text-light">Manage your account settings and view system activity</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <div class="bg-green-50 border border-green-200 rounded-lg px-3 py-1.5 text-sm font-medium text-green-800">
+                    <div class="bg-green-50 border border-green-200 rounded-full px-3 py-1.5 text-sm font-medium text-green-800 flex items-center">
                         <i class="fas fa-circle w-2 h-2 mr-2"></i>Active
                     </div>
-                    <button id="editProfileButton" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
+                    <button id="editProfileButton" class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
                         <i class="fas fa-edit w-4 h-4 mr-2"></i>
                         Edit Profile
                     </button>
@@ -71,94 +72,89 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Main Profile Section -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Profile Overview Card -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
-                    <div class="px-6 py-6 border-b border-slate-200">
+                <div class="bg-white border border-border-light rounded-xl shadow-sm">
+                    <div class="px-6 py-6 border-b border-border-light">
                         <div class="flex items-start space-x-6">
-                            <div class="bg-slate-100 rounded-lg p-6 flex-shrink-0">
-                                <i class="fas fa-user text-3xl text-slate-600"></i>
+                            <div class="bg-accent-purple p-6 rounded-full flex-shrink-0 flex items-center justify-center w-24 h-24">
+                                <i class="fas fa-user text-4xl text-white"></i>
                             </div>
-                            <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0 pt-2">
                                 <div class="flex items-center space-x-3 mb-2">
-                                    <h2 id="usernameDisplay" class="text-xl font-semibold text-slate-900">Warehouse User</h2>
-                                    <span class="inline-flex items-center bg-slate-100 text-slate-800 px-2.5 py-0.5 rounded-md text-sm font-medium">
+                                    <h2 id="usernameDisplay" class="text-2xl font-semibold text-text-dark">Warehouse User</h2>
+                                    <span class="inline-flex items-center bg-accent-purple bg-opacity-10 text-accent-purple px-2.5 py-0.5 rounded-full text-sm font-medium">
                                         <i class="fas fa-hard-hat w-3 h-3 mr-1.5"></i>
                                         Warehouse Staff
                                     </span>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div class="grid grid-cols-2 gap-x-4 gap-y-2 mt-4">
                                     <div>
-                                        <p class="text-sm text-slate-500">Employee ID</p>
-                                        <p id="employeeIdDisplay" class="font-mono text-sm font-medium text-slate-900 mt-1 bg-slate-50 px-2 py-1 rounded border">WH-EMP-12345</p>
+                                        <p class="text-sm text-text-light">Employee ID</p>
+                                        <p id="employeeIdDisplay" class="font-mono text-base font-medium text-text-dark mt-1 bg-soft-gray px-2 py-1 rounded border border-border-light">WH-EMP-12345</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-slate-500">Join Date</p>
-                                        <p id="joinDateDisplay" class="text-sm font-medium text-slate-900 mt-1">January 15, 2024</p>
+                                        <p class="text-sm text-text-light">Join Date</p>
+                                        <p id="joinDateDisplay" class="text-base font-medium text-text-dark mt-1">January 15, 2024</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Contact Information -->
-                    <div class="px-6 py-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Contact Information</h3>
+                    <div class="px-6 py-6 border-b border-border-light">
+                        <h3 class="text-lg font-semibold text-text-dark mb-4">Contact Information</h3>
                         <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <dt class="text-sm font-medium text-slate-500 mb-1">Email Address</dt>
-                                <dd id="emailDisplay" class="text-sm text-slate-900 font-medium">user@warehouse.com</dd>
+                                <dt class="text-sm font-medium text-text-light mb-1">Email Address</dt>
+                                <dd id="emailDisplay" class="text-base text-text-dark font-medium">user@warehouse.com</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-slate-500 mb-1">Phone Number</dt>
-                                <dd id="phoneDisplay" class="text-sm text-slate-900 font-medium">+62 812 3456 7890</dd>
+                                <dt class="text-sm font-medium text-text-light mb-1">Phone Number</dt>
+                                <dd id="phoneDisplay" class="text-base text-text-dark font-medium">+62 812 3456 7890</dd>
                             </div>
                         </dl>
                     </div>
 
-                    <!-- Work Information -->
-                    <div class="px-6 py-6 border-t border-slate-200 bg-slate-25">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Work Assignment</h3>
+                    <div class="px-6 py-6 bg-soft-gray rounded-b-xl">
+                        <h3 class="text-lg font-semibold text-text-dark mb-4">Work Assignment</h3>
                         <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <dt class="text-sm font-medium text-slate-500 mb-1">Current Shift</dt>
-                                <dd id="shiftDisplay" class="text-sm text-slate-900 font-medium">Morning Shift (08:00 - 16:00)</dd>
+                                <dt class="text-sm font-medium text-text-light mb-1">Current Shift</dt>
+                                <dd id="shiftDisplay" class="text-base text-text-dark font-medium">Morning Shift (08:00 - 16:00)</dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-slate-500 mb-1">Assigned Location</dt>
-                                <dd id="locationDisplay" class="text-sm text-slate-900 font-medium">Warehouse A, Block 3</dd>
+                                <dt class="text-sm font-medium text-text-light mb-1">Assigned Location</dt>
+                                <dd id="locationDisplay" class="text-base text-text-dark font-medium">Warehouse A, Block 3</dd>
                             </div>
                         </dl>
                     </div>
                 </div>
 
-                <!-- Performance Metrics -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
-                    <div class="px-6 py-4 border-b border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-900">Performance Overview</h3>
+                <div class="bg-white border border-border-light rounded-xl shadow-sm">
+                    <div class="px-6 py-4 border-b border-border-light">
+                        <h3 class="text-lg font-semibold text-text-dark">Performance Overview</h3>
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-slate-900">50</div>
-                                <div class="text-sm text-slate-500 mt-1">Transactions This Month</div>
-                                <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5">
-                                    <div class="bg-blue-600 h-1.5 rounded-full" style="width: 83%"></div>
+                                <div class="text-3xl font-bold text-text-dark">50</div>
+                                <div class="text-sm text-text-light mt-1">Transactions This Month</div>
+                                <div class="mt-3 w-full bg-border-light rounded-full h-2">
+                                    <div class="bg-primary-blue h-2 rounded-full" style="width: 83%"></div>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-slate-900">1,200</div>
-                                <div class="text-sm text-slate-500 mt-1">Items Handled</div>
-                                <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5">
-                                    <div class="bg-green-600 h-1.5 rounded-full" style="width: 95%"></div>
+                                <div class="text-3xl font-bold text-text-dark">1,200</div>
+                                <div class="text-sm text-text-light mt-1">Items Handled</div>
+                                <div class="mt-3 w-full bg-border-light rounded-full h-2">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: 95%"></div>
                                 </div>
                             </div>
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-slate-900">98.5%</div>
-                                <div class="text-sm text-slate-500 mt-1">Accuracy Rate</div>
-                                <div class="mt-2 w-full bg-slate-200 rounded-full h-1.5">
-                                    <div class="bg-emerald-600 h-1.5 rounded-full" style="width: 98.5%"></div>
+                                <div class="text-3xl font-bold text-text-dark">98.5%</div>
+                                <div class="text-sm text-text-light mt-1">Accuracy Rate</div>
+                                <div class="mt-3 w-full bg-border-light rounded-full h-2">
+                                    <div class="bg-emerald-600 h-2 rounded-full" style="width: 98.5%"></div>
                                 </div>
                             </div>
                         </div>
@@ -166,69 +162,66 @@
                 </div>
             </div>
 
-            <!-- Sidebar -->
             <div class="space-y-6">
-                <!-- Current Status -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
-                    <div class="px-6 py-4 border-b border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-900">Current Status</h3>
+                <div class="bg-white border border-border-light rounded-xl shadow-sm">
+                    <div class="px-6 py-4 border-b border-border-light">
+                        <h3 class="text-lg font-semibold text-text-dark">Current Status</h3>
                     </div>
                     <div class="p-6 space-y-4">
                         <div class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                             <div class="flex items-center space-x-3">
-                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                                <span class="text-sm font-medium text-slate-900">On Duty</span>
+                                <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+                                <span class="text-sm font-medium text-text-dark">On Duty</span>
                             </div>
-                            <span class="text-xs text-green-600 font-medium">07:55 AM</span>
+                            <span class="text-xs text-green-700 font-medium">07:55 AM</span>
                         </div>
                         
                         <div class="space-y-2">
                             <div class="flex justify-between text-sm">
-                                <span class="text-slate-500">Today's Hours</span>
-                                <span class="font-medium text-slate-900">6.2 / 8.0</span>
+                                <span class="text-text-light">Today's Hours</span>
+                                <span class="font-medium text-text-dark">6.2 / 8.0</span>
                             </div>
-                            <div class="w-full bg-slate-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 77.5%"></div>
+                            <div class="w-full bg-border-light rounded-full h-2">
+                                <div class="bg-primary-blue h-2 rounded-full" style="width: 77.5%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
-                <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
-                    <div class="px-6 py-4 border-b border-slate-200">
-                        <h3 class="text-lg font-semibold text-slate-900">Recent Activity</h3>
+                <div class="bg-white border border-border-light rounded-xl shadow-sm">
+                    <div class="px-6 py-4 border-b border-border-light">
+                        <h3 class="text-lg font-semibold text-text-dark">Recent Activity</h3>
                     </div>
-                    <div class="divide-y divide-slate-200">
-                        <div class="px-6 py-4 hover:bg-slate-50 transition-colors">
+                    <div class="divide-y divide-border-light">
+                        <div class="px-6 py-4 hover:bg-soft-gray transition-colors">
                             <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
+                                <div class="w-2.5 h-2.5 bg-primary-blue rounded-full mt-2"></div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-slate-900">Scanned Barcode #707</p>
-                                    <p class="text-xs text-slate-500 mt-1">3 days ago</p>
+                                    <p class="text-sm font-medium text-text-dark">Scanned Barcode #707</p>
+                                    <p class="text-xs text-text-light mt-1">3 days ago</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="px-6 py-4 hover:bg-slate-50 transition-colors">
+                        <div class="px-6 py-4 hover:bg-soft-gray transition-colors">
                             <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
+                                <div class="w-2.5 h-2.5 bg-green-500 rounded-full mt-2"></div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-slate-900">Completed Training Module</p>
-                                    <p class="text-xs text-slate-500 mt-1">1 week ago</p>
+                                    <p class="text-sm font-medium text-text-dark">Completed Training Module</p>
+                                    <p class="text-xs text-text-light mt-1">1 week ago</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="px-6 py-4 hover:bg-slate-50 transition-colors">
+                        <div class="px-6 py-4 hover:bg-soft-gray transition-colors">
                             <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-amber-400 rounded-full mt-2"></div>
+                                <div class="w-2.5 h-2.5 bg-amber-500 rounded-full mt-2"></div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-slate-900">Updated Profile Information</p>
-                                    <p class="text-xs text-slate-500 mt-1">2 weeks ago</p>
+                                    <p class="text-sm font-medium text-text-dark">Updated Profile Information</p>
+                                    <p class="text-xs text-text-light mt-1">2 weeks ago</p>
                                 </div>
                             </div>
                         </div>
                         <div class="px-6 py-4">
-                            <button class="text-sm text-slate-500 hover:text-slate-700 font-medium">
+                            <button class="text-sm text-primary-blue hover:text-indigo-700 font-medium">
                                 View all activity →
                             </button>
                         </div>
@@ -238,12 +231,11 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div id="editModal" class="fixed inset-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-lg">
-                <h3 class="text-xl font-semibold text-slate-900">Edit Profile Information</h3>
-                <button class="text-slate-400 hover:text-slate-600 transition-colors" onclick="closeEditModal()">
+    <div id="editModal" class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
+                <h3 class="text-xl font-semibold text-text-dark">Edit Profile Information</h3>
+                <button id="closeModalButton" class="text-text-light hover:text-text-dark transition-colors">
                     <i class="fas fa-times w-5 h-5"></i>
                 </button>
             </div>
@@ -251,27 +243,27 @@
             <div class="px-6 py-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="editUsername" class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
+                        <label for="editUsername" class="block text-sm font-medium text-text-dark mb-2">Full Name</label>
                         <input type="text" id="editUsername" placeholder="Enter your full name" 
-                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors text-sm">
+                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
                     
                     <div>
-                        <label for="editEmail" class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                        <label for="editEmail" class="block text-sm font-medium text-text-dark mb-2">Email Address</label>
                         <input type="email" id="editEmail" placeholder="Enter your email"
-                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors text-sm">
+                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
                     
                     <div>
-                        <label for="editPhone" class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                        <label for="editPhone" class="block text-sm font-medium text-text-dark mb-2">Phone Number</label>
                         <input type="text" id="editPhone" placeholder="Enter your phone number"
-                               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors text-sm">
+                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
                     
                     <div>
-                        <label for="editShift" class="block text-sm font-medium text-slate-700 mb-2">Work Shift</label>
+                        <label for="editShift" class="block text-sm font-medium text-text-dark mb-2">Work Shift</label>
                         <select id="editShift" 
-                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors text-sm">
+                                class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                             <option value="">Select your shift</option>
                             <option value="Morning Shift (08:00 - 16:00)">Morning Shift (08:00 - 16:00)</option>
                             <option value="Afternoon Shift (16:00 - 00:00)">Afternoon Shift (16:00 - 00:00)</option>
@@ -280,9 +272,9 @@
                     </div>
                     
                     <div class="md:col-span-2">
-                        <label for="editLocation" class="block text-sm font-medium text-slate-700 mb-2">Assigned Location</label>
+                        <label for="editLocation" class="block text-sm font-medium text-text-dark mb-2">Assigned Location</label>
                         <select id="editLocation"
-                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors text-sm">
+                                class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                             <option value="">Select your location</option>
                             <option value="Warehouse A, Block 1">Warehouse A, Block 1</option>
                             <option value="Warehouse A, Block 2">Warehouse A, Block 2</option>
@@ -294,74 +286,17 @@
                 </div>
             </div>
             
-            <div class="sticky bottom-0 bg-slate-50 px-6 py-4 flex justify-end space-x-3 rounded-b-lg border-t border-slate-200">
-                <button class="px-4 py-2 text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm" onclick="closeEditModal()">
+            <div class="sticky bottom-0 bg-soft-gray px-6 py-4 flex justify-end space-x-3 rounded-b-xl border-t border-border-light">
+                <button id="cancelButton" class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
                     Cancel
                 </button>
-                <button class="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 font-medium transition-colors text-sm" onclick="saveChanges()">
+                <button id="saveChangesButton" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm">
                     Save Changes
                 </button>
             </div>
         </div>
     </div>
 
-    <script>
-        // Modal functionality
-        document.getElementById('editProfileButton').addEventListener('click', function() {
-            // Populate form with current values
-            document.getElementById('editUsername').value = document.getElementById('usernameDisplay').textContent;
-            document.getElementById('editEmail').value = document.getElementById('emailDisplay').textContent;
-            document.getElementById('editPhone').value = document.getElementById('phoneDisplay').textContent;
-            document.getElementById('editShift').value = document.getElementById('shiftDisplay').textContent;
-            document.getElementById('editLocation').value = document.getElementById('locationDisplay').textContent;
-            
-            document.getElementById('editModal').classList.remove('hidden');
-            document.getElementById('editModal').classList.add('flex');
-        });
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
-            document.getElementById('editModal').classList.remove('flex');
-        }
-
-        function saveChanges() {
-            // Update display values
-            document.getElementById('usernameDisplay').textContent = document.getElementById('editUsername').value;
-            document.getElementById('emailDisplay').textContent = document.getElementById('editEmail').value;
-            document.getElementById('phoneDisplay').textContent = document.getElementById('editPhone').value;
-            document.getElementById('shiftDisplay').textContent = document.getElementById('editShift').value;
-            document.getElementById('locationDisplay').textContent = document.getElementById('editLocation').value;
-            
-            closeEditModal();
-            
-            // Show success notification (more professional)
-            showNotification('Profile updated successfully!', 'success');
-        }
-
-        function goToDashboard() {
-            window.history.back();
-        }
-
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 ${
-                type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-            }`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => document.body.removeChild(notification), 300);
-            }, 3000);
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('editModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeEditModal();
-            }
-        });
-    </script>
+    <script src="./js/profile.js"></script>
 </body>
 </html>

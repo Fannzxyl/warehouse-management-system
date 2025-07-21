@@ -1,0 +1,1865 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const mainContent = document.getElementById('default-content-area');
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const sidebarGroups = document.querySelectorAll('.sidebar-item[id^="sidebar-"][onclick^="toggleChildren"]');
+    const searchOverlay = document.getElementById('search-overlay');
+    const closeOverlayButton = document.querySelector('#search-overlay button[onclick="closeSearchOverlay()"]');
+    const overlaySearchInput = document.getElementById('overlay-search-input');
+    const overlaySearchResultsListPanel = document.getElementById('overlay-search-results-list-panel');
+    const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
+    const overlaySearchFilters = document.getElementById('overlay-search-filters');
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    const contentData = {
+        dashboard: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Dashboard</h2>
+                <p class="text-wise-gray mb-4">Selamat datang di dashboard Anda. Berikut ringkasan singkat operasi Anda.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Pemesanan</h3>
+                        <p class="text-3xl font-bold text-wise-blue-500">1,250</p>
+                        <p class="text-wise-gray text-sm mt-1">30 hari terakhir</p>
+                    </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kru Aktif</h3>
+                        <p class="text-3xl font-bold text-wise-teal-500">85</p>
+                        <p class="text-wise-gray text-sm mt-1">Sedang bekerja</p>
+                    </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Nilai Inventaris</h3>
+                        <p class="text-3xl font-bold text-wise-green-500">$2.5M</p>
+                        <p class="text-wise-gray text-sm mt-1">Total aset</p>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Aktivitas Terbaru</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
+                            <h4 class="text-wise-dark-gray font-medium">Pemesanan baru untuk Proyek Alpha</h4>
+                            <span class="text-wise-gray text-xs md:text-sm">5 menit yang lalu</span>
+                        </div>
+                        <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
+                            <h4 class="text-wise-dark-gray font-medium">Kru #123 menyelesaikan tugas</h4>
+                            <span class="text-wise-gray text-xs md:text-sm">1 jam yang lalu</span>
+                        </div>
+                        <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
+                            <h4 class="text-wise-dark-gray font-medium">Pembaruan inventaris: 10 unit ditambahkan ke Gudang</h4>
+                            <span class="text-wise-gray text-xs md:text-sm">3 jam yang lalu</span>
+                        </div>
+                    </div>
+                </div>
+            `,
+        },
+        'dashboard-summary': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ringkasan Dashboard</h2><p class="text-wise-gray">Ringkasan singkat metrik dashboard utama.</p><p class="text-wise-gray text-sm mt-2">Data terakhir diperbarui: Sekarang</p>`,
+        },
+        'dashboard-reports': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Laporan Dashboard</h2><p class="text-wise-gray">Laporan kinerja dan aktivitas dashboard terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terbaru: Q2 2025</p>`,
+        },
+        'dashboard-alerts': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Peringatan Dashboard</h2><p class="text-wise-gray">Daftar peringatan dan notifikasi penting.</p><p class="text-wise-gray text-sm mt-2">Peringatan aktif: 3</p>`,
+        },
+        'yard-management': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Halaman</h2>
+                <p class="text-wise-gray mb-4">Kelola sumber daya dan peralatan halaman Anda di sini. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Total Kendaraan: 50, Tersedia: 35</li>
+                        <li>Total Peralatan: 120, Tersedia: 80</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'yard-vehicles': {
+            full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan (Halaman Lengkap)</h2><p class="text-wise-gray">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray text-sm mt-2">Detail penuh kendaraan.</p>`,
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan</h2><p class="text-wise-gray">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 35 unit</p>`,
+        },
+        'yard-equipment': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Peralatan</h2><p class="text-wise-gray">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 80 unit</p>`,
+        },
+        'yard-personnel': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Personel</h2><p class="text-wise-gray">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 15 orang</p>`,
+        },
+        receiving: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Penerimaan</h2>
+                <p class="text-wise-gray mb-4">Lacak dan kelola semua pengiriman dan kiriman yang masuk. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Penerimaan Tertunda</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Pengiriman #101 - Diharapkan: Hari Ini</li>
+                        <li>Pengiriman #102 - Diharapkan: Besok</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'receiving-deliveries': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengiriman</h2><p class="text-wise-gray">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengiriman: 5</p>`,
+        },
+        'receiving-returns': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengembalian</h2><p class="text-wise-gray">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengembalian: 2</p>`,
+        },
+        'receiving-vendors': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Vendor</h2><p class="text-wise-gray">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah vendor aktif: 10</p>`,
+        },
+        order: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan</h2>
+                <p class="text-wise-gray mb-4">Rencanakan dan optimalkan pesanan Anda. Lacak status pesanan, kelola pengiriman, dan perkiraan permintaan. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Pesanan Tertunda</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Pengiriman #X123 - Status: Menunggu Persetujuan</li>
+                        <li>Pengiriman #Y456 - Status: Dalam Perjalanan</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'order-new': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Baru</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
+        },
+        'order-pending': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam proses atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
+        },
+        'order-history': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
+        },
+        work: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Pekerjaan</h2>
+                <p class="text-wise-gray mb-4">Tetapkan tugas, lacak kemajuan, dan kelola tenaga kerja Anda secara efisien. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Tugas Selesai (Hari Ini): 5</li>
+                        <li>Tugas Tertunda: 12</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'work-tasks': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tugas</h2><p class="text-wise-gray">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray text-sm mt-2">Tugas aktif: 8</p>`,
+        },
+        'work-schedule': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Jadwal</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
+        },
+        'work-teams': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah tim: 5</p>`,
+        },
+        'cross-application': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Lintas Aplikasi</h2>
+                <p class="text-wise-gray mb-4">Kelola integrasi dan aliran data antar aplikasi yang berbeda. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Sistem Terhubung</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Sistem CRM (Aktif)</li>
+                        <li>Sistem ERP (Aktif)</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'cross-app-integrations': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Integrasi</h2><p class="text-wise-gray">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray text-sm mt-2">Integrasi aktif: 3</p>`,
+        },
+        'cross-app-data-sync': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Sinkronisasi Data</h2><p class="text-wise-gray">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
+        },
+        'cross-app-api': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Manajemen API</h2><p class="text-wise-gray">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray text-sm mt-2">Kunci API aktif: 7</p>`,
+        },
+        inventory: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Inventaris</h2>
+                <p class="text-wise-gray mb-4">Pilih lokasi inventaris dari sidebar untuk melihat detailnya.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Ringkasan</h3>
+                    <p class="text-wise-gray text-sm mt-2">Total Item di Semua Lokasi: 1,500</p>
+                    <p class="text-wise-gray text-sm">Tersedia untuk Digunakan: 1,200</p>
+                </div>
+            `,
+        },
+        yard: {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Halaman</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 150</p>`,
+        },
+        warehouse: {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Gudang</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 1000</p>`,
+        },
+        storage: {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Penyimpanan</h2><p class="text-wise-gray">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 350</p>`,
+        },
+        performance: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Kinerja</h2>
+                <p class="text-wise-gray mb-4">Pantau dan analisis metrik kinerja untuk berbagai operasi dan personel. Pilih sub-kategori dari sidebar.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Indikator Kinerja Utama (KPI)</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Tingkat Pengiriman Tepat Waktu: 98%</li>
+                        <li>Tingkat Penyelesaian Tugas: 95%</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'performance-kpis': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - KPI</h2><p class="text-wise-gray">Lihat metrik kinerja utama.</p><p class="text-wise-gray text-sm mt-2">KPI: 5 aktif</p>`,
+        },
+        'performance-analytics': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Analitik</h2><p class="text-wise-gray">Analisis data kinerja terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terakhir: Hari ini</p>`,
+        },
+        'performance-goals': {
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
+        },
+        
+        configuration: {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi Sistem</h2>
+                <p class="text-wise-gray mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub-kategori dari sidebar untuk mengelola Warehouse, Zone, atau Location Type.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Gudang</h3>
+                        <p class="text-wise-gray text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-warehouse')">
+                            Kelola Gudang
+                        </button>
+                    </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Zona</h3>
+                        <p class="text-wise-gray text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-zone')">
+                            Kelola Zona
+                        </button>
+                    </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Tipe Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-location-type')">
+                            Kelola Tipe Lokasi
+                        </button>
+                    </div>
+                </div>
+            `,
+        },
+        'configuration-warehouse': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Gudang </h2>
+                <p class="text-wise-gray mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showWarehouseForm('create')">
+                        Buat Gudang Baru
+                    </button>
+                    <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
+                </div>
+                <div id="warehouse-list-container" class="overflow-x-auto">
+                    </div>
+                <div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
+                        <h3 id="warehouse-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                        <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="warehouse-name" class="block text-sm font-medium text-wise-dark-gray">Warehouse:</label>
+                                    <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="warehouse-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                    <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex space-x-2 mb-2">
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="warehouse-address">Warehouse Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="returns-address">Returns Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="freight-bill-to-address">Freight Bill to Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="authorized-users">Authorized Users</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="miscellaneous">Miscellaneous</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data">User Defined Data</button>
+                                </div>
+
+                                <div id="warehouse-address" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Warehouse Address</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
+                                            <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
+                                            <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
+                                            <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <div class="flex-1">
+                                                <label for="city" class="block text-sm font-medium text-wise-dark-gray">City, state postal code:</label>
+                                                <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="w-24">
+                                                <label for="state" class="block text-sm font-medium text-wise-dark-gray hidden">State:</label>
+                                                <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Jawa Barat">Jawa Barat</option>
+                                                    <option value="Jawa Tengah">Jawa Tengah</option>
+                                                    <option value="Jawa Timur">Jawa Timur</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex-1">
+                                                <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray hidden">Postal Code:</label>
+                                                <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
+                                            <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <option value="">--Pilih--</option>
+                                                <option value="Indonesia">Indonesia</option>
+                                                <option value="USA">USA</option>
+                                                <option value="Singapore">Singapore</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
+                                            <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
+                                            <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
+                                            <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
+                                            <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
+                                            <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="returns-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Returns Address</h4>
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" onclick="toggleReturnAddressFields()">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Same as warehouse address</span>
+                                        </label>
+                                    </div>
+                                    <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="return-name" class="block text-sm font-medium text-wise-dark-gray">Name:</label>
+                                            <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
+                                            <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
+                                            <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
+                                            <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <div class="flex-1">
+                                                <label for="return-city" class="block text-sm font-medium text-wise-dark-gray">City, state postal code:</label>
+                                                <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="w-24">
+                                                <label for="return-state" class="block text-sm font-medium text-wise-dark-gray hidden">State:</label>
+                                                <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Jawa Barat">Jawa Barat</option>
+                                                    <option value="Jawa Tengah">Jawa Tengah</option>
+                                                    <option value="Jawa Timur">Jawa Timur</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex-1">
+                                                <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray hidden">Postal Code:</label>
+                                                <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
+                                            <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <option value="">--Pilih--</option>
+                                                <option value="Indonesia">Indonesia</option>
+                                                <option value="USA">USA</option>
+                                                <option value="Singapore">Singapore</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="return-fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
+                                            <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
+                                            <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
+                                            <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
+                                            <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="return-ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
+                                            <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="freight-bill-to-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Freight Bill to Address</h4>
+                                    <p class="text-wise-gray text-sm">Formulir untuk Freight Bill to Address.</p>
+                                </div>
+                                <div id="authorized-users" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" onclick="toggleAllUsers()">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                        </label>
+                                    </div>
+                                    <div id="user-checkbox-list" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                                        </div>
+                                </div>
+                                <div id="miscellaneous" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Miscellaneous</h4>
+                                    <div class="mb-4">
+                                        <label for="slotting-move-file-directory" class="block text-sm font-medium text-wise-dark-gray">Slotting move file download directory:</label>
+                                        <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-wise-dark-gray">Default location for unslotted items:</label>
+                                        <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <h5 class="font-semibold text-wise-dark-gray mt-4 mb-2">SQL Server Reporting Services</h5>
+                                    <div>
+                                        <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-wise-dark-gray">Rendered document pdf file directory:</label>
+                                        <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                </div>
+                                <div id="user-defined-data" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                            <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                            <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                            <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                            <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                            <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                            <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                            <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="user-defined-field8" class="block text-sm font-medium text-wise-dark-gray">User defined field 8:</label>
+                                            <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
+                                <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+        },
+        'configuration-zone': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Zona</h2>
+                <p class="text-wise-gray mb-4">Kelola tipe zona untuk berbagai area dalam gudang.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showZoneForm('create')">
+                        Buat Zona Baru
+                    </button>
+                    <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
+                </div>
+                <div id="zone-list-container" class="overflow-x-auto">
+                    </div>
+
+                <div id="zone-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                        <h3 id="zone-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                        <form id="zone-form" onsubmit="handleZoneSubmit(event)">
+                            <div class="mb-4">
+                                <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                                <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="mb-4">
+                                <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                                <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                            </div>
+                            <div class="mb-4">
+                                <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500 cursor-not-allowed">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                </label>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
+                                <button type="submit" id="zone-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+        },
+        'configuration-location-type': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Tipe Lokasi</h2>
+                <p class="text-wise-gray mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocationTypeForm('create')">
+                        Buat Tipe Lokasi Baru
+                    </button>
+                    <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
+                </div>
+                <div id="location-type-list-container" class="overflow-x-auto">
+                    </div>
+
+                <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                        <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                        <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
+                            <div class="mb-4">
+                                <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
+                                <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="flex space-x-2 mb-2">
+                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="general-location">General</button>
+                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data-location">User defined data</button>
+                            </div>
+                            <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
+                                        <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                        <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
+                                        <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
+                                        <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
+                                        <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                        <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
+                                <p class="text-wise-gray text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
+                            </div>
+
+                            <div class="mb-4 mt-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
+                                <button type="submit" id="location-type-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+        },
+        
+        'article a': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Artikel A</h2>
+                <p class="text-wise-gray">Ini adalah konten terperinci untuk Artikel A. Ini baru saja diperbarui dan berisi informasi penting mengenai pembaruan sistem.</p>
+                <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 2 jam yang lalu</p>
+            `,
+        },
+        'paragraph b': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Paragraf B</h2>
+                <p class="text-wise-gray">Di sini Anda akan menemukan informasi lebih lanjut tentang Paragraf B. Bagian ini mencakup berbagai aspek penanganan dan pemrosesan data.</p>
+                <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 1 jam yang lalu</p>
+            `,
+        },
+        'method c': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Metode C</h2>
+                <p class="text-wise-gray">Detail tentang Metode C, termasuk langkah-langkah implementasi dan praktik terbaiknya. Metode ini sangat penting untuk mengoptimalkan kinerja.</p>
+                <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 30 menit yang lalu</p>
+            `,
+        },
+        // Start of Setting Optimization Data
+        'setting-optimization': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Optimasi</h2>
+                <p class="text-wise-gray mb-4">Kelola pengaturan untuk mengoptimalkan kinerja sistem dan preferensi notifikasi.</p>
+                <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                    <h3 class="font-medium text-wise-dark-gray">Ikhtisar Pengaturan</h3>
+                    <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                        <li>Status Optimasi: Aktif</li>
+                        <li>Pembaruan Otomatis: Diaktifkan</li>
+                        <li>Notifikasi Email: Diaktifkan</li>
+                    </ul>
+                </div>
+            `,
+        },
+        'setting-optimization-general': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Umum</h2>
+                <p class="text-wise-gray">Konfigurasi pengaturan dasar sistem.</p>
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <label for="auto-update" class="flex items-center">
+                            <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" checked>
+                            <span class="ml-2 text-wise-dark-gray text-sm">Aktifkan Pembaruan Otomatis</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Bahasa:</label>
+                        <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            <option value="id">Bahasa Indonesia</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+            `,
+        },
+        'setting-optimization-performance': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penyesuaian Kinerja</h2>
+                <p class="text-wise-gray">Optimalkan kinerja aplikasi.</p>
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Ukuran Cache (MB):</label>
+                        <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                    </div>
+                    <div>
+                        <label for="data-compression" class="flex items-center">
+                            <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                            <span class="ml-2 text-wise-dark-gray text-sm">Aktifkan Kompresi Data</span>
+                        </label>
+                    </div>
+                </div>
+            `,
+        },
+        'setting-optimization-notifications': {
+            detail: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Preferensi Notifikasi</h2>
+                <p class="text-wise-gray">Atur bagaimana kamu menerima notifikasi.</p>
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <label for="email-notifications" class="flex items-center">
+                            <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" checked>
+                            <span class="ml-2 text-wise-dark-gray text-sm">Notifikasi Email</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="sms-notifications" class="flex items-center">
+                            <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-500">
+                            <span class="ml-2 text-wise-dark-gray text-sm">Notifikasi SMS</span>
+                        </label>
+                    </div>
+                </div>
+            `,
+        },
+        // End of Setting Optimization Data
+    };
+
+    const searchItems = [
+        { id: 'article a', title: 'Artikel A', category: 'Umum', lastUpdated: '2 jam yang lalu' },
+        { id: 'paragraph b', title: 'Paragraf B', category: 'Dokumentasi', lastUpdated: '1 jam yang lalu' },
+        { id: 'method c', title: 'Metode C', category: 'Teknis', lastUpdated: '30 menit yang lalu' },
+        { id: 'recent-booking', title: 'Pemesanan baru untuk Proyek Alpha', category: 'Pemesanan', lastUpdated: '5 menit yang lalu' },
+        { id: 'crew-task', title: 'Tugas kru #123 selesai', category: 'Pekerjaan', lastUpdated: '1 jam yang lalu' },
+        { id: 'inventory-update', title: 'Pembaruan inventaris: 10 unit ditambahkan ke Gudang', category: 'Inventaris', lastUpdated: '3 jam yang lalu' },
+        { id: 'vehicle-a', title: 'Loader Berat A', category: 'Manajemen Halaman', lastUpdated: '1 hari yang lalu' },
+        { id: 'delivery-x', title: 'Pengiriman X dari Pemasok A', category: 'Penerimaan', lastUpdated: '4 jam yang lalu' },
+        { id: 'order-123', title: 'Pesanan Pelanggan #123', category: 'Perencanaan Pesanan', lastUpdated: '1 hari yang lalu' },
+        { id: 'integration-crm', title: 'Status Integrasi CRM', category: 'Lintas Aplikasi', lastUpdated: '1 jam yang lalu' },
+        { id: 'report-q1', title: 'Laporan Kinerja Q1', category: 'Kinerja', lastUpdated: '2 minggu yang lalu' },
+        { id: 'setting-notifications', title: 'Preferensi Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Kemarin' },
+        { id: 'log-errors', title: 'Log Kesalahan', category: 'Manajemen Sistem', lastUpdated: '5 menit yang lalu' },
+        { id: 'archive-finance', title: 'Laporan Keuangan 2023', category: 'Pengarsipan Data', lastUpdated: 'Jan 2024' },
+        { id: 'dashboard-summary', title: 'Ringkasan Dashboard', category: 'Dashboard', lastUpdated: 'Sekarang' },
+        { id: 'dashboard-reports', title: 'Laporan Dashboard', category: 'Dashboard', lastUpdated: 'Q2 2025' },
+        { id: 'dashboard-alerts', title: 'Peringatan Dashboard', category: 'Dashboard', lastUpdated: '3 aktif' },
+        { id: 'yard-vehicles', title: 'Kendaraan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+        { id: 'yard-equipment', title: 'Peralatan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+        { id: 'yard-personnel', title: 'Personel Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
+        { id: 'receiving-deliveries', title: 'Pengiriman Penerimaan', category: 'Penerimaan', lastUpdated: 'Hari ini' },
+        { id: 'receiving-returns', title: 'Pengembalian Penerimaan', category: 'Penerimaan', lastUpdated: 'Minggu lalu' },
+        { id: 'receiving-vendors', title: 'Vendor Penerimaan', category: 'Penerimaan', lastUpdated: 'Bulanan' },
+        { id: 'order-new', title: 'Pesanan Baru', category: 'Perencanaan Pesanan', lastUpdated: 'Hari ini' },
+        { id: 'order-pending', title: 'Pesanan Tertunda', category: 'Perencanaan Pesanan', lastUpdated: 'Berlangsung' },
+        { id: 'order-history', title: 'Riwayat Pesanan', category: 'Perencanaan Pesanan', lastUpdated: 'Sepanjang waktu' },
+        { id: 'work-tasks', title: 'Tugas Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
+        { id: 'work-schedule', title: 'Jadwal Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Harian' },
+        { id: 'work-teams', title: 'Tim Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
+        { id: 'cross-app-integrations', title: 'Integrasi Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
+        { id: 'cross-app-data-sync', title: 'Sinkronisasi Data Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Terbaru' },
+        { id: 'cross-app-api', title: 'Manajemen API Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
+        { id: 'performance-kpis', title: 'KPI Kinerja', category: 'Kinerja', lastUpdated: 'Langsung' },
+        { id: 'performance-analytics', title: 'Analitik Kinerja', category: 'Kinerja', lastUpdated: 'Harian' },
+        { id: 'performance-goals', title: 'Sasaran Kinerja', category: 'Kinerja', lastUpdated: 'Triwulanan' },
+        { id: 'configuration-warehouse', title: 'Konfigurasi Gudang', category: 'Configuration', lastUpdated: 'Terbaru' },
+        { id: 'configuration-zone', title: 'Konfigurasi Zona', category: 'Configuration', lastUpdated: 'Terbaru' },
+        { id: 'configuration-location-type', title: 'Konfigurasi Tipe Lokasi', category: 'Configuration', lastUpdated: 'Terbaru' },
+        { id: 'system-users', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
+        { id: 'system-logs', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
+        { id: 'system-backup', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
+        { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+        { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+        { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+        // Start of Setting Optimization Search Items
+        { id: 'setting-optimization-general', title: 'Pengaturan Umum', category: 'Setting Optimization', lastUpdated: 'Baru saja' },
+        { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
+        { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
+        // End of Setting Optimization Search Items
+    ];
+
+    let currentCategory = 'dashboard';
+    let activeFilters = [];
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+    const parentMapping = {
+        'dashboard-summary': 'dashboard', 'dashboard-reports': 'dashboard', 'dashboard-alerts': 'dashboard',
+        'yard-vehicles': 'yard-management', 'yard-equipment': 'yard-management', 'yard-personnel': 'yard-management',
+        'receiving-deliveries': 'receiving', 'receiving-returns': 'receiving', 'receiving-vendors': 'receiving',
+        'order-new': 'order', 'order-pending': 'order', 'order-history': 'order',
+        'work-tasks': 'work', 'work-schedule': 'work', 'work-teams': 'work',
+        'cross-app-integrations': 'cross-application', 'cross-app-data-sync': 'cross-application', 'cross-app-api': 'cross-application',
+        'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
+        'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
+        'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
+        'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system',
+        'archive-documents': 'archive', 'archive-media': 'archive', 'archive-financial': 'archive',
+        // Start of Setting Optimization Parent Mapping
+        'setting-optimization-general': 'setting-optimization',
+        'setting-optimization-performance': 'setting-optimization',
+        'setting-optimization-notifications': 'setting-optimization',
+        // End of Setting Optimization Parent Mapping
+    };
+
+    window.toggleChildren = function(category) {
+        const childrenDiv = document.getElementById(`${category}-children`);
+        const arrowIcon = document.getElementById(`${category}-arrow`);
+        
+        if (childrenDiv && arrowIcon) {
+            childrenDiv.classList.toggle('hidden');
+            arrowIcon.classList.toggle('rotate-90');
+            arrowIcon.classList.toggle('rotate-0');
+        }
+
+        // Jika kategori utama dibuka, pilih kategori utama tersebut
+        if (!childrenDiv.classList.contains('hidden')) {
+            selectCategory(category);
+        }
+    }
+
+    window.selectCategory = function(category) {
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
+        });
+        document.querySelectorAll('.sidebar-child').forEach(item => {
+            item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+            item.classList.add('text-wise-gray');
+        });
+
+        const selectedItem = document.getElementById(`sidebar-${category}`);
+        if (selectedItem) {
+            selectedItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+        } else {
+            const childElement = document.querySelector(`[onclick="selectCategory('${category}')"]`);
+            if (childElement) {
+                childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+                childElement.classList.remove('text-wise-gray');
+                
+                const parentCategory = parentMapping[category];
+                if (parentCategory) {
+                    const parentSidebarItem = document.getElementById(`sidebar-${parentCategory}`);
+                    if (parentSidebarItem) {
+                        parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+                    }
+                    const parentChildrenDiv = document.getElementById(`${parentCategory}-children`);
+                    const parentArrowIcon = document.getElementById(`${parentCategory}-arrow`);
+                    if (parentChildrenDiv && parentChildrenDiv.classList.contains('hidden')) {
+                        parentChildrenDiv.classList.remove('hidden');
+                        if (parentArrowIcon) {
+                            parentArrowIcon.classList.remove('rotate-0');
+                            parentArrowIcon.classList.add('rotate-90');
+                        }
+                    }
+                }
+            }
+        }
+        
+        currentCategory = category;
+        const content = contentData[category];
+        const defaultContentArea = document.getElementById('default-content-area');
+        const searchOverlay = document.getElementById('search-overlay');
+
+        searchOverlay.classList.add('hidden');
+
+        if (content && content.full) {
+            defaultContentArea.innerHTML = content.full;
+            defaultContentArea.classList.remove('hidden');
+        } else if (content && content.detail) {
+            defaultContentArea.innerHTML = content.detail;
+            defaultContentArea.classList.remove('hidden');
+        } else {
+            defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten untuk ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Belum ada konten spesifik untuk kategori ini.</p>`;
+            defaultContentArea.classList.remove('hidden');
+        }
+        
+        // Specific handlers for configuration categories to render forms/lists
+        if (category === 'configuration-warehouse') {
+            renderWarehouseList();
+            initializeTabButtons('warehouse-form-modal');
+            activateTab('warehouse-address');
+        } else if (category === 'configuration-zone') {
+            renderZoneList();
+            initializeTabButtons('zone-form-modal');
+        } else if (category === 'configuration-location-type') {
+            renderLocationTypeList();
+            initializeTabButtons('location-type-form-modal');
+            activateTab('general-location');
+        }
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+            mainContent.classList.remove('ml-64');
+            mainContent.classList.add('ml-0');
+        }
+    }
+
+    window.handleSearch = function(query) {
+        const searchOverlay = document.getElementById('search-overlay');
+        const overlaySearchInput = document.getElementById('overlay-search-input');
+        const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
+        if (query.length > 0) {
+            searchOverlay.classList.remove('hidden');
+            overlaySearchInput.value = query;
+            performSearch(query, 'overlay');
+            searchHistoryDropdown.classList.add('hidden');
+        } else {
+            searchOverlay.classList.add('hidden');
+            selectCategory(currentCategory);
+            showSearchHistory();
+        }
+    }
+
+    window.performSearch = function(query, source) {
+        const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
+        const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
+        const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
+
+        // Hide all filters initially
+        document.getElementById('overlay-filter-articles').classList.add('hidden');
+        document.getElementById('overlay-filter-photography').classList.add('hidden');
+        document.getElementById('filter-articles').classList.add('hidden');
+        document.getElementById('filter-photography').classList.add('hidden');
+
+
+        if (query.length > 0) {
+            filtersContainer.classList.remove('hidden');
+            
+            let filteredResults = searchItems.filter(item => 
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.category.toLowerCase().includes(query.toLowerCase()) ||
+                (item.id && item.id.toLowerCase().includes(query.toLowerCase()))
+            );
+
+            if (activeFilters.length > 0) {
+                filteredResults = filteredResults.filter(item => 
+                    activeFilters.some(filter => item.category.toLowerCase().includes(filter.toLowerCase()))
+                );
+            }
+
+            resultsPanel.innerHTML = ''; // Clear previous results
+
+            if (filteredResults.length > 0) {
+                // Show filters if relevant results exist
+                if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
+                    document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
+                }
+                if (filteredResults.some(item => item.category.toLowerCase().includes('fotografi') || item.title.toLowerCase().includes('foto'))) {
+                    document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
+                }
+                
+                filteredResults.forEach(item => {
+                    const resultItem = document.createElement('div');
+                    resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2');
+                    resultItem.innerHTML = `
+                        <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
+                        <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+                    `;
+                    resultItem.onmouseenter = (event) => showPreview(item.id, event); // Show preview on hover
+                    resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
+                    resultsPanel.appendChild(resultItem);
+                });
+            } else {
+                resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                filtersContainer.classList.add('hidden'); // Hide filters if no results
+            }
+            if (detailPanel) {
+                detailPanel.innerHTML = `<p class="text-wise-gray text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+            }
+        } else {
+            resultsPanel.innerHTML = ''; // Clear results if query is empty
+            if (detailPanel) {
+                detailPanel.innerHTML = `<p class="text-wise-gray text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+            }
+            filtersContainer.classList.add('hidden'); // Hide filters if query is empty
+        }
+    }
+
+    window.showPreview = function(id) {
+        const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
+        const content = contentData[id];
+
+        if (content && (content.detail || content.full)) {
+            overlayDetailContentPanel.innerHTML = `
+                ${content.detail || content.full}
+                <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="displayContentInMainDashboard('${id}')">
+                    Tampilkan Halaman
+                </button>
+            `;
+        } else {
+            overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center">Tidak ada pratinjau tersedia untuk item ini.</p>`;
+        }
+    }
+
+    window.selectSearchResult = function(id, title, query) {
+        addSearchHistory(query);
+        displayContentInMainDashboard(id);
+    }
+
+    window.displayContentInMainDashboard = function(id) {
+        const content = contentData[id];
+        const defaultContentArea = document.getElementById('default-content-area');
+        
+        if (content && content.full) {
+            defaultContentArea.innerHTML = content.full;
+        } else if (content && content.detail) {
+            defaultContentArea.innerHTML = content.detail;
+        } else {
+            defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap tersedia.</p>`;
+        }
+        
+        closeSearchOverlay();
+        selectCategory(id); // Also highlight the selected category in sidebar
+    }
+
+    window.addOverlayFilter = function(filterName) {
+        if (!activeFilters.includes(filterName.toLowerCase())) {
+            activeFilters.push(filterName.toLowerCase());
+            document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.remove('hidden');
+            performSearch(document.getElementById('overlay-search-input').value, 'overlay');
+        }
+    }
+
+    window.removeOverlayFilter = function(filterName) {
+        activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
+        document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
+        performSearch(document.getElementById('overlay-search-input').value, 'overlay');
+    }
+
+    window.removeAllOverlayFilters = function() {
+        activeFilters = [];
+        document.getElementById('overlay-filter-articles').classList.add('hidden');
+        document.getElementById('overlay-filter-photography').classList.add('hidden');
+        document.getElementById('overlay-search-input').value = '';
+        performSearch('', 'overlay');
+    }
+    
+    window.closeSearchOverlay = function() {
+        document.getElementById('search-overlay').classList.add('hidden');
+        document.getElementById('search-input').value = '';
+        document.getElementById('overlay-search-input').value = '';
+        activeFilters = [];
+        document.getElementById('overlay-search-filters').classList.add('hidden');
+        document.getElementById('filter-articles').classList.add('hidden');
+        document.getElementById('filter-photography').classList.add('hidden');
+        document.getElementById('search-history-dropdown').classList.add('hidden');
+        selectCategory(currentCategory); // Re-select current category to refresh content
+    }
+
+    window.toggleUserDropdown = function() {
+        const userDropdown = document.getElementById('user-dropdown');
+        userDropdown.classList.toggle('hidden');
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        const userIconContainer = document.querySelector('header .relative.flex.items-center');
+        const userDropdown = document.getElementById('user-dropdown');
+        const searchInput = document.getElementById('search-input');
+        const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
+        if (userIconContainer && userDropdown && !userIconContainer.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+        if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+            searchHistoryDropdown.classList.add('hidden');
+        }
+    });
+
+    window.handleLogout = function() {
+        alert('Kamu udah berhasil keluar.');
+        window.location.href = 'login.html';
+    }
+
+    window.navigateToProfile = function() {
+        window.location.href = 'profile.html';
+    }
+
+    function addSearchHistory(query) {
+        if (query && !searchHistory.includes(query)) {
+            searchHistory.unshift(query); // Add to the beginning
+            searchHistory = searchHistory.slice(0, 5); // Keep only the last 5
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        }
+    }
+
+    window.showSearchHistory = function() {
+        const historyDropdown = document.getElementById('search-history-dropdown');
+        const historyContent = document.getElementById('search-history-content');
+        
+        historyContent.innerHTML = ''; // Clear previous history
+
+        if (searchHistory.length > 0) {
+            searchHistory.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.classList.add('flex', 'items-center', 'justify-between', 'px-3', 'py-2', 'cursor-pointer', 'hover:bg-wise-light-gray', 'rounded-md');
+                historyItem.innerHTML = `
+                    <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
+                    <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
+                `;
+                historyContent.appendChild(historyItem);
+            });
+            const clearAllButton = document.createElement('div');
+            clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
+            clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Hapus Semua Riwayat</button>`;
+            historyContent.appendChild(clearAllButton);
+
+            historyDropdown.classList.remove('hidden');
+        } else {
+            historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+            historyDropdown.classList.remove('hidden');
+        }
+    }
+
+    window.applySearchHistory = function(query) {
+        document.getElementById('search-input').value = query;
+        handleSearch(query);
+        document.getElementById('search-history-dropdown').classList.add('hidden');
+    }
+
+    window.removeSearchHistory = function(index) {
+        searchHistory.splice(index, 1); // Remove item at index
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        showSearchHistory(); // Refresh history display
+    }
+
+    window.clearAllSearchHistory = function() {
+        searchHistory = [];
+        localStorage.removeItem('searchHistory');
+        showSearchHistory(); // Refresh history display
+    }
+
+    // Dummy data for configuration sections (Warehouses, Zones, Location Types)
+    let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
+        { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
+        { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCP', description: 'DC PELABUHAN RATU', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCS', description: 'DC SUMBER', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCT', description: 'DC TEGAL', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'GBG', description: 'DC GEDE BAGE', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+    ];
+    
+    let zones = JSON.parse(localStorage.getItem('zones')) || [
+        { id: 'Allocation', identifier: 'Allocation', recordType: 'ZONETYPE', description: 'Allocation', systemValue1: 'Yes', systemCreated: true, active: true },
+        { id: 'Locating', identifier: 'Locating', recordType: 'ZONETYPE', description: 'Locating', systemValue1: 'Yes', systemCreated: true, active: true },
+        { id: 'Work', identifier: 'Work', recordType: 'ZONETYPE', description: 'Work', systemValue1: 'Yes', systemCreated: true, active: true },
+    ];
+
+    let locationTypes = JSON.parse(localStorage.getItem('locationTypes')) || [
+        { id: 'CFLOW RESV TYPE 1', locationType: 'CFLOW RESV TYPE 1', length: 120.00, width: 30.00, height: 120.00, dimensionUM: 'CM', maximumWeight: 1000.00, weightUM: 'KG', active: true, lastUpdated: '01-07-2019 9:46:38 AM User: suhartono' },
+        { id: 'CARTON FLOW', locationType: 'CARTON FLOW', length: 180.00, width: 60.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 100/120/80', locationType: 'CARTON FLOW 100/120/80', length: 100.00, width: 120.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 140/73/40', locationType: 'CARTON FLOW 140/73/40', length: 140.00, width: 73.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 37/130/60', locationType: 'CARTON FLOW 37/130/60', length: 37.00, width: 130.00, height: 60.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 40/18/40', locationType: 'CARTON FLOW 40/18/40', length: 40.00, width: 18.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 40/37/40', locationType: 'CARTON FLOW 40/37/40', length: 40.00, width: 37.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 5 SLOT', locationType: 'CARTON FLOW 5 SLOT', length: 46.00, width: 120.00, height: 88.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 55/70/45', locationType: 'CARTON FLOW 55/70/45', length: 55.00, width: 70.00, height: 45.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 7 SLOT', locationType: 'CARTON FLOW 7 SLOT', length: 32.00, width: 120.00, height: 94.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 70/28/40', locationType: 'CARTON FLOW 70/28/40', length: 70.00, width: 28.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 70/50/40', locationType: 'CARTON FLOW 70/50/40', length: 70.00, width: 50.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CARTON FLOW 80/40/55', locationType: 'CARTON FLOW 80/40/55', length: 80.00, width: 40.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW.TYPE A', locationType: 'CFLOW.TYPE A', length: 82.00, width: 30.00, height: 93.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW.TYPE B', locationType: 'CFLOW.TYPE B', length: 42.00, width: 38.00, height: 50.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESERVE 115cm', locationType: 'CFLOW RESERVE 115cm', length: 239.00, width: 122.00, height: 115.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESERVE 55cm', locationType: 'CFLOW RESERVE 55cm', length: 239.00, width: 122.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESERVE 70cm', locationType: 'CFLOW RESERVE 70cm', length: 239.00, width: 122.00, height: 70.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESERVE 90cm', locationType: 'CFLOW RESERVE 90cm', length: 239.00, width: 122.00, height: 90.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESV TYPE A', locationType: 'CFLOW RESV TYPE A', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESV TYPE B', locationType: 'CFLOW RESV TYPE B', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CFLOW RESV TYPE C', locationType: 'CFLOW RESV TYPE C', length: 37.00, width: 40.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER FACE', locationType: 'CONTAINER FACE', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER PINK 2002', locationType: 'CONTAINER PINK 2002', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER PINK 2004', locationType: 'CONTAINER PINK 2004', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER PINK 2006', locationType: 'CONTAINER PINK 2006', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER PINK 2010', locationType: 'CONTAINER PINK 2010', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'CONTAINER PINK 2055', locationType: 'CONTAINER PINK 2055', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
+        { id: 'DCB LOADING LANE', locationType: 'DCB LOADING LANE', length: 0.00, width: 0.00, height: 0.00, dimensionUM: 'CM', maximumWeight: 0.00, weightUM: 'KG', active: true, lastUpdated: '' },
+    ];
+
+    const allUsers = [
+        'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
+        'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
+        'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115',
+        'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'
+    ];
+
+
+    let currentWarehouseId = null;
+    let currentZoneId = null;
+    let currentLocationTypeId = null;
+
+    function generateUniqueId(prefix) {
+        return prefix + Date.now();
+    }
+
+    function saveWarehouses() {
+        localStorage.setItem('warehouses', JSON.stringify(warehouses));
+    }
+
+    function saveZones() {
+        localStorage.setItem('zones', JSON.stringify(zones));
+    }
+
+    function saveLocationTypes() {
+        localStorage.setItem('locationTypes', JSON.stringify(locationTypes));
+    }
+
+    window.renderWarehouseList = function(filterQuery = '') {
+        const container = document.getElementById('warehouse-list-container');
+        container.innerHTML = '';
+
+        const filteredWarehouses = warehouses.filter(wh =>
+            wh.id.toLowerCase().includes(filterQuery.toLowerCase()) ||
+            wh.description.toLowerCase().includes(filterQuery.toLowerCase())
+        );
+
+        if (filteredWarehouses.length === 0) {
+            container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada gudang ditemukan.</p>`;
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+        table.innerHTML = `
+            <thead class="bg-wise-light-gray">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Warehouse</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-wise-border" id="warehouse-table-body">
+                </tbody>
+        `;
+        container.appendChild(table);
+
+        const tbody = document.getElementById('warehouse-table-body');
+        filteredWarehouses.forEach(wh => {
+            const row = tbody.insertRow();
+            row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${wh.id}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="showWarehouseForm('edit', '${wh.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteWarehouse('${wh.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    window.showWarehouseForm = function(mode, id = null) {
+        const modal = document.getElementById('warehouse-form-modal');
+        const title = document.getElementById('warehouse-form-title');
+        const form = document.getElementById('warehouse-form');
+        form.reset();
+
+        const tabButtons = form.querySelectorAll('.tab-button');
+        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500'));
+        const firstTabButton = tabButtons[0];
+        if (firstTabButton) {
+            firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+        }
+        const tabContents = form.querySelectorAll('.tab-content');
+        tabContents.forEach(content => content.classList.add('hidden'));
+        document.getElementById('warehouse-address').classList.remove('hidden');
+
+        document.getElementById('same-as-warehouse-address-return').checked = false;
+        toggleReturnAddressFields();
+
+        currentWarehouseId = id;
+
+        if (mode === 'create') {
+            title.textContent = 'Buat Gudang Baru';
+            document.getElementById('warehouse-submit-button').textContent = 'Buat';
+            document.getElementById('warehouse-name').disabled = false;
+            document.getElementById('warehouse-inactive').checked = false;
+            renderUserCheckboxes([]);
+        } else {
+            title.textContent = 'Edit Gudang';
+            document.getElementById('warehouse-submit-button').textContent = 'Simpan Perubahan';
+            document.getElementById('warehouse-name').disabled = true;
+
+            const warehouseToEdit = warehouses.find(wh => wh.id === id);
+            if (warehouseToEdit) {
+                document.getElementById('warehouse-name').value = warehouseToEdit.id;
+                document.getElementById('warehouse-description').value = warehouseToEdit.description;
+                document.getElementById('warehouse-inactive').checked = !warehouseToEdit.active;
+
+                document.getElementById('address1').value = warehouseToEdit.address1;
+                document.getElementById('address2').value = warehouseToEdit.address2;
+                document.getElementById('address3').value = warehouseToEdit.address3;
+                document.getElementById('city').value = warehouseToEdit.city;
+                document.getElementById('state').value = warehouseToEdit.state;
+                document.getElementById('postal-code').value = warehouseToEdit.postalCode;
+                document.getElementById('country').value = warehouseToEdit.country;
+                document.getElementById('fax-number').value = warehouseToEdit.faxNumber;
+                document.getElementById('attention-to').value = warehouseToEdit.attentionTo;
+                document.getElementById('phone-number').value = warehouseToEdit.phoneNumber;
+                document.getElementById('email-address').value = warehouseToEdit.emailAddress;
+                document.getElementById('ucc-ean-number').value = warehouseToEdit.uccEanNumber;
+
+                document.getElementById('same-as-warehouse-address-return').checked = warehouseToEdit.returnAddressSame;
+                toggleReturnAddressFields();
+                document.getElementById('return-name').value = warehouseToEdit.returnName;
+                document.getElementById('return-address1').value = warehouseToEdit.returnAddress1;
+                document.getElementById('return-address2').value = warehouseToEdit.returnAddress2;
+                document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
+                document.getElementById('return-city').value = warehouseToEdit.returnCity;
+                document.getElementById('return-state').value = warehouseToEdit.returnState;
+                document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
+                document.getElementById('return-country').value = warehouseToEdit.returnCountry;
+                document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
+                document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
+                document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
+                document.getElementById('return-email-address').value = warehouseToEdit.returnEmailAddress;
+                document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
+
+                document.getElementById('slotting-move-file-directory').value = warehouseToEdit.slottingMoveFileDirectory;
+                document.getElementById('default-location-for-unslotted-items').value = warehouseToEdit.defaultLocationForUnslottedItems;
+                document.getElementById('rendered-document-pdf-file-directory').value = warehouseToEdit.renderedDocumentPdfFileDirectory;
+
+                document.getElementById('user-defined-field1').value = warehouseToEdit.userDefinedField1;
+                document.getElementById('user-defined-field2').value = warehouseToEdit.userDefinedField2;
+                document.getElementById('user-defined-field3').value = warehouseToEdit.userDefinedField3;
+                document.getElementById('user-defined-field4').value = warehouseToEdit.userDefinedField4;
+                document.getElementById('user-defined-field5').value = warehouseToEdit.userDefinedField5;
+                document.getElementById('user-defined-field6').value = warehouseToEdit.userDefinedField6;
+                document.getElementById('user-defined-field7').value = warehouseToEdit.userDefinedField7;
+                document.getElementById('user-defined-field8').value = warehouseToEdit.userDefinedField8;
+
+                renderUserCheckboxes(warehouseToEdit.users || []);
+            }
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    window.closeWarehouseForm = function() {
+        document.getElementById('warehouse-form-modal').classList.add('hidden');
+        document.getElementById('warehouse-form-modal').classList.remove('flex');
+        currentWarehouseId = null;
+    }
+
+    window.handleWarehouseSubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const warehouseId = document.getElementById('warehouse-name').value;
+        const description = document.getElementById('warehouse-description').value;
+        const inactive = document.getElementById('warehouse-inactive').checked;
+        const active = !inactive;
+
+        const address1 = document.getElementById('address1').value;
+        const address2 = document.getElementById('address2').value;
+        const address3 = document.getElementById('address3').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const postalCode = document.getElementById('postal-code').value;
+        const country = document.getElementById('country').value;
+        const faxNumber = document.getElementById('fax-number').value;
+        const attentionTo = document.getElementById('attention-to').value;
+        const phoneNumber = document.getElementById('phone-number').value;
+        const emailAddress = document.getElementById('email-address').value;
+        const uccEanNumber = document.getElementById('ucc-ean-number').value;
+
+        const returnAddressSame = document.getElementById('same-as-warehouse-address-return').checked;
+        const returnName = document.getElementById('return-name').value;
+        const returnAddress1 = document.getElementById('return-address1').value;
+        const returnAddress2 = document.getElementById('return-address2').value;
+        const returnAddress3 = document.getElementById('return-address3').value;
+        const returnCity = document.getElementById('return-city').value;
+        const returnState = document.getElementById('return-state').value;
+        const returnPostalCode = document.getElementById('return-postal-code').value;
+        const returnCountry = document.getElementById('return-country').value;
+        const returnFaxNumber = document.getElementById('return-fax-number').value;
+        const returnAttentionTo = document.getElementById('return-attention-to').value;
+        const returnPhoneNumber = document.getElementById('return-phone-number').value;
+        const returnEmailAddress = document.getElementById('return-email-address').value;
+        const returnUccEanNumber = document.getElementById('return-ucc-ean-number').value;
+
+        const slottingMoveFileDirectory = document.getElementById('slotting-move-file-directory').value;
+        const defaultLocationForUnslottedItems = document.getElementById('default-location-for-unslotted-items').value;
+        const renderedDocumentPdfFileDirectory = document.getElementById('rendered-document-pdf-file-directory').value;
+
+        const userDefinedField1 = document.getElementById('user-defined-field1').value;
+        const userDefinedField2 = document.getElementById('user-defined-field2').value;
+        const userDefinedField3 = document.getElementById('user-defined-field3').value;
+        const userDefinedField4 = document.getElementById('user-defined-field4').value;
+        const userDefinedField5 = document.getElementById('user-defined-field5').value;
+        const userDefinedField6 = document.getElementById('user-defined-field6').value;
+        const userDefinedField7 = document.getElementById('user-defined-field7').value;
+        const userDefinedField8 = document.getElementById('user-defined-field8').value;
+
+        const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
+                                   .map(checkbox => checkbox.value);
+
+        const newWarehouse = {
+            id: warehouseId,
+            description,
+            active,
+            address1, address2, address3, city, state, postalCode, country, faxNumber, attentionTo, phoneNumber, emailAddress, uccEanNumber,
+            returnAddressSame, returnName, returnAddress1, returnAddress2, returnAddress3, returnCity, returnState, returnPostalCode, returnCountry, returnFaxNumber, returnAttentionTo, returnPhoneNumber, returnEmailAddress, returnUccEanNumber,
+            slottingMoveFileDirectory, defaultLocationForUnslottedItems, renderedDocumentPdfFileDirectory,
+            userDefinedField1, userDefinedField2, userDefinedField3, userDefinedField4, userDefinedField5, userDefinedField6, userDefinedField7, userDefinedField8,
+            users: selectedUsers,
+        };
+
+        if (currentWarehouseId) {
+            const index = warehouses.findIndex(wh => wh.id === currentWarehouseId);
+            if (index !== -1) {
+                warehouses[index] = { ...warehouses[index], ...newWarehouse };
+            }
+        } else {
+            if (warehouses.some(wh => wh.id === warehouseId)) {
+                alert('Warehouse ID sudah ada!');
+                return;
+            }
+            newWarehouse.id = warehouseId; // Set ID for new warehouse
+            warehouses.push(newWarehouse);
+        }
+        saveWarehouses();
+        renderWarehouseList();
+        closeWarehouseForm();
+    }
+
+    window.deleteWarehouse = function(id) {
+        if (confirm(`Kamu yakin mau hapus gudang ${id} ini?`)) {
+            warehouses = warehouses.filter(wh => wh.id !== id);
+            saveWarehouses();
+            renderWarehouseList();
+        }
+    }
+
+    window.filterWarehouseList = function(query) {
+        renderWarehouseList(query);
+    }
+
+    window.toggleReturnAddressFields = function() {
+        const sameAsCheckbox = document.getElementById('same-as-warehouse-address-return');
+        const returnAddressFields = document.getElementById('return-address-fields');
+        const fields = returnAddressFields.querySelectorAll('input, select');
+
+        if (sameAsCheckbox.checked) {
+            returnAddressFields.classList.add('hidden');
+            fields.forEach(field => field.disabled = true);
+        } else {
+            returnAddressFields.classList.remove('hidden');
+            fields.forEach(field => field.disabled = false);
+        }
+    }
+
+    window.renderUserCheckboxes = function(selectedUsers) {
+        const userListContainer = document.getElementById('user-checkbox-list');
+        userListContainer.innerHTML = '';
+
+        allUsers.forEach(user => {
+            const div = document.createElement('div');
+            div.classList.add('flex', 'items-center');
+            div.innerHTML = `
+                <input type="checkbox" id="user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" ${selectedUsers.includes(user) ? 'checked' : ''}>
+                <label for="user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
+            `;
+            userListContainer.appendChild(div);
+        });
+        document.getElementById('check-all-users').checked = (selectedUsers.length === allUsers.length && allUsers.length > 0);
+    }
+
+    window.toggleAllUsers = function() {
+        const checkAllCheckbox = document.getElementById('check-all-users');
+        const userCheckboxes = document.querySelectorAll('#user-checkbox-list input[type="checkbox"]');
+        userCheckboxes.forEach(checkbox => {
+            checkbox.checked = checkAllCheckbox.checked;
+        });
+    }
+
+    window.renderZoneList = function(filterQuery = '') {
+        const container = document.getElementById('zone-list-container');
+        container.innerHTML = '';
+
+        const filteredZones = zones.filter(zone =>
+            zone.identifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
+            zone.description.toLowerCase().includes(filterQuery.toLowerCase())
+        );
+
+        if (filteredZones.length === 0) {
+            container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada zona ditemukan.</p>`;
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+        table.innerHTML = `
+            <thead class="bg-wise-light-gray">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Identifier</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System created</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-wise-border" id="zone-table-body">
+                </tbody>
+        `;
+        container.appendChild(table);
+
+        const tbody = document.getElementById('zone-table-body');
+        filteredZones.forEach(zone => {
+            const row = tbody.insertRow();
+            row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${zone.identifier}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.systemCreated ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="showZoneForm('edit', '${zone.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteZone('${zone.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    window.showZoneForm = function(mode, id = null) {
+        const modal = document.getElementById('zone-form-modal');
+        const title = document.getElementById('zone-form-title');
+        const form = document.getElementById('zone-form');
+        form.reset(); 
+        currentZoneId = id;
+
+        if (mode === 'create') {
+            title.textContent = 'Buat Zona Baru';
+            document.getElementById('zone-submit-button').textContent = 'Buat';
+            document.getElementById('zone-identifier').disabled = false;
+            document.getElementById('zone-inactive').checked = false;
+            document.getElementById('zone-system-created').checked = false;
+        } else {
+            title.textContent = 'Edit Zona';
+            document.getElementById('zone-submit-button').textContent = 'Simpan Perubahan';
+            document.getElementById('zone-identifier').disabled = true;
+
+            const zoneToEdit = zones.find(z => z.id === id);
+            if (zoneToEdit) {
+                document.getElementById('zone-identifier').value = zoneToEdit.identifier;
+                document.getElementById('zone-record-type').value = zoneToEdit.recordType;
+                document.getElementById('zone-description').value = zoneToEdit.description;
+                document.getElementById('zone-inactive').checked = !zoneToEdit.active;
+                document.getElementById('zone-system-created').checked = zoneToEdit.systemCreated;
+            }
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    window.closeZoneForm = function() {
+        document.getElementById('zone-form-modal').classList.add('hidden');
+        document.getElementById('zone-form-modal').classList.remove('flex');
+        currentZoneId = null;
+    }
+
+    window.handleZoneSubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const identifier = document.getElementById('zone-identifier').value;
+        const recordType = document.getElementById('zone-record-type').value;
+        const description = document.getElementById('zone-description').value;
+        const inactive = document.getElementById('zone-inactive').checked;
+        const active = !inactive;
+        const systemCreated = document.getElementById('zone-system-created').checked;
+
+        const newZone = {
+            id: currentZoneId || identifier,
+            identifier,
+            recordType,
+            description,
+            systemValue1: systemCreated ? 'Yes' : 'No',
+            systemCreated,
+            active,
+        };
+
+        if (currentZoneId) {
+            const index = zones.findIndex(z => z.id === currentZoneId);
+            if (index !== -1) {
+                zones[index] = { ...zones[index], ...newZone };
+            }
+        } else {
+            if (zones.some(z => z.identifier === identifier)) {
+                alert('Zone Identifier sudah ada!');
+                return;
+            }
+            newZone.id = identifier;
+            zones.push(newZone);
+        }
+        saveZones();
+        renderZoneList();
+        closeZoneForm();
+    }
+
+    window.deleteZone = function(id) {
+        if (confirm(`Kamu yakin mau hapus zona ${id} ini?`)) {
+            zones = zones.filter(z => z.id !== id);
+            saveZones();
+            renderZoneList();
+        }
+    }
+
+    window.filterZoneList = function(query) {
+        renderZoneList(query);
+    }
+
+    window.renderLocationTypeList = function(filterQuery = '') {
+        const container = document.getElementById('location-type-list-container');
+        container.innerHTML = '';
+
+        const filteredLocationTypes = locationTypes.filter(lt =>
+            lt.locationType.toLowerCase().includes(filterQuery.toLowerCase())
+        );
+
+        if (filteredLocationTypes.length === 0) {
+            container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada tipe lokasi ditemukan.</p>`;
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+        table.innerHTML = `
+            <thead class="bg-wise-light-gray">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Location type</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Length</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Width</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Height</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Dimension um</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Maximum weight</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Weight um</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-wise-border" id="location-type-table-body">
+                </tbody>
+        `;
+        container.appendChild(table);
+
+        const tbody = document.getElementById('location-type-table-body');
+        filteredLocationTypes.forEach(lt => {
+            const row = tbody.insertRow();
+            row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${lt.locationType}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.length.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.width.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.height.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.dimensionUM}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.maximumWeight.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.weightUM}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="showLocationTypeForm('edit', '${lt.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocationType('${lt.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    window.showLocationTypeForm = function(mode, id = null) {
+        const modal = document.getElementById('location-type-form-modal');
+        const title = document.getElementById('location-type-form-title');
+        const form = document.getElementById('location-type-form');
+        form.reset();
+        
+        const tabButtons = form.querySelectorAll('.tab-button');
+        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500'));
+        const firstTabButton = tabButtons[0];
+        if (firstTabButton) {
+            firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+        }
+        const tabContents = form.querySelectorAll('.tab-content');
+        tabContents.forEach(content => content.classList.add('hidden'));
+        document.getElementById('general-location').classList.remove('hidden');
+
+
+        currentLocationTypeId = id;
+
+        if (mode === 'create') {
+            title.textContent = 'Buat Tipe Lokasi Baru';
+            document.getElementById('location-type-submit-button').textContent = 'Buat';
+            document.getElementById('location-type-name').disabled = false;
+            document.getElementById('location-type-inactive').checked = false;
+        } else {
+            title.textContent = 'Edit Tipe Lokasi';
+            document.getElementById('location-type-submit-button').textContent = 'Simpan Perubahan';
+            document.getElementById('location-type-name').disabled = true;
+
+            const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
+            if (locationTypeToEdit) {
+                document.getElementById('location-type-name').value = locationTypeToEdit.locationType;
+                document.getElementById('location-type-length').value = locationTypeToEdit.length;
+                document.getElementById('location-type-width').value = locationTypeToEdit.width;
+                document.getElementById('location-type-height').value = locationTypeToEdit.height;
+                document.getElementById('location-type-length-um').value = locationTypeToEdit.dimensionUM;
+                document.getElementById('location-type-maximum-weight').value = locationTypeToEdit.maximumWeight;
+                document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
+                document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
+            }
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    window.closeLocationTypeForm = function() {
+        document.getElementById('location-type-form-modal').classList.add('hidden');
+        document.getElementById('location-type-form-modal').classList.remove('flex');
+        currentLocationTypeId = null;
+    }
+
+    window.handleLocationTypeSubmit = function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const locationTypeName = document.getElementById('location-type-name').value;
+        const length = parseFloat(document.getElementById('location-type-length').value) || 0;
+        const width = parseFloat(document.getElementById('location-type-width').value) || 0;
+        const height = parseFloat(document.getElementById('location-type-height').value) || 0;
+        const dimensionUM = document.getElementById('location-type-length-um').value;
+        const maximumWeight = parseFloat(document.getElementById('location-type-maximum-weight').value) || 0;
+        const weightUM = document.getElementById('location-type-weight-um').value;
+        const inactive = document.getElementById('location-type-inactive').checked;
+        const active = !inactive;
+
+        const newLocationType = {
+            id: currentLocationTypeId || locationTypeName,
+            locationType: locationTypeName,
+            length,
+            width,
+            height,
+            dimensionUM,
+            maximumWeight,
+            weightUM,
+            active,
+            lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
+        };
+
+        if (currentLocationTypeId) {
+            const index = locationTypes.findIndex(lt => lt.id === currentLocationTypeId);
+            if (index !== -1) {
+                locationTypes[index] = { ...locationTypes[index], ...newLocationType };
+            }
+        } else {
+            if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
+                alert('Location Type name sudah ada!');
+                return;
+            }
+            newLocationType.id = locationTypeName;
+            locationTypes.push(newLocationType);
+        }
+        saveLocationTypes();
+        renderLocationTypeList();
+        closeLocationTypeForm();
+    }
+
+    window.deleteLocationType = function(id) {
+        if (confirm(`Kamu yakin mau hapus tipe lokasi ${id} ini?`)) {
+            locationTypes = locationTypes.filter(lt => lt.id !== id);
+            saveLocationTypes();
+            renderLocationTypeList();
+        }
+    }
+
+    window.filterLocationTypeList = function(query) {
+        renderLocationTypeList(query);
+    }
+
+    window.initializeTabButtons = function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        const tabButtons = modal.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.onclick = () => {
+                const tabId = button.dataset.tab;
+                activateTab(tabId, modalId);
+            };
+        });
+    }
+
+    window.activateTab = function(tabId, modalId = null) {
+        const parentElement = modalId ? document.getElementById(modalId) : document;
+        
+        parentElement.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        parentElement.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+        });
+
+        document.getElementById(tabId).classList.remove('hidden');
+        const activeTabButton = parentElement.querySelector(`.tab-button[data-tab="${tabId}"]`);
+        if (activeTabButton) {
+            activeTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+        }
+    }
+
+    // Sidebar toggle functionality
+    sidebarToggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        const mainContentArea = document.querySelector('.flex-1');
+        if (sidebar.classList.contains('-translate-x-full')) {
+            mainContentArea.classList.remove('ml-64');
+            mainContentArea.classList.add('ml-0');
+        } else {
+            mainContentArea.classList.add('ml-64');
+            mainContentArea.classList.remove('ml-0');
+        }
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (event) => {
+        if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
+            sidebar.classList.add('-translate-x-full');
+            const mainContentArea = document.querySelector('.flex-1');
+            mainContentArea.classList.remove('ml-64');
+            mainContentArea.classList.add('ml-0');
+        }
+    });
+
+    // Adjust sidebar on resize
+    window.addEventListener('resize', () => {
+        const mainContentArea = document.querySelector('.flex-1');
+        if (window.innerWidth >= 768) {
+            sidebar.classList.remove('-translate-x-full');
+            mainContentArea.classList.add('ml-64');
+            mainContentArea.classList.remove('ml-0');
+        } else {
+            sidebar.classList.add('-translate-x-full');
+            mainContentArea.classList.remove('ml-64');
+            mainContentArea.classList.add('ml-0');
+        }
+    });
+
+    window.onload = function() {
+        selectCategory('dashboard');
+        
+        const username = "SuperAdmin";
+        document.getElementById('username-display').textContent = username;
+    };
+});
