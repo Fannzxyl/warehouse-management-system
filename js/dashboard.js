@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('default-content-area');
     const sidebarItems = document.querySelectorAll('.sidebar-item');
-    const sidebarGroups = document.querySelectorAll('.sidebar-item[id^="sidebar-"][onclick^="toggleChildren"]');
     const searchOverlay = document.getElementById('search-overlay');
     const closeOverlayButton = document.querySelector('#search-overlay button[onclick="closeSearchOverlay()"]');
     const overlaySearchInput = document.getElementById('overlay-search-input');
@@ -11,6 +10,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
     const sidebar = document.getElementById('sidebar');
 
+    // Custom Modal Elements
+    const customModalOverlay = document.getElementById('custom-modal-overlay');
+    const customModalTitle = document.getElementById('custom-modal-title');
+    const customModalMessage = document.getElementById('custom-modal-message');
+    const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
+    const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
+
+    // Function to show custom alert
+    window.showCustomAlert = function(title, message) {
+        customModalTitle.textContent = title;
+        customModalMessage.textContent = message;
+        customModalCancelBtn.classList.add('hidden'); // Hide cancel button for alerts
+        customModalOkBtn.textContent = 'OK';
+        customModalOverlay.classList.remove('hidden');
+        customModalOverlay.classList.add('flex');
+
+        return new Promise(resolve => {
+            customModalOkBtn.onclick = () => {
+                customModalOverlay.classList.add('hidden');
+                customModalOverlay.classList.remove('flex');
+                resolve(true);
+            };
+        });
+    };
+
+    // Function to show custom confirm
+    window.showCustomConfirm = function(title, message) {
+        customModalTitle.textContent = title;
+        customModalMessage.textContent = message;
+        customModalCancelBtn.classList.remove('hidden'); // Show cancel button for confirms
+        customModalOkBtn.textContent = 'OK';
+        customModalOverlay.classList.remove('hidden');
+        customModalOverlay.classList.add('flex');
+
+        return new Promise(resolve => {
+            const handleOk = () => {
+                customModalOkBtn.removeEventListener('click', handleOk);
+                customModalCancelBtn.removeEventListener('click', handleCancel);
+                customModalOverlay.classList.add('hidden');
+                customModalOverlay.classList.remove('flex');
+                resolve(true);
+            };
+            const handleCancel = () => {
+                customModalOkBtn.removeEventListener('click', handleOk);
+                customModalCancelBtn.removeEventListener('click', handleCancel);
+                customModalOverlay.classList.add('hidden');
+                customModalOverlay.classList.remove('flex');
+                resolve(false);
+            };
+            customModalOkBtn.addEventListener('click', handleOk);
+            customModalCancelBtn.addEventListener('click', handleCancel);
+        });
+    };
+
+
     const contentData = {
         dashboard: {
             full: `
@@ -19,17 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Pemesanan</h3>
-                        <p class="text-3xl font-bold text-wise-blue-500">1,250</p>
+                        <p class="text-3xl font-bold text-wise-primary">1,250</p>
                         <p class="text-wise-gray text-sm mt-1">30 hari terakhir</p>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kru Aktif</h3>
-                        <p class="text-3xl font-bold text-wise-teal-500">85</p>
+                        <p class="text-3xl font-bold text-wise-info">85</p>
                         <p class="text-wise-gray text-sm mt-1">Sedang bekerja</p>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Nilai Inventaris</h3>
-                        <p class="text-3xl font-bold text-wise-green-500">$2.5M</p>
+                        <p class="text-3xl font-bold text-wise-success">$2.5M</p>
                         <p class="text-wise-gray text-sm mt-1">Total aset</p>
                     </div>
                 </div>
@@ -51,15 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `,
-        },
-        'dashboard-summary': {
-            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ringkasan Dashboard</h2><p class="text-wise-gray">Ringkasan singkat metrik dashboard utama.</p><p class="text-wise-gray text-sm mt-2">Data terakhir diperbarui: Sekarang</p>`,
-        },
-        'dashboard-reports': {
-            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Laporan Dashboard</h2><p class="text-wise-gray">Laporan kinerja dan aktivitas dashboard terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terbaru: Q2 2025</p>`,
-        },
-        'dashboard-alerts': {
-            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Peringatan Dashboard</h2><p class="text-wise-gray">Daftar peringatan dan notifikasi penting.</p><p class="text-wise-gray text-sm mt-2">Peringatan aktif: 3</p>`,
         },
         'yard-management': {
             full: `
@@ -223,35 +268,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Gudang</h3>
                         <p class="text-wise-gray text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
-                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-warehouse')">
+                        <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
                             Kelola Gudang
                         </button>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Zona</h3>
                         <p class="text-wise-gray text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
-                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-zone')">
+                        <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
                             Kelola Zona
                         </button>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Tipe Lokasi</h3>
                         <p class="text-wise-gray text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
-                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('configuration-location-type')">
+                        <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
                             Kelola Tipe Lokasi
                         </button>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Strategi Penempatan</h3>
                         <p class="text-wise-gray text-sm mt-1">Mengelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
-                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('locating-strategies')">
+                        <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
                             Kelola Strategi Penempatan
                         </button>
                     </div>
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                         <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Aturan Penempatan</h3>
                         <p class="text-wise-gray text-sm mt-1">Menentukan aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
-                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('locating-rule')">
+                        <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
                             Kelola Aturan Penempatan
                         </button>
                     </div>
@@ -263,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Gudang </h2>
                 <p class="text-wise-gray mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
                 <div class="flex justify-between items-center mb-4">
-                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showWarehouseForm('create')">
+                    <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
                         Buat Gudang Baru
                     </button>
                     <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
@@ -277,22 +322,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label for="warehouse-name" class="block text-sm font-medium text-wise-dark-gray">Warehouse:</label>
-                                    <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="warehouse-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                    <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                             </div>
                             
                             <div class="mb-4">
                                 <div class="flex space-x-2 mb-2">
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="warehouse-address">Warehouse Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="returns-address">Returns Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="freight-bill-to-address">Freight Bill to Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="authorized-users">Authorized Users</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="miscellaneous">Miscellaneous</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data">User Defined Data</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="warehouse-address">Warehouse Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="returns-address">Returns Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="freight-bill-to-address">Freight Bill to Address</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="authorized-users">Authorized Users</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="miscellaneous">Miscellaneous</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data">User Defined Data</button>
                                 </div>
 
                                 <div id="warehouse-address" class="tab-content border border-wise-border p-4 rounded-b-md">
@@ -300,24 +345,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label for="address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
-                                            <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
-                                            <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
-                                            <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
-                                        <div class="flex space-x-2">
+                                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
                                             <div class="flex-1">
-                                                <label for="city" class="block text-sm font-medium text-wise-dark-gray">City, state postal code:</label>
-                                                <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <label for="city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
+                                                <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
-                                            <div class="w-24">
-                                                <label for="state" class="block text-sm font-medium text-wise-dark-gray hidden">State:</label>
-                                                <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <div class="w-full sm:w-24">
+                                                <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
+                                                <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                     <option value="">--Pilih--</option>
                                                     <option value="Jawa Barat">Jawa Barat</option>
                                                     <option value="Jawa Tengah">Jawa Tengah</option>
@@ -325,13 +370,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 </select>
                                             </div>
                                             <div class="flex-1">
-                                                <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray hidden">Postal Code:</label>
-                                                <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
+                                                <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                         </div>
                                         <div>
                                             <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
-                                            <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                 <option value="">--Pilih--</option>
                                                 <option value="Indonesia">Indonesia</option>
                                                 <option value="USA">USA</option>
@@ -340,23 +385,23 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                         <div>
                                             <label for="fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
-                                            <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
-                                            <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
-                                            <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
-                                            <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
-                                            <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                     </div>
                                 </div>
@@ -364,35 +409,35 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4 class="font-semibold text-wise-dark-gray mb-2">Returns Address</h4>
                                     <div class="mb-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" onclick="toggleReturnAddressFields()">
+                                            <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleReturnAddressFields()">
                                             <span class="ml-2 text-sm text-wise-dark-gray">Same as warehouse address</span>
                                         </label>
                                     </div>
                                     <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label for="return-name" class="block text-sm font-medium text-wise-dark-gray">Name:</label>
-                                            <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
-                                            <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
-                                            <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
-                                            <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
-                                        <div class="flex space-x-2">
+                                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
                                             <div class="flex-1">
-                                                <label for="return-city" class="block text-sm font-medium text-wise-dark-gray">City, state postal code:</label>
-                                                <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <label for="return-city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
+                                                <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
-                                            <div class="w-24">
-                                                <label for="return-state" class="block text-sm font-medium text-wise-dark-gray hidden">State:</label>
-                                                <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <div class="w-full sm:w-24">
+                                                <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
+                                                <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                     <option value="">--Pilih--</option>
                                                     <option value="Jawa Barat">Jawa Barat</option>
                                                     <option value="Jawa Tengah">Jawa Tengah</option>
@@ -400,13 +445,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 </select>
                                             </div>
                                             <div class="flex-1">
-                                                <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray hidden">Postal Code:</label>
-                                                <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                                <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
+                                                <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                         </div>
                                         <div>
                                             <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
-                                            <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                 <option value="">--Pilih--</option>
                                                 <option value="Indonesia">Indonesia</option>
                                                 <option value="USA">USA</option>
@@ -415,23 +460,23 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                         <div>
                                             <label for="return-fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
-                                            <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
-                                            <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
-                                            <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
-                                            <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="return-ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
-                                            <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                     </div>
                                 </div>
@@ -443,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
                                     <div class="mb-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" onclick="toggleAllUsers()">
+                                            <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllUsers()">
                                             <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
                                         </label>
                                     </div>
@@ -454,16 +499,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <h4 class="font-semibold text-wise-dark-gray mb-2">Miscellaneous</h4>
                                     <div class="mb-4">
                                         <label for="slotting-move-file-directory" class="block text-sm font-medium text-wise-dark-gray">Slotting move file download directory:</label>
-                                        <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div class="mb-4">
                                         <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-wise-dark-gray">Default location for unslotted items:</label>
-                                        <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <h5 class="font-semibold text-wise-dark-gray mt-4 mb-2">SQL Server Reporting Services</h5>
                                     <div>
                                         <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-wise-dark-gray">Rendered document pdf file directory:</label>
-                                        <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                 </div>
                                 <div id="user-defined-data" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
@@ -471,35 +516,35 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label for="user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
-                                            <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
-                                            <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
-                                            <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
-                                            <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
-                                            <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
-                                            <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
-                                            <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                         <div>
                                             <label for="user-defined-field8" class="block text-sm font-medium text-wise-dark-gray">User defined field 8:</label>
-                                            <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                     </div>
                                 </div>
@@ -507,13 +552,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             <div class="mb-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                     <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
                                 </label>
                             </div>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
-                                <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </form>
                     </div>
@@ -525,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Zona</h2>
                 <p class="text-wise-gray mb-4">Kelola tipe zona untuk berbagai area dalam gudang.</p>
                 <div class="flex justify-between items-center mb-4">
-                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showZoneForm('create')">
+                    <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
                         Buat Zona Baru
                     </button>
                     <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
@@ -539,31 +584,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         <form id="zone-form" onsubmit="handleZoneSubmit(event)">
                             <div class="mb-4">
                                 <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
-                                <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             </div>
                             <div class="mb-4">
                                 <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                                <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
                             </div>
                             <div class="mb-4">
                                 <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             </div>
                             <div class="mb-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                     <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
                                 </label>
                             </div>
                             <div class="mb-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500 cursor-not-allowed">
+                                    <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
                                     <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                 </label>
                             </div>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
-                                <button type="submit" id="zone-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" id="zone-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </form>
                     </div>
@@ -575,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Tipe Lokasi</h2>
                 <p class="text-wise-gray mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
                 <div class="flex justify-between items-center mb-4">
-                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocationTypeForm('create')">
+                    <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
                         Buat Tipe Lokasi Baru
                     </button>
                     <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
@@ -589,38 +634,38 @@ document.addEventListener('DOMContentLoaded', () => {
                         <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
                             <div class="mb-4">
                                 <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
-                                <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             </div>
                             <div class="flex space-x-2 mb-2">
-                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="general-location">General</button>
-                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent" data-tab="user-defined-data-location">User defined data</button>
+                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="general-location">General</button>
+                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User defined data</button>
                             </div>
                             <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
                                 <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
-                                        <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div>
                                         <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                        <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div>
                                         <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
-                                        <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div>
                                         <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
-                                        <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div>
                                         <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
-                                        <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div>
                                         <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                        <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                        <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                 </div>
                             </div>
@@ -631,13 +676,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             <div class="mb-4 mt-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                     <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
                                 </label>
                             </div>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
-                                <button type="submit" id="location-type-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" id="location-type-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </form>
                     </div>
@@ -688,13 +733,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="mt-4 space-y-4">
                     <div>
                         <label for="auto-update" class="flex items-center">
-                            <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" checked>
-                            <span class="ml-2 text-wise-dark-gray text-sm">Aktifkan Pembaruan Otomatis</span>
+                            <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                            <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Pembaruan Otomatis</span>
                         </label>
                     </div>
                     <div>
                         <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Bahasa:</label>
-                        <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                        <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             <option value="id">Bahasa Indonesia</option>
                             <option value="en">English</option>
                         </select>
@@ -709,12 +754,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="mt-4 space-y-4">
                     <div>
                         <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Ukuran Cache (MB):</label>
-                        <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                        <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                     </div>
                     <div>
                         <label for="data-compression" class="flex items-center">
-                            <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
-                            <span class="ml-2 text-wise-dark-gray text-sm">Aktifkan Kompresi Data</span>
+                            <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                            <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Kompresi Data</span>
                         </label>
                     </div>
                 </div>
@@ -727,14 +772,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="mt-4 space-y-4">
                     <div>
                         <label for="email-notifications" class="flex items-center">
-                            <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" checked>
-                            <span class="ml-2 text-wise-dark-gray text-sm">Notifikasi Email</span>
+                            <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                            <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi Email</span>
                         </label>
                     </div>
                     <div>
                         <label for="sms-notifications" class="flex items-center">
-                            <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-500">
-                            <span class="ml-2 text-wise-dark-gray text-sm">Notifikasi SMS</span>
+                            <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                            <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi SMS</span>
                         </label>
                     </div>
                 </div>
@@ -746,7 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
                 <p class="text-wise-gray mb-4">Kelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
                 <div class="flex justify-between items-center mb-4">
-                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocatingStrategyForm('create')">
+                    <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
                         Buat Strategi Penempatan Baru
                     </button>
                     <input type="text" id="locating-strategy-search" placeholder="Cari strategi penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
@@ -759,22 +804,32 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3 id="locating-strategy-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                         <form id="locating-strategy-form" onsubmit="handleLocatingStrategySubmit(event)">
                             <div class="mb-4">
-                                <label for="locating-strategy-name" class="block text-sm font-medium text-wise-dark-gray">Strategy Name:</label>
-                                <input type="text" id="locating-strategy-name" name="strategyName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                <label for="locating-strategy-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                                <input type="text" id="locating-strategy-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="mb-4">
+                                <label for="locating-strategy-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                                <input type="text" id="locating-strategy-record-type" name="recordType" value="LOCSTRAT" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
                             </div>
                             <div class="mb-4">
                                 <label for="locating-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                <input type="text" id="locating-strategy-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                <input type="text" id="locating-strategy-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             </div>
                             <div class="mb-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-strategy-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <input type="checkbox" id="locating-strategy-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                     <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="locating-strategy-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                 </label>
                             </div>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
-                                <button type="submit" id="locating-strategy-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" id="locating-strategy-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </form>
                     </div>
@@ -786,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Aturan Penempatan</h2>
                 <p class="text-wise-gray mb-4">Kelola aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
                 <div class="flex justify-between items-center mb-4">
-                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocatingRuleForm('create')">
+                    <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
                         Buat Aturan Penempatan Baru
                     </button>
                     <input type="text" id="locating-rule-search" placeholder="Cari aturan penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
@@ -801,16 +856,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
-                                    <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                    <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                             </div>
                             <div class="mb-4">
                                 <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-rule-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <input type="checkbox" id="locating-rule-delayed-locating" name="delayedLocating" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Delayed locating</span>
+                                </label>
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="locating-rule-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                     <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
                                 </label>
                             </div>
@@ -822,13 +883,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div id="detail-records-list" class="space-y-2">
                                         <!-- Detail records will be dynamically added here -->
                                     </div>
-                                    <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-sm text-sm active:scale-95 transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                    <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
                                 </div>
                             </div>
 
                             <div class="flex justify-end space-x-2">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
-                                <button type="submit" id="locating-rule-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" id="locating-rule-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </form>
                     </div>
@@ -852,9 +913,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'setting-notifications', title: 'Preferensi Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Kemarin' },
         { id: 'log-errors', title: 'Log Kesalahan', category: 'Manajemen Sistem', lastUpdated: '5 menit yang lalu' },
         { id: 'archive-finance', title: 'Laporan Keuangan 2023', category: 'Pengarsipan Data', lastUpdated: 'Jan 2024' },
-        { id: 'dashboard-summary', title: 'Ringkasan Dashboard', category: 'Dashboard', lastUpdated: 'Sekarang' },
-        { id: 'dashboard-reports', title: 'Laporan Dashboard', category: 'Dashboard', lastUpdated: 'Q2 2025' },
-        { id: 'dashboard-alerts', title: 'Peringatan Dashboard', category: 'Dashboard', lastUpdated: '3 aktif' },
         { id: 'yard-vehicles', title: 'Kendaraan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
         { id: 'yard-equipment', title: 'Peralatan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
         { id: 'yard-personnel', title: 'Personel Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
@@ -896,7 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
     const parentMapping = {
-        'dashboard-summary': 'dashboard', 'dashboard-reports': 'dashboard', 'dashboard-alerts': 'dashboard',
         'yard-vehicles': 'yard-management', 'yard-equipment': 'yard-management', 'yard-personnel': 'yard-management',
         'receiving-deliveries': 'receiving', 'receiving-returns': 'receiving', 'receiving-vendors': 'receiving',
         'order-new': 'order', 'order-pending': 'order', 'order-history': 'order',
@@ -926,13 +983,13 @@ document.addEventListener('DOMContentLoaded', () => {
             arrowIcon.classList.toggle('rotate-0');
         }
 
-        // Jika kategori utama dibuka, pilih kategori utama tersebut
-        if (!childrenDiv.classList.contains('hidden')) {
+        if (!childrenDiv.classList.contains('hidden') && contentData[category] && contentData[category].full) {
             selectCategory(category);
         }
     }
 
     window.selectCategory = function(category) {
+        // Remove active state from all sidebar items
         document.querySelectorAll('.sidebar-item').forEach(item => {
             item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
         });
@@ -941,14 +998,27 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.add('text-wise-gray');
         });
 
-        const selectedItem = document.getElementById(`sidebar-${category}`);
-        if (selectedItem) {
-            selectedItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+        // Remove left border from all sidebar children
+        document.querySelectorAll('.sidebar-child').forEach(item => {
+            item.classList.remove('border-l-2', 'border-wise-primary');
+        });
+
+
+        // Add active state to the selected item
+        const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
+        const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
+
+        if (category === 'dashboard' && selectedMainDashboardItem) {
+            selectedMainDashboardItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+        } else if (selectedCollapsibleGroup) {
+            selectedCollapsibleGroup.classList.add('active-sidebar-item', 'bg-wise-light-gray');
         } else {
             const childElement = document.querySelector(`[onclick="selectCategory('${category}')"]`);
             if (childElement) {
                 childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
                 childElement.classList.remove('text-wise-gray');
+                // Add left border to active child
+                childElement.classList.add('border-l-2', 'border-wise-primary');
                 
                 const parentCategory = parentMapping[category];
                 if (parentCategory) {
@@ -999,10 +1069,20 @@ document.addEventListener('DOMContentLoaded', () => {
             renderLocationTypeList();
             initializeTabButtons('location-type-form-modal');
             activateTab('general-location');
-        } else if (category === 'locating-strategies') { // New handler
+        } else if (category === 'locating-strategies') {
             renderLocatingStrategyList();
-        } else if (category === 'locating-rule') { // New handler
+            initializeTabButtons('locating-strategy-form-modal');
+        } else if (category === 'locating-rule') {
             renderLocatingRuleList();
+            initializeTabButtons('locating-rule-form-modal');
+            // Add event listeners for rule name and description to enable detail records
+            const ruleNameInput = document.getElementById('locating-rule-name');
+            const ruleDescriptionInput = document.getElementById('locating-rule-description');
+            if (ruleNameInput && ruleDescriptionInput) {
+                ruleNameInput.addEventListener('input', checkLocatingRuleFormValidity);
+                ruleDescriptionInput.addEventListener('input', checkLocatingRuleFormValidity);
+                checkLocatingRuleFormValidity(); // Initial check
+            }
         }
 
         // Close sidebar on mobile after selection
@@ -1010,6 +1090,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
             mainContent.classList.add('ml-0');
+            document.getElementById('sidebar-overlay').classList.add('hidden');
         }
     }
 
@@ -1035,7 +1116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
         const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
 
-        // Hide all filters initially
         document.getElementById('overlay-filter-articles').classList.add('hidden');
         document.getElementById('overlay-filter-photography').classList.add('hidden');
         document.getElementById('filter-articles').classList.add('hidden');
@@ -1060,7 +1140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsPanel.innerHTML = ''; // Clear previous results
 
             if (filteredResults.length > 0) {
-                // Show filters if relevant results exist
                 if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
                     document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
                 }
@@ -1070,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 filteredResults.forEach(item => {
                     const resultItem = document.createElement('div');
-                    resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2');
+                    resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
                     resultItem.innerHTML = `
                         <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
                         <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
@@ -1084,12 +1163,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 filtersContainer.classList.add('hidden'); // Hide filters if no results
             }
             if (detailPanel) {
-                detailPanel.innerHTML = `<p class="text-wise-gray text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
             }
         } else {
             resultsPanel.innerHTML = ''; // Clear results if query is empty
             if (detailPanel) {
-                detailPanel.innerHTML = `<p class="text-wise-gray text-center">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
             }
             filtersContainer.classList.add('hidden'); // Hide filters if query is empty
         }
@@ -1102,12 +1181,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (content && (content.detail || content.full)) {
             overlayDetailContentPanel.innerHTML = `
                 ${content.detail || content.full}
-                <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="displayContentInMainDashboard('${id}')">
+                <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
                     Tampilkan Halaman
                 </button>
             `;
         } else {
-            overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center">Tidak ada pratinjau tersedia untuk item ini.</p>`;
+            overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
         }
     }
 
@@ -1186,8 +1265,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.handleLogout = function() {
-        alert('Kamu udah berhasil keluar.');
+    window.handleLogout = async function() {
+        await showCustomAlert('Log Out', 'Kamu udah berhasil keluar.');
         window.location.href = 'login.html';
     }
 
@@ -1212,7 +1291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchHistory.length > 0) {
             searchHistory.forEach((item, index) => {
                 const historyItem = document.createElement('div');
-                historyItem.classList.add('flex', 'items-center', 'justify-between', 'px-3', 'py-2', 'cursor-pointer', 'hover:bg-wise-light-gray', 'rounded-md');
+                historyItem.classList.add('flex', 'items-center', 'justify-between', 'px-3', 'py-2', 'cursor-pointer', 'hover:bg-wise-light-gray', 'rounded-md', 'transition-all-smooth');
                 historyItem.innerHTML = `
                     <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
                     <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
@@ -1254,11 +1333,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
         { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCP', description: 'DC PELABUHAN RATU', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCS', description: 'DC SUMBER', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCT', description: 'DC TEGAL', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
@@ -1305,30 +1384,35 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let locatingStrategies = JSON.parse(localStorage.getItem('locatingStrategies')) || [
-        { id: 'STRATEGY_A', strategyName: 'STRATEGY A', description: 'Strategy A Description', active: true },
-        { id: 'STRATEGY_B', strategyName: 'STRATEGY B', description: 'Strategy B Description', active: true },
-        { id: 'STRATEGY_C', strategyName: 'STRATEGY C', description: 'Strategy C Description', active: false },
+        { id: 'LOCSTRAT_DEFAULT', identifier: 'DEFAULT', recordType: 'LOCSTRAT', description: 'Default Locating Strategy', inactive: false, systemCreated: true, lastUpdated: '01-01-2023 10:00:00 AM User: SYSTEM' },
+        { id: 'LOCSTRAT_FAST_MOVERS', identifier: 'FAST_MOVERS', recordType: 'LOCSTRAT', description: 'Strategy for fast moving items', inactive: false, systemCreated: false, lastUpdated: '01-01-2023 10:00:00 AM User: Admin' },
+        { id: 'LOCSTRAT_OVERSTOCK', identifier: 'OVERSTOCK', recordType: 'LOCSTRAT', description: 'Strategy for overstock items', inactive: true, systemCreated: false, lastUpdated: '01-01-2023 10:00:00 AM User: Admin' },
     ];
 
     let locatingRules = JSON.parse(localStorage.getItem('locatingRules')) || [
         {
-            id: 'RULE_1',
-            ruleName: 'RULE 1',
-            description: 'First Locating Rule',
-            active: true,
+            id: 'LOC_RULE_A',
+            ruleName: 'LOC_RULE_A',
+            description: 'Rule for small items',
+            delayedLocating: false,
+            inactive: false,
             detailRecords: [
-                { sequence: 1, field: 'Item Code', operator: '=', value: 'ITEM001' },
-                { sequence: 2, field: 'Zone Type', operator: 'IN', value: 'ALLOCATION, PICKING' }
-            ]
+                { sequence: 1, field: 'Item Size', operator: '<', value: 'Small' },
+                { sequence: 2, field: 'Zone Type', operator: '=', value: 'PICKING' }
+            ],
+            lastUpdated: '01-01-2023 11:00:00 AM User: SYSTEM'
         },
         {
-            id: 'RULE_2',
-            ruleName: 'RULE 2',
-            description: 'Second Locating Rule',
-            active: false,
+            id: 'LOC_RULE_B',
+            ruleName: 'LOC_RULE_B',
+            description: 'Rule for heavy items',
+            delayedLocating: true,
+            inactive: false,
             detailRecords: [
-                { sequence: 1, field: 'Weight', operator: '>', value: '100' }
-            ]
+                { sequence: 1, field: 'Weight', operator: '>', value: '50KG' },
+                { sequence: 2, field: 'Location Type', operator: '=', value: 'PALLET' }
+            ],
+            lastUpdated: '01-01-2023 11:00:00 AM User: Admin'
         },
     ];
 
@@ -1411,8 +1495,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.description}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.active ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="showWarehouseForm('edit', '${wh.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
-                    <button onclick="deleteWarehouse('${wh.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                    <button onclick="showWarehouseForm('edit', '${wh.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteWarehouse('${wh.id}')" class="text-wise-error hover:text-red-700">Delete</button>
                 </td>
             `;
         });
@@ -1425,10 +1509,10 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
 
         const tabButtons = form.querySelectorAll('.tab-button');
-        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500'));
+        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
         const firstTabButton = tabButtons[0];
         if (firstTabButton) {
-            firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+            firstTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
         }
         const tabContents = form.querySelectorAll('.tab-content');
         tabContents.forEach(content => content.classList.add('hidden'));
@@ -1477,12 +1561,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
                 document.getElementById('return-city').value = warehouseToEdit.returnCity;
                 document.getElementById('return-state').value = warehouseToEdit.returnState;
-                document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
+                document.getElementById('return-postal-code').value = warehouseToEdit.postalCode;
                 document.getElementById('return-country').value = warehouseToEdit.returnCountry;
                 document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                 document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
                 document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
-                document.getElementById('return-email-address').value = warehouseToEdit.returnEmailAddress;
+                document.getElementById('return-email-address').value = warehouseToEdit.emailAddress;
                 document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
 
                 document.getElementById('slotting-move-file-directory').value = warehouseToEdit.slottingMoveFileDirectory;
@@ -1511,7 +1595,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentWarehouseId = null;
     }
 
-    window.handleWarehouseSubmit = function(event) {
+    window.handleWarehouseSubmit = async function(event) {
         event.preventDefault();
         const form = event.target;
         const warehouseId = document.getElementById('warehouse-name').value;
@@ -1581,7 +1665,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (warehouses.some(wh => wh.id === warehouseId)) {
-                alert('Warehouse ID sudah ada!');
+                await showCustomAlert('Error', 'Warehouse ID sudah ada!');
                 return;
             }
             newWarehouse.id = warehouseId; // Set ID for new warehouse
@@ -1592,8 +1676,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeWarehouseForm();
     }
 
-    window.deleteWarehouse = function(id) {
-        if (confirm(`Kamu yakin mau hapus gudang ${id} ini?`)) {
+    window.deleteWarehouse = async function(id) {
+        const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus gudang ${id} ini?`);
+        if (confirmed) {
             warehouses = warehouses.filter(wh => wh.id !== id);
             saveWarehouses();
             renderWarehouseList();
@@ -1626,7 +1711,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.classList.add('flex', 'items-center');
             div.innerHTML = `
-                <input type="checkbox" id="user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500" ${selectedUsers.includes(user) ? 'checked' : ''}>
+                <input type="checkbox" id="user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedUsers.includes(user) ? 'checked' : ''}>
                 <label for="user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
             `;
             userListContainer.appendChild(div);
@@ -1685,8 +1770,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.systemCreated ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.active ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="showZoneForm('edit', '${zone.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
-                    <button onclick="deleteZone('${zone.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                    <button onclick="showZoneForm('edit', '${zone.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteZone('${zone.id}')" class="text-wise-error hover:text-red-700">Delete</button>
                 </td>
             `;
         });
@@ -1729,7 +1814,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentZoneId = null;
     }
 
-    window.handleZoneSubmit = function(event) {
+    window.handleZoneSubmit = async function(event) {
         event.preventDefault();
         const form = event.target;
         const identifier = document.getElementById('zone-identifier').value;
@@ -1756,7 +1841,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (zones.some(z => z.identifier === identifier)) {
-                alert('Zone Identifier sudah ada!');
+                await showCustomAlert('Error', 'Zone Identifier sudah ada!');
                 return;
             }
             newZone.id = identifier;
@@ -1767,8 +1852,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeZoneForm();
     }
 
-    window.deleteZone = function(id) {
-        if (confirm(`Kamu yakin mau hapus zona ${id} ini?`)) {
+    window.deleteZone = async function(id) {
+        const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus zona ${id} ini?`);
+        if (confirmed) {
             zones = zones.filter(z => z.id !== id);
             saveZones();
             renderZoneList();
@@ -1829,8 +1915,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.weightUM}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.active ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="showLocationTypeForm('edit', '${lt.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
-                    <button onclick="deleteLocationType('${lt.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                    <button onclick="showLocationTypeForm('edit', '${lt.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocationType('${lt.id}')" class="text-wise-error hover:text-red-700">Delete</button>
                 </td>
             `;
         });
@@ -1843,10 +1929,10 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         
         const tabButtons = form.querySelectorAll('.tab-button');
-        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500'));
+        tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
         const firstTabButton = tabButtons[0];
         if (firstTabButton) {
-            firstTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+            firstTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
         }
         const tabContents = form.querySelectorAll('.tab-content');
         tabContents.forEach(content => content.classList.add('hidden'));
@@ -1887,7 +1973,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLocationTypeId = null;
     }
 
-    window.handleLocationTypeSubmit = function(event) {
+    window.handleLocationTypeSubmit = async function(event) {
         event.preventDefault();
         const form = event.target;
         const locationTypeName = document.getElementById('location-type-name').value;
@@ -1920,7 +2006,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
-                alert('Location Type name sudah ada!');
+                await showCustomAlert('Error', 'Location Type name sudah ada!');
                 return;
             }
             newLocationType.id = locationTypeName;
@@ -1931,8 +2017,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeLocationTypeForm();
     }
 
-    window.deleteLocationType = function(id) {
-        if (confirm(`Kamu yakin mau hapus tipe lokasi ${id} ini?`)) {
+    window.deleteLocationType = async function(id) {
+        const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus tipe lokasi ${id} ini?`);
+        if (confirmed) {
             locationTypes = locationTypes.filter(lt => lt.id !== id);
             saveLocationTypes();
             renderLocationTypeList();
@@ -1949,7 +2036,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
 
         const filteredStrategies = locatingStrategies.filter(strategy =>
-            strategy.strategyName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+            strategy.identifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
             strategy.description.toLowerCase().includes(filterQuery.toLowerCase())
         );
 
@@ -1963,9 +2050,11 @@ document.addEventListener('DOMContentLoaded', () => {
         table.innerHTML = `
             <thead class="bg-wise-light-gray">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Strategy Name</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Identifier</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Record Type</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System Created</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Actions</span>
                     </th>
@@ -1981,12 +2070,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = tbody.insertRow();
             row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
             row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${strategy.strategyName}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${strategy.identifier}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.recordType}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.description}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.systemCreated ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.inactive ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="showLocatingStrategyForm('edit', '${strategy.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
-                    <button onclick="deleteLocatingStrategy('${strategy.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                    <button onclick="showLocatingStrategyForm('edit', '${strategy.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocatingStrategy('${strategy.id}')" class="text-wise-error hover:text-red-700">Delete</button>
                 </td>
             `;
         });
@@ -2003,18 +2094,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'create') {
             title.textContent = 'Buat Strategi Penempatan Baru';
             document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
-            document.getElementById('locating-strategy-name').disabled = false;
+            document.getElementById('locating-strategy-identifier').disabled = false;
+            document.getElementById('locating-strategy-record-type').value = 'LOCSTRAT'; // Default value
             document.getElementById('locating-strategy-inactive').checked = false;
+            document.getElementById('locating-strategy-system-created').checked = false; // Default to false for new
         } else {
             title.textContent = 'Edit Strategi Penempatan';
             document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
-            document.getElementById('locating-strategy-name').disabled = true;
+            document.getElementById('locating-strategy-identifier').disabled = true;
 
             const strategyToEdit = locatingStrategies.find(s => s.id === id);
             if (strategyToEdit) {
-                document.getElementById('locating-strategy-name').value = strategyToEdit.strategyName;
+                document.getElementById('locating-strategy-identifier').value = strategyToEdit.identifier;
+                document.getElementById('locating-strategy-record-type').value = strategyToEdit.recordType;
                 document.getElementById('locating-strategy-description').value = strategyToEdit.description;
-                document.getElementById('locating-strategy-inactive').checked = !strategyToEdit.active;
+                document.getElementById('locating-strategy-inactive').checked = strategyToEdit.inactive;
+                document.getElementById('locating-strategy-system-created').checked = strategyToEdit.systemCreated;
             }
         }
         modal.classList.remove('hidden');
@@ -2027,18 +2122,22 @@ document.addEventListener('DOMContentLoaded', () => {
         currentLocatingStrategyId = null;
     }
 
-    window.handleLocatingStrategySubmit = function(event) {
+    window.handleLocatingStrategySubmit = async function(event) {
         event.preventDefault();
-        const strategyName = document.getElementById('locating-strategy-name').value;
+        const identifier = document.getElementById('locating-strategy-identifier').value;
+        const recordType = document.getElementById('locating-strategy-record-type').value;
         const description = document.getElementById('locating-strategy-description').value;
         const inactive = document.getElementById('locating-strategy-inactive').checked;
-        const active = !inactive;
+        const systemCreated = document.getElementById('locating-strategy-system-created').checked;
 
         const newStrategy = {
-            id: currentLocatingStrategyId || strategyName,
-            strategyName,
+            id: currentLocatingStrategyId || identifier,
+            identifier,
+            recordType,
             description,
-            active,
+            inactive,
+            systemCreated,
+            lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
         };
 
         if (currentLocatingStrategyId) {
@@ -2047,11 +2146,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 locatingStrategies[index] = { ...locatingStrategies[index], ...newStrategy };
             }
         } else {
-            if (locatingStrategies.some(s => s.id === strategyName)) {
-                alert('Strategy Name sudah ada!');
+            if (locatingStrategies.some(s => s.identifier === identifier)) {
+                await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
                 return;
             }
-            newStrategy.id = strategyName;
+            newStrategy.id = identifier; // Use identifier as ID
             locatingStrategies.push(newStrategy);
         }
         saveLocatingStrategies();
@@ -2059,8 +2158,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeLocatingStrategyForm();
     }
 
-    window.deleteLocatingStrategy = function(id) {
-        if (confirm(`Kamu yakin mau hapus strategi penempatan ${id} ini?`)) {
+    window.deleteLocatingStrategy = async function(id) {
+        const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus strategi penempatan ${id} ini?`);
+        if (confirmed) {
             locatingStrategies = locatingStrategies.filter(s => s.id !== id);
             saveLocatingStrategies();
             renderLocatingStrategyList();
@@ -2093,7 +2193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Rule Name</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Delayed Locating</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Actions</span>
                     </th>
@@ -2111,10 +2212,11 @@ document.addEventListener('DOMContentLoaded', () => {
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${rule.ruleName}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.description}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.delayedLocating ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.inactive ? 'Yes' : 'No'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="showLocatingRuleForm('edit', '${rule.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
-                    <button onclick="deleteLocatingRule('${rule.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                    <button onclick="showLocatingRuleForm('edit', '${rule.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocatingRule('${rule.id}')" class="text-wise-error hover:text-red-700">Delete</button>
                 </td>
             `;
         });
@@ -2135,10 +2237,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         detailRecordsList.innerHTML = ''; // Clear existing detail records
 
+        // Remove existing event listeners to prevent duplicates
+        document.getElementById('locating-rule-name').removeEventListener('input', checkLocatingRuleFormValidity);
+        document.getElementById('locating-rule-description').removeEventListener('input', checkLocatingRuleFormValidity);
+
+
         if (mode === 'create') {
             title.textContent = 'Buat Aturan Penempatan Baru';
             document.getElementById('locating-rule-submit-button').textContent = 'Buat';
             document.getElementById('locating-rule-name').disabled = false;
+            document.getElementById('locating-rule-delayed-locating').checked = false;
             document.getElementById('locating-rule-inactive').checked = false;
             
             detailRecordsPlaceholder.classList.remove('hidden');
@@ -2158,7 +2266,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ruleToEdit) {
                 document.getElementById('locating-rule-name').value = ruleToEdit.ruleName;
                 document.getElementById('locating-rule-description').value = ruleToEdit.description;
-                document.getElementById('locating-rule-inactive').checked = !ruleToEdit.active;
+                document.getElementById('locating-rule-delayed-locating').checked = ruleToEdit.delayedLocating;
+                document.getElementById('locating-rule-inactive').checked = ruleToEdit.inactive;
 
                 detailRecordsPlaceholder.classList.add('hidden');
                 detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50'); // Enable
@@ -2166,12 +2275,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 ruleToEdit.detailRecords.forEach(record => addDetailRecord(record));
             }
-            // Remove event listeners if editing, as fields are already filled
-            document.getElementById('locating-rule-name').removeEventListener('input', checkLocatingRuleFormValidity);
-            document.getElementById('locating-rule-description').removeEventListener('input', checkLocatingRuleFormValidity);
+            // Re-add event listeners for editing mode as well, in case user clears fields
+            document.getElementById('locating-rule-name').addEventListener('input', checkLocatingRuleFormValidity);
+            document.getElementById('locating-rule-description').addEventListener('input', checkLocatingRuleFormValidity);
         }
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        checkLocatingRuleFormValidity(); // Initial check after form population
     }
 
     window.closeLocatingRuleForm = function() {
@@ -2206,14 +2316,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const newRecordDiv = document.createElement('div');
         newRecordDiv.classList.add('flex', 'flex-col', 'md:flex-row', 'gap-2', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm');
         newRecordDiv.innerHTML = `
-            <input type="number" placeholder="Sequence" value="${record.sequence || ''}" class="detail-record-sequence w-20 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
-            <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-1 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
-            <input type="text" placeholder="Operator" value="${record.operator || ''}" class="detail-record-operator w-24 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
-            <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-1 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
-            <button type="button" onclick="removeDetailRecord(this)" class="px-2 py-1 bg-wise-red-500 text-white rounded-md hover:bg-wise-red-600 transition-colors duration-200 shadow-sm text-sm active:scale-95 transform">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            <input type="number" placeholder="Sequence" value="${record.sequence || ''}" class="detail-record-sequence w-20 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+            <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-1 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+            <input type="text" placeholder="Operator" value="${record.operator || ''}" class="detail-record-operator w-24 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+            <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-1 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+            <button type="button" onclick="removeDetailRecord(this)" class="px-2 py-1 bg-white text-wise-error border border-wise-border rounded-md hover:bg-red-100 transition-colors duration-200 shadow-sm text-sm active-press transform">
+                <i class="fas fa-times w-4 h-4 flex items-center justify-center"></i>
             </button>
         `;
         detailRecordsList.appendChild(newRecordDiv);
@@ -2223,12 +2331,12 @@ document.addEventListener('DOMContentLoaded', () => {
         button.closest('div').remove();
     }
 
-    window.handleLocatingRuleSubmit = function(event) {
+    window.handleLocatingRuleSubmit = async function(event) {
         event.preventDefault();
         const ruleName = document.getElementById('locating-rule-name').value;
         const description = document.getElementById('locating-rule-description').value;
+        const delayedLocating = document.getElementById('locating-rule-delayed-locating').checked;
         const inactive = document.getElementById('locating-rule-inactive').checked;
-        const active = !inactive;
 
         const detailRecords = [];
         document.querySelectorAll('#detail-records-list > div').forEach(recordDiv => {
@@ -2244,8 +2352,10 @@ document.addEventListener('DOMContentLoaded', () => {
             id: currentLocatingRuleId || ruleName,
             ruleName,
             description,
-            active,
+            delayedLocating,
+            inactive,
             detailRecords,
+            lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
         };
 
         if (currentLocatingRuleId) {
@@ -2254,11 +2364,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 locatingRules[index] = { ...locatingRules[index], ...newRule };
             }
         } else {
-            if (locatingRules.some(r => r.id === ruleName)) {
-                alert('Locating Rule Name sudah ada!');
+            if (locatingRules.some(r => r.ruleName === ruleName)) {
+                await showCustomAlert('Error', 'Locating Rule Name sudah ada!');
                 return;
             }
-            newRule.id = ruleName;
+            newRule.id = ruleName; // Use ruleName as ID
             locatingRules.push(newRule);
         }
         saveLocatingRules();
@@ -2266,8 +2376,9 @@ document.addEventListener('DOMContentLoaded', () => {
         closeLocatingRuleForm();
     }
 
-    window.deleteLocatingRule = function(id) {
-        if (confirm(`Kamu yakin mau hapus aturan penempatan ${id} ini?`)) {
+    window.deleteLocatingRule = async function(id) {
+        const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus aturan penempatan ${id} ini?`);
+        if (confirmed) {
             locatingRules = locatingRules.filter(r => r.id !== id);
             saveLocatingRules();
             renderLocatingRuleList();
@@ -2299,26 +2410,32 @@ document.addEventListener('DOMContentLoaded', () => {
             content.classList.add('hidden');
         });
         parentElement.querySelectorAll('.tab-button').forEach(button => {
-            button.classList.remove('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+            button.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary');
+            button.classList.add('text-wise-gray', 'border-transparent');
         });
 
         document.getElementById(tabId).classList.remove('hidden');
         const activeTabButton = parentElement.querySelector(`.tab-button[data-tab="${tabId}"]`);
         if (activeTabButton) {
-            activeTabButton.classList.add('active-tab', 'border-wise-blue-500', 'text-wise-blue-500');
+            activeTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
+            activeTabButton.classList.remove('text-wise-gray', 'border-transparent');
         }
     }
 
     // Sidebar toggle functionality
     sidebarToggleBtn.addEventListener('click', () => {
         sidebar.classList.toggle('-translate-x-full');
-        const mainContentArea = document.querySelector('.flex-1');
+        const mainContentArea = document.querySelector('main'); // Select the main content area
         if (sidebar.classList.contains('-translate-x-full')) {
-            mainContentArea.classList.remove('ml-64');
+            mainContentArea.classList.remove('md:ml-64');
             mainContentArea.classList.add('ml-0');
+            document.getElementById('sidebar-overlay').classList.add('hidden'); // Hide overlay
         } else {
-            mainContentArea.classList.add('ml-64');
+            mainContentArea.classList.add('md:ml-64');
             mainContentArea.classList.remove('ml-0');
+            if (window.innerWidth < 768) { // Only show overlay on mobile
+                document.getElementById('sidebar-overlay').classList.remove('hidden');
+            }
         }
     });
 
@@ -2326,23 +2443,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (event) => {
         if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
             sidebar.classList.add('-translate-x-full');
-            const mainContentArea = document.querySelector('.flex-1');
-            mainContentArea.classList.remove('ml-64');
-            mainContentArea.classList.add('ml-0');
+            mainContent.classList.remove('ml-64');
+            mainContent.classList.add('ml-0');
+            document.getElementById('sidebar-overlay').classList.add('hidden'); // Hide overlay
         }
     });
 
+    // Function to close sidebar (used by overlay click)
+    window.closeSidebar = function() {
+        sidebar.classList.add('-translate-x-full');
+        mainContent.classList.remove('ml-64');
+        mainContent.classList.add('ml-0');
+        document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+
     // Adjust sidebar on resize
     window.addEventListener('resize', () => {
-        const mainContentArea = document.querySelector('.flex-1');
+        const mainContentArea = document.querySelector('main'); // Select the main content area
         if (window.innerWidth >= 768) {
             sidebar.classList.remove('-translate-x-full');
-            mainContentArea.classList.add('ml-64');
+            mainContentArea.classList.add('md:ml-64');
             mainContentArea.classList.remove('ml-0');
+            document.getElementById('sidebar-overlay').classList.add('hidden'); // Hide overlay on desktop
         } else {
             sidebar.classList.add('-translate-x-full');
-            mainContentArea.classList.remove('ml-64');
+            mainContentArea.classList.remove('md:ml-64');
             mainContentArea.classList.add('ml-0');
+            // Do not show overlay on resize if sidebar is already hidden
         }
     });
 
