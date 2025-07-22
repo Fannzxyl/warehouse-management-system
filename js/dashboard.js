@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Baru</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
         },
         'order-pending': {
-            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam proses atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
+            detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam process atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
         },
         'order-history': {
             detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
@@ -315,252 +315,253 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div id="warehouse-list-container" class="overflow-x-auto">
                     </div>
-                <div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
+                <div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                         <h3 id="warehouse-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label for="warehouse-name" class="block text-sm font-medium text-wise-dark-gray">Warehouse:</label>
-                                    <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                </div>
-                                <div>
-                                    <label for="warehouse-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                    <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="flex space-x-2 mb-2">
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="warehouse-address">Warehouse Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="returns-address">Returns Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="freight-bill-to-address">Freight Bill to Address</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="authorized-users">Authorized Users</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="miscellaneous">Miscellaneous</button>
-                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data">User Defined Data</button>
-                                </div>
-
-                                <div id="warehouse-address" class="tab-content border border-wise-border p-4 rounded-b-md">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Warehouse Address</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
-                                            <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
-                                            <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
-                                            <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
-                                            <div class="flex-1">
-                                                <label for="city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
-                                                <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div class="w-full sm:w-24">
-                                                <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
-                                                <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="Jawa Barat">Jawa Barat</option>
-                                                    <option value="Jawa Tengah">Jawa Tengah</option>
-                                                    <option value="Jawa Timur">Jawa Timur</option>
-                                                </select>
-                                            </div>
-                                            <div class="flex-1">
-                                                <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
-                                                <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
-                                            <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                <option value="">--Pilih--</option>
-                                                <option value="Indonesia">Indonesia</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Singapore">Singapore</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label for="fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
-                                            <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
-                                            <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
-                                            <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
-                                            <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
-                                            <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="returns-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Returns Address</h4>
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleReturnAddressFields()">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Same as warehouse address</span>
-                                        </label>
-                                    </div>
-                                    <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="return-name" class="block text-sm font-medium text-wise-dark-gray">Name:</label>
-                                            <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
-                                            <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
-                                            <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
-                                            <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
-                                            <div class="flex-1">
-                                                <label for="return-city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
-                                                <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div class="w-full sm:w-24">
-                                                <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
-                                                <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                    <option value="">--Pilih--</option>
-                                                    <option value="Jawa Barat">Jawa Barat</option>
-                                                    <option value="Jawa Tengah">Jawa Tengah</option>
-                                                    <option value="Jawa Timur">Jawa Timur</option>
-                                                </select>
-                                            </div>
-                                            <div class="flex-1">
-                                                <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
-                                                <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
-                                            <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                <option value="">--Pilih--</option>
-                                                <option value="Indonesia">Indonesia</option>
-                                                <option value="USA">USA</option>
-                                                <option value="Singapore">Singapore</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label for="return-fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
-                                            <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
-                                            <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
-                                            <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
-                                            <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="return-ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
-                                            <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="freight-bill-to-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Freight Bill to Address</h4>
-                                    <p class="text-wise-gray text-sm">Formulir untuk Freight Bill to Address.</p>
-                                </div>
-                                <div id="authorized-users" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllUsers()">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
-                                        </label>
-                                    </div>
-                                    <div id="user-checkbox-list" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
-                                        </div>
-                                </div>
-                                <div id="miscellaneous" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Miscellaneous</h4>
-                                    <div class="mb-4">
-                                        <label for="slotting-move-file-directory" class="block text-sm font-medium text-wise-dark-gray">Slotting move file download directory:</label>
-                                        <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-wise-dark-gray">Default location for unslotted items:</label>
-                                        <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <h5 class="font-semibold text-wise-dark-gray mt-4 mb-2">SQL Server Reporting Services</h5>
+                        <div class="flex-1 overflow-y-auto pr-4 -mr-4"> <!-- Added flex-1, overflow-y-auto, pr-4, -mr-4 -->
+                            <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                     <div>
-                                        <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-wise-dark-gray">Rendered document pdf file directory:</label>
-                                        <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        <label for="warehouse-name" class="block text-sm font-medium text-wise-dark-gray">Warehouse:</label>
+                                        <input type="text" id="warehouse-name" name="warehouse" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div>
+                                        <label for="warehouse-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                        <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                 </div>
-                                <div id="user-defined-data" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
-                                            <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
-                                            <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
-                                            <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
-                                            <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
-                                            <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
-                                            <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
-                                            <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="user-defined-field8" class="block text-sm font-medium text-wise-dark-gray">User defined field 8:</label>
-                                            <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex space-x-2 mb-2">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="warehouse-address">Warehouse Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="returns-address">Returns Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="freight-bill-to-address">Freight Bill to Address</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="authorized-users">Authorized Users</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="miscellaneous">Miscellaneous</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data">User Defined Data</button>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                </label>
-                            </div>
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
-                                <button type="submit" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
-                            </div>
-                        </form>
+                                    <div id="warehouse-address" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Warehouse Address</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
+                                                <input type="text" id="address1" name="address1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
+                                                <input type="text" id="address2" name="address2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
+                                                <input type="text" id="address3" name="address3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
+                                                <div class="flex-1">
+                                                    <label for="city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
+                                                    <input type="text" id="city" name="city" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div class="w-full sm:w-24">
+                                                    <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
+                                                    <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">--Pilih--</option>
+                                                        <option value="Jawa Barat">Jawa Barat</option>
+                                                        <option value="Jawa Tengah">Jawa Tengah</option>
+                                                        <option value="Jawa Timur">Jawa Timur</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label for="postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
+                                                    <input type="text" id="postal-code" name="postalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
+                                                <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Indonesia">Indonesia</option>
+                                                    <option value="USA">USA</option>
+                                                    <option value="Singapore">Singapore</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
+                                                <input type="text" id="fax-number" name="faxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
+                                                <input type="text" id="attention-to" name="attentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
+                                                <input type="text" id="phone-number" name="phoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
+                                                <input type="email" id="email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
+                                                <input type="text" id="ucc-ean-number" name="uccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="returns-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Returns Address</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="same-as-warehouse-address-return" name="sameAsWarehouseAddressReturn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleReturnAddressFields()">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Same as warehouse address</span>
+                                            </label>
+                                        </div>
+                                        <div id="return-address-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="return-name" class="block text-sm font-medium text-wise-dark-gray">Name:</label>
+                                                <input type="text" id="return-name" name="returnName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-address1" class="block text-sm font-medium text-wise-dark-gray">Address 1:</label>
+                                                <input type="text" id="return-address1" name="returnAddress1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-address2" class="block text-sm font-medium text-wise-dark-gray">Address 2 (optional):</label>
+                                                <input type="text" id="return-address2" name="returnAddress2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-address3" class="block text-sm font-medium text-wise-dark-gray">Address 3 (optional):</label>
+                                                <input type="text" id="return-address3" name="returnAddress3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 col-span-full">
+                                                <div class="flex-1">
+                                                    <label for="return-city" class="block text-sm font-medium text-wise-dark-gray">City:</label>
+                                                    <input type="text" id="return-city" name="returnCity" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div class="w-full sm:w-24">
+                                                    <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
+                                                    <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">--Pilih--</option>
+                                                        <option value="Jawa Barat">Jawa Barat</option>
+                                                        <option value="Jawa Tengah">Jawa Tengah</option>
+                                                        <option value="Jawa Timur">Jawa Timur</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label for="return-postal-code" class="block text-sm font-medium text-wise-dark-gray">Postal Code:</label>
+                                                    <input type="text" id="return-postal-code" name="returnPostalCode" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
+                                                <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">--Pilih--</option>
+                                                    <option value="Indonesia">Indonesia</option>
+                                                    <option value="USA">USA</option>
+                                                    <option value="Singapore">Singapore</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="return-fax-number" class="block text-sm font-medium text-wise-dark-gray">Fax number:</label>
+                                                <input type="text" id="return-fax-number" name="returnFaxNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-attention-to" class="block text-sm font-medium text-wise-dark-gray">Attention to:</label>
+                                                <input type="text" id="return-attention-to" name="returnAttentionTo" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-phone-number" class="block text-sm font-medium text-wise-dark-gray">Phone number:</label>
+                                                <input type="text" id="return-phone-number" name="returnPhoneNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
+                                                <input type="email" id="return-email-address" name="returnEmailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="return-ucc-ean-number" class="block text-sm font-medium text-wise-dark-gray">UCC/EAN number:</label>
+                                                <input type="text" id="return-ucc-ean-number" name="returnUccEanNumber" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="freight-bill-to-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Freight Bill to Address</h4>
+                                        <p class="text-wise-gray text-sm">Formulir untuk Freight Bill to Address.</p>
+                                    </div>
+                                    <div id="authorized-users" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="check-all-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllUsers()">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                            </label>
+                                        </div>
+                                        <div id="user-checkbox-list" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
+                                            </div>
+                                    </div>
+                                    <div id="miscellaneous" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Miscellaneous</h4>
+                                        <div class="mb-4">
+                                            <label for="slotting-move-file-directory" class="block text-sm font-medium text-wise-dark-gray">Slotting move file download directory:</label>
+                                            <input type="text" id="slotting-move-file-directory" name="slottingMoveFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="default-location-for-unslotted-items" class="block text-sm font-medium text-wise-dark-gray">Default location for unslotted items:</label>
+                                            <input type="text" id="default-location-for-unslotted-items" name="defaultLocationForUnslottedItems" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <h5 class="font-semibold text-wise-dark-gray mt-4 mb-2">SQL Server Reporting Services</h5>
+                                        <div>
+                                            <label for="rendered-document-pdf-file-directory" class="block text-sm font-medium text-wise-dark-gray">Rendered document pdf file directory:</label>
+                                            <input type="text" id="rendered-document-pdf-file-directory" name="renderedDocumentPdfFileDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+                                    <div id="user-defined-data" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                <input type="text" id="user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                <input type="text" id="user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                <input type="text" id="user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                <input type="text" id="user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                <input type="text" id="user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                <input type="text" id="user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                <input type="text" id="user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="user-defined-field8" class="block text-sm font-medium text-wise-dark-gray">User defined field 8:</label>
+                                                <input type="text" id="user-defined-field8" name="userDefinedField8" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="warehouse-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press" onclick="closeWarehouseForm()">Cancel</button>
+                            <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-lg hover:bg-gray-100 transition-all-smooth active-press">OK</button>
+                        </div>
                     </div>
                 </div>
             `,
@@ -578,39 +579,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="zone-list-container" class="overflow-x-auto">
                     </div>
 
-                <div id="zone-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                <div id="zone-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
                         <h3 id="zone-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <form id="zone-form" onsubmit="handleZoneSubmit(event)">
-                            <div class="mb-4">
-                                <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
-                                <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div class="mb-4">
-                                <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
-                            </div>
-                            <div class="mb-4">
-                                <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                </label>
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
-                                </label>
-                            </div>
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
-                                <button type="submit" id="zone-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
-                            </div>
-                        </form>
+                        <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                            <form id="zone-form" onsubmit="handleZoneSubmit(event)">
+                                <div class="mb-4">
+                                    <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                                    <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                                    <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                    <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
+                            <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                        </div>
                     </div>
                 </div>
             `,
@@ -628,63 +631,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="location-type-list-container" class="overflow-x-auto">
                     </div>
 
-                <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
                         <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
-                            <div class="mb-4">
-                                <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
-                                <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div class="flex space-x-2 mb-2">
-                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="general-location">General</button>
-                                <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User defined data</button>
-                            </div>
-                            <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
-                                <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
-                                        <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div>
-                                        <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                        <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div>
-                                        <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
-                                        <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div>
-                                        <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
-                                        <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div>
-                                        <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
-                                        <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div>
-                                        <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                        <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                        <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                            <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
+                                <div class="mb-4">
+                                    <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
+                                    <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div class="flex space-x-2 mb-2">
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="general-location">General</button>
+                                    <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User defined data</button>
+                                </div>
+                                <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
+                                            <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                            <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
+                                            <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
+                                            <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
+                                            <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                            <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
-                                <p class="text-wise-gray text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
-                            </div>
+                                <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
+                                    <p class="text-wise-gray text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
+                                </div>
 
-                            <div class="mb-4 mt-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                </label>
-                            </div>
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
-                                <button type="submit" id="location-type-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
-                            </div>
-                        </form>
+                                <div class="mb-4 mt-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
+                            <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                        </div>
                     </div>
                 </div>
             `,
@@ -799,39 +804,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="locating-strategy-list-container" class="overflow-x-auto">
                 </div>
 
-                <div id="locating-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                <div id="locating-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
                         <h3 id="locating-strategy-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <form id="locating-strategy-form" onsubmit="handleLocatingStrategySubmit(event)">
-                            <div class="mb-4">
-                                <label for="locating-strategy-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
-                                <input type="text" id="locating-strategy-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div class="mb-4">
-                                <label for="locating-strategy-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                <input type="text" id="locating-strategy-record-type" name="recordType" value="LOCSTRAT" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
-                            </div>
-                            <div class="mb-4">
-                                <label for="locating-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                <input type="text" id="locating-strategy-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-strategy-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                </label>
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-strategy-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
-                                </label>
-                            </div>
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
-                                <button type="submit" id="locating-strategy-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
-                            </div>
-                        </form>
+                        <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                            <form id="locating-strategy-form" onsubmit="handleLocatingStrategySubmit(event)">
+                                <div class="mb-4">
+                                    <label for="locating-strategy-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                                    <input type="text" id="locating-strategy-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="locating-strategy-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                                    <input type="text" id="locating-strategy-record-type" name="recordType" value="LOCSTRAT" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="locating-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                    <input type="text" id="locating-strategy-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="locating-strategy-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="locating-strategy-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
+                            <button type="submit" form="locating-strategy-form" id="locating-strategy-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                        </div>
                     </div>
                 </div>
             `,
@@ -849,49 +856,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="locating-rule-list-container" class="overflow-x-auto">
                 </div>
 
-                <div id="locating-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
+                <div id="locating-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                         <h3 id="locating-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <form id="locating-rule-form" onsubmit="handleLocatingRuleSubmit(event)">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
-                                    <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                </div>
-                                <div>
-                                    <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                    <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-rule-delayed-locating" name="delayedLocating" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Delayed locating</span>
-                                </label>
-                            </div>
-                            <div class="mb-4">
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="locating-rule-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                </label>
-                            </div>
-
-                            <div class="mb-4">
-                                <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
-                                <div id="locating-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray" disabled>
-                                    <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
-                                    <div id="detail-records-list" class="space-y-2">
-                                        <!-- Detail records will be dynamically added here -->
+                        <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                            <form id="locating-rule-form" onsubmit="handleLocatingRuleSubmit(event)">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
+                                        <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
-                                    <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                    <div>
+                                        <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                        <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="locating-rule-delayed-locating" name="delayedLocating" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Delayed locating</span>
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="locating-rule-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                    </label>
+                                </div>
 
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
-                                <button type="submit" id="locating-rule-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
-                            </div>
-                        </form>
+                                <div class="mb-4">
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
+                                    <div id="locating-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray" disabled>
+                                        <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
+                                        <div id="detail-records-list" class="space-y-2">
+                                            <!-- Detail records will be dynamically added here -->
+                                        </div>
+                                        <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
+                            <button type="submit" form="locating-rule-form" id="locating-rule-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                        </div>
                     </div>
                 </div>
             `,
@@ -1017,8 +1025,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (childElement) {
                 childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
                 childElement.classList.remove('text-wise-gray');
-                // Add left border to active child
-                childElement.classList.add('border-l-2', 'border-wise-primary');
+                // Removed the left border for sidebar child active state as per user request
+                // childElement.classList.add('border-l-2', 'border-wise-primary');
                 
                 const parentCategory = parentMapping[category];
                 if (parentCategory) {
@@ -1405,7 +1413,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'LOC_RULE_B',
             ruleName: 'LOC_RULE_B',
-            description: 'Rule for heavy items',
+            description: 'Second Locating Rule',
             delayedLocating: true,
             inactive: false,
             detailRecords: [
@@ -1561,11 +1569,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
                 document.getElementById('return-city').value = warehouseToEdit.returnCity;
                 document.getElementById('return-state').value = warehouseToEdit.returnState;
-                document.getElementById('return-postal-code').value = warehouseToEdit.postalCode;
+                document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
                 document.getElementById('return-country').value = warehouseToEdit.returnCountry;
                 document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                 document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
-                document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
+                document.getElementById('return-phone-number').value = warehouseToEdit.phoneNumber;
                 document.getElementById('return-email-address').value = warehouseToEdit.emailAddress;
                 document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
 
@@ -2035,10 +2043,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('locating-strategy-list-container');
         container.innerHTML = '';
 
-        const filteredStrategies = locatingStrategies.filter(strategy =>
-            strategy.identifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
-            strategy.description.toLowerCase().includes(filterQuery.toLowerCase())
-        );
+        const filteredStrategies = locatingStrategies.filter(strategy => {
+            // Safely access id or identifier for filtering
+            const strategyIdOrIdentifier = strategy.id || strategy.identifier;
+            return (
+                strategyIdOrIdentifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                strategy.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+        });
 
         if (filteredStrategies.length === 0) {
             container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada strategi penempatan ditemukan.</p>`;
@@ -2131,7 +2143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const systemCreated = document.getElementById('locating-strategy-system-created').checked;
 
         const newStrategy = {
-            id: currentLocatingStrategyId || identifier,
+            id: currentLocatingStrategyId || identifier, // Ensure ID is always set
             identifier,
             recordType,
             description,
@@ -2150,7 +2162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
                 return;
             }
-            newStrategy.id = identifier; // Use identifier as ID
+            newStrategy.id = identifier; // Use identifier as ID for new entries
             locatingStrategies.push(newStrategy);
         }
         saveLocatingStrategies();
