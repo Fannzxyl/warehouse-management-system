@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style type="text/tailwindcss">
         @layer base {
@@ -24,7 +23,6 @@
         }
         
         @layer utilities {
-            /* Custom Scrollbar Styles */
             ::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
@@ -36,22 +34,20 @@
             }
             
             ::-webkit-scrollbar-thumb {
-                background: rgba(156, 163, 175, 0.4); /* Tailwind gray-400 with opacity */
+                background: rgba(156, 163, 175, 0.4); 
                 border-radius: 10px;
                 transition: all 0.2s ease;
             }
             
             ::-webkit-scrollbar-thumb:hover {
-                background: rgba(156, 163, 175, 0.7); /* Tailwind gray-500 with opacity */
+                background: rgba(156, 163, 175, 0.7); 
             }
             
-            /* Firefox scrollbar */
             html {
                 scrollbar-width: thin;
                 scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
             }
 
-            /* Smooth transitions for all elements */
             .transition-all-smooth {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
@@ -60,20 +56,18 @@
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            /* Backdrop blur effects */
             .backdrop-blur-glass {
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
-                background: rgba(255, 255, 255, 0.85); /* White with opacity */
+                background: rgba(255, 255, 255, 0.85); 
             }
             
             .backdrop-blur-overlay {
                 backdrop-filter: blur(8px);
                 -webkit-backdrop-filter: blur(8px);
-                background: rgba(0, 0, 0, 0.1); /* Black with opacity */
+                background: rgba(0, 0, 0, 0.1); 
             }
 
-            /* Sidebar animations */
             .sidebar-slide-in {
                 animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
@@ -104,7 +98,6 @@
                 }
             }
 
-            /* Hover effects */
             .hover-lift:hover {
                 transform: translateY(-1px);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -114,12 +107,10 @@
                 transform: scale(1.02);
             }
 
-            /* Button press effect */
             .active-press:active {
                 transform: scale(0.98);
             }
 
-            /* Gradient backgrounds */
             .gradient-primary {
                 background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%); /* wise-blue-500 to wise-indigo-500 */
             }
@@ -128,7 +119,6 @@
                 background: linear-gradient(135deg, #8B5CF6 0%, #F5576C 100%); /* wise-secondary to a red/pink */
             }
 
-            /* Card shadows */
             .shadow-card {
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
             }
@@ -137,7 +127,6 @@
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05);
             }
 
-            /* Loading skeleton */
             .skeleton {
                 background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
                 background-size: 200% 100%;
@@ -149,7 +138,6 @@
                 100% { background-position: -200% 0; }
             }
 
-            /* Mobile-first responsive utilities */
             @media (max-width: 768px) {
                 .mobile-full-width {
                     width: 100vw;
@@ -170,12 +158,12 @@
                             'border': '#E5E7EB',
                             'pink': '#FEE2E2',
                             'brown': '#991B1B',
-                            'primary': '#3B82F6',   // Blue
-                            'secondary': '#8B5CF6', // Purple
-                            'success': '#10B981',   // Emerald
-                            'warning': '#F59E0B',   // Yellow/Orange
-                            'error': '#EF4444',     // Red
-                            'info': '#06B6D4',      // Cyan
+                            'primary': '#3B82F6',   
+                            'secondary': '#8B5CF6', 
+                            'success': '#10B981',   
+                            'warning': '#F59E0B',   
+                            'error': '#EF4444',     
+                            'info': '#06B6D4',      
                         }
                     },
                     animation: {

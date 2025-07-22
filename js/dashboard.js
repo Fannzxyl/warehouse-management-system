@@ -1,7 +1,7 @@
-(function() { // Menggunakan IIFE untuk membungkus seluruh kode dan menghindari polusi global namespace
+(function() { 
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Mendapatkan elemen DOM
+        
         const mainContent = document.getElementById('default-content-area');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
         const searchOverlay = document.getElementById('search-overlay');
@@ -13,18 +13,18 @@
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
 
-        // Elemen Modal Kustom
+        
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        // Fungsi untuk menampilkan alert kustom (tetap global agar bisa dipanggil dari HTML)
+        
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden'); // Sembunyikan tombol batal untuk alert
+            customModalCancelBtn.classList.add('hidden'); 
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -40,11 +40,11 @@
             });
         };
 
-        // Fungsi untuk menampilkan konfirmasi kustom (tetap global agar bisa dipanggil dari HTML)
+        
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden'); // Tampilkan tombol batal untuk konfirmasi
+            customModalCancelBtn.classList.remove('hidden'); 
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -69,7 +69,7 @@
             });
         };
 
-        // Data konten (tidak berubah)
+        
         const contentData = {
             dashboard: {
                 full: `
@@ -720,7 +720,7 @@
                     <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 30 menit yang lalu</p>
                 `,
             },
-            // Start of Setting Optimization Data
+            
             'setting-optimization': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Optimasi</h2>
@@ -794,7 +794,7 @@
                     </div>
                 `,
             },
-            // End of Setting Optimization Data
+            
             'locating-strategies': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
@@ -868,11 +868,11 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
-                                            <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                             <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
                                         </div>
                                         <div>
                                             <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -952,11 +952,11 @@
             { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
             { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
             { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            // Start of Setting Optimization Search Items
+            
             { id: 'setting-optimization-general', title: 'Pengaturan Umum', category: 'Setting Optimization', lastUpdated: 'Baru saja' },
             { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
             { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
-            // End of Setting Optimization Search Items
+            
             { id: 'locating-strategies', title: 'Strategi Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
             { id: 'locating-rule', title: 'Aturan Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
         ];
@@ -975,11 +975,11 @@
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
             'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
             'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system',
-            // Start of Setting Optimization Parent Mapping
+            
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            // End of Setting Optimization Parent Mapping
+            
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
         };
@@ -1000,7 +1000,7 @@
         }
 
         window.selectCategory = function(category) {
-            // Hapus status aktif dari semua item sidebar
+            
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
             });
@@ -1009,13 +1009,13 @@
                 item.classList.add('text-wise-gray');
             });
 
-            // Hapus border kiri dari semua sidebar children
+            
             document.querySelectorAll('.sidebar-child').forEach(item => {
                 item.classList.remove('border-l-2', 'border-wise-primary');
             });
 
 
-            // Tambahkan status aktif ke item yang dipilih
+            
             const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
             const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
 
@@ -1066,7 +1066,7 @@
                 defaultContentArea.classList.remove('hidden');
             }
             
-            // Penangan khusus untuk kategori konfigurasi untuk merender form/daftar
+            
             if (category === 'configuration-warehouse') {
                 renderWarehouseList();
                 initializeTabButtons('warehouse-form-modal');
@@ -1074,7 +1074,7 @@
             } else if (category === 'configuration-zone') {
                 renderZoneList();
                 initializeTabButtons('zone-form-modal');
-                activateTab('general-zone', 'zone-form-modal'); // Asumsi tab default untuk zona
+                activateTab('general-zone', 'zone-form-modal'); 
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
                 initializeTabButtons('location-type-form-modal');
@@ -1082,16 +1082,16 @@
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
                 initializeTabButtons('locating-strategy-form-modal');
-                activateTab('general-strategy', 'locating-strategy-form-modal'); // Asumsi tab default untuk strategi
+                activateTab('general-strategy', 'locating-strategy-form-modal'); 
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
                 initializeTabButtons('locating-rule-form-modal');
-                activateTab('general-rule', 'locating-rule-form-modal'); // Asumsi tab default untuk aturan
-                // Panggil checkLocatingRuleFormValidity untuk memastikan status awal yang benar
+                activateTab('general-rule', 'locating-rule-form-modal'); 
+                
                 checkLocatingRuleFormValidity();
             }
 
-            // Tutup sidebar di perangkat seluler setelah pemilihan
+            
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
@@ -1100,7 +1100,7 @@
             }
         }
 
-        // Fungsi pencarian utama (tanpa debouncing)
+        
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
             const overlaySearchInput = document.getElementById('overlay-search-input');
@@ -1118,7 +1118,7 @@
             }
         }
 
-        // Fungsi pencarian overlay (tanpa debouncing)
+        
         window.performSearch = function(query, source) {
             const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
             const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
@@ -1145,7 +1145,7 @@
                     );
                 }
 
-                resultsPanel.innerHTML = ''; // Hapus hasil sebelumnya
+                resultsPanel.innerHTML = ''; 
 
                 if (filteredResults.length > 0) {
                     if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
@@ -1162,23 +1162,23 @@
                             <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
                             <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
                         `;
-                        resultItem.onmouseenter = (event) => showPreview(item.id, event); // Tampilkan pratinjau saat hover
+                        resultItem.onmouseenter = (event) => showPreview(item.id, event); 
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
                         resultsPanel.appendChild(resultItem);
                     });
                 } else {
                     resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
-                    filtersContainer.classList.add('hidden'); // Sembunyikan filter jika tidak ada hasil
+                    filtersContainer.classList.add('hidden'); 
                 }
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
             } else {
-                resultsPanel.innerHTML = ''; // Hapus hasil jika query kosong
+                resultsPanel.innerHTML = ''; 
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
-                filtersContainer.classList.add('hidden'); // Sembunyikan filter jika query kosong
+                filtersContainer.classList.add('hidden'); 
             }
         }
 
@@ -1216,7 +1216,7 @@
             }
             
             closeSearchOverlay();
-            selectCategory(id); // Juga sorot kategori yang dipilih di sidebar
+            selectCategory(id); 
         }
 
         window.addOverlayFilter = function(filterName) {
@@ -1250,7 +1250,7 @@
             document.getElementById('filter-articles').classList.add('hidden');
             document.getElementById('filter-photography').classList.add('hidden');
             document.getElementById('search-history-dropdown').classList.add('hidden');
-            selectCategory(currentCategory); // Pilih ulang kategori saat ini untuk menyegarkan konten
+            selectCategory(currentCategory); 
         }
 
         window.toggleUserDropdown = function() {
@@ -1258,7 +1258,7 @@
             userDropdown.classList.toggle('hidden');
         }
 
-        // Tutup dropdown saat mengklik di luar
+        
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .relative.flex.items-center');
             const userDropdown = document.getElementById('user-dropdown');
@@ -1284,8 +1284,8 @@
 
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query); // Tambahkan ke awal
-                searchHistory = searchHistory.slice(0, 5); // Hanya simpan 5 terakhir
+                searchHistory.unshift(query); 
+                searchHistory = searchHistory.slice(0, 5); 
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
         }
@@ -1294,7 +1294,7 @@
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
             
-            historyContent.innerHTML = ''; // Hapus riwayat sebelumnya
+            historyContent.innerHTML = ''; 
 
             if (searchHistory.length > 0) {
                 searchHistory.forEach((item, index) => {
@@ -1325,18 +1325,18 @@
         }
 
         window.removeSearchHistory = function(index) {
-            searchHistory.splice(index, 1); // Hapus item pada indeks
+            searchHistory.splice(index, 1); 
             localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory(); // Segarkan tampilan riwayat
+            showSearchHistory(); 
         }
 
         window.clearAllSearchHistory = function() {
             searchHistory = [];
             localStorage.removeItem('searchHistory');
-            showSearchHistory(); // Segarkan tampilan riwayat
+            showSearchHistory(); 
         }
 
-        // Data dummy untuk bagian konfigurasi (Warehouses, Zones, Location Types)
+        
         let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
             { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
             { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
@@ -1438,7 +1438,7 @@
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
 
-        // Fungsi utilitas untuk penyimpanan data
+        
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
         }
@@ -1459,7 +1459,7 @@
             localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
         }
 
-        // Fungsi untuk merender daftar Gudang
+        
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
             container.innerHTML = '';
@@ -1674,7 +1674,7 @@
                     await showCustomAlert('Error', 'Warehouse ID sudah ada!');
                     return;
                 }
-                newWarehouse.id = warehouseId; // Set ID untuk gudang baru
+                newWarehouse.id = warehouseId; 
                 warehouses.push(newWarehouse);
             }
             saveWarehouses();
@@ -2036,13 +2036,13 @@
             renderLocationTypeList(query);
         }
 
-        // Fungsi Strategi Penempatan
+        
         window.renderLocatingStrategyList = function(filterQuery = '') {
             const container = document.getElementById('locating-strategy-list-container');
             container.innerHTML = '';
 
             const filteredStrategies = locatingStrategies.filter(strategy => {
-                // Akses id atau identifier dengan aman untuk filtering
+                
                 const strategyIdOrIdentifier = strategy.id || strategy.identifier;
                 return (
                     strategyIdOrIdentifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
@@ -2101,25 +2101,45 @@
 
             currentLocatingStrategyId = id;
 
+            const identifierInput = document.getElementById('locating-strategy-identifier');
+            const recordTypeInput = document.getElementById('locating-strategy-record-type');
+            const systemCreatedCheckbox = document.getElementById('locating-strategy-system-created');
+
+            identifierInput.classList.remove('cursor-not-allowed', 'bg-gray-100');
+            recordTypeInput.classList.remove('cursor-not-allowed', 'bg-gray-100');
+            systemCreatedCheckbox.classList.remove('cursor-not-allowed');
+
             if (mode === 'create') {
                 title.textContent = 'Buat Strategi Penempatan Baru';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
-                document.getElementById('locating-strategy-identifier').disabled = false;
-                document.getElementById('locating-strategy-record-type').value = 'LOCSTRAT'; // Nilai default
+
+                identifierInput.disabled = false;
+                identifierInput.readOnly = false; 
+                recordTypeInput.disabled = false;
+                recordTypeInput.readOnly = false; 
+                recordTypeInput.value = 'LOCSTRAT'; 
+                systemCreatedCheckbox.disabled = false;
+                systemCreatedCheckbox.checked = false; 
+
                 document.getElementById('locating-strategy-inactive').checked = false;
-                document.getElementById('locating-strategy-system-created').checked = false; // Default ke false untuk yang baru
-            } else {
+
+            } else { 
                 title.textContent = 'Edit Strategi Penempatan';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
-                document.getElementById('locating-strategy-identifier').disabled = true;
 
                 const strategyToEdit = locatingStrategies.find(s => s.id === id);
                 if (strategyToEdit) {
-                    document.getElementById('locating-strategy-identifier').value = strategyToEdit.identifier;
-                    document.getElementById('locating-strategy-record-type').value = strategyToEdit.recordType;
+                    identifierInput.value = strategyToEdit.identifier;
+                    recordTypeInput.value = strategyToEdit.recordType;
                     document.getElementById('locating-strategy-description').value = strategyToEdit.description;
                     document.getElementById('locating-strategy-inactive').checked = strategyToEdit.inactive;
-                    document.getElementById('locating-strategy-system-created').checked = strategyToEdit.systemCreated;
+                    systemCreatedCheckbox.checked = strategyToEdit.systemCreated;
+
+                    identifierInput.disabled = false; 
+                    identifierInput.readOnly = false; 
+                    recordTypeInput.disabled = false; 
+                    recordTypeInput.readOnly = false; 
+                    systemCreatedCheckbox.disabled = false; 
                 }
             }
             modal.classList.remove('hidden');
@@ -2141,7 +2161,7 @@
             const systemCreated = document.getElementById('locating-strategy-system-created').checked;
 
             const newStrategy = {
-                id: currentLocatingStrategyId || identifier, // Pastikan ID selalu diatur
+                id: currentLocatingStrategyId || identifier, 
                 identifier,
                 recordType,
                 description,
@@ -2160,7 +2180,7 @@
                     await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
                     return;
                 }
-                newStrategy.id = identifier; // Gunakan identifier sebagai ID untuk entri baru
+                newStrategy.id = identifier; 
                 locatingStrategies.push(newStrategy);
             }
             saveLocatingStrategies();
@@ -2181,7 +2201,7 @@
             renderLocatingStrategyList(query);
         }
 
-        // Fungsi Aturan Penempatan
+        
         window.renderLocatingRuleList = function(filterQuery = '') {
             const container = document.getElementById('locating-rule-list-container');
             container.innerHTML = '';
@@ -2245,10 +2265,10 @@
             const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
             const detailRecordsList = document.getElementById('detail-records-list');
 
-            detailRecordsList.innerHTML = ''; // Hapus detail record yang ada
+            detailRecordsList.innerHTML = ''; 
 
-            // Event listener untuk rule name dan description ditambahkan sekali di DOMContentLoaded
-            // Jadi tidak perlu ditambahkan atau dihapus di sini lagi.
+            
+            
 
             if (mode === 'create') {
                 title.textContent = 'Buat Aturan Penempatan Baru';
@@ -2258,7 +2278,7 @@
                 document.getElementById('locating-rule-inactive').checked = false;
                 
                 detailRecordsPlaceholder.classList.remove('hidden');
-                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50'); // Nonaktifkan secara visual
+                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50'); 
                 addDetailRecordBtn.disabled = true;
 
             } else {
@@ -2274,7 +2294,7 @@
                     document.getElementById('locating-rule-inactive').checked = ruleToEdit.inactive;
 
                     detailRecordsPlaceholder.classList.add('hidden');
-                    detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50'); // Aktifkan
+                    detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50'); 
                     addDetailRecordBtn.disabled = false;
 
                     ruleToEdit.detailRecords.forEach(record => addDetailRecord(record));
@@ -2282,14 +2302,14 @@
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            checkLocatingRuleFormValidity(); // Pengecekan awal setelah populasi form
+            checkLocatingRuleFormValidity(); 
         }
 
         window.closeLocatingRuleForm = function() {
             document.getElementById('locating-rule-form-modal').classList.add('hidden');
             document.getElementById('locating-rule-form-modal').classList.remove('flex');
             currentLocatingRuleId = null;
-            // Tidak perlu membersihkan event listener di sini karena sudah ditambahkan sekali di DOMContentLoaded
+            
         }
 
         window.checkLocatingRuleFormValidity = function() {
@@ -2310,24 +2330,37 @@
             }
         }
 
+        
         window.addDetailRecord = function(record = {}) {
             const detailRecordsList = document.getElementById('detail-records-list');
             const newRecordDiv = document.createElement('div');
+            
             newRecordDiv.classList.add('flex', 'flex-col', 'md:flex-row', 'gap-2', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm');
             newRecordDiv.innerHTML = `
-                <input type="number" placeholder="Sequence" value="${record.sequence || ''}" class="detail-record-sequence w-20 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-1 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                <input type="text" placeholder="Operator" value="${record.operator || ''}" class="detail-record-operator w-24 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-1 px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                <button type="button" onclick="removeDetailRecord(this)" class="px-2 py-1 bg-white text-wise-error border border-wise-border rounded-md hover:bg-red-100 transition-colors duration-200 shadow-sm text-sm active-press transform">
-                    <i class="fas fa-times w-4 h-4 flex items-center justify-center"></i>
+                <input type="number" placeholder="Seq" value="${record.sequence || ''}" class="detail-record-sequence w-12 px-2 py-1 border border-wise-border rounded-md text-sm text-center bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+
+                <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-grow px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+
+                <input type="text" placeholder="Op" value="${record.operator || ''}" class="detail-record-operator w-12 px-2 py-1 border border-wise-border rounded-md text-sm text-center bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+
+                <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-grow px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+
+                <button type="button" onclick="window.removeDetailRecord(this)" class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-wise-error text-white rounded-md hover:bg-red-600 transition-colors duration-200 shadow-sm active-press transform">
+                    <i class="fas fa-times text-xs"></i>
                 </button>
             `;
             detailRecordsList.appendChild(newRecordDiv);
         }
 
+        
         window.removeDetailRecord = function(button) {
-            button.closest('div').remove();
+            
+            const recordDiv = button.closest('.flex.flex-col.md\\:flex-row');
+            if (recordDiv) {
+                recordDiv.remove(); 
+            } else {
+                console.error("Could not find the parent record div to remove.");
+            }
         }
 
         window.handleLocatingRuleSubmit = async function(event) {
@@ -2367,7 +2400,7 @@
                     await showCustomAlert('Error', 'Locating Rule Name sudah ada!');
                     return;
                 }
-                newRule.id = ruleName; // Gunakan ruleName sebagai ID
+                newRule.id = ruleName; 
                 locatingRules.push(newRule);
             }
             saveLocatingRules();
@@ -2421,34 +2454,34 @@
             }
         }
 
-        // Fungsionalitas toggle sidebar
+        
         sidebarToggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
-            const mainContentArea = document.querySelector('main'); // Pilih area konten utama
+            const mainContentArea = document.querySelector('main'); 
             if (sidebar.classList.contains('-translate-x-full')) {
                 mainContentArea.classList.remove('md:ml-64');
                 mainContentArea.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); // Sembunyikan overlay
+                document.getElementById('sidebar-overlay').classList.add('hidden'); 
             } else {
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-                if (window.innerWidth < 768) { // Hanya tampilkan overlay di perangkat seluler
+                if (window.innerWidth < 768) { 
                     document.getElementById('sidebar-overlay').classList.remove('hidden');
                 }
             }
         });
 
-        // Tutup sidebar saat mengklik di luar di perangkat seluler
+        
         document.addEventListener('click', (event) => {
             if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
                 mainContent.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); // Sembunyikan overlay
+                document.getElementById('sidebar-overlay').classList.add('hidden'); 
             }
         });
 
-        // Fungsi untuk menutup sidebar (digunakan oleh klik overlay)
+        
         window.closeSidebar = function() {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
@@ -2456,38 +2489,37 @@
             document.getElementById('sidebar-overlay').classList.add('hidden');
         }
 
-        // Sesuaikan sidebar saat ukuran diubah
+        
         window.addEventListener('resize', () => {
-            const mainContentArea = document.querySelector('main'); // Pilih area konten utama
+            const mainContentArea = document.querySelector('main'); 
             if (window.innerWidth >= 768) {
                 sidebar.classList.remove('-translate-x-full');
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); // Sembunyikan overlay di desktop
+                document.getElementById('sidebar-overlay').classList.add('hidden'); 
             } else {
                 sidebar.classList.add('-translate-x-full');
                 mainContentArea.classList.remove('md:ml-64');
                 mainContentArea.classList.add('ml-0');
-                // Jangan tampilkan overlay saat ukuran diubah jika sidebar sudah tersembunyi
+                
             }
         });
 
-        // Pemuatan awal
+        
         window.onload = function() {
             selectCategory('dashboard');
             
             const username = "SuperAdmin";
             document.getElementById('username-display').textContent = username;
 
-            // Tambahkan event listener untuk input aturan penempatan sekali di sini
-            const ruleNameInput = document.getElementById('locating-rule-name');
-            const ruleDescriptionInput = document.getElementById('locating-rule-description');
-            if (ruleNameInput && ruleDescriptionInput) {
-                ruleNameInput.addEventListener('input', checkLocatingRuleFormValidity);
-                ruleDescriptionInput.addEventListener('input', checkLocatingRuleFormValidity);
-            }
+            
+            
+            
+            
+            
+            
         };
     });
 
-})(); // Akhir dari IIFE
+})(); 
             
