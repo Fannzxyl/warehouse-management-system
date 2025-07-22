@@ -241,6 +241,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             Kelola Tipe Lokasi
                         </button>
                     </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Strategi Penempatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Mengelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('locating-strategies')">
+                            Kelola Strategi Penempatan
+                        </button>
+                    </div>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Aturan Penempatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Menentukan aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="selectCategory('locating-rule')">
+                            Kelola Aturan Penempatan
+                        </button>
+                    </div>
                 </div>
             `,
         },
@@ -727,6 +741,100 @@ document.addEventListener('DOMContentLoaded', () => {
             `,
         },
         // End of Setting Optimization Data
+        'locating-strategies': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
+                <p class="text-wise-gray mb-4">Kelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocatingStrategyForm('create')">
+                        Buat Strategi Penempatan Baru
+                    </button>
+                    <input type="text" id="locating-strategy-search" placeholder="Cari strategi penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
+                </div>
+                <div id="locating-strategy-list-container" class="overflow-x-auto">
+                </div>
+
+                <div id="locating-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                        <h3 id="locating-strategy-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                        <form id="locating-strategy-form" onsubmit="handleLocatingStrategySubmit(event)">
+                            <div class="mb-4">
+                                <label for="locating-strategy-name" class="block text-sm font-medium text-wise-dark-gray">Strategy Name:</label>
+                                <input type="text" id="locating-strategy-name" name="strategyName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="mb-4">
+                                <label for="locating-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                <input type="text" id="locating-strategy-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="locating-strategy-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
+                                <button type="submit" id="locating-strategy-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+        },
+        'locating-rule': {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Aturan Penempatan</h2>
+                <p class="text-wise-gray mb-4">Kelola aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <button class="px-4 py-2 bg-wise-green-500 text-white rounded-md hover:bg-wise-green-600 transition-colors duration-200 shadow-md active:scale-95 transform" onclick="showLocatingRuleForm('create')">
+                        Buat Aturan Penempatan Baru
+                    </button>
+                    <input type="text" id="locating-rule-search" placeholder="Cari aturan penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
+                </div>
+                <div id="locating-rule-list-container" class="overflow-x-auto">
+                </div>
+
+                <div id="locating-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
+                        <h3 id="locating-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                        <form id="locating-rule-form" onsubmit="handleLocatingRuleSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
+                                    <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                    <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-blue-500 focus:border-wise-blue-500 sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" id="locating-rule-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-blue-500 rounded border-wise-border focus:ring-wise-blue-500">
+                                    <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                </label>
+                            </div>
+
+                            <div class="mb-4">
+                                <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
+                                <div id="locating-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray" disabled>
+                                    <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
+                                    <div id="detail-records-list" class="space-y-2">
+                                        <!-- Detail records will be dynamically added here -->
+                                    </div>
+                                    <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-sm text-sm active:scale-95 transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-2">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
+                                <button type="submit" id="locating-rule-submit-button" class="px-4 py-2 bg-wise-blue-500 text-white rounded-md hover:bg-wise-blue-600 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `,
+        },
     };
 
     const searchItems = [
@@ -779,6 +887,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
         { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
         // End of Setting Optimization Search Items
+        { id: 'locating-strategies', title: 'Strategi Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
+        { id: 'locating-rule', title: 'Aturan Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
     ];
 
     let currentCategory = 'dashboard';
@@ -802,6 +912,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'setting-optimization-performance': 'setting-optimization',
         'setting-optimization-notifications': 'setting-optimization',
         // End of Setting Optimization Parent Mapping
+        'locating-strategies': 'configuration',
+        'locating-rule': 'configuration',
     };
 
     window.toggleChildren = function(category) {
@@ -887,6 +999,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderLocationTypeList();
             initializeTabButtons('location-type-form-modal');
             activateTab('general-location');
+        } else if (category === 'locating-strategies') { // New handler
+            renderLocatingStrategyList();
+        } else if (category === 'locating-rule') { // New handler
+            renderLocatingRuleList();
         }
 
         // Close sidebar on mobile after selection
@@ -1139,14 +1255,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCP', description: 'DC PELABUHAN RATU', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCS', description: 'DC SUMBER', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'DCT', description: 'DC TEGAL', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
+        { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         { id: 'GBG', description: 'DC GEDE BAGE', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
     ];
     
@@ -1188,6 +1304,34 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'DCB LOADING LANE', locationType: 'DCB LOADING LANE', length: 0.00, width: 0.00, height: 0.00, dimensionUM: 'CM', maximumWeight: 0.00, weightUM: 'KG', active: true, lastUpdated: '' },
     ];
 
+    let locatingStrategies = JSON.parse(localStorage.getItem('locatingStrategies')) || [
+        { id: 'STRATEGY_A', strategyName: 'STRATEGY A', description: 'Strategy A Description', active: true },
+        { id: 'STRATEGY_B', strategyName: 'STRATEGY B', description: 'Strategy B Description', active: true },
+        { id: 'STRATEGY_C', strategyName: 'STRATEGY C', description: 'Strategy C Description', active: false },
+    ];
+
+    let locatingRules = JSON.parse(localStorage.getItem('locatingRules')) || [
+        {
+            id: 'RULE_1',
+            ruleName: 'RULE 1',
+            description: 'First Locating Rule',
+            active: true,
+            detailRecords: [
+                { sequence: 1, field: 'Item Code', operator: '=', value: 'ITEM001' },
+                { sequence: 2, field: 'Zone Type', operator: 'IN', value: 'ALLOCATION, PICKING' }
+            ]
+        },
+        {
+            id: 'RULE_2',
+            ruleName: 'RULE 2',
+            description: 'Second Locating Rule',
+            active: false,
+            detailRecords: [
+                { sequence: 1, field: 'Weight', operator: '>', value: '100' }
+            ]
+        },
+    ];
+
     const allUsers = [
         'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
         'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
@@ -1199,6 +1343,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentWarehouseId = null;
     let currentZoneId = null;
     let currentLocationTypeId = null;
+    let currentLocatingStrategyId = null;
+    let currentLocatingRuleId = null;
 
     function generateUniqueId(prefix) {
         return prefix + Date.now();
@@ -1214,6 +1360,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveLocationTypes() {
         localStorage.setItem('locationTypes', JSON.stringify(locationTypes));
+    }
+
+    function saveLocatingStrategies() {
+        localStorage.setItem('locatingStrategies', JSON.stringify(locatingStrategies));
+    }
+
+    function saveLocatingRules() {
+        localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
     }
 
     window.renderWarehouseList = function(filterQuery = '') {
@@ -1407,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userDefinedField8 = document.getElementById('user-defined-field8').value;
 
         const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
-                                   .map(checkbox => checkbox.value);
+                                       .map(checkbox => checkbox.value);
 
         const newWarehouse = {
             id: warehouseId,
@@ -1788,6 +1942,342 @@ document.addEventListener('DOMContentLoaded', () => {
     window.filterLocationTypeList = function(query) {
         renderLocationTypeList(query);
     }
+
+    // Locating Strategies functions
+    window.renderLocatingStrategyList = function(filterQuery = '') {
+        const container = document.getElementById('locating-strategy-list-container');
+        container.innerHTML = '';
+
+        const filteredStrategies = locatingStrategies.filter(strategy =>
+            strategy.strategyName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+            strategy.description.toLowerCase().includes(filterQuery.toLowerCase())
+        );
+
+        if (filteredStrategies.length === 0) {
+            container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada strategi penempatan ditemukan.</p>`;
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+        table.innerHTML = `
+            <thead class="bg-wise-light-gray">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Strategy Name</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-wise-border" id="locating-strategy-table-body">
+            </tbody>
+        `;
+        container.appendChild(table);
+
+        const tbody = document.getElementById('locating-strategy-table-body');
+        filteredStrategies.forEach(strategy => {
+            const row = tbody.insertRow();
+            row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${strategy.strategyName}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="showLocatingStrategyForm('edit', '${strategy.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocatingStrategy('${strategy.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    window.showLocatingStrategyForm = function(mode, id = null) {
+        const modal = document.getElementById('locating-strategy-form-modal');
+        const title = document.getElementById('locating-strategy-form-title');
+        const form = document.getElementById('locating-strategy-form');
+        form.reset();
+
+        currentLocatingStrategyId = id;
+
+        if (mode === 'create') {
+            title.textContent = 'Buat Strategi Penempatan Baru';
+            document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
+            document.getElementById('locating-strategy-name').disabled = false;
+            document.getElementById('locating-strategy-inactive').checked = false;
+        } else {
+            title.textContent = 'Edit Strategi Penempatan';
+            document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
+            document.getElementById('locating-strategy-name').disabled = true;
+
+            const strategyToEdit = locatingStrategies.find(s => s.id === id);
+            if (strategyToEdit) {
+                document.getElementById('locating-strategy-name').value = strategyToEdit.strategyName;
+                document.getElementById('locating-strategy-description').value = strategyToEdit.description;
+                document.getElementById('locating-strategy-inactive').checked = !strategyToEdit.active;
+            }
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    window.closeLocatingStrategyForm = function() {
+        document.getElementById('locating-strategy-form-modal').classList.add('hidden');
+        document.getElementById('locating-strategy-form-modal').classList.remove('flex');
+        currentLocatingStrategyId = null;
+    }
+
+    window.handleLocatingStrategySubmit = function(event) {
+        event.preventDefault();
+        const strategyName = document.getElementById('locating-strategy-name').value;
+        const description = document.getElementById('locating-strategy-description').value;
+        const inactive = document.getElementById('locating-strategy-inactive').checked;
+        const active = !inactive;
+
+        const newStrategy = {
+            id: currentLocatingStrategyId || strategyName,
+            strategyName,
+            description,
+            active,
+        };
+
+        if (currentLocatingStrategyId) {
+            const index = locatingStrategies.findIndex(s => s.id === currentLocatingStrategyId);
+            if (index !== -1) {
+                locatingStrategies[index] = { ...locatingStrategies[index], ...newStrategy };
+            }
+        } else {
+            if (locatingStrategies.some(s => s.id === strategyName)) {
+                alert('Strategy Name sudah ada!');
+                return;
+            }
+            newStrategy.id = strategyName;
+            locatingStrategies.push(newStrategy);
+        }
+        saveLocatingStrategies();
+        renderLocatingStrategyList();
+        closeLocatingStrategyForm();
+    }
+
+    window.deleteLocatingStrategy = function(id) {
+        if (confirm(`Kamu yakin mau hapus strategi penempatan ${id} ini?`)) {
+            locatingStrategies = locatingStrategies.filter(s => s.id !== id);
+            saveLocatingStrategies();
+            renderLocatingStrategyList();
+        }
+    }
+
+    window.filterLocatingStrategyList = function(query) {
+        renderLocatingStrategyList(query);
+    }
+
+    // Locating Rule functions
+    window.renderLocatingRuleList = function(filterQuery = '') {
+        const container = document.getElementById('locating-rule-list-container');
+        container.innerHTML = '';
+
+        const filteredRules = locatingRules.filter(rule =>
+            rule.ruleName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+            rule.description.toLowerCase().includes(filterQuery.toLowerCase())
+        );
+
+        if (filteredRules.length === 0) {
+            container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada aturan penempatan ditemukan.</p>`;
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+        table.innerHTML = `
+            <thead class="bg-wise-light-gray">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Rule Name</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-wise-border" id="locating-rule-table-body">
+            </tbody>
+        `;
+        container.appendChild(table);
+
+        const tbody = document.getElementById('locating-rule-table-body');
+        filteredRules.forEach(rule => {
+            const row = tbody.insertRow();
+            row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${rule.ruleName}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.active ? 'Yes' : 'No'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button onclick="showLocatingRuleForm('edit', '${rule.id}')" class="text-wise-blue-500 hover:text-wise-blue-700 mr-3">Edit</button>
+                    <button onclick="deleteLocatingRule('${rule.id}')" class="text-wise-red-500 hover:text-wise-red-700">Delete</button>
+                </td>
+            `;
+        });
+    }
+
+    window.showLocatingRuleForm = function(mode, id = null) {
+        const modal = document.getElementById('locating-rule-form-modal');
+        const title = document.getElementById('locating-rule-form-title');
+        const form = document.getElementById('locating-rule-form');
+        form.reset();
+
+        currentLocatingRuleId = id;
+
+        const detailRecordsContainer = document.getElementById('locating-rule-detail-records-container');
+        const detailRecordsPlaceholder = document.getElementById('detail-records-placeholder');
+        const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
+        const detailRecordsList = document.getElementById('detail-records-list');
+
+        detailRecordsList.innerHTML = ''; // Clear existing detail records
+
+        if (mode === 'create') {
+            title.textContent = 'Buat Aturan Penempatan Baru';
+            document.getElementById('locating-rule-submit-button').textContent = 'Buat';
+            document.getElementById('locating-rule-name').disabled = false;
+            document.getElementById('locating-rule-inactive').checked = false;
+            
+            detailRecordsPlaceholder.classList.remove('hidden');
+            detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50'); // Disable visually
+            addDetailRecordBtn.disabled = true;
+
+            // Add event listener to enable detail records when name/description are filled
+            document.getElementById('locating-rule-name').addEventListener('input', checkLocatingRuleFormValidity);
+            document.getElementById('locating-rule-description').addEventListener('input', checkLocatingRuleFormValidity);
+
+        } else {
+            title.textContent = 'Edit Aturan Penempatan';
+            document.getElementById('locating-rule-submit-button').textContent = 'Simpan Perubahan';
+            document.getElementById('locating-rule-name').disabled = true;
+
+            const ruleToEdit = locatingRules.find(r => r.id === id);
+            if (ruleToEdit) {
+                document.getElementById('locating-rule-name').value = ruleToEdit.ruleName;
+                document.getElementById('locating-rule-description').value = ruleToEdit.description;
+                document.getElementById('locating-rule-inactive').checked = !ruleToEdit.active;
+
+                detailRecordsPlaceholder.classList.add('hidden');
+                detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50'); // Enable
+                addDetailRecordBtn.disabled = false;
+
+                ruleToEdit.detailRecords.forEach(record => addDetailRecord(record));
+            }
+            // Remove event listeners if editing, as fields are already filled
+            document.getElementById('locating-rule-name').removeEventListener('input', checkLocatingRuleFormValidity);
+            document.getElementById('locating-rule-description').removeEventListener('input', checkLocatingRuleFormValidity);
+        }
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    window.closeLocatingRuleForm = function() {
+        document.getElementById('locating-rule-form-modal').classList.add('hidden');
+        document.getElementById('locating-rule-form-modal').classList.remove('flex');
+        currentLocatingRuleId = null;
+        // Clean up event listeners when closing the form
+        document.getElementById('locating-rule-name').removeEventListener('input', checkLocatingRuleFormValidity);
+        document.getElementById('locating-rule-description').removeEventListener('input', checkLocatingRuleFormValidity);
+    }
+
+    window.checkLocatingRuleFormValidity = function() {
+        const ruleName = document.getElementById('locating-rule-name').value;
+        const description = document.getElementById('locating-rule-description').value;
+        const detailRecordsContainer = document.getElementById('locating-rule-detail-records-container');
+        const detailRecordsPlaceholder = document.getElementById('detail-records-placeholder');
+        const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
+
+        if (ruleName && description) {
+            detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50');
+            detailRecordsPlaceholder.classList.add('hidden');
+            addDetailRecordBtn.disabled = false;
+        } else {
+            detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50');
+            detailRecordsPlaceholder.classList.remove('hidden');
+            addDetailRecordBtn.disabled = true;
+        }
+    }
+
+    window.addDetailRecord = function(record = {}) {
+        const detailRecordsList = document.getElementById('detail-records-list');
+        const newRecordDiv = document.createElement('div');
+        newRecordDiv.classList.add('flex', 'flex-col', 'md:flex-row', 'gap-2', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm');
+        newRecordDiv.innerHTML = `
+            <input type="number" placeholder="Sequence" value="${record.sequence || ''}" class="detail-record-sequence w-20 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
+            <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-1 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
+            <input type="text" placeholder="Operator" value="${record.operator || ''}" class="detail-record-operator w-24 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
+            <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-1 px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray">
+            <button type="button" onclick="removeDetailRecord(this)" class="px-2 py-1 bg-wise-red-500 text-white rounded-md hover:bg-wise-red-600 transition-colors duration-200 shadow-sm text-sm active:scale-95 transform">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        `;
+        detailRecordsList.appendChild(newRecordDiv);
+    }
+
+    window.removeDetailRecord = function(button) {
+        button.closest('div').remove();
+    }
+
+    window.handleLocatingRuleSubmit = function(event) {
+        event.preventDefault();
+        const ruleName = document.getElementById('locating-rule-name').value;
+        const description = document.getElementById('locating-rule-description').value;
+        const inactive = document.getElementById('locating-rule-inactive').checked;
+        const active = !inactive;
+
+        const detailRecords = [];
+        document.querySelectorAll('#detail-records-list > div').forEach(recordDiv => {
+            detailRecords.push({
+                sequence: parseInt(recordDiv.querySelector('.detail-record-sequence').value) || 0,
+                field: recordDiv.querySelector('.detail-record-field').value,
+                operator: recordDiv.querySelector('.detail-record-operator').value,
+                value: recordDiv.querySelector('.detail-record-value').value,
+            });
+        });
+
+        const newRule = {
+            id: currentLocatingRuleId || ruleName,
+            ruleName,
+            description,
+            active,
+            detailRecords,
+        };
+
+        if (currentLocatingRuleId) {
+            const index = locatingRules.findIndex(r => r.id === currentLocatingRuleId);
+            if (index !== -1) {
+                locatingRules[index] = { ...locatingRules[index], ...newRule };
+            }
+        } else {
+            if (locatingRules.some(r => r.id === ruleName)) {
+                alert('Locating Rule Name sudah ada!');
+                return;
+            }
+            newRule.id = ruleName;
+            locatingRules.push(newRule);
+        }
+        saveLocatingRules();
+        renderLocatingRuleList();
+        closeLocatingRuleForm();
+    }
+
+    window.deleteLocatingRule = function(id) {
+        if (confirm(`Kamu yakin mau hapus aturan penempatan ${id} ini?`)) {
+            locatingRules = locatingRules.filter(r => r.id !== id);
+            saveLocatingRules();
+            renderLocatingRuleList();
+        }
+    }
+
+    window.filterLocatingRuleList = function(query) {
+        renderLocatingRuleList(query);
+    }
+
 
     window.initializeTabButtons = function(modalId) {
         const modal = document.getElementById(modalId);

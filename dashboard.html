@@ -62,26 +62,34 @@
             #default-content-area::-webkit-scrollbar-thumb,
             #warehouse-list-container::-webkit-scrollbar-thumb,
             #zone-list-container::-webkit-scrollbar-thumb,
-            #location-type-list-container::-webkit-scrollbar-thumb {
+            #location-type-list-container::-webkit-scrollbar-thumb,
+            #locating-strategy-list-container::-webkit-scrollbar-thumb,
+            #locating-rule-list-container::-webkit-scrollbar-thumb {
                 background: #c1c1c1; 
             }
             #default-content-area::-webkit-scrollbar-thumb:hover,
             #warehouse-list-container::-webkit-scrollbar-thumb:hover,
             #zone-list-container::-webkit-scrollbar-thumb:hover,
-            #location-type-list-container::-webkit-scrollbar-thumb:hover {
+            #location-type-list-container::-webkit-scrollbar-thumb:hover,
+            #locating-strategy-list-container::-webkit-scrollbar-thumb:hover,
+            #locating-rule-list-container::-webkit-scrollbar-thumb:hover {
                 background: #a8a8a8; 
             }
             #default-content-area,
             #warehouse-list-container,
             #zone-list-container,
-            #location-type-list-container {
+            #location-type-list-container,
+            #locating-strategy-list-container,
+            #locating-rule-list-container {
                 scrollbar-width: thin;
                 scrollbar-color: #c1c1c1 #f1f1f1;
             }
             #default-content-area:hover,
             #warehouse-list-container:hover,
             #zone-list-container:hover,
-            #location-type-list-container:hover {
+            #location-type-list-container:hover,
+            #locating-strategy-list-container:hover,
+            #locating-rule-list-container:hover {
                 scrollbar-color: #a8a8a8 #f1f1f1;
             }
 
@@ -415,6 +423,12 @@
                         </div>
                         <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors duration-200" onclick="selectCategory('configuration-location-type')">
                             <span class="text-wise-gray text-sm">Location Type</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors duration-200" onclick="selectCategory('locating-strategies')">
+                            <span class="text-wise-gray text-sm">Locating Strategies</span>
+                        </div>
+                        <div class="sidebar-child p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors duration-200" onclick="selectCategory('locating-rule')">
+                            <span class="text-wise-gray text-sm">Locating Rule</span>
                         </div>
                     </div>
                     
