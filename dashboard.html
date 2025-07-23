@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style type="text/tailwindcss">
         @layer base {
             body {
@@ -36,13 +36,13 @@
             }
             
             ::-webkit-scrollbar-thumb {
-                background: rgba(156, 163, 175, 0.4); /* Tailwind gray-400 with opacity */
+                background: rgba(156, 163, 175, 0.4); 
                 border-radius: 10px;
                 transition: all 0.2s ease;
             }
             
             ::-webkit-scrollbar-thumb:hover {
-                background: rgba(156, 163, 175, 0.7); /* Tailwind gray-500 with opacity */
+                background: rgba(156, 163, 175, 0.7); 
             }
             
             /* Firefox scrollbar */
@@ -156,6 +156,9 @@
                     margin-left: calc(-1 * (100vw - 100%) / 2);
                 }
             }
+            .fas, .fa-solid {
+                font-weight: 900;
+            }
         }
     </style>
     <script>
@@ -255,8 +258,8 @@
                 <span class="text-wise-dark-gray font-medium text-sm hidden lg:block">
                     Selamat Datang, <span id="username-display" class="font-semibold text-wise-primary">SuperAdmin</span>
                 </span>
-                <div 
-                    class="w-9 h-9 bg-gradient-primary rounded-full flex items-center justify-center shadow-card cursor-pointer hover-lift transition-all-smooth active-press" 
+                <div
+                    class="w-9 h-9 bg-wise-dark-gray rounded-full flex items-center justify-center shadow-card cursor-pointer hover-lift transition-all-smooth active-press"
                     onclick="toggleUserDropdown()"
                     aria-label="Menu pengguna"
                 >
@@ -549,7 +552,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Data Archiving -->
                     <div class="sidebar-section">
                         <div id="sidebar-archive" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('archive')" tabindex="0" role="button" aria-expanded="false" aria-controls="archive-children" aria-label="Toggle Data Archiving sub-menu">
@@ -570,6 +573,7 @@
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Keuangan</span>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

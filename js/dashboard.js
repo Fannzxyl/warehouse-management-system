@@ -1,7 +1,7 @@
-(function() { 
+(function() {
 
     document.addEventListener('DOMContentLoaded', () => {
-        
+
         const mainContent = document.getElementById('default-content-area');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
         const searchOverlay = document.getElementById('search-overlay');
@@ -13,18 +13,16 @@
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
 
-        
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden'); 
+            customModalCancelBtn.classList.add('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -40,11 +38,10 @@
             });
         };
 
-        
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden'); 
+            customModalCancelBtn.classList.remove('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -69,7 +66,39 @@
             });
         };
 
-        
+        // Data Dummy untuk Sistem Manajemen (Pengguna, Log, Cadangan, Pengarsipan) - Ini tidak akan ditampilkan langsung di HTML
+        // Hanya untuk referensi jika nanti butuh data lengkap di JavaScript
+        let sistemPengguna = [
+            { id: 'SA001', namaPengguna: 'SuperAdmin', peran: 'Administrator', status: 'Aktif', terakhirLogin: '2025-07-23 09:30 AM' },
+            { id: 'WH005', namaPengguna: 'PenggunaGudang', peran: 'Staf Gudang', status: 'Aktif', terakhirLogin: '2025-07-23 08:00 AM' },
+            { id: 'INV010', namaPengguna: 'ManajerInventaris', peran: 'Manajer Inventaris', status: 'Tidak Aktif', terakhirLogin: '2025-07-20 03:00 PM' },
+            { id: 'OPS021', namaPengguna: 'OperatorLogistik', peran: 'Operator', status: 'Aktif', terakhirLogin: '2025-07-23 10:15 AM' },
+            { id: 'SEC002', namaPengguna: 'PenjagaKeamanan', peran: 'Keamanan', status: 'Aktif', terakhirLogin: '2025-07-23 07:00 AM' },
+        ];
+
+        let logSistem = [
+            { waktu: '2025-07-23 10:50:00', level: 'INFO', pesan: 'Pengguna SuperAdmin berhasil login.' },
+            { waktu: '2025-07-23 10:45:15', level: 'PERINGATAN', pesan: 'Peringatan: Level stok rendah untuk Item #XYZ.' },
+            { waktu: '2025-07-23 09:00:00', level: 'INFO', pesan: 'Sistem cadangan harian selesai.' },
+            { waktu: '2025-07-23 08:30:00', level: 'ERROR', pesan: 'Gagal melakukan sinkronisasi data dengan ERP. Timeout.' },
+            { waktu: '2025-07-22 17:30:00', level: 'INFO', pesan: 'Pengguna OperatorLogistik logout.' },
+            { waktu: '2025-07-22 14:10:00', level: 'INFO', pesan: 'Sesi pengguna PenggunaGudang habis.' },
+        ];
+
+        let cadanganSistem = [
+            { tanggal: '2025-07-22', tipe: 'Cadangan Penuh', ukuran: '50 GB', status: 'Selesai', catatan: 'Cadangan data harian ke cloud.' },
+            { tanggal: '2025-07-15', tipe: 'Cadangan Mingguan', ukuran: '200 GB', status: 'Selesai', catatan: 'Cadangan data mingguan ke NAS.' },
+            { tanggal: '2025-07-01', tipe: 'Cadangan Bulanan', ukuran: '500 GB', status: 'Selesai', catatan: 'Cadangan data bulanan ke tape.' },
+            { tanggal: '2025-07-23', tipe: 'Inkremental', ukuran: '5 GB', status: 'Gagal', catatan: 'Gagal karena koneksi terputus.' },
+        ];
+
+        let pengarsipanData = [
+            { idArsip: 'ARC001', namaArsip: 'Transaksi Q1 2024', tanggalArsip: '2025-04-01', ukuran: '10 GB', status: 'Diarsipkan', lokasi: 'Cloud Storage' },
+            { idArsip: 'ARC002', namaArsip: 'Laporan Audit 2023', tanggalArsip: '2025-01-15', ukuran: '2 GB', status: 'Diarsipkan', lokasi: 'Lokal Server' },
+            { idArsip: 'ARC003', namaArsip: 'Data Pengguna Lama', tanggalArsip: '2024-12-01', ukuran: '5 GB', status: 'Dalam Proses', lokasi: 'NAS' },
+        ];
+
+        // Data dummy untuk konten dashboard dan sub-kategori
         const contentData = {
             dashboard: {
                 full: `
@@ -197,7 +226,7 @@
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Jadwal</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
             },
             'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah tim: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 5</p>`,
             },
             'cross-application': {
                 full: `
@@ -263,7 +292,7 @@
             'performance-goals': {
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
             },
-            
+
             configuration: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi Sistem</h2>
@@ -322,7 +351,7 @@
                     <div id="warehouse-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                             <h3 id="warehouse-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4"> <!-- Added flex-1, overflow-y-auto, pr-4, -mr-4 -->
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
@@ -334,7 +363,7 @@
                                             <input type="text" id="warehouse-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mb-4">
                                         <div class="flex space-x-2 mb-2">
                                             <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="warehouse-address">Warehouse Address</button>
@@ -563,8 +592,8 @@
                                 </form>
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press" onclick="closeWarehouseForm()">Cancel</button>
-                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-lg hover:bg-gray-100 transition-all-smooth active-press">OK</button>
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
+                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-lg hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </div>
                     </div>
@@ -698,7 +727,7 @@
                     </div>
                 `,
             },
-            
+
             'article a': {
                 detail: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Artikel A</h2>
@@ -720,7 +749,7 @@
                     <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 30 menit yang lalu</p>
                 `,
             },
-            
+
             'setting-optimization': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Optimasi</h2>
@@ -794,7 +823,7 @@
                     </div>
                 `,
             },
-            
+
             'locating-strategies': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
@@ -893,8 +922,7 @@
                                         <div id="locating-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray" disabled>
                                             <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
                                             <div id="detail-records-list" class="space-y-2">
-                                                <!-- Detail records will be dynamically added here -->
-                                            </div>
+                                                </div>
                                             <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
                                         </div>
                                     </div>
@@ -908,8 +936,64 @@
                     </div>
                 `,
             },
+            'system-users': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
+                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
+                `
+            },
+            'system-logs': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - log</h2>
+                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
+                `,
+            },
+            'system-backup': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
+                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Pengguna: 5</p>
+                `,
+            },
+            'archive': { 
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan Data</h2>
+                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar Arsip</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Total Arsip: ${pengarsipanData.length}</li>
+                            <li>Arsip Terbaru: ${pengarsipanData[0].namaArsip} (${pengarsipanData[0].tanggalArsip})</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'archive-documents': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Dokumen</h2>
+                    <p class="text-wise-gray">Detail semua dokumen yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total dokumen diarsipkan: 150</p>
+                `,
+            },
+            'archive-media': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Media</h2>
+                    <p class="text-wise-gray">Detail semua file media yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total file media diarsipkan: 75</p>
+                `,
+            },
+            'archive-financial': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Keuangan</h2>
+                    <p class="text-wise-gray">Detail laporan dan data keuangan yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan diarsipkan: 40</p>
+                `,
+            },
         };
 
+        // Data dummy untuk hasil pencarian
         const searchItems = [
             { id: 'article a', title: 'Artikel A', category: 'Umum', lastUpdated: '2 jam yang lalu' },
             { id: 'paragraph b', title: 'Paragraf B', category: 'Dokumentasi', lastUpdated: '1 jam yang lalu' },
@@ -946,17 +1030,18 @@
             { id: 'configuration-warehouse', title: 'Konfigurasi Gudang', category: 'Configuration', lastUpdated: 'Terbaru' },
             { id: 'configuration-zone', title: 'Konfigurasi Zona', category: 'Configuration', lastUpdated: 'Terbaru' },
             { id: 'configuration-location-type', title: 'Konfigurasi Tipe Lokasi', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'system-users', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
-            { id: 'system-logs', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
-            { id: 'system-backup', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
+            { id: 'sistem-pengguna', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
+            { id: 'log-sistem', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
+            { id: 'cadangan-sistem', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
+            { id: 'pengarsipan-data', title: 'Pengarsipan Data', category: 'Manajemen Sistem', lastUpdated: 'Mingguan' },
             { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
             { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
             { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            
+
             { id: 'setting-optimization-general', title: 'Pengaturan Umum', category: 'Setting Optimization', lastUpdated: 'Baru saja' },
             { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
             { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
-            
+
             { id: 'locating-strategies', title: 'Strategi Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
             { id: 'locating-rule', title: 'Aturan Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
         ];
@@ -974,20 +1059,21 @@
             'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
             'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
-            'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system',
-            
+            'sistem-pengguna': 'system', 'log-sistem': 'system', 'cadangan-sistem': 'system', 'pengarsipan-data': 'archive', // Updated for Indonesian names
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
+            'archive-documents': 'archive',
+            'archive-media': 'archive',
+            'archive-financial': 'archive',
         };
 
         window.toggleChildren = function(category) {
             const childrenDiv = document.getElementById(`${category}-children`);
             const arrowIcon = document.getElementById(`${category}-arrow`);
-            
+
             if (childrenDiv && arrowIcon) {
                 childrenDiv.classList.toggle('hidden');
                 arrowIcon.classList.toggle('rotate-90');
@@ -1000,7 +1086,7 @@
         }
 
         window.selectCategory = function(category) {
-            
+
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
             });
@@ -1009,13 +1095,11 @@
                 item.classList.add('text-wise-gray');
             });
 
-            
             document.querySelectorAll('.sidebar-child').forEach(item => {
                 item.classList.remove('border-l-2', 'border-wise-primary');
             });
 
 
-            
             const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
             const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
 
@@ -1028,7 +1112,7 @@
                 if (childElement) {
                     childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
                     childElement.classList.remove('text-wise-gray');
-                    
+
                     const parentCategory = parentMapping[category];
                     if (parentCategory) {
                         const parentSidebarItem = document.getElementById(`sidebar-${parentCategory}`);
@@ -1047,7 +1131,7 @@
                     }
                 }
             }
-            
+
             currentCategory = category;
             const content = contentData[category];
             const defaultContentArea = document.getElementById('default-content-area');
@@ -1065,8 +1149,8 @@
                 defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten untuk ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Belum ada konten spesifik untuk kategori ini.</p>`;
                 defaultContentArea.classList.remove('hidden');
             }
-            
-            
+
+            // Inisialisasi form dan tabel jika kategori terkait
             if (category === 'configuration-warehouse') {
                 renderWarehouseList();
                 initializeTabButtons('warehouse-form-modal');
@@ -1074,7 +1158,7 @@
             } else if (category === 'configuration-zone') {
                 renderZoneList();
                 initializeTabButtons('zone-form-modal');
-                activateTab('general-zone', 'zone-form-modal'); 
+                activateTab('general-zone', 'zone-form-modal');
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
                 initializeTabButtons('location-type-form-modal');
@@ -1082,16 +1166,15 @@
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
                 initializeTabButtons('locating-strategy-form-modal');
-                activateTab('general-strategy', 'locating-strategy-form-modal'); 
+                activateTab('general-strategy', 'locating-strategy-form-modal');
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
                 initializeTabButtons('locating-rule-form-modal');
-                activateTab('general-rule', 'locating-rule-form-modal'); 
-                
+                activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
             }
 
-            
+            // Tutup sidebar di tampilan mobile setelah memilih kategori
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
@@ -1100,7 +1183,11 @@
             }
         }
 
-        
+        /**
+         * Menangani input pencarian dari header atau overlay.
+         * @param {string} query - Kata kunci pencarian.
+         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         */
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
             const overlaySearchInput = document.getElementById('overlay-search-input');
@@ -1118,7 +1205,11 @@
             }
         }
 
-        
+        /**
+         * Melakukan pencarian dan menampilkan hasilnya.
+         * @param {string} query - Kata kunci pencarian.
+         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         */
         window.performSearch = function(query, source) {
             const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
             const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
@@ -1132,20 +1223,20 @@
 
             if (query.length > 0) {
                 filtersContainer.classList.remove('hidden');
-                
-                let filteredResults = searchItems.filter(item => 
+
+                let filteredResults = searchItems.filter(item =>
                     item.title.toLowerCase().includes(query.toLowerCase()) ||
                     item.category.toLowerCase().includes(query.toLowerCase()) ||
                     (item.id && item.id.toLowerCase().includes(query.toLowerCase()))
                 );
 
                 if (activeFilters.length > 0) {
-                    filteredResults = filteredResults.filter(item => 
+                    filteredResults = filteredResults.filter(item =>
                         activeFilters.some(filter => item.category.toLowerCase().includes(filter.toLowerCase()))
                     );
                 }
 
-                resultsPanel.innerHTML = ''; 
+                resultsPanel.innerHTML = '';
 
                 if (filteredResults.length > 0) {
                     if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
@@ -1154,7 +1245,7 @@
                     if (filteredResults.some(item => item.category.toLowerCase().includes('fotografi') || item.title.toLowerCase().includes('foto'))) {
                         document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
                     }
-                    
+
                     filteredResults.forEach(item => {
                         const resultItem = document.createElement('div');
                         resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
@@ -1162,26 +1253,30 @@
                             <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
                             <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
                         `;
-                        resultItem.onmouseenter = (event) => showPreview(item.id, event); 
+                        resultItem.onmouseenter = (event) => showPreview(item.id, event);
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
                         resultsPanel.appendChild(resultItem);
                     });
                 } else {
                     resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
-                    filtersContainer.classList.add('hidden'); 
+                    filtersContainer.classList.add('hidden');
                 }
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
             } else {
-                resultsPanel.innerHTML = ''; 
+                resultsPanel.innerHTML = '';
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
-                filtersContainer.classList.add('hidden'); 
+                filtersContainer.classList.add('hidden');
             }
         }
 
+        /**
+         * Menampilkan pratinjau konten di panel detail overlay pencarian.
+         * @param {string} id - ID konten yang akan ditampilkan pratinjaunya.
+         */
         window.showPreview = function(id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const content = contentData[id];
@@ -1198,15 +1293,25 @@
             }
         }
 
+        /**
+         * Memilih hasil pencarian dan menampilkan kontennya di dashboard utama.
+         * @param {string} id - ID konten yang dipilih.
+         * @param {string} title - Judul hasil pencarian.
+         * @param {string} query - Kata kunci pencarian yang menghasilkan hasil ini.
+         */
         window.selectSearchResult = function(id, title, query) {
             addSearchHistory(query);
             displayContentInMainDashboard(id);
         }
 
+        /**
+         * Menampilkan konten di area dashboard utama.
+         * @param {string} id - ID konten yang akan ditampilkan.
+         */
         window.displayContentInMainDashboard = function(id) {
             const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
-            
+
             if (content && content.full) {
                 defaultContentArea.innerHTML = content.full;
             } else if (content && content.detail) {
@@ -1214,11 +1319,15 @@
             } else {
                 defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap tersedia.</p>`;
             }
-            
+
             closeSearchOverlay();
-            selectCategory(id); 
+            selectCategory(id);
         }
 
+        /**
+         * Menambahkan filter ke overlay pencarian.
+         * @param {string} filterName - Nama filter yang akan ditambahkan.
+         */
         window.addOverlayFilter = function(filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
                 activeFilters.push(filterName.toLowerCase());
@@ -1227,12 +1336,19 @@
             }
         }
 
+        /**
+         * Menghapus filter dari overlay pencarian.
+         * @param {string} filterName - Nama filter yang akan dihapus.
+         */
         window.removeOverlayFilter = function(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
             document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
             performSearch(document.getElementById('overlay-search-input').value, 'overlay');
         }
 
+        /**
+         * Menghapus semua filter dari overlay pencarian.
+         */
         window.removeAllOverlayFilters = function() {
             activeFilters = [];
             document.getElementById('overlay-filter-articles').classList.add('hidden');
@@ -1240,7 +1356,10 @@
             document.getElementById('overlay-search-input').value = '';
             performSearch('', 'overlay');
         }
-        
+
+        /**
+         * Menutup overlay pencarian.
+         */
         window.closeSearchOverlay = function() {
             document.getElementById('search-overlay').classList.add('hidden');
             document.getElementById('search-input').value = '';
@@ -1250,15 +1369,24 @@
             document.getElementById('filter-articles').classList.add('hidden');
             document.getElementById('filter-photography').classList.add('hidden');
             document.getElementById('search-history-dropdown').classList.add('hidden');
-            selectCategory(currentCategory); 
+            selectCategory(currentCategory);
         }
 
+        /**
+         * Mengubah visibilitas dropdown pengguna.
+         */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
-            userDropdown.classList.toggle('hidden');
+            if (userDropdown.style.display === 'block' || userDropdown.classList.contains('hidden')) {
+                userDropdown.style.display = 'block';
+                userDropdown.classList.remove('hidden');
+            } else {
+                userDropdown.style.display = 'none';
+                userDropdown.classList.add('hidden');
+            }
         }
 
-        
+        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .relative.flex.items-center');
             const userDropdown = document.getElementById('user-dropdown');
@@ -1273,28 +1401,41 @@
             }
         });
 
+        /**
+         * Menangani proses logout.
+         */
         window.handleLogout = async function() {
             await showCustomAlert('Log Out', 'Kamu udah berhasil keluar.');
             window.location.href = 'login.html';
         }
 
+        /**
+         * Navigasi ke halaman profil.
+         */
         window.navigateToProfile = function() {
             window.location.href = 'profile.html';
         }
 
+        /**
+         * Menambahkan query pencarian ke riwayat.
+         * @param {string} query - Kata kunci pencarian.
+         */
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query); 
-                searchHistory = searchHistory.slice(0, 5); 
+                searchHistory.unshift(query);
+                searchHistory = searchHistory.slice(0, 5);
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
         }
 
+        /**
+         * Menampilkan riwayat pencarian di dropdown.
+         */
         window.showSearchHistory = function() {
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
-            
-            historyContent.innerHTML = ''; 
+
+            historyContent.innerHTML = '';
 
             if (searchHistory.length > 0) {
                 searchHistory.forEach((item, index) => {
@@ -1318,25 +1459,36 @@
             }
         }
 
+        /**
+         * Menerapkan query dari riwayat pencarian.
+         * @param {string} query - Kata kunci dari riwayat.
+         */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
             handleSearch(query);
             document.getElementById('search-history-dropdown').classList.add('hidden');
         }
 
+        /**
+         * Menghapus item dari riwayat pencarian.
+         * @param {number} index - Indeks item yang akan dihapus.
+         */
         window.removeSearchHistory = function(index) {
-            searchHistory.splice(index, 1); 
+            searchHistory.splice(index, 1);
             localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory(); 
+            showSearchHistory();
         }
 
+        /**
+         * Menghapus semua riwayat pencarian.
+         */
         window.clearAllSearchHistory = function() {
             searchHistory = [];
             localStorage.removeItem('searchHistory');
-            showSearchHistory(); 
+            showSearchHistory();
         }
 
-        
+        // Data dummy untuk gudang (dari penyimpanan lokal atau default)
         let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
             { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
             { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
@@ -1352,7 +1504,7 @@
             { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
             { id: 'GBG', description: 'DC GEDE BAGE', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         ];
-        
+
         let zones = JSON.parse(localStorage.getItem('zones')) || [
             { id: 'Allocation', identifier: 'Allocation', recordType: 'ZONETYPE', description: 'Allocation', systemValue1: 'Yes', systemCreated: true, active: true },
             { id: 'Locating', identifier: 'Locating', recordType: 'ZONETYPE', description: 'Locating', systemValue1: 'Yes', systemCreated: true, active: true },
@@ -1375,10 +1527,10 @@
             { id: 'CARTON FLOW 80/40/55', locationType: 'CARTON FLOW 80/40/55', length: 80.00, width: 40.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
             { id: 'CFLOW.TYPE A', locationType: 'CFLOW.TYPE A', length: 82.00, width: 30.00, height: 93.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
             { id: 'CFLOW.TYPE B', locationType: 'CFLOW.TYPE B', length: 42.00, width: 38.00, height: 50.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESERVE 115cm', locationType: 'CFLOW RESERVE 115cm', length: 239.00, width: 122.00, height: 115.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESERVE 55cm', locationType: 'CFLOW RESERVE 55cm', length: 239.00, width: 122.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESERVE 70cm', locationType: 'CFLOW RESERVE 70cm', length: 239.00, width: 122.00, height: 70.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESERVE 90cm', locationType: 'CFLOW RESERVE 90cm', length: 239.00, width: 122.00, height: 90.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV 115cm', locationType: 'CFLOW RESERVE 115cm', length: 239.00, width: 122.00, height: 115.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV 55cm', locationType: 'CFLOW RESERVE 55cm', length: 239.00, width: 122.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV 70cm', locationType: 'CFLOW RESERVE 70cm', length: 239.00, width: 122.00, height: 70.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
+            { id: 'CFLOW RESV 90cm', locationType: 'CFLOW RESERVE 90cm', length: 239.00, width: 122.00, height: 90.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
             { id: 'CFLOW RESV TYPE A', locationType: 'CFLOW RESV TYPE A', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
             { id: 'CFLOW RESV TYPE B', locationType: 'CFLOW RESV TYPE B', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
             { id: 'CFLOW RESV TYPE C', locationType: 'CFLOW RESV TYPE C', length: 37.00, width: 40.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
@@ -1438,7 +1590,6 @@
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
 
-        
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
         }
@@ -1459,7 +1610,6 @@
             localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
         }
 
-        
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
             container.innerHTML = '';
@@ -1572,7 +1722,7 @@
                     document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                     document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
                     document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
-                    document.getElementById('return-email-address').value = warehouseToEdit.emailAddress;
+                    document.getElementById('return-email-address').value = warehouseToEdit.returnEmailAddress;
                     document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
 
                     document.getElementById('slotting-move-file-directory').value = warehouseToEdit.slottingMoveFileDirectory;
@@ -1674,7 +1824,7 @@
                     await showCustomAlert('Error', 'Warehouse ID sudah ada!');
                     return;
                 }
-                newWarehouse.id = warehouseId; 
+                newWarehouse.id = warehouseId;
                 warehouses.push(newWarehouse);
             }
             saveWarehouses();
@@ -1787,7 +1937,7 @@
             const modal = document.getElementById('zone-form-modal');
             const title = document.getElementById('zone-form-title');
             const form = document.getElementById('zone-form');
-            form.reset(); 
+            form.reset();
             currentZoneId = id;
 
             if (mode === 'create') {
@@ -1933,7 +2083,7 @@
             const title = document.getElementById('location-type-form-title');
             const form = document.getElementById('location-type-form');
             form.reset();
-            
+
             const tabButtons = form.querySelectorAll('.tab-button');
             tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
             const firstTabButton = tabButtons[0];
@@ -2036,13 +2186,11 @@
             renderLocationTypeList(query);
         }
 
-        
         window.renderLocatingStrategyList = function(filterQuery = '') {
             const container = document.getElementById('locating-strategy-list-container');
             container.innerHTML = '';
 
             const filteredStrategies = locatingStrategies.filter(strategy => {
-                
                 const strategyIdOrIdentifier = strategy.id || strategy.identifier;
                 return (
                     strategyIdOrIdentifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
@@ -2114,16 +2262,16 @@
                 document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
 
                 identifierInput.disabled = false;
-                identifierInput.readOnly = false; 
+                identifierInput.readOnly = false;
                 recordTypeInput.disabled = false;
-                recordTypeInput.readOnly = false; 
-                recordTypeInput.value = 'LOCSTRAT'; 
+                recordTypeInput.readOnly = false;
+                recordTypeInput.value = 'LOCSTRAT';
                 systemCreatedCheckbox.disabled = false;
-                systemCreatedCheckbox.checked = false; 
+                systemCreatedCheckbox.checked = false;
 
                 document.getElementById('locating-strategy-inactive').checked = false;
 
-            } else { 
+            } else {
                 title.textContent = 'Edit Strategi Penempatan';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
 
@@ -2135,11 +2283,11 @@
                     document.getElementById('locating-strategy-inactive').checked = strategyToEdit.inactive;
                     systemCreatedCheckbox.checked = strategyToEdit.systemCreated;
 
-                    identifierInput.disabled = false; 
-                    identifierInput.readOnly = false; 
-                    recordTypeInput.disabled = false; 
-                    recordTypeInput.readOnly = false; 
-                    systemCreatedCheckbox.disabled = false; 
+                    identifierInput.disabled = false;
+                    identifierInput.readOnly = false;
+                    recordTypeInput.disabled = false;
+                    recordTypeInput.readOnly = false;
+                    systemCreatedCheckbox.disabled = false;
                 }
             }
             modal.classList.remove('hidden');
@@ -2161,7 +2309,7 @@
             const systemCreated = document.getElementById('locating-strategy-system-created').checked;
 
             const newStrategy = {
-                id: currentLocatingStrategyId || identifier, 
+                id: currentLocatingStrategyId || identifier,
                 identifier,
                 recordType,
                 description,
@@ -2180,7 +2328,7 @@
                     await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
                     return;
                 }
-                newStrategy.id = identifier; 
+                newStrategy.id = identifier;
                 locatingStrategies.push(newStrategy);
             }
             saveLocatingStrategies();
@@ -2201,7 +2349,6 @@
             renderLocatingStrategyList(query);
         }
 
-        
         window.renderLocatingRuleList = function(filterQuery = '') {
             const container = document.getElementById('locating-rule-list-container');
             container.innerHTML = '';
@@ -2265,10 +2412,7 @@
             const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
             const detailRecordsList = document.getElementById('detail-records-list');
 
-            detailRecordsList.innerHTML = ''; 
-
-            
-            
+            detailRecordsList.innerHTML = '';
 
             if (mode === 'create') {
                 title.textContent = 'Buat Aturan Penempatan Baru';
@@ -2276,9 +2420,9 @@
                 document.getElementById('locating-rule-name').disabled = false;
                 document.getElementById('locating-rule-delayed-locating').checked = false;
                 document.getElementById('locating-rule-inactive').checked = false;
-                
+
                 detailRecordsPlaceholder.classList.remove('hidden');
-                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50'); 
+                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50');
                 addDetailRecordBtn.disabled = true;
 
             } else {
@@ -2294,7 +2438,7 @@
                     document.getElementById('locating-rule-inactive').checked = ruleToEdit.inactive;
 
                     detailRecordsPlaceholder.classList.add('hidden');
-                    detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50'); 
+                    detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50');
                     addDetailRecordBtn.disabled = false;
 
                     ruleToEdit.detailRecords.forEach(record => addDetailRecord(record));
@@ -2302,14 +2446,14 @@
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            checkLocatingRuleFormValidity(); 
+            checkLocatingRuleFormValidity();
         }
 
         window.closeLocatingRuleForm = function() {
             document.getElementById('locating-rule-form-modal').classList.add('hidden');
             document.getElementById('locating-rule-form-modal').classList.remove('flex');
             currentLocatingRuleId = null;
-            
+
         }
 
         window.checkLocatingRuleFormValidity = function() {
@@ -2330,11 +2474,10 @@
             }
         }
 
-        
         window.addDetailRecord = function(record = {}) {
             const detailRecordsList = document.getElementById('detail-records-list');
             const newRecordDiv = document.createElement('div');
-            
+
             newRecordDiv.classList.add('flex', 'flex-col', 'md:flex-row', 'gap-2', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm');
             newRecordDiv.innerHTML = `
                 <input type="number" placeholder="Seq" value="${record.sequence || ''}" class="detail-record-sequence w-12 px-2 py-1 border border-wise-border rounded-md text-sm text-center bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
@@ -2352,12 +2495,10 @@
             detailRecordsList.appendChild(newRecordDiv);
         }
 
-        
         window.removeDetailRecord = function(button) {
-            
             const recordDiv = button.closest('.flex.flex-col.md\\:flex-row');
             if (recordDiv) {
-                recordDiv.remove(); 
+                recordDiv.remove();
             } else {
                 console.error("Could not find the parent record div to remove.");
             }
@@ -2400,7 +2541,7 @@
                     await showCustomAlert('Error', 'Locating Rule Name sudah ada!');
                     return;
                 }
-                newRule.id = ruleName; 
+                newRule.id = ruleName;
                 locatingRules.push(newRule);
             }
             saveLocatingRules();
@@ -2421,7 +2562,6 @@
             renderLocatingRuleList(query);
         }
 
-
         window.initializeTabButtons = function(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
@@ -2437,7 +2577,7 @@
 
         window.activateTab = function(tabId, modalId = null) {
             const parentElement = modalId ? document.getElementById(modalId) : document;
-            
+
             parentElement.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
@@ -2454,34 +2594,31 @@
             }
         }
 
-        
         sidebarToggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
-            const mainContentArea = document.querySelector('main'); 
+            const mainContentArea = document.querySelector('main');
             if (sidebar.classList.contains('-translate-x-full')) {
                 mainContentArea.classList.remove('md:ml-64');
                 mainContentArea.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); 
+                document.getElementById('sidebar-overlay').classList.add('hidden');
             } else {
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-                if (window.innerWidth < 768) { 
+                if (window.innerWidth < 768) {
                     document.getElementById('sidebar-overlay').classList.remove('hidden');
                 }
             }
         });
 
-        
         document.addEventListener('click', (event) => {
             if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
                 mainContent.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); 
+                document.getElementById('sidebar-overlay').classList.add('hidden');
             }
         });
 
-        
         window.closeSidebar = function() {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
@@ -2489,37 +2626,27 @@
             document.getElementById('sidebar-overlay').classList.add('hidden');
         }
 
-        
         window.addEventListener('resize', () => {
-            const mainContentArea = document.querySelector('main'); 
+            const mainContentArea = document.querySelector('main');
             if (window.innerWidth >= 768) {
                 sidebar.classList.remove('-translate-x-full');
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden'); 
+                document.getElementById('sidebar-overlay').classList.add('hidden');
             } else {
                 sidebar.classList.add('-translate-x-full');
                 mainContentArea.classList.remove('md:ml-64');
                 mainContentArea.classList.add('ml-0');
-                
+
             }
         });
 
-        
         window.onload = function() {
             selectCategory('dashboard');
-            
+
             const username = "SuperAdmin";
             document.getElementById('username-display').textContent = username;
-
-            
-            
-            
-            
-            
-            
         };
     });
 
-})(); 
-            
+})();
