@@ -66,74 +66,74 @@
             });
         };
 
-        // Data Dummy untuk Sistem Manajemen (Pengguna, Log, Cadangan, Pengarsipan) - Ini tidak akan ditampilkan langsung di HTML
-        // Hanya untuk referensi jika nanti butuh data lengkap di JavaScript
-        let sistemPengguna = [
-            { id: 'SA001', namaPengguna: 'SuperAdmin', peran: 'Administrator', status: 'Aktif', terakhirLogin: '2025-07-23 09:30 AM' },
-            { id: 'WH005', namaPengguna: 'PenggunaGudang', peran: 'Staf Gudang', status: 'Aktif', terakhirLogin: '2025-07-23 08:00 AM' },
-            { id: 'INV010', namaPengguna: 'ManajerInventaris', peran: 'Manajer Inventaris', status: 'Tidak Aktif', terakhirLogin: '2025-07-20 03:00 PM' },
-            { id: 'OPS021', namaPengguna: 'OperatorLogistik', peran: 'Operator', status: 'Aktif', terakhirLogin: '2025-07-23 10:15 AM' },
-            { id: 'SEC002', namaPengguna: 'PenjagaKeamanan', peran: 'Keamanan', status: 'Aktif', terakhirLogin: '2025-07-23 07:00 AM' },
+        // Dummy data for System Management (Users, Logs, Backups, Archiving) - This will not be displayed directly in HTML
+        // Only for reference if complete data is needed in JavaScript later
+        let systemUsers = [
+            { id: 'SA001', username: 'SuperAdmin', role: 'Administrator', status: 'Active', lastLogin: '2025-07-23 09:30 AM' },
+            { id: 'WH005', username: 'WarehouseUser', role: 'Warehouse Staff', status: 'Active', lastLogin: '2025-07-23 08:00 AM' },
+            { id: 'INV010', username: 'InventoryManager', role: 'Inventory Manager', status: 'Inactive', lastLogin: '2025-07-20 03:00 PM' },
+            { id: 'OPS021', username: 'LogisticsOperator', role: 'Operator', status: 'Active', lastLogin: '2025-07-23 10:15 AM' },
+            { id: 'SEC002', username: 'SecurityGuard', role: 'Security', status: 'Active', lastLogin: '2025-07-23 07:00 AM' },
         ];
 
-        let logSistem = [
-            { waktu: '2025-07-23 10:50:00', level: 'INFO', pesan: 'Pengguna SuperAdmin berhasil login.' },
-            { waktu: '2025-07-23 10:45:15', level: 'PERINGATAN', pesan: 'Peringatan: Level stok rendah untuk Item #XYZ.' },
-            { waktu: '2025-07-23 09:00:00', level: 'INFO', pesan: 'Sistem cadangan harian selesai.' },
-            { waktu: '2025-07-23 08:30:00', level: 'ERROR', pesan: 'Gagal melakukan sinkronisasi data dengan ERP. Timeout.' },
-            { waktu: '2025-07-22 17:30:00', level: 'INFO', pesan: 'Pengguna OperatorLogistik logout.' },
-            { waktu: '2025-07-22 14:10:00', level: 'INFO', pesan: 'Sesi pengguna PenggunaGudang habis.' },
+        let systemLogs = [
+            { time: '2025-07-23 10:50:00', level: 'INFO', message: 'User SuperAdmin successfully logged in.' },
+            { time: '2025-07-23 10:45:15', level: 'WARNING', message: 'Warning: Low stock level for Item #XYZ.' },
+            { time: '2025-07-23 09:00:00', level: 'INFO', message: 'Daily backup system completed.' },
+            { time: '2025-07-23 08:30:00', level: 'ERROR', message: 'Failed to sync data with ERP. Timeout.' },
+            { time: '2025-07-22 17:30:00', level: 'INFO', message: 'User LogisticsOperator logged out.' },
+            { time: '2025-07-22 14:10:00', level: 'INFO', message: 'User WarehouseUser session expired.' },
         ];
 
-        let cadanganSistem = [
-            { tanggal: '2025-07-22', tipe: 'Cadangan Penuh', ukuran: '50 GB', status: 'Selesai', catatan: 'Cadangan data harian ke cloud.' },
-            { tanggal: '2025-07-15', tipe: 'Cadangan Mingguan', ukuran: '200 GB', status: 'Selesai', catatan: 'Cadangan data mingguan ke NAS.' },
-            { tanggal: '2025-07-01', tipe: 'Cadangan Bulanan', ukuran: '500 GB', status: 'Selesai', catatan: 'Cadangan data bulanan ke tape.' },
-            { tanggal: '2025-07-23', tipe: 'Inkremental', ukuran: '5 GB', status: 'Gagal', catatan: 'Gagal karena koneksi terputus.' },
+        let systemBackups = [
+            { date: '2025-07-22', type: 'Full Backup', size: '50 GB', status: 'Completed', notes: 'Daily data backup to cloud.' },
+            { date: '2025-07-15', type: 'Weekly Backup', size: '200 GB', status: 'Completed', notes: 'Weekly data backup to NAS.' },
+            { date: '2025-07-01', type: 'Monthly Backup', size: '500 GB', status: 'Completed', notes: 'Monthly data backup to tape.' },
+            { date: '2025-07-23', type: 'Incremental', size: '5 GB', status: 'Failed', notes: 'Failed due to disconnected connection.' },
         ];
 
-        let pengarsipanData = [
-            { idArsip: 'ARC001', namaArsip: 'Transaksi Q1 2024', tanggalArsip: '2025-04-01', ukuran: '10 GB', status: 'Diarsipkan', lokasi: 'Cloud Storage' },
-            { idArsip: 'ARC002', namaArsip: 'Laporan Audit 2023', tanggalArsip: '2025-01-15', ukuran: '2 GB', status: 'Diarsipkan', lokasi: 'Lokal Server' },
-            { idArsip: 'ARC003', namaArsip: 'Data Pengguna Lama', tanggalArsip: '2024-12-01', ukuran: '5 GB', status: 'Dalam Proses', lokasi: 'NAS' },
+        let archivedData = [
+            { archiveId: 'ARC001', archiveName: 'Q1 2024 Transactions', archiveDate: '2025-04-01', size: '10 GB', status: 'Archived', location: 'Cloud Storage' },
+            { archiveId: 'ARC002', archiveName: '2023 Audit Report', archiveDate: '2025-01-15', size: '2 GB', status: 'Archived', location: 'Local Server' },
+            { archiveId: 'ARC003', archiveName: 'Old User Data', archiveDate: '2024-12-01', size: '5 GB', status: 'In Process', location: 'NAS' },
         ];
 
-        // Data dummy untuk konten dashboard dan sub-kategori
+        // Dummy data for dashboard content and sub-categories
         const contentData = {
             dashboard: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Dashboard</h2>
-                    <p class="text-wise-gray mb-4">Selamat datang di dashboard Anda. Berikut ringkasan singkat operasi Anda.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Dashboard Overview</h2>
+                    <p class="text-wise-gray mb-4">Welcome to your dashboard. Here's a quick summary of your operations.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Pemesanan</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Orders</h3>
                             <p class="text-3xl font-bold text-wise-primary">1,250</p>
-                            <p class="text-wise-gray text-sm mt-1">30 hari terakhir</p>
+                            <p class="text-wise-gray text-sm mt-1">last 30 days</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kru Aktif</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews</h3>
                             <p class="text-3xl font-bold text-wise-info">85</p>
-                            <p class="text-wise-gray text-sm mt-1">Sedang bekerja</p>
+                            <p class="text-wise-gray text-sm mt-1">currently working</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-bold text-wise-success">$2.5M</p>
-                            <p class="text-wise-gray text-sm mt-1">Total aset</p>
+                            <p class="text-wise-gray text-sm mt-1">Total assets</p>
                         </div>
                     </div>
                     <div class="mt-8">
-                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Aktivitas Terbaru</h3>
+                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Recent Activity</h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Pemesanan baru untuk Proyek Alpha</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">5 menit yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">New order for Project Alpha</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">5 minutes ago</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Kru #123 menyelesaikan tugas</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">1 jam yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">Crew #123 completed task</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">1 hour ago</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Pembaruan inventaris: 10 unit ditambahkan ke Gudang</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">3 jam yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">Inventory update: 10 units added to Warehouse</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">3 hours ago</span>
                             </div>
                         </div>
                     </div>
@@ -141,196 +141,196 @@
             },
             'yard-management': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Halaman</h2>
-                    <p class="text-wise-gray mb-4">Kelola sumber daya dan peralatan halaman Anda di sini. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management</h2>
+                    <p class="text-wise-gray mb-4">Manage your yard resources and equipment here. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Kendaraan: 50, Tersedia: 35</li>
-                            <li>Total Peralatan: 120, Tersedia: 80</li>
+                            <li>Total Vehicles: 50, Available: 35</li>
+                            <li>Total Equipment: 120, Available: 80</li>
                         </ul>
                     </div>
                 `,
             },
             'yard-vehicles': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan (Halaman Lengkap)</h2><p class="text-wise-gray">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray text-sm mt-2">Detail penuh kendaraan.</p>`,
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan</h2><p class="text-wise-gray">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 35 unit</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles (Full Page)</h2><p class="text-wise-gray">This is the full page view for Vehicles in the Yard. It contains a complete list of vehicles, their status, and history.</p><p class="text-wise-gray text-sm mt-2">Full vehicle details.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles</h2><p class="text-wise-gray">List of vehicles available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 35 units</p>`,
             },
             'yard-equipment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Peralatan</h2><p class="text-wise-gray">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 80 unit</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Equipment</h2><p class="text-wise-gray">List of equipment available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 80 units</p>`,
             },
             'yard-personnel': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Personel</h2><p class="text-wise-gray">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 15 orang</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Personnel</h2><p class="text-wise-gray">List of personnel assigned to the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 15 people</p>`,
             },
             receiving: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Penerimaan</h2>
-                    <p class="text-wise-gray mb-4">Lacak dan kelola semua pengiriman dan kiriman yang masuk. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Management</h2>
+                    <p class="text-wise-gray mb-4">Track and manage all incoming shipments and deliveries. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Penerimaan Tertunda</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Pending Receiving</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Pengiriman #101 - Diharapkan: Hari Ini</li>
-                            <li>Pengiriman #102 - Diharapkan: Besok</li>
+                            <li>Shipment #101 - Expected: Today</li>
+                            <li>Shipment #102 - Expected: Tomorrow</li>
                         </ul>
                     </div>
                 `,
             },
             'receiving-deliveries': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengiriman</h2><p class="text-wise-gray">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengiriman: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Deliveries</h2><p class="text-wise-gray">Details of all incoming deliveries.</p><p class="text-wise-gray text-sm mt-2">Number of deliveries: 5</p>`,
             },
             'receiving-returns': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengembalian</h2><p class="text-wise-gray">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengembalian: 2</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Returns</h2><p class="text-wise-gray">Details of all received returns.</p><p class="text-wise-gray text-sm mt-2">Number of returns: 2</p>`,
             },
             'receiving-vendors': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Vendor</h2><p class="text-wise-gray">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah vendor aktif: 10</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Vendors</h2><p class="text-wise-gray">List of vendors and their delivery status.</p><p class="text-wise-gray text-sm mt-2">Number of active vendors: 10</p>`,
             },
             order: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan</h2>
-                    <p class="text-wise-gray mb-4">Rencanakan dan optimalkan pesanan Anda. Lacak status pesanan, kelola pengiriman, dan perkiraan permintaan. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning</h2>
+                    <p class="text-wise-gray mb-4">Plan and optimize your orders. Track order status, manage shipments, and forecast demand. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Pesanan Tertunda</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Pending Orders</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Pengiriman #X123 - Status: Menunggu Persetujuan</li>
-                            <li>Pengiriman #Y456 - Status: Dalam Perjalanan</li>
+                            <li>Shipment #X123 - Status: Awaiting Approval</li>
+                            <li>Shipment #Y456 - Status: In Transit</li>
                         </ul>
                     </div>
                 `,
             },
             'order-new': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Baru</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - New Orders</h2><p class="text-wise-gray">List of new orders to be processed.</p><p class="text-wise-gray text-sm mt-2">New orders: 7</p>`,
             },
             'order-pending': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam process atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Pending Orders</h2><p class="text-wise-gray">List of orders that are in process or awaiting action.</p><p class="text-wise-gray text-sm mt-2">Pending orders: 12</p>`,
             },
             'order-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order History</h2><p class="text-wise-gray">Archive of all completed orders.</p><p class="text-wise-gray text-sm mt-2">Total completed orders: 500</p>`,
             },
             work: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Pekerjaan</h2>
-                    <p class="text-wise-gray mb-4">Tetapkan tugas, lacak kemajuan, dan kelola tenaga kerja Anda secara efisien. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Management</h2>
+                    <p class="text-wise-gray mb-4">Assign tasks, track progress, and manage your workforce efficiently. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Tugas Selesai (Hari Ini): 5</li>
-                            <li>Tugas Tertunda: 12</li>
+                            <li>Tasks Completed (Today): 5</li>
+                            <li>Pending Tasks: 12</li>
                         </ul>
                     </div>
                 `,
             },
             'work-tasks': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tugas</h2><p class="text-wise-gray">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray text-sm mt-2">Tugas aktif: 8</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Tasks</h2><p class="text-wise-gray">List of assigned tasks and their status.</p><p class="text-wise-gray text-sm mt-2">Active tasks: 8</p>`,
             },
             'work-schedule': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Jadwal</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Schedule</h2><p class="text-wise-gray">Work schedule for all teams and individuals.</p><p class="text-wise-gray text-sm mt-2">Today's schedule: Full</p>`,
             },
             'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Teams</h2><p class="text-wise-gray">List of work teams and their members.</p><p class="text-wise-gray text-sm mt-2">Count: 5</p>`,
             },
             'cross-application': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Lintas Aplikasi</h2>
-                    <p class="text-wise-gray mb-4">Kelola integrasi dan aliran data antar aplikasi yang berbeda. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application Management</h2>
+                    <p class="text-wise-gray mb-4">Manage integrations and data flow between different applications. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Sistem Terhubung</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Connected Systems</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Sistem CRM (Aktif)</li>
-                            <li>Sistem ERP (Aktif)</li>
+                            <li>CRM System (Active)</li>
+                            <li>ERP System (Active)</li>
                         </ul>
                     </div>
                 `,
             },
             'cross-app-integrations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Integrasi</h2><p class="text-wise-gray">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray text-sm mt-2">Integrasi aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Integrations</h2><p class="text-wise-gray">Status and configuration of application integrations.</p><p class="text-wise-gray text-sm mt-2">Active integrations: 3</p>`,
             },
             'cross-app-data-sync': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Sinkronisasi Data</h2><p class="text-wise-gray">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Data Synchronization</h2><p class="text-wise-gray">Track data synchronization status between systems.</p><p class="text-wise-gray text-sm mt-2">Last sync: 10 minutes ago</p>`,
             },
             'cross-app-api': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Manajemen API</h2><p class="text-wise-gray">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray text-sm mt-2">Kunci API aktif: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - API Management</h2><p class="text-wise-gray">Manage API keys and access for integrations.</p><p class="text-wise-gray text-sm mt-2">Active API keys: 7</p>`,
             },
             inventory: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Inventaris</h2>
-                    <p class="text-wise-gray mb-4">Pilih lokasi inventaris dari sidebar untuk melihat detailnya.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Overview</h2>
+                    <p class="text-wise-gray mb-4">Select an inventory location from the sidebar to view details.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan</h3>
-                        <p class="text-wise-gray text-sm mt-2">Total Item di Semua Lokasi: 1,500</p>
-                        <p class="text-wise-gray text-sm">Tersedia untuk Digunakan: 1,200</p>
+                        <h3 class="font-medium text-wise-dark-gray">Summary</h3>
+                        <p class="text-wise-gray text-sm mt-2">Total Items Across All Locations: 1,500</p>
+                        <p class="text-wise-gray text-sm">Available for Use: 1,200</p>
                     </div>
                 `,
             },
             yard: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Halaman</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 150</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Yard</h2><p class="text-wise-gray">Manage inventory located in the yard.</p><p class="text-wise-gray text-sm mt-2">Item count: 150</p>`,
             },
             warehouse: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Gudang</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 1000</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Warehouse</h2><p class="text-wise-gray">Manage inventory located in the warehouse.</p><p class="text-wise-gray text-sm mt-2">Item count: 1000</p>`,
             },
             storage: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Penyimpanan</h2><p class="text-wise-gray">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 350</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Storage</h2><p class="text-wise-gray">Manage long-term or overflow storage.</p><p class="text-wise-gray text-sm mt-2">Item count: 350</p>`,
             },
             performance: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Kinerja</h2>
-                    <p class="text-wise-gray mb-4">Pantau dan analisis metrik kinerja untuk berbagai operasi dan personel. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management</h2>
+                    <p class="text-wise-gray mb-4">Monitor and analyze performance metrics for various operations and personnel. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Indikator Kinerja Utama (KPI)</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Key Performance Indicators (KPIs)</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Tingkat Pengiriman Tepat Waktu: 98%</li>
-                            <li>Tingkat Penyelesaian Tugas: 95%</li>
+                            <li>On-Time Delivery Rate: 98%</li>
+                            <li>Task Completion Rate: 95%</li>
                         </ul>
                     </div>
                 `,
             },
             'performance-kpis': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - KPI</h2><p class="text-wise-gray">Lihat metrik kinerja utama.</p><p class="text-wise-gray text-sm mt-2">KPI: 5 aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - KPIs</h2><p class="text-wise-gray">View key performance metrics.</p><p class="text-wise-gray text-sm mt-2">KPIs: 5 active</p>`,
             },
             'performance-analytics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Analitik</h2><p class="text-wise-gray">Analisis data kinerja terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terakhir: Hari ini</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Analytics</h2><p class="text-wise-gray">Analyze detailed performance data.</p><p class="text-wise-gray text-sm mt-2">Last report: Today</p>`,
             },
             'performance-goals': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Goals</h2><p class="text-wise-gray">Track and manage performance goals.</p><p class="text-wise-gray text-sm mt-2">Active goals: 3</p>`,
             },
 
             configuration: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi Sistem</h2>
-                    <p class="text-wise-gray mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub-kategori dari sidebar untuk mengelola Warehouse, Zone, atau Location Type.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Configuration</h2>
+                    <p class="text-wise-gray mb-4">Here you can manage various configurations for the WISE system. Select a sub-category from the sidebar to manage Warehouse, Zone, or Location Type.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Gudang</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Warehouse Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Manage warehouse details, including addresses and authorized users.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
-                                Kelola Gudang
+                                Manage Warehouses
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Zona</h3>
-                            <p class="text-wise-gray text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Define and manage various zones within the warehouse.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
-                                Kelola Zona
+                                Manage Zones
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Tipe Lokasi</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Location Type Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Configure storage location types based on dimensions and weight.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
-                                Kelola Tipe Lokasi
+                                Manage Location Types
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Strategi Penempatan</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Strategy Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Manage strategies used to place items in warehouse locations.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
-                                Kelola Strategi Penempatan
+                                Manage Locating Strategies
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Aturan Penempatan</h3>
-                            <p class="text-wise-gray text-sm mt-1">Menentukan aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Rule Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Define rules that determine how items are placed in warehouse locations.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
-                                Kelola Aturan Penempatan
+                                Manage Locating Rules
                             </button>
                         </div>
                     </div>
@@ -338,13 +338,13 @@
             },
             'configuration-warehouse': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Gudang </h2>
-                    <p class="text-wise-gray mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Warehouse </h2>
+                    <p class="text-wise-gray mb-4">Manage existing warehouses or add new ones.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
-                            Buat Gudang Baru
+                            Create New Warehouse
                         </button>
-                        <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
+                        <input type="text" id="warehouse-search" placeholder="Search warehouse..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
                     </div>
                     <div id="warehouse-list-container" class="overflow-x-auto">
                         </div>
@@ -397,10 +397,10 @@
                                                     <div class="w-full sm:w-24">
                                                         <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                            <option value="">--Pilih--</option>
-                                                            <option value="Jawa Barat">Jawa Barat</option>
-                                                            <option value="Jawa Tengah">Jawa Tengah</option>
-                                                            <option value="Jawa Timur">Jawa Timur</option>
+                                                            <option value="">--Select--</option>
+                                                            <option value="Jawa Barat">West Java</option>
+                                                            <option value="Jawa Tengah">Central Java</option>
+                                                            <option value="Jawa Timur">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -411,7 +411,7 @@
                                                 <div>
                                                     <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
                                                     <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                        <option value="">--Pilih--</option>
+                                                        <option value="">--Select--</option>
                                                         <option value="Indonesia">Indonesia</option>
                                                         <option value="USA">USA</option>
                                                         <option value="Singapore">Singapore</option>
@@ -472,10 +472,10 @@
                                                     <div class="w-full sm:w-24">
                                                         <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                            <option value="">--Pilih--</option>
-                                                            <option value="Jawa Barat">Jawa Barat</option>
-                                                            <option value="Jawa Tengah">Jawa Tengah</option>
-                                                            <option value="Jawa Timur">Jawa Timur</option>
+                                                            <option value="">--Select--</option>
+                                                            <option value="Jawa Barat">West Java</option>
+                                                            <option value="Jawa Tengah">Central Java</option>
+                                                            <option value="Jawa Timur">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -486,7 +486,7 @@
                                                 <div>
                                                     <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
                                                     <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                        <option value="">--Pilih--</option>
+                                                        <option value="">--Select--</option>
                                                         <option value="Indonesia">Indonesia</option>
                                                         <option value="USA">USA</option>
                                                         <option value="Singapore">Singapore</option>
@@ -516,7 +516,7 @@
                                         </div>
                                         <div id="freight-bill-to-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                             <h4 class="font-semibold text-wise-dark-gray mb-2">Freight Bill to Address</h4>
-                                            <p class="text-wise-gray text-sm">Formulir untuk Freight Bill to Address.</p>
+                                            <p class="text-wise-gray text-sm">Form for Freight Bill to Address.</p>
                                         </div>
                                         <div id="authorized-users" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                             <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
@@ -601,13 +601,13 @@
             },
             'configuration-zone': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Zona</h2>
-                    <p class="text-wise-gray mb-4">Kelola tipe zona untuk berbagai area dalam gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone</h2>
+                    <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
-                            Buat Zona Baru
+                            Create New Zone
                         </button>
-                        <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
+                        <input type="text" id="zone-search" placeholder="Search zone..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
                     </div>
                     <div id="zone-list-container" class="overflow-x-auto">
                         </div>
@@ -653,13 +653,13 @@
             },
             'configuration-location-type': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Tipe Lokasi</h2>
-                    <p class="text-wise-gray mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Location Type</h2>
+                    <p class="text-wise-gray mb-4">Configure storage location types based on dimensions and weight.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
-                            Buat Tipe Lokasi Baru
+                            Create New Location Type
                         </button>
-                        <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
+                        <input type="text" id="location-type-search" placeholder="Search location type..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
                     </div>
                     <div id="location-type-list-container" class="overflow-x-auto">
                         </div>
@@ -708,7 +708,7 @@
                                     </div>
                                     <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                         <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
-                                        <p class="text-wise-gray text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
+                                        <p class="text-wise-gray text-sm">Add custom fields for location types here.</p>
                                     </div>
 
                                     <div class="mb-4 mt-4">
@@ -730,55 +730,55 @@
 
             'article a': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Artikel A</h2>
-                    <p class="text-wise-gray">Ini adalah konten terperinci untuk Artikel A. Ini baru saja diperbarui dan berisi informasi penting mengenai pembaruan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 2 jam yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Article A Details</h2>
+                    <p class="text-wise-gray">This is the detailed content for Article A. It has just been updated and contains important information regarding system updates.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 2 hours ago</p>
                 `,
             },
             'paragraph b': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Paragraf B</h2>
-                    <p class="text-wise-gray">Di sini Anda akan menemukan informasi lebih lanjut tentang Paragraf B. Bagian ini mencakup berbagai aspek penanganan dan pemrosesan data.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 1 jam yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Paragraph B Details</h2>
+                    <p class="text-wise-gray">Here you will find more information about Paragraph B. This section covers various aspects of data handling and processing.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 1 hour ago</p>
                 `,
             },
             'method c': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Metode C</h2>
-                    <p class="text-wise-gray">Detail tentang Metode C, termasuk langkah-langkah implementasi dan praktik terbaiknya. Metode ini sangat penting untuk mengoptimalkan kinerja.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 30 menit yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Method C Details</h2>
+                    <p class="text-wise-gray">Details about Method C, including its implementation steps and best practices. This method is crucial for optimizing performance.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 30 minutes ago</p>
                 `,
             },
 
             'setting-optimization': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Optimasi</h2>
-                    <p class="text-wise-gray mb-4">Kelola pengaturan untuk mengoptimalkan kinerja sistem dan preferensi notifikasi.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization</h2>
+                    <p class="text-wise-gray mb-4">Manage settings to optimize system performance and notification preferences.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar Pengaturan</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Setting Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Status Optimasi: Aktif</li>
-                            <li>Pembaruan Otomatis: Diaktifkan</li>
-                            <li>Notifikasi Email: Diaktifkan</li>
+                            <li>Optimization Status: Active</li>
+                            <li>Automatic Updates: Enabled</li>
+                            <li>Email Notifications: Enabled</li>
                         </ul>
                     </div>
                 `,
             },
             'setting-optimization-general': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Umum</h2>
-                    <p class="text-wise-gray">Konfigurasi pengaturan dasar sistem.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">General Settings</h2>
+                    <p class="text-wise-gray">Configure basic system settings.</p>
                     <div class="mt-4 space-y-4">
                         <div>
                             <label for="auto-update" class="flex items-center">
                                 <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Pembaruan Otomatis</span>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Automatic Updates</span>
                             </label>
                         </div>
                         <div>
-                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Bahasa:</label>
+                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Language:</label>
                             <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                <option value="id">Bahasa Indonesia</option>
+                                <option value="id">Indonesian</option>
                                 <option value="en">English</option>
                             </select>
                         </div>
@@ -787,17 +787,17 @@
             },
             'setting-optimization-performance': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penyesuaian Kinerja</h2>
-                    <p class="text-wise-gray">Optimalkan kinerja aplikasi.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Adjustments</h2>
+                    <p class="text-wise-gray">Optimize application performance.</p>
                     <div class="mt-4 space-y-4">
                         <div>
-                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Ukuran Cache (MB):</label>
+                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Cache Size (MB):</label>
                             <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                         </div>
                         <div>
                             <label for="data-compression" class="flex items-center">
                                 <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Kompresi Data</span>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Data Compression</span>
                             </label>
                         </div>
                     </div>
@@ -805,19 +805,19 @@
             },
             'setting-optimization-notifications': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Preferensi Notifikasi</h2>
-                    <p class="text-wise-gray">Atur bagaimana kamu menerima notifikasi.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Notification Preferences</h2>
+                    <p class="text-wise-gray">Set how you receive notifications.</p>
                     <div class="mt-4 space-y-4">
                         <div>
                             <label for="email-notifications" class="flex items-center">
                                 <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi Email</span>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Email Notifications</span>
                             </label>
                         </div>
                         <div>
                             <label for="sms-notifications" class="flex items-center">
                                 <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi SMS</span>
+                                <span class="ml-2 text-sm text-wise-dark-gray">SMS Notifications</span>
                             </label>
                         </div>
                     </div>
@@ -826,13 +826,13 @@
 
             'locating-strategies': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
-                    <p class="text-wise-gray mb-4">Kelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Strategy</h2>
+                    <p class="text-wise-gray mb-4">Manage strategies used to place items in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
-                            Buat Strategi Penempatan Baru
+                            Create New Locating Strategy
                         </button>
-                        <input type="text" id="locating-strategy-search" placeholder="Cari strategi penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
+                        <input type="text" id="locating-strategy-search" placeholder="Search locating strategy..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
                     </div>
                     <div id="locating-strategy-list-container" class="overflow-x-auto">
                     </div>
@@ -878,13 +878,13 @@
             },
             'locating-rule': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Aturan Penempatan</h2>
-                    <p class="text-wise-gray mb-4">Kelola aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Rule</h2>
+                    <p class="text-wise-gray mb-4">Manage rules that determine how items are placed in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
-                            Buat Aturan Penempatan Baru
+                            Create New Locating Rule
                         </button>
-                        <input type="text" id="locating-rule-search" placeholder="Cari aturan penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
+                        <input type="text" id="locating-rule-search" placeholder="Search locating rule..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
                     </div>
                     <div id="locating-rule-list-container" class="overflow-x-auto">
                     </div>
@@ -897,7 +897,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
-                                             <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
+                                            <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
                                         </div>
                                         <div>
                                             <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
@@ -938,112 +938,112 @@
             },
             'system-users': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
-                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Users</h2>
+                    <p class="text-wise-gray">Manage all users within the system.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Users: 5</p>
                 `
             },
             'system-logs': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - log</h2>
-                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Logs</h2>
+                    <p class="text-wise-gray">Manage all user logs within the system.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total User Logs: 5</p>
                 `,
             },
             'system-backup': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
-                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Pengguna: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Backup</h2>
+                    <p class="text-wise-gray">Manage system backups.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total User Backups: 5</p>
                 `,
             },
-            'archive': { 
+            'archive': {  
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan Data</h2>
-                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
+                    <p class="text-wise-gray mb-4">Manage archived data here.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar Arsip</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Archive Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Arsip: ${pengarsipanData.length}</li>
-                            <li>Arsip Terbaru: ${pengarsipanData[0].namaArsip} (${pengarsipanData[0].tanggalArsip})</li>
+                            <li>Total Archives: ${archivedData.length}</li>
+                            <li>Latest Archive: ${archivedData[0].archiveName} (${archivedData[0].archiveDate})</li>
                         </ul>
                     </div>
                 `,
             },
             'archive-documents': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Dokumen</h2>
-                    <p class="text-wise-gray">Detail semua dokumen yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total dokumen diarsipkan: 150</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Documents</h2>
+                    <p class="text-wise-gray">Details of all archived documents.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total archived documents: 150</p>
                 `,
             },
             'archive-media': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Media</h2>
-                    <p class="text-wise-gray">Detail semua file media yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total file media diarsipkan: 75</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Media</h2>
+                    <p class="text-wise-gray">Details of all archived media files.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total archived media files: 75</p>
                 `,
             },
             'archive-financial': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Keuangan</h2>
-                    <p class="text-wise-gray">Detail laporan dan data keuangan yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan diarsipkan: 40</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Financial</h2>
+                    <p class="text-wise-gray">Details of archived financial reports and data.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total archived financial reports: 40</p>
                 `,
             },
         };
 
-        // Data dummy untuk hasil pencarian
+        // Dummy data for search results
         const searchItems = [
-            { id: 'article a', title: 'Artikel A', category: 'Umum', lastUpdated: '2 jam yang lalu' },
-            { id: 'paragraph b', title: 'Paragraf B', category: 'Dokumentasi', lastUpdated: '1 jam yang lalu' },
-            { id: 'method c', title: 'Metode C', category: 'Teknis', lastUpdated: '30 menit yang lalu' },
-            { id: 'recent-booking', title: 'Pemesanan baru untuk Proyek Alpha', category: 'Pemesanan', lastUpdated: '5 menit yang lalu' },
-            { id: 'crew-task', title: 'Tugas kru #123 selesai', category: 'Pekerjaan', lastUpdated: '1 jam yang lalu' },
-            { id: 'inventory-update', title: 'Pembaruan inventaris: 10 unit ditambahkan ke Gudang', category: 'Inventaris', lastUpdated: '3 jam yang lalu' },
-            { id: 'vehicle-a', title: 'Loader Berat A', category: 'Manajemen Halaman', lastUpdated: '1 hari yang lalu' },
-            { id: 'delivery-x', title: 'Pengiriman X dari Pemasok A', category: 'Penerimaan', lastUpdated: '4 jam yang lalu' },
-            { id: 'order-123', title: 'Pesanan Pelanggan #123', category: 'Perencanaan Pesanan', lastUpdated: '1 hari yang lalu' },
-            { id: 'integration-crm', title: 'Status Integrasi CRM', category: 'Lintas Aplikasi', lastUpdated: '1 jam yang lalu' },
-            { id: 'report-q1', title: 'Laporan Kinerja Q1', category: 'Kinerja', lastUpdated: '2 minggu yang lalu' },
-            { id: 'setting-notifications', title: 'Preferensi Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Kemarin' },
-            { id: 'log-errors', title: 'Log Kesalahan', category: 'Manajemen Sistem', lastUpdated: '5 menit yang lalu' },
-            { id: 'archive-finance', title: 'Laporan Keuangan 2023', category: 'Pengarsipan Data', lastUpdated: 'Jan 2024' },
-            { id: 'yard-vehicles', title: 'Kendaraan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'yard-equipment', title: 'Peralatan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'yard-personnel', title: 'Personel Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'receiving-deliveries', title: 'Pengiriman Penerimaan', category: 'Penerimaan', lastUpdated: 'Hari ini' },
-            { id: 'receiving-returns', title: 'Pengembalian Penerimaan', category: 'Penerimaan', lastUpdated: 'Minggu lalu' },
-            { id: 'receiving-vendors', title: 'Vendor Penerimaan', category: 'Penerimaan', lastUpdated: 'Bulanan' },
-            { id: 'order-new', title: 'Pesanan Baru', category: 'Perencanaan Pesanan', lastUpdated: 'Hari ini' },
-            { id: 'order-pending', title: 'Pesanan Tertunda', category: 'Perencanaan Pesanan', lastUpdated: 'Berlangsung' },
-            { id: 'order-history', title: 'Riwayat Pesanan', category: 'Perencanaan Pesanan', lastUpdated: 'Sepanjang waktu' },
-            { id: 'work-tasks', title: 'Tugas Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
-            { id: 'work-schedule', title: 'Jadwal Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Harian' },
-            { id: 'work-teams', title: 'Tim Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
-            { id: 'cross-app-integrations', title: 'Integrasi Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
-            { id: 'cross-app-data-sync', title: 'Sinkronisasi Data Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Terbaru' },
-            { id: 'cross-app-api', title: 'Manajemen API Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
-            { id: 'performance-kpis', title: 'KPI Kinerja', category: 'Kinerja', lastUpdated: 'Langsung' },
-            { id: 'performance-analytics', title: 'Analitik Kinerja', category: 'Kinerja', lastUpdated: 'Harian' },
-            { id: 'performance-goals', title: 'Sasaran Kinerja', category: 'Kinerja', lastUpdated: 'Triwulanan' },
-            { id: 'configuration-warehouse', title: 'Konfigurasi Gudang', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'configuration-zone', title: 'Konfigurasi Zona', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'configuration-location-type', title: 'Konfigurasi Tipe Lokasi', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'sistem-pengguna', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
-            { id: 'log-sistem', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
-            { id: 'cadangan-sistem', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
-            { id: 'pengarsipan-data', title: 'Pengarsipan Data', category: 'Manajemen Sistem', lastUpdated: 'Mingguan' },
-            { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+            { id: 'article a', title: 'Article A', category: 'General', lastUpdated: '2 hours ago' },
+            { id: 'paragraph b', title: 'Paragraph B', category: 'Documentation', lastUpdated: '1 hour ago' },
+            { id: 'method c', title: 'Method C', category: 'Technical', lastUpdated: '30 minutes ago' },
+            { id: 'recent-booking', title: 'New order for Project Alpha', category: 'Orders', lastUpdated: '5 minutes ago' },
+            { id: 'crew-task', title: 'Crew #123 completed task', category: 'Work', lastUpdated: '1 hour ago' },
+            { id: 'inventory-update', title: 'Inventory update: 10 units added to Warehouse', category: 'Inventory', lastUpdated: '3 hours ago' },
+            { id: 'vehicle-a', title: 'Heavy Loader A', category: 'Yard Management', lastUpdated: '1 day ago' },
+            { id: 'delivery-x', title: 'Delivery X from Supplier A', category: 'Receiving', lastUpdated: '4 hours ago' },
+            { id: 'order-123', title: 'Customer Order #123', category: 'Order Planning', lastUpdated: '1 day ago' },
+            { id: 'integration-crm', title: 'CRM Integration Status', category: 'Cross Application', lastUpdated: '1 hour ago' },
+            { id: 'report-q1', title: 'Q1 Performance Report', category: 'Performance', lastUpdated: '2 weeks ago' },
+            { id: 'setting-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
+            { id: 'log-errors', title: 'Error Logs', category: 'System Management', lastUpdated: '5 minutes ago' },
+            { id: 'archive-finance', title: 'Financial Report 2023', category: 'Data Archiving', lastUpdated: 'Jan 2024' },
+            { id: 'yard-vehicles', title: 'Yard Vehicles', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'yard-equipment', title: 'Yard Equipment', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'yard-personnel', title: 'Yard Personnel', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'receiving-deliveries', title: 'Receiving Deliveries', category: 'Receiving', lastUpdated: 'Today' },
+            { id: 'receiving-returns', title: 'Receiving Returns', category: 'Receiving', lastUpdated: 'Last week' },
+            { id: 'receiving-vendors', title: 'Receiving Vendors', category: 'Receiving', lastUpdated: 'Monthly' },
+            { id: 'order-new', title: 'New Orders', category: 'Order Planning', lastUpdated: 'Today' },
+            { id: 'order-pending', title: 'Pending Orders', category: 'Order Planning', lastUpdated: 'Ongoing' },
+            { id: 'order-history', title: 'Order History', category: 'Order Planning', lastUpdated: 'All time' },
+            { id: 'work-tasks', title: 'Work Tasks', category: 'Work', lastUpdated: 'Active' },
+            { id: 'work-schedule', title: 'Work Schedule', category: 'Work', lastUpdated: 'Daily' },
+            { id: 'work-teams', title: 'Work Teams', category: 'Work', lastUpdated: 'Active' },
+            { id: 'cross-app-integrations', title: 'Cross Application Integrations', category: 'Cross Application', lastUpdated: 'Active' },
+            { id: 'cross-app-data-sync', title: 'Cross Application Data Sync', category: 'Cross Application', lastUpdated: 'Latest' },
+            { id: 'cross-app-api', title: 'Cross Application API Management', category: 'Cross Application', lastUpdated: 'Active' },
+            { id: 'performance-kpis', title: 'Performance KPIs', category: 'Performance', lastUpdated: 'Live' },
+            { id: 'performance-analytics', title: 'Performance Analytics', category: 'Performance', lastUpdated: 'Daily' },
+            { id: 'performance-goals', title: 'Performance Goals', category: 'Performance', lastUpdated: 'Quarterly' },
+            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'system-users', title: 'System Users', category: 'System Management', lastUpdated: 'Active' },
+            { id: 'system-logs', title: 'System Logs', category: 'System Management', lastUpdated: 'Latest' },
+            { id: 'system-backup', title: 'System Backup', category: 'System Management', lastUpdated: 'Daily' },
+            { id: 'data-archiving', title: 'Data Archiving', category: 'System Management', lastUpdated: 'Weekly' },
+            { id: 'archive-documents', title: 'Archived Documents', category: 'Data Archiving', lastUpdated: 'Old' },
+            { id: 'archive-media', title: 'Archived Media', category: 'Data Archiving', lastUpdated: 'Old' },
+            { id: 'archive-financial', title: 'Archived Financial', category: 'Data Archiving', lastUpdated: 'Old' },
 
-            { id: 'setting-optimization-general', title: 'Pengaturan Umum', category: 'Setting Optimization', lastUpdated: 'Baru saja' },
-            { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
-            { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
+            { id: 'setting-optimization-general', title: 'General Settings', category: 'Setting Optimization', lastUpdated: 'Just now' },
+            { id: 'setting-optimization-performance', title: 'Performance Adjustments', category: 'Setting Optimization', lastUpdated: 'Today' },
+            { id: 'setting-optimization-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
 
-            { id: 'locating-strategies', title: 'Strategi Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'locating-rule', title: 'Aturan Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
+            { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
         ];
 
         let currentCategory = 'dashboard';
@@ -1059,7 +1059,7 @@
             'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
             'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
-            'sistem-pengguna': 'system', 'log-sistem': 'system', 'cadangan-sistem': 'system', 'pengarsipan-data': 'archive', // Updated for Indonesian names
+            'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system', 'data-archiving': 'archive', // Updated for English names
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
@@ -1146,11 +1146,11 @@
                 defaultContentArea.innerHTML = content.detail;
                 defaultContentArea.classList.remove('hidden');
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten untuk ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Belum ada konten spesifik untuk kategori ini.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Content for ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No specific content available for this category yet.</p>`;
                 defaultContentArea.classList.remove('hidden');
             }
 
-            // Inisialisasi form dan tabel jika kategori terkait
+            // Initialize form and table if category is related
             if (category === 'configuration-warehouse') {
                 renderWarehouseList();
                 initializeTabButtons('warehouse-form-modal');
@@ -1174,7 +1174,7 @@
                 checkLocatingRuleFormValidity();
             }
 
-            // Tutup sidebar di tampilan mobile setelah memilih kategori
+            // Close sidebar in mobile view after selecting a category
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
@@ -1184,9 +1184,9 @@
         }
 
         /**
-         * Menangani input pencarian dari header atau overlay.
-         * @param {string} query - Kata kunci pencarian.
-         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         * Handles search input from header or overlay.
+         * @param {string} query - The search keyword.
+         * @param {string} source - The search source ('overlay' or otherwise).
          */
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
@@ -1206,9 +1206,9 @@
         }
 
         /**
-         * Melakukan pencarian dan menampilkan hasilnya.
-         * @param {string} query - Kata kunci pencarian.
-         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         * Performs a search and displays the results.
+         * @param {string} query - The search keyword.
+         * @param {string} source - The search source ('overlay' or otherwise).
          */
         window.performSearch = function(query, source) {
             const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
@@ -1239,10 +1239,10 @@
                 resultsPanel.innerHTML = '';
 
                 if (filteredResults.length > 0) {
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('article') || item.title.toLowerCase().includes('article'))) {
                         document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
                     }
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('fotografi') || item.title.toLowerCase().includes('foto'))) {
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('photography') || item.title.toLowerCase().includes('photo'))) {
                         document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
                     }
 
@@ -1251,31 +1251,31 @@
                         resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
                         resultItem.innerHTML = `
                             <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                            <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+                            <p class="text-wise-gray text-xs">Category: ${item.category} | Last Updated: ${item.lastUpdated}</p>
                         `;
                         resultItem.onmouseenter = (event) => showPreview(item.id, event);
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
                         resultsPanel.appendChild(resultItem);
                     });
                 } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">No results found.</p>`;
                     filtersContainer.classList.add('hidden');
                 }
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
                 }
             } else {
                 resultsPanel.innerHTML = '';
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
                 }
                 filtersContainer.classList.add('hidden');
             }
         }
 
         /**
-         * Menampilkan pratinjau konten di panel detail overlay pencarian.
-         * @param {string} id - ID konten yang akan ditampilkan pratinjaunya.
+         * Displays content preview in the search overlay detail panel.
+         * @param {string} id - The ID of the content to preview.
          */
         window.showPreview = function(id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
@@ -1285,19 +1285,19 @@
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail || content.full}
                     <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                        Tampilkan Halaman
+                        Display Page
                     </button>
                 `;
             } else {
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
+                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">No preview available for this item.</p>`;
             }
         }
 
         /**
-         * Memilih hasil pencarian dan menampilkan kontennya di dashboard utama.
-         * @param {string} id - ID konten yang dipilih.
-         * @param {string} title - Judul hasil pencarian.
-         * @param {string} query - Kata kunci pencarian yang menghasilkan hasil ini.
+         * Selects a search result and displays its content in the main dashboard.
+         * @param {string} id - The ID of the selected content.
+         * @param {string} title - The title of the search result.
+         * @param {string} query - The search keyword that led to this result.
          */
         window.selectSearchResult = function(id, title, query) {
             addSearchHistory(query);
@@ -1305,8 +1305,8 @@
         }
 
         /**
-         * Menampilkan konten di area dashboard utama.
-         * @param {string} id - ID konten yang akan ditampilkan.
+         * Displays content in the main dashboard area.
+         * @param {string} id - The ID of the content to display.
          */
         window.displayContentInMainDashboard = function(id) {
             const content = contentData[id];
@@ -1317,7 +1317,7 @@
             } else if (content && content.detail) {
                 defaultContentArea.innerHTML = content.detail;
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap tersedia.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Full Content for ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No full content available.</p>`;
             }
 
             closeSearchOverlay();
@@ -1325,8 +1325,8 @@
         }
 
         /**
-         * Menambahkan filter ke overlay pencarian.
-         * @param {string} filterName - Nama filter yang akan ditambahkan.
+         * Adds a filter to the search overlay.
+         * @param {string} filterName - The name of the filter to add.
          */
         window.addOverlayFilter = function(filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
@@ -1337,8 +1337,8 @@
         }
 
         /**
-         * Menghapus filter dari overlay pencarian.
-         * @param {string} filterName - Nama filter yang akan dihapus.
+         * Removes a filter from the search overlay.
+         * @param {string} filterName - The name of the filter to remove.
          */
         window.removeOverlayFilter = function(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
@@ -1347,7 +1347,7 @@
         }
 
         /**
-         * Menghapus semua filter dari overlay pencarian.
+         * Removes all filters from the search overlay.
          */
         window.removeAllOverlayFilters = function() {
             activeFilters = [];
@@ -1358,7 +1358,7 @@
         }
 
         /**
-         * Menutup overlay pencarian.
+         * Closes the search overlay.
          */
         window.closeSearchOverlay = function() {
             document.getElementById('search-overlay').classList.add('hidden');
@@ -1373,7 +1373,7 @@
         }
 
         /**
-         * Mengubah visibilitas dropdown pengguna.
+         * Toggles the visibility of the user dropdown.
          */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
@@ -1386,7 +1386,7 @@
             }
         }
 
-        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
+        // Closes user dropdown and search history when clicking outside the area.
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .relative.flex.items-center');
             const userDropdown = document.getElementById('user-dropdown');
@@ -1402,23 +1402,23 @@
         });
 
         /**
-         * Menangani proses logout.
+         * Handles the logout process.
          */
         window.handleLogout = async function() {
-            await showCustomAlert('Log Out', 'Kamu udah berhasil keluar.');
+            await showCustomAlert('Log Out', 'You have successfully logged out.');
             window.location.href = 'login.html';
         }
 
         /**
-         * Navigasi ke halaman profil.
+         * Navigates to the profile page.
          */
         window.navigateToProfile = function() {
             window.location.href = 'profile.html';
         }
 
         /**
-         * Menambahkan query pencarian ke riwayat.
-         * @param {string} query - Kata kunci pencarian.
+         * Adds a search query to history.
+         * @param {string} query - The search keyword.
          */
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
@@ -1429,7 +1429,7 @@
         }
 
         /**
-         * Menampilkan riwayat pencarian di dropdown.
+         * Displays search history in the dropdown.
          */
         window.showSearchHistory = function() {
             const historyDropdown = document.getElementById('search-history-dropdown');
@@ -1449,19 +1449,19 @@
                 });
                 const clearAllButton = document.createElement('div');
                 clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Hapus Semua Riwayat</button>`;
+                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Clear All History</button>`;
                 historyContent.appendChild(clearAllButton);
 
                 historyDropdown.classList.remove('hidden');
             } else {
-                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">No search history.</p>`;
                 historyDropdown.classList.remove('hidden');
             }
         }
 
         /**
-         * Menerapkan query dari riwayat pencarian.
-         * @param {string} query - Kata kunci dari riwayat.
+         * Applies a query from search history.
+         * @param {string} query - The keyword from history.
          */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
@@ -1470,8 +1470,8 @@
         }
 
         /**
-         * Menghapus item dari riwayat pencarian.
-         * @param {number} index - Indeks item yang akan dihapus.
+         * Removes an item from search history.
+         * @param {number} index - The index of the item to remove.
          */
         window.removeSearchHistory = function(index) {
             searchHistory.splice(index, 1);
@@ -1480,7 +1480,7 @@
         }
 
         /**
-         * Menghapus semua riwayat pencarian.
+         * Clears all search history.
          */
         window.clearAllSearchHistory = function() {
             searchHistory = [];
@@ -1488,9 +1488,9 @@
             showSearchHistory();
         }
 
-        // Data dummy untuk gudang (dari penyimpanan lokal atau default)
+        // Dummy data for warehouses (from local storage or default)
         let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
-            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
+            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'West Java', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
             { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
             { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
             { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
@@ -1620,7 +1620,7 @@
             );
 
             if (filteredWarehouses.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada gudang ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No warehouses found.</p>`;
                 return;
             }
 
@@ -1680,14 +1680,14 @@
             currentWarehouseId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Gudang Baru';
-                document.getElementById('warehouse-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Warehouse';
+                document.getElementById('warehouse-submit-button').textContent = 'Create';
                 document.getElementById('warehouse-name').disabled = false;
                 document.getElementById('warehouse-inactive').checked = false;
                 renderUserCheckboxes([]);
             } else {
-                title.textContent = 'Edit Gudang';
-                document.getElementById('warehouse-submit-button').textContent = 'Simpan Perubahan';
+                title.textContent = 'Edit Warehouse';
+                document.getElementById('warehouse-submit-button').textContent = 'Save Changes';
                 document.getElementById('warehouse-name').disabled = true;
 
                 const warehouseToEdit = warehouses.find(wh => wh.id === id);
@@ -1801,7 +1801,7 @@
             const userDefinedField8 = document.getElementById('user-defined-field8').value;
 
             const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
-                                           .map(checkbox => checkbox.value);
+                                               .map(checkbox => checkbox.value);
 
             const newWarehouse = {
                 id: warehouseId,
@@ -1821,7 +1821,7 @@
                 }
             } else {
                 if (warehouses.some(wh => wh.id === warehouseId)) {
-                    await showCustomAlert('Error', 'Warehouse ID sudah ada!');
+                    await showCustomAlert('Error', 'Warehouse ID already exists!');
                     return;
                 }
                 newWarehouse.id = warehouseId;
@@ -1833,7 +1833,7 @@
         }
 
         window.deleteWarehouse = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus gudang ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this warehouse ${id}?`);
             if (confirmed) {
                 warehouses = warehouses.filter(wh => wh.id !== id);
                 saveWarehouses();
@@ -1893,7 +1893,7 @@
             );
 
             if (filteredZones.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada zona ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No zones found.</p>`;
                 return;
             }
 
@@ -1941,14 +1941,14 @@
             currentZoneId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Zona Baru';
-                document.getElementById('zone-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Zone';
+                document.getElementById('zone-submit-button').textContent = 'Create';
                 document.getElementById('zone-identifier').disabled = false;
                 document.getElementById('zone-inactive').checked = false;
                 document.getElementById('zone-system-created').checked = false;
             } else {
-                title.textContent = 'Edit Zona';
-                document.getElementById('zone-submit-button').textContent = 'Simpan Perubahan';
+                title.textContent = 'Edit Zone';
+                document.getElementById('zone-submit-button').textContent = 'Save Changes';
                 document.getElementById('zone-identifier').disabled = true;
 
                 const zoneToEdit = zones.find(z => z.id === id);
@@ -1997,7 +1997,7 @@
                 }
             } else {
                 if (zones.some(z => z.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Zone Identifier sudah ada!');
+                    await showCustomAlert('Error', 'Zone Identifier already exists!');
                     return;
                 }
                 newZone.id = identifier;
@@ -2009,7 +2009,7 @@
         }
 
         window.deleteZone = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus zona ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this zone ${id}?`);
             if (confirmed) {
                 zones = zones.filter(z => z.id !== id);
                 saveZones();
@@ -2030,7 +2030,7 @@
             );
 
             if (filteredLocationTypes.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada tipe lokasi ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No location types found.</p>`;
                 return;
             }
 
@@ -2098,13 +2098,13 @@
             currentLocationTypeId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Tipe Lokasi Baru';
-                document.getElementById('location-type-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Location Type';
+                document.getElementById('location-type-submit-button').textContent = 'Create';
                 document.getElementById('location-type-name').disabled = false;
                 document.getElementById('location-type-inactive').checked = false;
             } else {
-                title.textContent = 'Edit Tipe Lokasi';
-                document.getElementById('location-type-submit-button').textContent = 'Simpan Perubahan';
+                title.textContent = 'Edit Location Type';
+                document.getElementById('location-type-submit-button').textContent = 'Save Changes';
                 document.getElementById('location-type-name').disabled = true;
 
                 const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
@@ -2162,7 +2162,7 @@
                 }
             } else {
                 if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
-                    await showCustomAlert('Error', 'Location Type name sudah ada!');
+                    await showCustomAlert('Error', 'Location Type name already exists!');
                     return;
                 }
                 newLocationType.id = locationTypeName;
@@ -2174,7 +2174,7 @@
         }
 
         window.deleteLocationType = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus tipe lokasi ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this location type ${id}?`);
             if (confirmed) {
                 locationTypes = locationTypes.filter(lt => lt.id !== id);
                 saveLocationTypes();
@@ -2199,7 +2199,7 @@
             });
 
             if (filteredStrategies.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada strategi penempatan ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No locating strategies found.</p>`;
                 return;
             }
 
@@ -2258,8 +2258,8 @@
             systemCreatedCheckbox.classList.remove('cursor-not-allowed');
 
             if (mode === 'create') {
-                title.textContent = 'Buat Strategi Penempatan Baru';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Locating Strategy';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Create';
 
                 identifierInput.disabled = false;
                 identifierInput.readOnly = false;
@@ -2272,8 +2272,8 @@
                 document.getElementById('locating-strategy-inactive').checked = false;
 
             } else {
-                title.textContent = 'Edit Strategi Penempatan';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
+                title.textContent = 'Edit Locating Strategy';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Save Changes';
 
                 const strategyToEdit = locatingStrategies.find(s => s.id === id);
                 if (strategyToEdit) {
@@ -2325,7 +2325,7 @@
                 }
             } else {
                 if (locatingStrategies.some(s => s.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
+                    await showCustomAlert('Error', 'Strategy Identifier already exists!');
                     return;
                 }
                 newStrategy.id = identifier;
@@ -2337,7 +2337,7 @@
         }
 
         window.deleteLocatingStrategy = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus strategi penempatan ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating strategy ${id}?`);
             if (confirmed) {
                 locatingStrategies = locatingStrategies.filter(s => s.id !== id);
                 saveLocatingStrategies();
@@ -2359,7 +2359,7 @@
             );
 
             if (filteredRules.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada aturan penempatan ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No locating rules found.</p>`;
                 return;
             }
 
@@ -2415,8 +2415,8 @@
             detailRecordsList.innerHTML = '';
 
             if (mode === 'create') {
-                title.textContent = 'Buat Aturan Penempatan Baru';
-                document.getElementById('locating-rule-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Locating Rule';
+                document.getElementById('locating-rule-submit-button').textContent = 'Create';
                 document.getElementById('locating-rule-name').disabled = false;
                 document.getElementById('locating-rule-delayed-locating').checked = false;
                 document.getElementById('locating-rule-inactive').checked = false;
@@ -2426,8 +2426,8 @@
                 addDetailRecordBtn.disabled = true;
 
             } else {
-                title.textContent = 'Edit Aturan Penempatan';
-                document.getElementById('locating-rule-submit-button').textContent = 'Simpan Perubahan';
+                title.textContent = 'Edit Locating Rule';
+                document.getElementById('locating-rule-submit-button').textContent = 'Save Changes';
                 document.getElementById('locating-rule-name').disabled = true;
 
                 const ruleToEdit = locatingRules.find(r => r.id === id);
@@ -2538,7 +2538,7 @@
                 }
             } else {
                 if (locatingRules.some(r => r.ruleName === ruleName)) {
-                    await showCustomAlert('Error', 'Locating Rule Name sudah ada!');
+                    await showCustomAlert('Error', 'Locating Rule Name already exists!');
                     return;
                 }
                 newRule.id = ruleName;
@@ -2550,7 +2550,7 @@
         }
 
         window.deleteLocatingRule = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus aturan penempatan ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating rule ${id}?`);
             if (confirmed) {
                 locatingRules = locatingRules.filter(r => r.id !== id);
                 saveLocatingRules();

@@ -1,11 +1,9 @@
 document.getElementById('editProfileButton').addEventListener('click', function() {
-    
     document.getElementById('editUsername').value = document.getElementById('usernameDisplay').textContent;
     document.getElementById('editEmail').value = document.getElementById('emailDisplay').textContent;
     document.getElementById('editPhone').value = document.getElementById('phoneDisplay').textContent;
     document.getElementById('editShift').value = document.getElementById('shiftDisplay').textContent;
     document.getElementById('editLocation').value = document.getElementById('locationDisplay').textContent;
-    
     
     const editModal = document.getElementById('editModal');
     editModal.classList.remove('hidden');
@@ -28,15 +26,13 @@ function closeEditModal() {
     editModal.querySelector('div').classList.remove('scale-100', 'opacity-100');
     editModal.querySelector('div').classList.add('scale-95', 'opacity-0');
 
-    
     setTimeout(() => {
         editModal.classList.add('hidden');
         editModal.classList.remove('flex');
-    }, 300); 
+    }, 300);
 }
 
 function saveChanges() {
-    
     document.getElementById('usernameDisplay').textContent = document.getElementById('editUsername').value;
     document.getElementById('emailDisplay').textContent = document.getElementById('editEmail').value;
     document.getElementById('phoneDisplay').textContent = document.getElementById('editPhone').value;
@@ -49,7 +45,7 @@ function saveChanges() {
 }
 
 function goToDashboard() {
-    window.history.back(); 
+    window.history.back();
 }
 
 function showNotification(message, type) {
@@ -67,7 +63,7 @@ function showNotification(message, type) {
 }
 
 document.getElementById('editModal').addEventListener('click', function(e) {
-    if (e.target === this) { 
+    if (e.target === this) {
         closeEditModal();
     }
 });
