@@ -66,38 +66,6 @@
             });
         };
 
-        // Dummy data for System Management (Users, Logs, Backups, Archiving) - This will not be displayed directly in HTML
-        // Only for reference if complete data is needed in JavaScript later
-        let systemUsers = [
-            { id: 'SA001', username: 'SuperAdmin', role: 'Administrator', status: 'Active', lastLogin: '2025-07-23 09:30 AM' },
-            { id: 'WH005', username: 'WarehouseUser', role: 'Warehouse Staff', status: 'Active', lastLogin: '2025-07-23 08:00 AM' },
-            { id: 'INV010', username: 'InventoryManager', role: 'Inventory Manager', status: 'Inactive', lastLogin: '2025-07-20 03:00 PM' },
-            { id: 'OPS021', username: 'LogisticsOperator', role: 'Operator', status: 'Active', lastLogin: '2025-07-23 10:15 AM' },
-            { id: 'SEC002', username: 'SecurityGuard', role: 'Security', status: 'Active', lastLogin: '2025-07-23 07:00 AM' },
-        ];
-
-        let systemLogs = [
-            { time: '2025-07-23 10:50:00', level: 'INFO', message: 'User SuperAdmin successfully logged in.' },
-            { time: '2025-07-23 10:45:15', level: 'WARNING', message: 'Warning: Low stock level for Item #XYZ.' },
-            { time: '2025-07-23 09:00:00', level: 'INFO', message: 'Daily backup system completed.' },
-            { time: '2025-07-23 08:30:00', level: 'ERROR', message: 'Failed to sync data with ERP. Timeout.' },
-            { time: '2025-07-22 17:30:00', level: 'INFO', message: 'User LogisticsOperator logged out.' },
-            { time: '2025-07-22 14:10:00', level: 'INFO', message: 'User WarehouseUser session expired.' },
-        ];
-
-        let systemBackups = [
-            { date: '2025-07-22', type: 'Full Backup', size: '50 GB', status: 'Completed', notes: 'Daily data backup to cloud.' },
-            { date: '2025-07-15', type: 'Weekly Backup', size: '200 GB', status: 'Completed', notes: 'Weekly data backup to NAS.' },
-            { date: '2025-07-01', type: 'Monthly Backup', size: '500 GB', status: 'Completed', notes: 'Monthly data backup to tape.' },
-            { date: '2025-07-23', type: 'Incremental', size: '5 GB', status: 'Failed', notes: 'Failed due to disconnected connection.' },
-        ];
-
-        let archivedData = [
-            { archiveId: 'ARC001', archiveName: 'Q1 2024 Transactions', archiveDate: '2025-04-01', size: '10 GB', status: 'Archived', location: 'Cloud Storage' },
-            { archiveId: 'ARC002', archiveName: '2023 Audit Report', archiveDate: '2025-01-15', size: '2 GB', status: 'Archived', location: 'Local Server' },
-            { archiveId: 'ARC003', archiveName: 'Old User Data', archiveDate: '2024-12-01', size: '5 GB', status: 'In Process', location: 'NAS' },
-        ];
-
         // Dummy data for dashboard content and sub-categories
         const contentData = {
             dashboard: {
@@ -936,61 +904,63 @@
                     </div>
                 `,
             },
-            'system-users': {
+            'system-management-users': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Users</h2>
-                    <p class="text-wise-gray">Manage all users within the system.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Users: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
+                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
                 `
             },
-            'system-logs': {
+            'system-management-logs': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Logs</h2>
-                    <p class="text-wise-gray">Manage all user logs within the system.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total User Logs: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
+                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
                 `,
             },
-            'system-backup': {
+            'system-management-backup': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System - Backup</h2>
-                    <p class="text-wise-gray">Manage system backups.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total User Backups: 5</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
+                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
                 `,
             },
-            'archive': {  
+
+                'archive': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
-                    <p class="text-wise-gray mb-4">Manage archived data here.</p>
+                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Archive Overview</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Archives: ${archivedData.length}</li>
-                            <li>Latest Archive: ${archivedData[0].archiveName} (${archivedData[0].archiveDate})</li>
+                            <li>Total Dokumen Diarsipkan: 150</li>
+                            <li>Total Media Diarsipkan: 75</li>
+                            <li>Total Arsip Keuangan: 40</li>
                         </ul>
                     </div>
                 `,
             },
             'archive-documents': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Documents</h2>
-                    <p class="text-wise-gray">Details of all archived documents.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total archived documents: 150</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
                 `,
             },
             'archive-media': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Media</h2>
-                    <p class="text-wise-gray">Details of all archived media files.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total archived media files: 75</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
                 `,
             },
             'archive-financial': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archived - Financial</h2>
-                    <p class="text-wise-gray">Details of archived financial reports and data.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total archived financial reports: 40</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
                 `,
-            },
+            }
         };
 
         // Dummy data for search results
