@@ -1,5 +1,4 @@
 (function() {
-
     document.addEventListener('DOMContentLoaded', () => {
 
         const mainContent = document.getElementById('default-content-area');
@@ -1055,61 +1054,72 @@
                     </div>
                 `,
             },
+            // KATA KUNCI: HALAMAN UTAMA SECURITY PERMISSION (GANTI SEMUA)
             'security-permission': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permissions</h2>
-                    <div class="flex flex-col md:flex-row gap-4 h-[60vh]">
-                        <!-- Left Panel: Filters and Tree -->
-                        <div class="w-full md:w-2/5 border border-wise-border rounded-lg p-4 flex flex-col">
-                            <div class="border-b border-wise-border pb-2 mb-2">
-                                <label for="sp-filter-by" class="block text-sm font-medium text-wise-dark-gray">Search criteria</label>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <select id="sp-filter-by" class="flex-grow px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm">
-                                        <option value="all">File by: All</option>
-                                        <option value="billing">File by: Billing</option>
-                                    </select>
-                                    <button class="px-3 py-1 bg-wise-dark-gray text-white rounded-md text-sm hover:bg-gray-700" onclick="filterPermissions()">Search</button>
-                                </div>
-                            </div>
-                            <div id="security-permission-tree-container" class="flex-1 overflow-y-auto text-sm pr-2 -mr-2">
-                                <!-- Permission tree will be rendered here -->
-                            </div>
-                        </div>
-                        <!-- Right Panel: Details -->
-                        <div class="w-full md:w-3/5 border border-wise-border rounded-lg p-4 flex flex-col justify-between">
-                            <div id="security-permission-details">
-                                <p class="text-wise-gray text-center">Select a permission from the list to see details.</p>
-                            </div>
-                            <div class="flex justify-end items-center gap-2 pt-4 border-t border-wise-border">
-                                <button class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" onclick="showSecurityPermissionForm('create')">New</button>
-                                <button id="sp-copy-btn" class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" disabled>Copy</button>
-                                <button id="sp-delete-btn" class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" disabled>Delete</button>
-                            </div>
-                        </div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission</h2>
+                    <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
+                    
+                    <!-- Tombol Aksi dan Search -->
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
+                            Create New Permission
+                        </button>
+                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
                     </div>
 
-                    <!-- Simple Modal for Create/Edit -->
+                    <!-- Container untuk Tabel -->
+                    <div id="security-permission-list-container" class="overflow-x-auto">
+                        <!-- Tabel akan dirender oleh JavaScript di sini -->
+                    </div>
+
+                    <!-- Modal Form untuk Create/Edit -->
                     <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
                             <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
-                                    <div class="mb-4">
-                                        <label for="security-permission-name" class="block text-sm font-medium text-wise-dark-gray">Security level:</label>
-                                        <input type="text" id="security-permission-name" name="permissionName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <!-- Input Nama & Deskripsi -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
+                                            <input type="text" id="sp-name" name="spName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="sp-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="sp-description" name="spDescription" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
                                     </div>
-                                    <div class="mb-4">
-                                        <label for="security-permission-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                        <input type="text" id="security-permission-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+
+                                    <!-- KATA KUNCI: BAGIAN MENU CHECKBOX -->
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
+                                    <div class="border border-wise-border rounded-md p-4">
+                                        <!-- Filter Radio Button -->
+                                        <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
+                                            <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)" checked><span class="ml-2">All</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Configurations</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Gadgets</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Processing</span></label>
+                                        </div>
+                                        <!-- Checkbox List Container -->
+                                        <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
+                                            <!-- Checkbox menu akan dirender oleh JavaScript -->
+                                        </div>
                                     </div>
-                                    <div class="mb-4">
+                                    
+                                    <!-- Checkbox Inactive -->
+                                    <div class="mt-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="security-permission-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                            <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
                                         </label>
                                     </div>
                                 </form>
                             </div>
+
+                            <!-- Tombol OK dan Cancel -->
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
                                 <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
@@ -1307,9 +1317,8 @@
                 checkLocatingRuleFormValidity();
             } else if (category === 'security-group') { 
                 renderSecurityGroupList();
-            } else if (category === 'security-permission') {
-                renderSecurityPermissionTree();
-                updatePermissionDetails(''); 
+            } else if (category === 'security-permission') { 
+                renderSecurityPermissionList(); 
             }
 
             // Close sidebar in mobile view after selecting a category
@@ -1719,24 +1728,23 @@
         let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
             {
                 id: 'configurations', name: 'Configurations', type: 'category', children: [
-                    { id: 'billing-record-trigger', name: 'Billing record trigger table', description: 'Allows access to the billing record trigger table.', securityLevel: 'BILLING', systemCreated: true, groupId: 'ADMIN' },
-                    { id: 'company', name: 'Company', description: 'Allows access to company configuration.', securityLevel: 'ADMIN', systemCreated: false, groupId: 'ADMIN' },
-                    { id: 'configuration', name: 'Configuration', description: 'General configuration access.', securityLevel: 'ADMIN', systemCreated: true, groupId: 'ADMIN' },
+                    { id: 'billing-record-trigger', name: 'Billing record trigger table', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'Yes' } },
+                    { id: 'company', name: 'Company', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
+                    { id: 'configuration', name: 'Configuration', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
                 ]
             },
             {
                 id: 'receiving', name: 'Receiving', type: 'category', children: [
-                    { id: 'adjustment-reason', name: 'Adjustment reason', description: 'Allows access to adjustment reasons.', securityLevel: 'RECEIVING', systemCreated: false, groupId: 'OPERATOR' },
-                    { id: 'item-maintenance', name: 'Item maintenance', description: 'Allows access to item maintenance.', securityLevel: 'INVENTORY', systemCreated: false, groupId: 'OPERATOR' },
+                    { id: 'adjustment-reason', name: 'Adjustment reason', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
+                    { id: 'item-maintenance', name: 'Item maintenance', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
                 ]
             },
             {
                 id: 'billing', name: 'Billing', type: 'category', children: [
-                    { id: 'billing-equipment-type', name: 'Billing equipment type', description: 'Allows access to billing equipment types.', securityLevel: 'BILLING', systemCreated: true, groupId: 'VIEWER' },
+                    { id: 'billing-equipment-type', name: 'Billing equipment type', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
                 ]
             }
         ];
-
         const allUsers = [
             'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
             'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
@@ -1753,6 +1761,7 @@
         let currentSecurityGroupId = null; 
         let currentSecurityPermissionId = null; 
         let selectedPermissionNode = null;
+        let activePermissionItem = null;
 
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
@@ -1782,7 +1791,6 @@
         function saveSecurityPermissions() {
             localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions));
         }
-
 
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
@@ -2937,94 +2945,109 @@
             renderSecurityGroupList(query);
         };
 
-        window.renderSecurityPermissionTree = function(filter = '') {
-            const container = document.getElementById('security-permission-tree-container');
+        window.renderSecurityPermissionList = function(filterQuery = '') {
+            const container = document.getElementById('security-permission-list-container');
             if (!container) return;
+
+            const filteredData = securityPermissions.filter(p =>
+                p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                p.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray text-center mt-4">No permissions found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Permission Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                        <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border">
+                    ${filteredData.map(p => `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${p.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.description}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.inactive ? 'No' : 'Yes'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="showSecurityPermissionForm('edit', '${p.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                                <button onclick="deleteSecurityPermission('${p.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
             container.innerHTML = '';
+            container.appendChild(table);
+        }
 
-            const createNode = (item) => {
-                const isCategory = item.type === 'category';
-                const summaryClass = isCategory ? 'font-bold cursor-pointer' : 'cursor-pointer pl-4';
-                
-                let childrenHtml = '';
-                if (isCategory && item.children) {
-                    const filteredChildren = item.children.filter(child => 
-                        child.name.toLowerCase().includes(filter.toLowerCase()) || 
-                        child.securityLevel.toLowerCase().includes(filter.toLowerCase())
-                    );
-                    
-                    if(filteredChildren.length > 0) {
-                       childrenHtml = filteredChildren.map(createNode).join('');
-                    } else if (filter) {
-                        return ''; // Jangan render kategori kalo ga ada anak yang cocok pas filter
-                    }
-                }
-
-                if (filter && isCategory && !childrenHtml) {
-                    return '';
-                }
-
-                const nodeHtml = `
-                    <details ${isCategory ? '' : 'class="ml-4"'} open>
-                        <summary id="node-${item.id}" class="${summaryClass} hover:bg-wise-light-gray p-1 rounded" onclick="updatePermissionDetails('${item.id}')">${item.name}</summary>
-                        ${childrenHtml}
-                    </details>
-                `;
-                return nodeHtml;
-            };
-
-            const filterBy = document.getElementById('sp-filter-by').value;
-            let dataToRender = securityPermissions;
-
-            if(filterBy !== 'all'){
-                dataToRender = securityPermissions.map(category => {
-                    const filteredChildren = category.children.filter(child => child.securityLevel.toLowerCase() === filterBy.toLowerCase());
-                    return {...category, children: filteredChildren};
-                }).filter(category => category.children.length > 0);
+        window.updatePermissionDetails = function(categoryId, itemId) {
+            const detailsContainer = document.getElementById('security-permission-details-container');
+            if (!detailsContainer) {
+                console.error('Container #security-permission-details-container tidak ditemukan!');
+                return;
             }
-
-            dataToRender.forEach(category => {
-                container.innerHTML += createNode(category);
-            });
-        };
-
-        window.updatePermissionDetails = function(permissionId) {
-            const detailsContainer = document.getElementById('security-permission-details');
-            if (!detailsContainer) return;
             
-            if(selectedPermissionNode) {
-                selectedPermissionNode.classList.remove('bg-wise-primary', 'text-white');
-            }
-            selectedPermissionNode = document.getElementById(`node-${permissionId}`);
-            if(selectedPermissionNode) {
-                 selectedPermissionNode.classList.add('bg-wise-primary', 'text-white');
+            // Hapus highlight dari item yang aktif sebelumnya
+            if (activePermissionItem) {
+                activePermissionItem.classList.remove('bg-wise-primary', 'text-white', 'font-semibold');
+                activePermissionItem.classList.add('text-wise-gray');
             }
 
-            let permission = null;
-            for (const category of securityPermissions) {
-                if (category.id === permissionId) {
-                    permission = category;
-                    break;
+            // Cari item yang baru diklik
+            let item = null;
+            if (categoryId && itemId) {
+                const category = securityPermissions.find(c => c.id === categoryId);
+                if (category && category.children) {
+                    item = category.children.find(i => i.id === itemId);
                 }
-                permission = category.children.find(p => p.id === permissionId);
-                if (permission) break;
             }
 
-            if (permission && permission.type !== 'category') {
+            // Jika item valid ditemukan, tampilkan detailnya.
+            if (item && item.details) {
+                const newActiveItem = document.getElementById(`perm-item-${itemId}`);
+                if (newActiveItem) {
+                    newActiveItem.classList.add('bg-wise-primary', 'text-white', 'font-semibold');
+                    newActiveItem.classList.remove('text-wise-gray');
+                    activePermissionItem = newActiveItem;
+                }
+
                 detailsContainer.innerHTML = `
-                    <div class="space-y-2 text-sm">
-                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Security level:</strong> <span class="text-wise-gray">${permission.securityLevel || 'N/A'}</span></div>
-                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Description:</strong> <span class="text-wise-gray">${permission.description || 'N/A'}</span></div>
-                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Security group:</strong> <span class="text-wise-gray">${permission.groupId || 'N/A'}</span></div>
-                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">System created:</strong> <span class="text-wise-gray">${permission.systemCreated ? 'Yes' : 'No'}</span></div>
+                    <div class="w-full h-full">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Security level</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">User security group</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System created</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-wise-border bg-white">
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.securityLevel}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.userSecurityGroup}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.systemCreated}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 `;
-                currentSecurityPermissionId = permission.id;
+                
                 document.getElementById('sp-copy-btn').disabled = false;
                 document.getElementById('sp-delete-btn').disabled = false;
             } else {
+                // Jika tidak ada item yang dipilih, reset panel detail
+                activePermissionItem = null;
+                // INI BARIS YANG SUDAH DIPERBAIKI (tanpa \)
                 detailsContainer.innerHTML = `<p class="text-wise-gray text-center">Select a permission from the list to see details.</p>`;
-                currentSecurityPermissionId = null;
+                
                 document.getElementById('sp-copy-btn').disabled = true;
                 document.getElementById('sp-delete-btn').disabled = true;
             }
@@ -3034,29 +3057,51 @@
             const modal = document.getElementById('security-permission-form-modal');
             const title = document.getElementById('security-permission-form-title');
             const form = document.getElementById('security-permission-form');
+            const nameInput = document.getElementById('sp-name');
             form.reset();
             currentSecurityPermissionId = id;
 
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
+                nameInput.disabled = false;
+                renderMenuCheckboxes([], 'All'); // Tampilkan semua menu, tidak ada yang tercentang
             } else {
                 title.textContent = 'Edit Security Permission';
-                // Nanti bisa ditambahin logika buat ngisi form kalo mau edit
+                nameInput.disabled = true;
+                const permission = securityPermissions.find(p => p.id === id);
+                if (permission) {
+                    document.getElementById('sp-name').value = permission.name;
+                    document.getElementById('sp-description').value = permission.description;
+                    document.getElementById('sp-inactive').checked = permission.inactive;
+                    renderMenuCheckboxes(permission.menus || [], 'All'); // Tampilkan menu yang sudah dipilih
+                }
             }
+            document.querySelector('input[name="menuFilter"][value="All"]').checked = true; // Selalu reset filter ke 'All'
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        };
+        }
 
-        window.closeSecurityPermissionForm = function() {
-            document.getElementById('security-permission-form-modal').classList.add('hidden');
-        };
+        window.renderMenuCheckboxes = function(selectedMenus = [], filter = 'All') {
+            const container = document.getElementById('sp-menu-checkbox-list');
+            if (!container) return;
 
-        window.handleSecurityPermissionSubmit = function(event) {
-            event.preventDefault();
-            // Nanti bisa ditambahin logika buat nyimpen data
-            showCustomAlert('Success', 'Security permission saved successfully.');
-            closeSecurityPermissionForm();
-        };
+            // Jika `selectedMenus` null (saat ganti filter), ambil dari checkbox yang sudah tercentang
+            if (selectedMenus === null) {
+                selectedMenus = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
+
+            let filteredMenus = allMenus;
+            if (filter !== 'All') {
+                filteredMenus = allMenus.filter(menu => menu.category === filter);
+            }
+            
+            container.innerHTML = filteredMenus.map(menu => `
+                <label class="flex items-center text-sm text-wise-dark-gray">
+                    <input type="checkbox" value="${menu.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedMenus.includes(menu.id) ? 'checked' : ''}>
+                    <span class="ml-2">${menu.name}</span>
+                </label>
+            `).join('');
+        }
 
         window.filterPermissions = function() {
             renderSecurityPermissionTree();
@@ -3066,17 +3111,17 @@
             document.getElementById('security-permission-form-modal').classList.add('hidden');
             document.getElementById('security-permission-form-modal').classList.remove('flex');
             currentSecurityPermissionId = null;
-        };
+        }
 
 
         window.deleteSecurityPermission = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security permission ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this permission: ${id}?`);
             if (confirmed) {
-                securityPermissions = securityPermissions.filter(permission => permission.id !== id);
+                securityPermissions = securityPermissions.filter(p => p.id !== id);
                 saveSecurityPermissions();
                 renderSecurityPermissionList();
             }
-        };
+        }
 
         window.filterSecurityPermissionList = function(query) {
             renderSecurityPermissionList(query);
