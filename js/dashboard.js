@@ -66,38 +66,6 @@
             });
         };
 
-        // Data Dummy untuk Sistem Manajemen (Pengguna, Log, Cadangan, Pengarsipan) - Ini tidak akan ditampilkan langsung di HTML
-        // Hanya untuk referensi jika nanti butuh data lengkap di JavaScript
-        let sistemPengguna = [
-            { id: 'SA001', namaPengguna: 'SuperAdmin', peran: 'Administrator', status: 'Aktif', terakhirLogin: '2025-07-23 09:30 AM' },
-            { id: 'WH005', namaPengguna: 'PenggunaGudang', peran: 'Staf Gudang', status: 'Aktif', terakhirLogin: '2025-07-23 08:00 AM' },
-            { id: 'INV010', namaPengguna: 'ManajerInventaris', peran: 'Manajer Inventaris', status: 'Tidak Aktif', terakhirLogin: '2025-07-20 03:00 PM' },
-            { id: 'OPS021', namaPengguna: 'OperatorLogistik', peran: 'Operator', status: 'Aktif', terakhirLogin: '2025-07-23 10:15 AM' },
-            { id: 'SEC002', namaPengguna: 'PenjagaKeamanan', peran: 'Keamanan', status: 'Aktif', terakhirLogin: '2025-07-23 07:00 AM' },
-        ];
-
-        let logSistem = [
-            { waktu: '2025-07-23 10:50:00', level: 'INFO', pesan: 'Pengguna SuperAdmin berhasil login.' },
-            { waktu: '2025-07-23 10:45:15', level: 'PERINGATAN', pesan: 'Peringatan: Level stok rendah untuk Item #XYZ.' },
-            { waktu: '2025-07-23 09:00:00', level: 'INFO', pesan: 'Sistem cadangan harian selesai.' },
-            { waktu: '2025-07-23 08:30:00', level: 'ERROR', pesan: 'Gagal melakukan sinkronisasi data dengan ERP. Timeout.' },
-            { waktu: '2025-07-22 17:30:00', level: 'INFO', pesan: 'Pengguna OperatorLogistik logout.' },
-            { waktu: '2025-07-22 14:10:00', level: 'INFO', pesan: 'Sesi pengguna PenggunaGudang habis.' },
-        ];
-
-        let cadanganSistem = [
-            { tanggal: '2025-07-22', tipe: 'Cadangan Penuh', ukuran: '50 GB', status: 'Selesai', catatan: 'Cadangan data harian ke cloud.' },
-            { tanggal: '2025-07-15', tipe: 'Cadangan Mingguan', ukuran: '200 GB', status: 'Selesai', catatan: 'Cadangan data mingguan ke NAS.' },
-            { tanggal: '2025-07-01', tipe: 'Cadangan Bulanan', ukuran: '500 GB', status: 'Selesai', catatan: 'Cadangan data bulanan ke tape.' },
-            { tanggal: '2025-07-23', tipe: 'Inkremental', ukuran: '5 GB', status: 'Gagal', catatan: 'Gagal karena koneksi terputus.' },
-        ];
-
-        let pengarsipanData = [
-            { idArsip: 'ARC001', namaArsip: 'Transaksi Q1 2024', tanggalArsip: '2025-04-01', ukuran: '10 GB', status: 'Diarsipkan', lokasi: 'Cloud Storage' },
-            { idArsip: 'ARC002', namaArsip: 'Laporan Audit 2023', tanggalArsip: '2025-01-15', ukuran: '2 GB', status: 'Diarsipkan', lokasi: 'Lokal Server' },
-            { idArsip: 'ARC003', namaArsip: 'Data Pengguna Lama', tanggalArsip: '2024-12-01', ukuran: '5 GB', status: 'Dalam Proses', lokasi: 'NAS' },
-        ];
-
         // Data dummy untuk konten dashboard dan sub-kategori
         const contentData = {
             dashboard: {
@@ -824,6 +792,78 @@
                 `,
             },
 
+            'system-management': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengguna, log, dan cadangan sistem Anda di sini. Pilih sub-kategori dari sidebar.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Sistem</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Total Pengguna: 5</li>
+                            <li>Total Log Hari Ini: 150</li>
+                            <li>Cadangan Terakhir: 25 Juli 2025 02:00 AM</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'system-management-users': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
+                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
+                `
+            },
+            'system-management-logs': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
+                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
+                `,
+            },
+            'system-management-backup': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
+                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
+                `,
+            },
+
+                'archive': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
+                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Total Dokumen Diarsipkan: 150</li>
+                            <li>Total Media Diarsipkan: 75</li>
+                            <li>Total Arsip Keuangan: 40</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'archive-documents': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
+                `,
+            },
+            'archive-media': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
+                `,
+            },
+            'archive-financial': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
+                `,
+            },
+
             'locating-strategies': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Strategy</h2>
@@ -934,61 +974,6 @@
                             </div>
                         </div>
                     </div>
-                `,
-            },
-            'system-users': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
-                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
-                `
-            },
-            'system-logs': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - log</h2>
-                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
-                `,
-            },
-            'system-backup': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Sistem - Pengguna</h2>
-                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Pengguna: 5</p>
-                `,
-            },
-            'archive': { 
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan Data</h2>
-                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Daftar Arsip Arsip</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Arsip: ${pengarsipanData.length}</li>
-                            <li>Arsip Terbaru: ${pengarsipanData[0].namaArsip} (${pengarsipanData[0].tanggalArsip})</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'archive-documents': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Dokumen</h2>
-                    <p class="text-wise-gray">Detail semua dokumen yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total dokumen diarsipkan: 150</p>
-                `,
-            },
-            'archive-media': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Media</h2>
-                    <p class="text-wise-gray">Detail semua file media yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total file media diarsipkan: 75</p>
-                `,
-            },
-            'archive-financial': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan - Keuangan</h2>
-                    <p class="text-wise-gray">Detail laporan dan data keuangan yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan diarsipkan: 40</p>
                 `,
             },
         };
@@ -1681,7 +1666,7 @@
 
             if (mode === 'create') {
                 title.textContent = 'Add new';
-                document.getElementById('warehouse-submit-button').textContent = 'Buat';
+                document.getElementById('warehouse-submit-button').textContent = 'Create';
                 document.getElementById('warehouse-name').disabled = false;
                 document.getElementById('warehouse-inactive').checked = false;
                 renderUserCheckboxes([]);
@@ -1942,7 +1927,7 @@
 
             if (mode === 'create') {
                 title.textContent = 'Add new';
-                document.getElementById('zone-submit-button').textContent = 'Buat';
+                document.getElementById('zone-submit-button').textContent = 'Create';
                 document.getElementById('zone-identifier').disabled = false;
                 document.getElementById('zone-inactive').checked = false;
                 document.getElementById('zone-system-created').checked = false;
@@ -2099,7 +2084,7 @@
 
             if (mode === 'create') {
                 title.textContent = 'Add new';
-                document.getElementById('location-type-submit-button').textContent = 'Buat';
+                document.getElementById('location-type-submit-button').textContent = 'Create';
                 document.getElementById('location-type-name').disabled = false;
                 document.getElementById('location-type-inactive').checked = false;
             } else {
@@ -2259,7 +2244,7 @@
 
             if (mode === 'create') {
                 title.textContent = 'Add new';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Create';
 
                 identifierInput.disabled = false;
                 identifierInput.readOnly = false;

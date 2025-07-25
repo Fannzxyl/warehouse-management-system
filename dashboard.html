@@ -511,25 +511,26 @@
                     
                     <!-- System Management -->
                     <div class="sidebar-section">
-                        <div id="sidebar-system" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('system')" tabindex="0" role="button" aria-expanded="false" aria-controls="system-children" aria-label="Toggle System Management sub-menu">
+                        <div id="sidebar-system-management" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('system-management')" tabindex="0" role="button" aria-expanded="false" aria-controls="system-management-children" aria-label="Toggle System Management sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-server text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">System Management</span>
-                            <i id="system-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="system-management-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="system-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-system">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-users')" tabindex="0" role="button" aria-label="Pilih Pengguna">
+                        <div id="system-management-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-system-management">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-users')" tabindex="0" role="button" aria-label="Pilih Pengguna">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Pengguna</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-logs')" tabindex="0" role="button" aria-label="Pilih Log">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-logs')" tabindex="0" role="button" aria-label="Pilih Log">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Log</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-backup')" tabindex="0" role="button" aria-label="Pilih Cadangan">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-backup')" tabindex="0" role="button" aria-label="Pilih Cadangan">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Cadangan</span>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Setting Optimization -->
                     <div class="sidebar-section">
