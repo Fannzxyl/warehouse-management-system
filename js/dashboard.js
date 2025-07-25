@@ -1717,34 +1717,30 @@
             },
         ];
 
-        // New dummy data for Security Groups
+        // dummy data for Security Groups
         let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
             { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
             { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
             { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true, users: [], userDefinedFields: {} },
         ];
 
-        // New dummy data for Security Permissions
+        // dummy data for Security Permissions
         let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
-            {
-                id: 'configurations', name: 'Configurations', type: 'category', children: [
-                    { id: 'billing-record-trigger', name: 'Billing record trigger table', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'Yes' } },
-                    { id: 'company', name: 'Company', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
-                    { id: 'configuration', name: 'Configuration', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
-                ]
-            },
-            {
-                id: 'receiving', name: 'Receiving', type: 'category', children: [
-                    { id: 'adjustment-reason', name: 'Adjustment reason', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
-                    { id: 'item-maintenance', name: 'Item maintenance', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
-                ]
-            },
-            {
-                id: 'billing', name: 'Billing', type: 'category', children: [
-                    { id: 'billing-equipment-type', name: 'Billing equipment type', type: 'item', details: { securityLevel: 'User', userSecurityGroup: 'User', systemCreated: 'No' } },
-                ]
-            }
+            { id: 'admin-access', name: 'Admin Full Access', description: 'Full access for administrators', inactive: false, menus: ['config-company', 'config-billing', 'proc-item-maintenance'] },
+            { id: 'viewer-access', name: 'Viewer Access', description: 'View-only access', inactive: false, menus: ['gadget-report'] },
+            { id: 'operator-access', name: 'Operator Standard', description: 'Standard access for operators', inactive: true, menus: ['proc-item-maintenance'] },
         ];
+
+        const allMenus = [
+            { id: 'config-billing', name: 'Billing Record Trigger', category: 'Configurations' },
+            { id: 'config-company', name: 'Company', category: 'Configurations' },
+            { id: 'config-main', name: 'Configuration', category: 'Configurations' },
+            { id: 'gadget-report', name: 'Gadget Report', category: 'Gadgets' },
+            { id: 'gadget-dashboard', name: 'Gadget Dashboard', category: 'Gadgets' },
+            { id: 'proc-adjustment', name: 'Adjustment Reason', category: 'Processing' },
+            { id: 'proc-item-maintenance', name: 'Item Maintenance', category: 'Processing' },
+        ];
+
         const allUsers = [
             'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
             'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
@@ -3113,6 +3109,46 @@
             currentSecurityPermissionId = null;
         }
 
+        window.handleSecurityPermissionSubmit = async function(event) {
+            event.preventDefault();
+            const permissionName = document.getElementById('sp-name').value;
+            const description = document.getElementById('sp-description').value;
+            const inactive = document.getElementById('sp-inactive').checked;
+            
+            // Get all checked menus from the form
+            const selectedMenus = Array.from(document.querySelectorAll('#sp-menu-checkbox-list input[type="checkbox"]:checked'))
+                                       .map(checkbox => checkbox.value);
+
+            if (currentSecurityPermissionId) {
+                // UPDATE mode
+                const index = securityPermissions.findIndex(p => p.id === currentSecurityPermissionId);
+                if (index !== -1) {
+                    securityPermissions[index].name = permissionName;
+                    securityPermissions[index].description = description;
+                    securityPermissions[index].inactive = inactive;
+                    securityPermissions[index].menus = selectedMenus;
+                }
+            } else {
+                // CREATE mode
+                const newId = permissionName.toLowerCase().replace(/\s+/g, '-');
+                if (securityPermissions.some(p => p.id === newId)) {
+                    await showCustomAlert('Error', 'Security Permission name already exists!');
+                    return;
+                }
+                const newPermission = {
+                    id: newId,
+                    name: permissionName,
+                    description,
+                    inactive,
+                    menus: selectedMenus
+                };
+                securityPermissions.push(newPermission);
+            }
+            
+            saveSecurityPermissions();
+            renderSecurityPermissionList();
+            closeSecurityPermissionForm();
+        };
 
         window.deleteSecurityPermission = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this permission: ${id}?`);
