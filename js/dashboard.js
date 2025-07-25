@@ -261,6 +261,135 @@
                 detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Goals</h2><p class="text-wise-gray">Track and manage performance goals.</p><p class="text-wise-gray text-sm mt-2">Active goals: 3</p>`,
             },
 
+            'setting-optimization': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization</h2>
+                    <p class="text-wise-gray mb-4">Manage settings to optimize system performance and notification preferences.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Setting Overview</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Optimization Status: Active</li>
+                            <li>Automatic Updates: Enabled</li>
+                            <li>Email Notifications: Enabled</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'setting-optimization-general': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">General Settings</h2>
+                    <p class="text-wise-gray">Configure basic system settings.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="auto-update" class="flex items-center">
+                                <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Automatic Updates</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Language:</label>
+                            <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                <option value="id">Indonesian</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                `,
+            },
+            'setting-optimization-performance': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Adjustments</h2>
+                    <p class="text-wise-gray">Optimize application performance.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Cache Size (MB):</label>
+                            <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                        </div>
+                        <div>
+                            <label for="data-compression" class="flex items-center">
+                                <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Data Compression</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+            },
+            'setting-optimization-notifications': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Notification Preferences</h2>
+                    <p class="text-wise-gray">Set how you receive notifications.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="email-notifications" class="flex items-center">
+                                <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Email Notifications</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="sms-notifications" class="flex items-center">
+                                <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                <span class="ml-2 text-sm text-wise-dark-gray">SMS Notifications</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+            },
+            'system-management-users': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
+                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
+                `
+            },
+            'system-management-logs': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
+                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
+                `,
+            },
+            'system-management-backup': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
+                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
+                `,
+            },
+            'archive': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
+                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Total Dokumen Diarsipkan: 150</li>
+                            <li>Total Media Diarsipkan: 75</li>
+                            <li>Total Arsip Keuangan: 40</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'archive-documents': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
+                `,
+            },
+            'archive-media': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
+                `,
+            },
+            'archive-financial': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
+                `,
+            },
             configuration: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Configuration</h2>
@@ -695,7 +824,6 @@
                     </div>
                 `,
             },
-
             'article a': {
                 detail: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Article A Details</h2>
@@ -717,81 +845,6 @@
                     <p class="text-wise-gray text-sm mt-2">Last updated: 30 minutes ago</p>
                 `,
             },
-
-            'setting-optimization': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization</h2>
-                    <p class="text-wise-gray mb-4">Manage settings to optimize system performance and notification preferences.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Setting Overview</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Optimization Status: Active</li>
-                            <li>Automatic Updates: Enabled</li>
-                            <li>Email Notifications: Enabled</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'setting-optimization-general': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">General Settings</h2>
-                    <p class="text-wise-gray">Configure basic system settings.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="auto-update" class="flex items-center">
-                                <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Automatic Updates</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Language:</label>
-                            <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                <option value="id">Indonesian</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                    </div>
-                `,
-            },
-            'setting-optimization-performance': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Adjustments</h2>
-                    <p class="text-wise-gray">Optimize application performance.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Cache Size (MB):</label>
-                            <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                        </div>
-                        <div>
-                            <label for="data-compression" class="flex items-center">
-                                <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Data Compression</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
-            },
-            'setting-optimization-notifications': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Notification Preferences</h2>
-                    <p class="text-wise-gray">Set how you receive notifications.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="email-notifications" class="flex items-center">
-                                <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Email Notifications</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="sms-notifications" class="flex items-center">
-                                <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">SMS Notifications</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
-            },
-
             'locating-strategies': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Strategy</h2>
@@ -904,27 +957,6 @@
                     </div>
                 `,
             },
-            'system-management-users': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
-                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
-                `
-            },
-            'system-management-logs': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
-                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
-                `,
-            },
-            'system-management-backup': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
-                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
-                `,
-            },
             'security-group': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group Management</h2>
@@ -939,19 +971,75 @@
                     </div>
 
                     <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                             <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
-                                    <div class="mb-4">
-                                        <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Group Name:</label>
-                                        <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
+                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
                                     </div>
+
                                     <div class="mb-4">
-                                        <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                        <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User defined data</button>
+                                        </div>
+
+                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                            <div class="flex justify-between items-center mb-2">
+                                                 <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                <label class="inline-flex items-center">
+                                                    <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                    <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                </label>
+                                            </div>
+                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
+                                                <!-- User checkboxes will be rendered here -->
+                                            </div>
+                                        </div>
+
+                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="mb-4">
+                                    <div class="mt-4">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                             <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
@@ -969,24 +1057,45 @@
             },
             'security-permission': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission Management</h2>
-                    <p class="text-wise-gray mb-4">Define and manage individual security permissions.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
-                            Create New Security Permission
-                        </button>
-                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityPermissionList(this.value)">
-                    </div>
-                    <div id="security-permission-list-container" class="overflow-x-auto">
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permissions</h2>
+                    <div class="flex flex-col md:flex-row gap-4 h-[60vh]">
+                        <!-- Left Panel: Filters and Tree -->
+                        <div class="w-full md:w-2/5 border border-wise-border rounded-lg p-4 flex flex-col">
+                            <div class="border-b border-wise-border pb-2 mb-2">
+                                <label for="sp-filter-by" class="block text-sm font-medium text-wise-dark-gray">Search criteria</label>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <select id="sp-filter-by" class="flex-grow px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm">
+                                        <option value="all">File by: All</option>
+                                        <option value="billing">File by: Billing</option>
+                                    </select>
+                                    <button class="px-3 py-1 bg-wise-dark-gray text-white rounded-md text-sm hover:bg-gray-700" onclick="filterPermissions()">Search</button>
+                                </div>
+                            </div>
+                            <div id="security-permission-tree-container" class="flex-1 overflow-y-auto text-sm pr-2 -mr-2">
+                                <!-- Permission tree will be rendered here -->
+                            </div>
+                        </div>
+                        <!-- Right Panel: Details -->
+                        <div class="w-full md:w-3/5 border border-wise-border rounded-lg p-4 flex flex-col justify-between">
+                            <div id="security-permission-details">
+                                <p class="text-wise-gray text-center">Select a permission from the list to see details.</p>
+                            </div>
+                            <div class="flex justify-end items-center gap-2 pt-4 border-t border-wise-border">
+                                <button class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" onclick="showSecurityPermissionForm('create')">New</button>
+                                <button id="sp-copy-btn" class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" disabled>Copy</button>
+                                <button id="sp-delete-btn" class="px-4 py-2 bg-wise-light-gray border border-wise-border rounded-md text-wise-dark-gray text-sm hover:bg-gray-200" disabled>Delete</button>
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Simple Modal for Create/Edit -->
                     <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
                             <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
                                     <div class="mb-4">
-                                        <label for="security-permission-name" class="block text-sm font-medium text-wise-dark-gray">Permission Name:</label>
+                                        <label for="security-permission-name" class="block text-sm font-medium text-wise-dark-gray">Security level:</label>
                                         <input type="text" id="security-permission-name" name="permissionName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div class="mb-4">
@@ -999,57 +1108,16 @@
                                             <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                         </label>
                                     </div>
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="security-permission-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
                                 </form>
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
-                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </div>
                     </div>
                 `,
             },
-            'archive': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
-                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Dokumen Diarsipkan: 150</li>
-                            <li>Total Media Diarsipkan: 75</li>
-                            <li>Total Arsip Keuangan: 40</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'archive-documents': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
-                `,
-            },
-            'archive-media': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
-                `,
-            },
-            'archive-financial': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
-                `,
-            }
         };
 
         // Dummy data for search results
@@ -1237,10 +1305,11 @@
                 initializeTabButtons('locating-rule-form-modal');
                 activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
-            } else if (category === 'security-group') { // New category
+            } else if (category === 'security-group') { 
                 renderSecurityGroupList();
-            } else if (category === 'security-permission') { // New category
-                renderSecurityPermissionList();
+            } else if (category === 'security-permission') {
+                renderSecurityPermissionTree();
+                updatePermissionDetails(''); 
             }
 
             // Close sidebar in mobile view after selecting a category
@@ -1446,13 +1515,7 @@
          */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
-            if (userDropdown.style.display === 'block' || userDropdown.classList.contains('hidden')) {
-                userDropdown.style.display = 'block';
-                userDropdown.classList.remove('hidden');
-            } else {
-                userDropdown.style.display = 'none';
-                userDropdown.classList.add('hidden');
-            }
+            userDropdown.classList.toggle('hidden');
         }
 
         // Closes user dropdown and search history when clicking outside the area.
@@ -1647,17 +1710,31 @@
 
         // New dummy data for Security Groups
         let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
-            { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false },
-            { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false },
-            { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true },
+            { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
+            { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
+            { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true, users: [], userDefinedFields: {} },
         ];
 
         // New dummy data for Security Permissions
         let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
-            { id: 'ALL', permissionName: 'ALL', description: 'All Permissions', systemCreated: true, inactive: false },
-            { id: 'VIEW_DASHBOARD', permissionName: 'VIEW_DASHBOARD', description: 'View Dashboard', systemCreated: false, inactive: false },
-            { id: 'EDIT_WAREHOUSE', permissionName: 'EDIT_WAREHOUSE', description: 'Edit Warehouse Configuration', systemCreated: false, inactive: false },
-            { id: 'MANAGE_USERS', permissionName: 'MANAGE_USERS', description: 'Manage User Accounts', systemCreated: false, inactive: false },
+            {
+                id: 'configurations', name: 'Configurations', type: 'category', children: [
+                    { id: 'billing-record-trigger', name: 'Billing record trigger table', description: 'Allows access to the billing record trigger table.', securityLevel: 'BILLING', systemCreated: true, groupId: 'ADMIN' },
+                    { id: 'company', name: 'Company', description: 'Allows access to company configuration.', securityLevel: 'ADMIN', systemCreated: false, groupId: 'ADMIN' },
+                    { id: 'configuration', name: 'Configuration', description: 'General configuration access.', securityLevel: 'ADMIN', systemCreated: true, groupId: 'ADMIN' },
+                ]
+            },
+            {
+                id: 'receiving', name: 'Receiving', type: 'category', children: [
+                    { id: 'adjustment-reason', name: 'Adjustment reason', description: 'Allows access to adjustment reasons.', securityLevel: 'RECEIVING', systemCreated: false, groupId: 'OPERATOR' },
+                    { id: 'item-maintenance', name: 'Item maintenance', description: 'Allows access to item maintenance.', securityLevel: 'INVENTORY', systemCreated: false, groupId: 'OPERATOR' },
+                ]
+            },
+            {
+                id: 'billing', name: 'Billing', type: 'category', children: [
+                    { id: 'billing-equipment-type', name: 'Billing equipment type', description: 'Allows access to billing equipment types.', securityLevel: 'BILLING', systemCreated: true, groupId: 'VIEWER' },
+                ]
+            }
         ];
 
         const allUsers = [
@@ -1673,8 +1750,9 @@
         let currentLocationTypeId = null;
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
-        let currentSecurityGroupId = null; // New current ID
-        let currentSecurityPermissionId = null; // New current ID
+        let currentSecurityGroupId = null; 
+        let currentSecurityPermissionId = null; 
+        let selectedPermissionNode = null;
 
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
@@ -2737,15 +2815,11 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Security Group';
                 document.getElementById('security-group-submit-button').textContent = 'Create';
-                document.getElementById('security-group-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('security-group-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('security-group-name').disabled = false;
-                document.getElementById('security-group-inactive').checked = false;
+                renderSecurityGroupUserCheckboxes([]); // Render empty user list
             } else {
                 title.textContent = 'Edit Security Group';
                 document.getElementById('security-group-submit-button').textContent = 'Save';
-                document.getElementById('security-group-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('security-group-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('security-group-name').disabled = true;
 
                 const groupToEdit = securityGroups.find(group => group.id === id);
@@ -2753,8 +2827,19 @@
                     document.getElementById('security-group-name').value = groupToEdit.groupName;
                     document.getElementById('security-group-description').value = groupToEdit.description;
                     document.getElementById('security-group-inactive').checked = groupToEdit.inactive;
+                    
+                    const udf = groupToEdit.userDefinedFields || {};
+                    for (let i = 1; i <= 7; i++) {
+                        const field = document.getElementById(`sg-user-defined-field${i}`);
+                        if(field) field.value = udf[`field${i}`] || '';
+                    }
+
+                    renderSecurityGroupUserCheckboxes(groupToEdit.users || []);
                 }
             }
+            
+            initializeTabButtons('security-group-form-modal');
+            activateTab('group-users-tab', 'security-group-form-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         };
@@ -2771,29 +2856,72 @@
             const description = document.getElementById('security-group-description').value;
             const inactive = document.getElementById('security-group-inactive').checked;
 
-            const newGroup = {
-                id: currentSecurityGroupId || groupName,
-                groupName,
-                description,
-                inactive,
-            };
+            const selectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked'))
+                                       .map(checkbox => checkbox.value);
+            
+            const userDefinedFields = {};
+            for (let i = 1; i <= 7; i++) {
+                const field = document.getElementById(`sg-user-defined-field${i}`);
+                if(field && field.value) userDefinedFields[`field${i}`] = field.value;
+            }
 
             if (currentSecurityGroupId) {
                 const index = securityGroups.findIndex(group => group.id === currentSecurityGroupId);
                 if (index !== -1) {
-                    securityGroups[index] = { ...securityGroups[index], ...newGroup };
+                    securityGroups[index].description = description;
+                    securityGroups[index].inactive = inactive;
+                    securityGroups[index].users = selectedUsers;
+                    securityGroups[index].userDefinedFields = userDefinedFields;
                 }
             } else {
-                if (securityGroups.some(group => group.groupName === groupName)) {
+                if (securityGroups.some(group => group.groupName.toLowerCase() === groupName.toLowerCase())) {
                     await showCustomAlert('Error', 'Security Group Name already exists!');
                     return;
                 }
-                newGroup.id = groupName;
+                const newGroup = { id: groupName, groupName, description, inactive, users: selectedUsers, userDefinedFields };
                 securityGroups.push(newGroup);
             }
             saveSecurityGroups();
             renderSecurityGroupList();
             closeSecurityGroupForm();
+        };
+
+        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = null, filter = '') {
+            const userListContainer = document.getElementById('security-group-user-checkbox-list');
+            if (!userListContainer) return;
+            
+            let currentSelectedUsers = selectedUsers;
+            if (currentSelectedUsers === null) {
+                currentSelectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
+
+            userListContainer.innerHTML = '';
+            const filteredAllUsers = allUsers.filter(user => user.toLowerCase().includes(filter.toLowerCase()));
+
+            filteredAllUsers.forEach(user => {
+                const isChecked = currentSelectedUsers.includes(user);
+                const div = document.createElement('div');
+                div.classList.add('flex', 'items-center');
+                div.innerHTML = `
+                    <input type="checkbox" id="sg-user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="sg-user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
+                `;
+                userListContainer.appendChild(div);
+            });
+            
+            const checkAllBox = document.getElementById('check-all-security-group-users');
+            if (checkAllBox) {
+                const allVisibleChecked = filteredAllUsers.length > 0 && filteredAllUsers.every(user => currentSelectedUsers.includes(user));
+                checkAllBox.checked = allVisibleChecked;
+            }
+        };
+
+        window.toggleAllSecurityGroupUsers = function() {
+            const checkAllCheckbox = document.getElementById('check-all-security-group-users');
+            const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = checkAllCheckbox.checked;
+            });
         };
 
         window.deleteSecurityGroup = async function(id) {
@@ -2809,55 +2937,97 @@
             renderSecurityGroupList(query);
         };
 
-        // New functions for Security Permission management
-        window.renderSecurityPermissionList = function(filterQuery = '') {
-            const container = document.getElementById('security-permission-list-container');
+        window.renderSecurityPermissionTree = function(filter = '') {
+            const container = document.getElementById('security-permission-tree-container');
+            if (!container) return;
             container.innerHTML = '';
 
-            const filteredPermissions = securityPermissions.filter(permission =>
-                permission.permissionName.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                permission.description.toLowerCase().includes(filterQuery.toLowerCase())
-            );
+            const createNode = (item) => {
+                const isCategory = item.type === 'category';
+                const summaryClass = isCategory ? 'font-bold cursor-pointer' : 'cursor-pointer pl-4';
+                
+                let childrenHtml = '';
+                if (isCategory && item.children) {
+                    const filteredChildren = item.children.filter(child => 
+                        child.name.toLowerCase().includes(filter.toLowerCase()) || 
+                        child.securityLevel.toLowerCase().includes(filter.toLowerCase())
+                    );
+                    
+                    if(filteredChildren.length > 0) {
+                       childrenHtml = filteredChildren.map(createNode).join('');
+                    } else if (filter) {
+                        return ''; // Jangan render kategori kalo ga ada anak yang cocok pas filter
+                    }
+                }
 
-            if (filteredPermissions.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No security permissions found.</p>`;
-                return;
+                if (filter && isCategory && !childrenHtml) {
+                    return '';
+                }
+
+                const nodeHtml = `
+                    <details ${isCategory ? '' : 'class="ml-4"'} open>
+                        <summary id="node-${item.id}" class="${summaryClass} hover:bg-wise-light-gray p-1 rounded" onclick="updatePermissionDetails('${item.id}')">${item.name}</summary>
+                        ${childrenHtml}
+                    </details>
+                `;
+                return nodeHtml;
+            };
+
+            const filterBy = document.getElementById('sp-filter-by').value;
+            let dataToRender = securityPermissions;
+
+            if(filterBy !== 'all'){
+                dataToRender = securityPermissions.map(category => {
+                    const filteredChildren = category.children.filter(child => child.securityLevel.toLowerCase() === filterBy.toLowerCase());
+                    return {...category, children: filteredChildren};
+                }).filter(category => category.children.length > 0);
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Permission Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System Created</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="security-permission-table-body">
-                </tbody>
-            `;
-            container.appendChild(table);
-
-            const tbody = document.getElementById('security-permission-table-body');
-            filteredPermissions.forEach(permission => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${permission.permissionName}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.systemCreated ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.inactive ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showSecurityPermissionForm('edit', '${permission.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteSecurityPermission('${permission.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
+            dataToRender.forEach(category => {
+                container.innerHTML += createNode(category);
             });
+        };
+
+        window.updatePermissionDetails = function(permissionId) {
+            const detailsContainer = document.getElementById('security-permission-details');
+            if (!detailsContainer) return;
+            
+            if(selectedPermissionNode) {
+                selectedPermissionNode.classList.remove('bg-wise-primary', 'text-white');
+            }
+            selectedPermissionNode = document.getElementById(`node-${permissionId}`);
+            if(selectedPermissionNode) {
+                 selectedPermissionNode.classList.add('bg-wise-primary', 'text-white');
+            }
+
+            let permission = null;
+            for (const category of securityPermissions) {
+                if (category.id === permissionId) {
+                    permission = category;
+                    break;
+                }
+                permission = category.children.find(p => p.id === permissionId);
+                if (permission) break;
+            }
+
+            if (permission && permission.type !== 'category') {
+                detailsContainer.innerHTML = `
+                    <div class="space-y-2 text-sm">
+                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Security level:</strong> <span class="text-wise-gray">${permission.securityLevel || 'N/A'}</span></div>
+                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Description:</strong> <span class="text-wise-gray">${permission.description || 'N/A'}</span></div>
+                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">Security group:</strong> <span class="text-wise-gray">${permission.groupId || 'N/A'}</span></div>
+                        <div><strong class="font-medium text-wise-dark-gray w-28 inline-block">System created:</strong> <span class="text-wise-gray">${permission.systemCreated ? 'Yes' : 'No'}</span></div>
+                    </div>
+                `;
+                currentSecurityPermissionId = permission.id;
+                document.getElementById('sp-copy-btn').disabled = false;
+                document.getElementById('sp-delete-btn').disabled = false;
+            } else {
+                detailsContainer.innerHTML = `<p class="text-wise-gray text-center">Select a permission from the list to see details.</p>`;
+                currentSecurityPermissionId = null;
+                document.getElementById('sp-copy-btn').disabled = true;
+                document.getElementById('sp-delete-btn').disabled = true;
+            }
         };
 
         window.showSecurityPermissionForm = function(mode, id = null) {
@@ -2869,29 +3039,27 @@
 
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
-                document.getElementById('security-permission-submit-button').textContent = 'Create';
-                document.getElementById('security-permission-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('security-permission-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('security-permission-name').disabled = false;
-                document.getElementById('security-permission-system-created').checked = false;
-                document.getElementById('security-permission-inactive').checked = false;
             } else {
                 title.textContent = 'Edit Security Permission';
-                document.getElementById('security-permission-submit-button').textContent = 'Save';
-                document.getElementById('security-permission-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('security-permission-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('security-permission-name').disabled = true;
-
-                const permissionToEdit = securityPermissions.find(permission => permission.id === id);
-                if (permissionToEdit) {
-                    document.getElementById('security-permission-name').value = permissionToEdit.permissionName;
-                    document.getElementById('security-permission-description').value = permissionToEdit.description;
-                    document.getElementById('security-permission-system-created').checked = permissionToEdit.systemCreated;
-                    document.getElementById('security-permission-inactive').checked = permissionToEdit.inactive;
-                }
+                // Nanti bisa ditambahin logika buat ngisi form kalo mau edit
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+        };
+
+        window.closeSecurityPermissionForm = function() {
+            document.getElementById('security-permission-form-modal').classList.add('hidden');
+        };
+
+        window.handleSecurityPermissionSubmit = function(event) {
+            event.preventDefault();
+            // Nanti bisa ditambahin logika buat nyimpen data
+            showCustomAlert('Success', 'Security permission saved successfully.');
+            closeSecurityPermissionForm();
+        };
+
+        window.filterPermissions = function() {
+            renderSecurityPermissionTree();
         };
 
         window.closeSecurityPermissionForm = function() {
@@ -2900,38 +3068,6 @@
             currentSecurityPermissionId = null;
         };
 
-        window.handleSecurityPermissionSubmit = async function(event) {
-            event.preventDefault();
-            const permissionName = document.getElementById('security-permission-name').value;
-            const description = document.getElementById('security-permission-description').value;
-            const systemCreated = document.getElementById('security-permission-system-created').checked;
-            const inactive = document.getElementById('security-permission-inactive').checked;
-
-            const newPermission = {
-                id: currentSecurityPermissionId || permissionName,
-                permissionName,
-                description,
-                systemCreated,
-                inactive,
-            };
-
-            if (currentSecurityPermissionId) {
-                const index = securityPermissions.findIndex(permission => permission.id === currentSecurityPermissionId);
-                if (index !== -1) {
-                    securityPermissions[index] = { ...securityPermissions[index], ...newPermission };
-                }
-            } else {
-                if (securityPermissions.some(permission => permission.permissionName === permissionName)) {
-                    await showCustomAlert('Error', 'Security Permission Name already exists!');
-                    return;
-                }
-                newPermission.id = permissionName;
-                securityPermissions.push(newPermission);
-            }
-            saveSecurityPermissions();
-            renderSecurityPermissionList();
-            closeSecurityPermissionForm();
-        };
 
         window.deleteSecurityPermission = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security permission ${id}?`);
