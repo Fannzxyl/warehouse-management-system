@@ -925,8 +925,97 @@
                     <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
                 `,
             },
+            'security-group': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group Management</h2>
+                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
+                            Create New Security Group
+                        </button>
+                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
+                    </div>
+                    <div id="security-group-list-container" class="overflow-x-auto">
+                    </div>
 
-                'archive': {
+                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
+                                    <div class="mb-4">
+                                        <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Group Name:</label>
+                                        <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                        <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
+                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'security-permission': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission Management</h2>
+                    <p class="text-wise-gray mb-4">Define and manage individual security permissions.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
+                            Create New Security Permission
+                        </button>
+                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityPermissionList(this.value)">
+                    </div>
+                    <div id="security-permission-list-container" class="overflow-x-auto">
+                    </div>
+
+                    <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                            <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
+                                    <div class="mb-4">
+                                        <label for="security-permission-name" class="block text-sm font-medium text-wise-dark-gray">Permission Name:</label>
+                                        <input type="text" id="security-permission-name" name="permissionName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="security-permission-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                        <input type="text" id="security-permission-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-permission-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-permission-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
+                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'archive': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
                     <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
@@ -1014,6 +1103,10 @@
 
             { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
+
+            // New search items for Security Group and Security Permission
+            { id: 'security-group', title: 'Security Group Management', category: 'System Management', lastUpdated: 'Just now' },
+            { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
         ];
 
         let currentCategory = 'dashboard';
@@ -1038,6 +1131,8 @@
             'archive-documents': 'archive',
             'archive-media': 'archive',
             'archive-financial': 'archive',
+            'security-group': 'system', // New parent mapping
+            'security-permission': 'system', // New parent mapping
         };
 
         window.toggleChildren = function(category) {
@@ -1142,6 +1237,10 @@
                 initializeTabButtons('locating-rule-form-modal');
                 activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
+            } else if (category === 'security-group') { // New category
+                renderSecurityGroupList();
+            } else if (category === 'security-permission') { // New category
+                renderSecurityPermissionList();
             }
 
             // Close sidebar in mobile view after selecting a category
@@ -1546,6 +1645,21 @@
             },
         ];
 
+        // New dummy data for Security Groups
+        let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
+            { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false },
+            { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false },
+            { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true },
+        ];
+
+        // New dummy data for Security Permissions
+        let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
+            { id: 'ALL', permissionName: 'ALL', description: 'All Permissions', systemCreated: true, inactive: false },
+            { id: 'VIEW_DASHBOARD', permissionName: 'VIEW_DASHBOARD', description: 'View Dashboard', systemCreated: false, inactive: false },
+            { id: 'EDIT_WAREHOUSE', permissionName: 'EDIT_WAREHOUSE', description: 'Edit Warehouse Configuration', systemCreated: false, inactive: false },
+            { id: 'MANAGE_USERS', permissionName: 'MANAGE_USERS', description: 'Manage User Accounts', systemCreated: false, inactive: false },
+        ];
+
         const allUsers = [
             'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
             'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
@@ -1559,6 +1673,8 @@
         let currentLocationTypeId = null;
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
+        let currentSecurityGroupId = null; // New current ID
+        let currentSecurityPermissionId = null; // New current ID
 
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
@@ -1579,6 +1695,16 @@
         function saveLocatingRules() {
             localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
         }
+
+        // New save functions for Security Groups and Permissions
+        function saveSecurityGroups() {
+            localStorage.setItem('securityGroups', JSON.stringify(securityGroups));
+        }
+
+        function saveSecurityPermissions() {
+            localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions));
+        }
+
 
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
@@ -1775,7 +1901,7 @@
             const userDefinedField8 = document.getElementById('user-defined-field8').value;
 
             const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
-                                               .map(checkbox => checkbox.value);
+                                                       .map(checkbox => checkbox.value);
 
             const newWarehouse = {
                 id: warehouseId,
@@ -2551,6 +2677,275 @@
         window.filterLocatingRuleList = function(query) {
             renderLocatingRuleList(query);
         }
+
+        // New functions for Security Group management
+        window.renderSecurityGroupList = function(filterQuery = '') {
+            const container = document.getElementById('security-group-list-container');
+            container.innerHTML = '';
+
+            const filteredGroups = securityGroups.filter(group =>
+                group.groupName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                group.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredGroups.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray mt-4">No security groups found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Group Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border" id="security-group-table-body">
+                </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('security-group-table-body');
+            filteredGroups.forEach(group => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${group.groupName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.inactive ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showSecurityGroupForm('edit', '${group.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                        <button onclick="deleteSecurityGroup('${group.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                    </td>
+                `;
+            });
+        };
+
+        window.showSecurityGroupForm = function(mode, id = null) {
+            const modal = document.getElementById('security-group-form-modal');
+            const title = document.getElementById('security-group-form-title');
+            const form = document.getElementById('security-group-form');
+            form.reset();
+            currentSecurityGroupId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Security Group';
+                document.getElementById('security-group-submit-button').textContent = 'Create';
+                document.getElementById('security-group-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('security-group-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
+                document.getElementById('security-group-name').disabled = false;
+                document.getElementById('security-group-inactive').checked = false;
+            } else {
+                title.textContent = 'Edit Security Group';
+                document.getElementById('security-group-submit-button').textContent = 'Save';
+                document.getElementById('security-group-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('security-group-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
+                document.getElementById('security-group-name').disabled = true;
+
+                const groupToEdit = securityGroups.find(group => group.id === id);
+                if (groupToEdit) {
+                    document.getElementById('security-group-name').value = groupToEdit.groupName;
+                    document.getElementById('security-group-description').value = groupToEdit.description;
+                    document.getElementById('security-group-inactive').checked = groupToEdit.inactive;
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeSecurityGroupForm = function() {
+            document.getElementById('security-group-form-modal').classList.add('hidden');
+            document.getElementById('security-group-form-modal').classList.remove('flex');
+            currentSecurityGroupId = null;
+        };
+
+        window.handleSecurityGroupSubmit = async function(event) {
+            event.preventDefault();
+            const groupName = document.getElementById('security-group-name').value;
+            const description = document.getElementById('security-group-description').value;
+            const inactive = document.getElementById('security-group-inactive').checked;
+
+            const newGroup = {
+                id: currentSecurityGroupId || groupName,
+                groupName,
+                description,
+                inactive,
+            };
+
+            if (currentSecurityGroupId) {
+                const index = securityGroups.findIndex(group => group.id === currentSecurityGroupId);
+                if (index !== -1) {
+                    securityGroups[index] = { ...securityGroups[index], ...newGroup };
+                }
+            } else {
+                if (securityGroups.some(group => group.groupName === groupName)) {
+                    await showCustomAlert('Error', 'Security Group Name already exists!');
+                    return;
+                }
+                newGroup.id = groupName;
+                securityGroups.push(newGroup);
+            }
+            saveSecurityGroups();
+            renderSecurityGroupList();
+            closeSecurityGroupForm();
+        };
+
+        window.deleteSecurityGroup = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security group ${id}?`);
+            if (confirmed) {
+                securityGroups = securityGroups.filter(group => group.id !== id);
+                saveSecurityGroups();
+                renderSecurityGroupList();
+            }
+        };
+
+        window.filterSecurityGroupList = function(query) {
+            renderSecurityGroupList(query);
+        };
+
+        // New functions for Security Permission management
+        window.renderSecurityPermissionList = function(filterQuery = '') {
+            const container = document.getElementById('security-permission-list-container');
+            container.innerHTML = '';
+
+            const filteredPermissions = securityPermissions.filter(permission =>
+                permission.permissionName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                permission.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredPermissions.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray mt-4">No security permissions found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Permission Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System Created</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border" id="security-permission-table-body">
+                </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('security-permission-table-body');
+            filteredPermissions.forEach(permission => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${permission.permissionName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${permission.inactive ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showSecurityPermissionForm('edit', '${permission.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                        <button onclick="deleteSecurityPermission('${permission.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                    </td>
+                `;
+            });
+        };
+
+        window.showSecurityPermissionForm = function(mode, id = null) {
+            const modal = document.getElementById('security-permission-form-modal');
+            const title = document.getElementById('security-permission-form-title');
+            const form = document.getElementById('security-permission-form');
+            form.reset();
+            currentSecurityPermissionId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Security Permission';
+                document.getElementById('security-permission-submit-button').textContent = 'Create';
+                document.getElementById('security-permission-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('security-permission-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
+                document.getElementById('security-permission-name').disabled = false;
+                document.getElementById('security-permission-system-created').checked = false;
+                document.getElementById('security-permission-inactive').checked = false;
+            } else {
+                title.textContent = 'Edit Security Permission';
+                document.getElementById('security-permission-submit-button').textContent = 'Save';
+                document.getElementById('security-permission-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('security-permission-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
+                document.getElementById('security-permission-name').disabled = true;
+
+                const permissionToEdit = securityPermissions.find(permission => permission.id === id);
+                if (permissionToEdit) {
+                    document.getElementById('security-permission-name').value = permissionToEdit.permissionName;
+                    document.getElementById('security-permission-description').value = permissionToEdit.description;
+                    document.getElementById('security-permission-system-created').checked = permissionToEdit.systemCreated;
+                    document.getElementById('security-permission-inactive').checked = permissionToEdit.inactive;
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeSecurityPermissionForm = function() {
+            document.getElementById('security-permission-form-modal').classList.add('hidden');
+            document.getElementById('security-permission-form-modal').classList.remove('flex');
+            currentSecurityPermissionId = null;
+        };
+
+        window.handleSecurityPermissionSubmit = async function(event) {
+            event.preventDefault();
+            const permissionName = document.getElementById('security-permission-name').value;
+            const description = document.getElementById('security-permission-description').value;
+            const systemCreated = document.getElementById('security-permission-system-created').checked;
+            const inactive = document.getElementById('security-permission-inactive').checked;
+
+            const newPermission = {
+                id: currentSecurityPermissionId || permissionName,
+                permissionName,
+                description,
+                systemCreated,
+                inactive,
+            };
+
+            if (currentSecurityPermissionId) {
+                const index = securityPermissions.findIndex(permission => permission.id === currentSecurityPermissionId);
+                if (index !== -1) {
+                    securityPermissions[index] = { ...securityPermissions[index], ...newPermission };
+                }
+            } else {
+                if (securityPermissions.some(permission => permission.permissionName === permissionName)) {
+                    await showCustomAlert('Error', 'Security Permission Name already exists!');
+                    return;
+                }
+                newPermission.id = permissionName;
+                securityPermissions.push(newPermission);
+            }
+            saveSecurityPermissions();
+            renderSecurityPermissionList();
+            closeSecurityPermissionForm();
+        };
+
+        window.deleteSecurityPermission = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security permission ${id}?`);
+            if (confirmed) {
+                securityPermissions = securityPermissions.filter(permission => permission.id !== id);
+                saveSecurityPermissions();
+                renderSecurityPermissionList();
+            }
+        };
+
+        window.filterSecurityPermissionList = function(query) {
+            renderSecurityPermissionList(query);
+        };
+
 
         window.initializeTabButtons = function(modalId) {
             const modal = document.getElementById(modalId);
