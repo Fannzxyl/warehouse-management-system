@@ -102,7 +102,7 @@
         const contentData = {
             dashboard: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Dashboard</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Dashboard</h2>
                     <p class="text-wise-gray mb-4">Selamat datang di dashboard Anda. Berikut ringkasan singkat operasi Anda.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
@@ -141,10 +141,10 @@
             },
             'yard-management': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Halaman</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Manamgement</h2>
                     <p class="text-wise-gray mb-4">Kelola sumber daya dan peralatan halaman Anda di sini. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                        <h3 class="font-medium text-wise-dark-gray">List</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
                             <li>Total Kendaraan: 50, Tersedia: 35</li>
                             <li>Total Peralatan: 120, Tersedia: 80</li>
@@ -153,18 +153,18 @@
                 `,
             },
             'yard-vehicles': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan (Halaman Lengkap)</h2><p class="text-wise-gray">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray text-sm mt-2">Detail penuh kendaraan.</p>`,
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Kendaraan</h2><p class="text-wise-gray">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 35 unit</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Vehicle</h2><p class="text-wise-gray">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray text-sm mt-2">Detail penuh kendaraan.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Vehicle</h2><p class="text-wise-gray">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 35 unit</p>`,
             },
             'yard-equipment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Peralatan</h2><p class="text-wise-gray">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 80 unit</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Equipment</h2><p class="text-wise-gray">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 80 unit</p>`,
             },
             'yard-personnel': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Halaman - Personel</h2><p class="text-wise-gray">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 15 orang</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Personel</h2><p class="text-wise-gray">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 15 orang</p>`,
             },
             receiving: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Penerimaan</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Management</h2>
                     <p class="text-wise-gray mb-4">Lacak dan kelola semua pengiriman dan kiriman yang masuk. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray">Penerimaan Tertunda</h3>
@@ -176,17 +176,17 @@
                 `,
             },
             'receiving-deliveries': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengiriman</h2><p class="text-wise-gray">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengiriman: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Deliveries</h2><p class="text-wise-gray">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengiriman: 5</p>`,
             },
             'receiving-returns': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Pengembalian</h2><p class="text-wise-gray">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengembalian: 2</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Returns</h2><p class="text-wise-gray">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengembalian: 2</p>`,
             },
             'receiving-vendors': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penerimaan - Vendor</h2><p class="text-wise-gray">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah vendor aktif: 10</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Vendors</h2><p class="text-wise-gray">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah vendor aktif: 10</p>`,
             },
             order: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning</h2>
                     <p class="text-wise-gray mb-4">Rencanakan dan optimalkan pesanan Anda. Lacak status pesanan, kelola pengiriman, dan perkiraan permintaan. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray">Pesanan Tertunda</h3>
@@ -198,20 +198,20 @@
                 `,
             },
             'order-new': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Baru</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order New</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
             },
             'order-pending': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Pesanan Tertunda</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam process atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Pending</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam process atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
             },
             'order-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Perencanaan Pesanan - Riwayat Pesanan</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order History</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
             },
             work: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Pekerjaan</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Management</h2>
                     <p class="text-wise-gray mb-4">Tetapkan tugas, lacak kemajuan, dan kelola tenaga kerja Anda secara efisien. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Tugas</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
                             <li>Tugas Selesai (Hari Ini): 5</li>
                             <li>Tugas Tertunda: 12</li>
@@ -220,17 +220,17 @@
                 `,
             },
             'work-tasks': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tugas</h2><p class="text-wise-gray">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray text-sm mt-2">Tugas aktif: 8</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Tasks</h2><p class="text-wise-gray">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray text-sm mt-2">Tugas aktif: 8</p>`,
             },
             'work-schedule': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Jadwal</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Schedule</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
             },
             'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pekerjaan - Tim</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Teams</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 5</p>`,
             },
             'cross-application': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Lintas Aplikasi</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application</h2>
                     <p class="text-wise-gray mb-4">Kelola integrasi dan aliran data antar aplikasi yang berbeda. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray">Sistem Terhubung</h3>
@@ -242,17 +242,17 @@
                 `,
             },
             'cross-app-integrations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Integrasi</h2><p class="text-wise-gray">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray text-sm mt-2">Integrasi aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp Interagations</h2><p class="text-wise-gray">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray text-sm mt-2">Integrasi aktif: 3</p>`,
             },
             'cross-app-data-sync': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Sinkronisasi Data</h2><p class="text-wise-gray">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp Data Sync</h2><p class="text-wise-gray">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
             },
             'cross-app-api': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Lintas Aplikasi - Manajemen API</h2><p class="text-wise-gray">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray text-sm mt-2">Kunci API aktif: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp API</h2><p class="text-wise-gray">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray text-sm mt-2">Kunci API aktif: 7</p>`,
             },
             inventory: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Ikhtisar Inventaris</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Management</h2>
                     <p class="text-wise-gray mb-4">Pilih lokasi inventaris dari sidebar untuk melihat detailnya.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray">Ringkasan</h3>
@@ -262,17 +262,17 @@
                 `,
             },
             yard: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Halaman</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 150</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Yard</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 150</p>`,
             },
             warehouse: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Gudang</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 1000</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Warehouse</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 1000</p>`,
             },
             storage: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventaris - Penyimpanan</h2><p class="text-wise-gray">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 350</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Storage</h2><p class="text-wise-gray">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 350</p>`,
             },
             performance: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Manajemen Kinerja</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management</h2>
                     <p class="text-wise-gray mb-4">Pantau dan analisis metrik kinerja untuk berbagai operasi dan personel. Pilih sub-kategori dari sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
                         <h3 class="font-medium text-wise-dark-gray">Indikator Kinerja Utama (KPI)</h3>
@@ -284,53 +284,53 @@
                 `,
             },
             'performance-kpis': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - KPI</h2><p class="text-wise-gray">Lihat metrik kinerja utama.</p><p class="text-wise-gray text-sm mt-2">KPI: 5 aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance KPI</h2><p class="text-wise-gray">Lihat metrik kinerja utama.</p><p class="text-wise-gray text-sm mt-2">KPI: 5 aktif</p>`,
             },
             'performance-analytics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Analitik</h2><p class="text-wise-gray">Analisis data kinerja terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terakhir: Hari ini</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Analytics</h2><p class="text-wise-gray">Analisis data kinerja terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terakhir: Hari ini</p>`,
             },
             'performance-goals': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Kinerja - Sasaran</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Goals</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
             },
 
             configuration: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi Sistem</h2>
-                    <p class="text-wise-gray mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub-kategori dari sidebar untuk mengelola Warehouse, Zone, atau Location Type.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration System</h2>
+                    <p class="text-wise-gray mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub kategori dari sidebar untuk mengelola Warehouse, Zone, Location Type, Locating Strategy, atau Locating Rule.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Gudang</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2"> Warehouse Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
-                                Kelola Gudang
+                                Warehouse Management
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Zona</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
-                                Kelola Zona
+                                Zone Management
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Tipe Lokasi</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Location Type Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
-                                Kelola Tipe Lokasi
+                                Location Type Management
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Strategi Penempatan</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Strategy Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Mengelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
-                                Kelola Strategi Penempatan
+                                Locating Strategy Management
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Aturan Penempatan</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Rule Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Menentukan aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
                             <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
-                                Kelola Aturan Penempatan
+                                Locating Rule Management
                             </button>
                         </div>
                     </div>
@@ -338,11 +338,11 @@
             },
             'configuration-warehouse': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Gudang </h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse</h2>
                     <p class="text-wise-gray mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
-                            Buat Gudang Baru
+                            Add new
                         </button>
                         <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
                     </div>
@@ -601,11 +601,11 @@
             },
             'configuration-zone': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Zona</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone</h2>
                     <p class="text-wise-gray mb-4">Kelola tipe zona untuk berbagai area dalam gudang.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
-                            Buat Zona Baru
+                            Add new
                         </button>
                         <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
                     </div>
@@ -653,11 +653,11 @@
             },
             'configuration-location-type': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Tipe Lokasi</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location Type</h2>
                     <p class="text-wise-gray mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
-                            Buat Tipe Lokasi Baru
+                            Add new
                         </button>
                         <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
                     </div>
@@ -752,10 +752,10 @@
 
             'setting-optimization': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Optimasi</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimzataion</h2>
                     <p class="text-wise-gray mb-4">Kelola pengaturan untuk mengoptimalkan kinerja sistem dan preferensi notifikasi.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar Pengaturan</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Dadtar Pengaturan</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
                             <li>Status Optimasi: Aktif</li>
                             <li>Pembaruan Otomatis: Diaktifkan</li>
@@ -766,7 +766,7 @@
             },
             'setting-optimization-general': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengaturan Umum</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimazation General</h2>
                     <p class="text-wise-gray">Konfigurasi pengaturan dasar sistem.</p>
                     <div class="mt-4 space-y-4">
                         <div>
@@ -787,7 +787,7 @@
             },
             'setting-optimization-performance': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Penyesuaian Kinerja</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimzation Performance</h2>
                     <p class="text-wise-gray">Optimalkan kinerja aplikasi.</p>
                     <div class="mt-4 space-y-4">
                         <div>
@@ -805,7 +805,7 @@
             },
             'setting-optimization-notifications': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Preferensi Notifikasi</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimazation Notifications</h2>
                     <p class="text-wise-gray">Atur bagaimana kamu menerima notifikasi.</p>
                     <div class="mt-4 space-y-4">
                         <div>
@@ -826,11 +826,11 @@
 
             'locating-strategies': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Strategi Penempatan</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Strategy</h2>
                     <p class="text-wise-gray mb-4">Kelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
-                            Buat Strategi Penempatan Baru
+                            Add new
                         </button>
                         <input type="text" id="locating-strategy-search" placeholder="Cari strategi penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
                     </div>
@@ -878,11 +878,11 @@
             },
             'locating-rule': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konfigurasi - Aturan Penempatan</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Rule</h2>
                     <p class="text-wise-gray mb-4">Kelola aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
-                            Buat Aturan Penempatan Baru
+                            Add new
                         </button>
                         <input type="text" id="locating-rule-search" placeholder="Cari aturan penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
                     </div>
@@ -962,7 +962,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Pengarsipan Data</h2>
                     <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ikhtisar Arsip</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Daftar Arsip Arsip</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
                             <li>Total Arsip: ${pengarsipanData.length}</li>
                             <li>Arsip Terbaru: ${pengarsipanData[0].namaArsip} (${pengarsipanData[0].tanggalArsip})</li>
@@ -1680,14 +1680,14 @@
             currentWarehouseId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Gudang Baru';
+                title.textContent = 'Add new';
                 document.getElementById('warehouse-submit-button').textContent = 'Buat';
                 document.getElementById('warehouse-name').disabled = false;
                 document.getElementById('warehouse-inactive').checked = false;
                 renderUserCheckboxes([]);
             } else {
                 title.textContent = 'Edit Gudang';
-                document.getElementById('warehouse-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('warehouse-submit-button').textContent = 'Confirm';
                 document.getElementById('warehouse-name').disabled = true;
 
                 const warehouseToEdit = warehouses.find(wh => wh.id === id);
@@ -1941,14 +1941,14 @@
             currentZoneId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Zona Baru';
+                title.textContent = 'Add new';
                 document.getElementById('zone-submit-button').textContent = 'Buat';
                 document.getElementById('zone-identifier').disabled = false;
                 document.getElementById('zone-inactive').checked = false;
                 document.getElementById('zone-system-created').checked = false;
             } else {
                 title.textContent = 'Edit Zona';
-                document.getElementById('zone-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('zone-submit-button').textContent = 'Confirm';
                 document.getElementById('zone-identifier').disabled = true;
 
                 const zoneToEdit = zones.find(z => z.id === id);
@@ -2098,13 +2098,13 @@
             currentLocationTypeId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Buat Tipe Lokasi Baru';
+                title.textContent = 'Add new';
                 document.getElementById('location-type-submit-button').textContent = 'Buat';
                 document.getElementById('location-type-name').disabled = false;
                 document.getElementById('location-type-inactive').checked = false;
             } else {
                 title.textContent = 'Edit Tipe Lokasi';
-                document.getElementById('location-type-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('location-type-submit-button').textContent = 'Confirm';
                 document.getElementById('location-type-name').disabled = true;
 
                 const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
@@ -2258,7 +2258,7 @@
             systemCreatedCheckbox.classList.remove('cursor-not-allowed');
 
             if (mode === 'create') {
-                title.textContent = 'Buat Strategi Penempatan Baru';
+                title.textContent = 'Add new';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Buat';
 
                 identifierInput.disabled = false;
@@ -2273,7 +2273,7 @@
 
             } else {
                 title.textContent = 'Edit Strategi Penempatan';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Confirm';
 
                 const strategyToEdit = locatingStrategies.find(s => s.id === id);
                 if (strategyToEdit) {
@@ -2415,7 +2415,7 @@
             detailRecordsList.innerHTML = '';
 
             if (mode === 'create') {
-                title.textContent = 'Buat Aturan Penempatan Baru';
+                title.textContent = 'Add new';
                 document.getElementById('locating-rule-submit-button').textContent = 'Buat';
                 document.getElementById('locating-rule-name').disabled = false;
                 document.getElementById('locating-rule-delayed-locating').checked = false;
@@ -2427,7 +2427,7 @@
 
             } else {
                 title.textContent = 'Edit Aturan Penempatan';
-                document.getElementById('locating-rule-submit-button').textContent = 'Simpan Perubahan';
+                document.getElementById('locating-rule-submit-button').textContent = 'Confirm';
                 document.getElementById('locating-rule-name').disabled = true;
 
                 const ruleToEdit = locatingRules.find(r => r.id === id);
