@@ -1301,7 +1301,7 @@
             } else if (category === 'configuration-zone') {
                 renderZoneList();
                 initializeTabButtons('zone-form-modal');
-                activateTab('general-zone', 'zone-form-modal');
+                // activateTab('general-zone', 'zone-form-modal');
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
                 initializeTabButtons('location-type-form-modal');
@@ -1309,11 +1309,11 @@
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
                 initializeTabButtons('locating-strategy-form-modal');
-                activateTab('general-strategy', 'locating-strategy-form-modal');
+                // activateTab('general-strategy', 'locating-strategy-form-modal');
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
                 initializeTabButtons('locating-rule-form-modal');
-                activateTab('general-rule', 'locating-rule-form-modal');
+                // activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
             } else if (category === 'security-group') { 
                 renderSecurityGroupList();
