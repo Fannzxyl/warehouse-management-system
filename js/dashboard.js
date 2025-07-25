@@ -2947,7 +2947,7 @@
 
             const filteredData = securityPermissions.filter(p =>
                 p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                p.description.toLowerCase().includes(filterQuery.toLowerCase())
+                (p.description && p.description.toLowerCase().includes(filterQuery.toLowerCase()))
             );
 
             if (filteredData.length === 0) {
@@ -2956,7 +2956,7 @@
             }
 
             const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
             table.innerHTML = `
                 <thead class="bg-wise-light-gray">
                     <tr>
@@ -3060,19 +3060,21 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
                 nameInput.disabled = false;
-                renderMenuCheckboxes([], 'All'); // Tampilkan semua menu, tidak ada yang tercentang
+                nameInput.value = ''; 
+                document.getElementById('sp-description').value = ''; 
+                renderMenuCheckboxes([], 'All'); 
             } else {
                 title.textContent = 'Edit Security Permission';
                 nameInput.disabled = true;
                 const permission = securityPermissions.find(p => p.id === id);
                 if (permission) {
-                    document.getElementById('sp-name').value = permission.name;
+                    nameInput.value = permission.name;
                     document.getElementById('sp-description').value = permission.description;
                     document.getElementById('sp-inactive').checked = permission.inactive;
-                    renderMenuCheckboxes(permission.menus || [], 'All'); // Tampilkan menu yang sudah dipilih
+                    renderMenuCheckboxes(permission.menus || [], 'All'); 
                 }
             }
-            document.querySelector('input[name="menuFilter"][value="All"]').checked = true; // Selalu reset filter ke 'All'
+            document.querySelector('input[name="menuFilter"][value="All"]').checked = true; 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
