@@ -301,35 +301,35 @@
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Warehouse Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Manage warehouse details, including addresses and authorized users.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
                                 Manage Warehouses
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Define and manage various zones within the warehouse.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
                                 Manage Zones
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Location Type Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Configure storage location types based on dimensions and weight.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
                                 Manage Location Types
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Strategy Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Manage strategies used to place items in warehouse locations.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
                                 Manage Locating Strategies
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Rule Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Define rules that determine how items are placed in warehouse locations.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
                                 Manage Locating Rules
                             </button>
                         </div>
@@ -341,7 +341,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Warehouse </h2>
                     <p class="text-wise-gray mb-4">Manage existing warehouses or add new ones.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
                             Create New Warehouse
                         </button>
                         <input type="text" id="warehouse-search" placeholder="Search warehouse..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
@@ -593,7 +593,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
-                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-lg hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -604,7 +604,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone</h2>
                     <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
                             Create New Zone
                         </button>
                         <input type="text" id="zone-search" placeholder="Search zone..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
@@ -645,7 +645,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
-                                <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -656,7 +656,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Location Type</h2>
                     <p class="text-wise-gray mb-4">Configure storage location types based on dimensions and weight.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
                             Create New Location Type
                         </button>
                         <input type="text" id="location-type-search" placeholder="Search location type..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
@@ -721,7 +721,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
-                                <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -829,7 +829,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Strategy</h2>
                     <p class="text-wise-gray mb-4">Manage strategies used to place items in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
                             Create New Locating Strategy
                         </button>
                         <input type="text" id="locating-strategy-search" placeholder="Search locating strategy..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
@@ -870,7 +870,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
-                                <button type="submit" form="locating-strategy-form" id="locating-strategy-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="locating-strategy-form" id="locating-strategy-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -881,7 +881,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Rule</h2>
                     <p class="text-wise-gray mb-4">Manage rules that determine how items are placed in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
                             Create New Locating Rule
                         </button>
                         <input type="text" id="locating-rule-search" placeholder="Search locating rule..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
@@ -923,14 +923,14 @@
                                             <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
                                             <div id="detail-records-list" class="space-y-2">
                                                 </div>
-                                            <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                            <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
-                                <button type="submit" form="locating-rule-form" id="locating-rule-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="locating-rule-form" id="locating-rule-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -1284,7 +1284,7 @@
             if (content && (content.detail || content.full)) {
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail || content.full}
-                    <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
+                    <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
                         Display Page
                     </button>
                 `;
@@ -1682,12 +1682,16 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Warehouse';
                 document.getElementById('warehouse-submit-button').textContent = 'Create';
+                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('warehouse-name').disabled = false;
                 document.getElementById('warehouse-inactive').checked = false;
                 renderUserCheckboxes([]);
             } else {
                 title.textContent = 'Edit Warehouse';
-                document.getElementById('warehouse-submit-button').textContent = 'Save Changes';
+                document.getElementById('warehouse-submit-button').textContent = 'Save';
+                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('warehouse-name').disabled = true;
 
                 const warehouseToEdit = warehouses.find(wh => wh.id === id);
@@ -1717,7 +1721,7 @@
                     document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
                     document.getElementById('return-city').value = warehouseToEdit.returnCity;
                     document.getElementById('return-state').value = warehouseToEdit.returnState;
-                    document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
+                    document.getElementById('return-postal-code').value = warehouseToEdit.postalCode;
                     document.getElementById('return-country').value = warehouseToEdit.returnCountry;
                     document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                     document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
@@ -1943,12 +1947,16 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Zone';
                 document.getElementById('zone-submit-button').textContent = 'Create';
+                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('zone-identifier').disabled = false;
                 document.getElementById('zone-inactive').checked = false;
                 document.getElementById('zone-system-created').checked = false;
             } else {
                 title.textContent = 'Edit Zone';
-                document.getElementById('zone-submit-button').textContent = 'Save Changes';
+                document.getElementById('zone-submit-button').textContent = 'Save';
+                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('zone-identifier').disabled = true;
 
                 const zoneToEdit = zones.find(z => z.id === id);
@@ -2100,11 +2108,15 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Location Type';
                 document.getElementById('location-type-submit-button').textContent = 'Create';
+                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('location-type-name').disabled = false;
                 document.getElementById('location-type-inactive').checked = false;
             } else {
                 title.textContent = 'Edit Location Type';
-                document.getElementById('location-type-submit-button').textContent = 'Save Changes';
+                document.getElementById('location-type-submit-button').textContent = 'Save';
+                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('location-type-name').disabled = true;
 
                 const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
@@ -2260,6 +2272,8 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Strategy';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Create';
+                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
 
                 identifierInput.disabled = false;
                 identifierInput.readOnly = false;
@@ -2273,7 +2287,9 @@
 
             } else {
                 title.textContent = 'Edit Locating Strategy';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Save Changes';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Save';
+                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
 
                 const strategyToEdit = locatingStrategies.find(s => s.id === id);
                 if (strategyToEdit) {
@@ -2417,6 +2433,8 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Rule';
                 document.getElementById('locating-rule-submit-button').textContent = 'Create';
+                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('locating-rule-name').disabled = false;
                 document.getElementById('locating-rule-delayed-locating').checked = false;
                 document.getElementById('locating-rule-inactive').checked = false;
@@ -2427,7 +2445,9 @@
 
             } else {
                 title.textContent = 'Edit Locating Rule';
-                document.getElementById('locating-rule-submit-button').textContent = 'Save Changes';
+                document.getElementById('locating-rule-submit-button').textContent = 'Save';
+                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('locating-rule-name').disabled = true;
 
                 const ruleToEdit = locatingRules.find(r => r.id === id);
@@ -2634,9 +2654,8 @@
                 mainContentArea.classList.remove('ml-0');
                 document.getElementById('sidebar-overlay').classList.add('hidden');
             } else {
-                sidebar.classList.add('-translate-x-full');
-                mainContentArea.classList.remove('md:ml-64');
-                mainContentArea.classList.add('ml-0');
+                mainContentArea.classList.add('md:ml-64');
+                mainContentArea.classList.remove('ml-0');
 
             }
         });
