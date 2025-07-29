@@ -273,6 +273,10 @@
                             <i class="fas fa-user-circle mr-3 text-wise-gray"></i>
                             Profile
                         </a>
+                        <a href="configuration.html" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth">
+                            <i class="fas fa-cogs mr-3 text-wise-gray"></i>
+                            Configuration
+                        </a>
                         <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="handleLogout()">
                             <i class="fas fa-sign-out-alt mr-3 text-wise-gray"></i>
                             Log Out
@@ -513,40 +517,6 @@
                             </div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-goals')" tabindex="0" role="button" aria-label="Select Goals">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Goals</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Configuration -->
-                    <div class="sidebar-section">
-                        <div id="sidebar-configuration" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('configuration')" tabindex="0" role="button" aria-expanded="false" aria-controls="configuration-children" aria-label="Toggle Configuration sub-menu">
-                            <div class="w-6 h-6 flex items-center justify-center">
-                                <i class="fas fa-cogs text-wise-gray"></i>
-                            </div>
-                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Configuration</span>
-                            <i id="configuration-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
-                        </div>
-                        <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-configuration">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button" aria-label="Select Warehouse">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-zone')" tabindex="0" role="button" aria-label="Select Zone">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Zone</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-location-type')" tabindex="0" role="button" aria-label="Select Location Type">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Type</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-strategies')" tabindex="0" role="button" aria-label="Select Locating Strategies">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Strategies</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-rule')" tabindex="0" role="button" aria-label="Select Locating Rule">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Rule</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('security-group')" tabindex="0" role="button" aria-label="Select Security Group">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Security Group</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('security-permission')" tabindex="0" role="button" aria-label="Select Security Permission">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Security Permission</span>
                             </div>
                         </div>
                     </div>
