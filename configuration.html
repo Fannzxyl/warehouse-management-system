@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - WISE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            
+            * {
+                scroll-behavior: smooth;
+            }
+        }
+        
+        @layer utilities {
+            /* Custom Scrollbar Styles */
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            
+            ::-webkit-scrollbar-track {
+                background: transparent;
+                border-radius: 10px;
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: rgba(156, 163, 175, 0.4); 
+                border-radius: 10px;
+                transition: all 0.2s ease;
+            }
+            
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(156, 163, 175, 0.7); 
+            }
+            
+            /* Firefox scrollbar */
+            html {
+                scrollbar-width: thin;
+                scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+            }
+
+            /* Smooth transitions for all elements */
+            .transition-all-smooth {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .transition-transform-smooth {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            /* Backdrop blur effects */
+            .backdrop-blur-glass {
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                background: rgba(255, 255, 255, 0.85); /* White with opacity */
+            }
+            
+            .backdrop-blur-overlay {
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                background: rgba(0, 0, 0, 0.1); /* Black with opacity */
+            }
+
+            /* Sidebar animations */
+            .sidebar-slide-in {
+                animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+            
+            .sidebar-slide-out {
+                animation: slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+            
+            @keyframes slideInLeft {
+                from {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutLeft {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(-100%);
+                    opacity: 0;
+                }
+            }
+
+            /* Hover effects */
+            .hover-lift:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            
+            .hover-scale:hover {
+                transform: scale(1.02);
+            }
+
+            /* Button press effect */
+            .active-press:active {
+                transform: scale(0.98);
+            }
+
+            /* Gradient backgrounds */
+            .gradient-primary {
+                background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%); /* wise-blue-500 to wise-indigo-500 */
+            }
+            
+            .gradient-secondary {
+                background: linear-gradient(135deg, #8B5CF6 0%, #F5576C 100%); /* wise-secondary to a red/pink */
+            }
+
+            /* Card shadows */
+            .shadow-card {
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            
+            .shadow-card-hover:hover {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Loading skeleton */
+            .skeleton {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 200% 100%;
+                animation: loading 1.5s infinite;
+            }
+            
+            @keyframes loading {
+                0% { background-position: 200% 0; }
+                100% { background-position: -200% 0; }
+            }
+
+            /* Mobile-first responsive utilities */
+            @media (max-width: 768px) {
+                .mobile-full-width {
+                    width: 100vw;
+                    margin-left: calc(-1 * (100vw - 100%) / 2);
+                }
+            }
+            .fas, .fa-solid {
+                font-weight: 900;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wise: {
+                            'light-gray': '#FAFAFA',
+                            'gray': '#6B7280',
+                            'dark-gray': '#1F2937',
+                            'border': '#E5E7EB',
+                            'pink': '#FEE2E2',
+                            'brown': '#991B1B',
+                            'primary': '#3B82F6',   // Blue
+                            'secondary': '#8B5CF6', // Purple
+                            'success': '#10B981',   // Emerald
+                            'warning': '#F59E0B',   // Yellow/Orange
+                            'error': '#EF4444',     // Red
+                            'info': '#06B6D4',      // Cyan
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'bounce-subtle': 'bounceSubtle 0.6s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-2px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
+        <div class="flex items-center justify-between w-full">
+            <!-- Left Section -->
+            <div class="flex-1 flex justify-start items-center">
+                <button 
+                    id="sidebar-toggle-btn" 
+                    class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 mr-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
+                    aria-label="Toggle sidebar"
+                >
+                    <i class="fas fa-bars w-6 h-6 flex items-center justify-center transition-transform-smooth"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">W</span>
+                    </div>
+                    <span class="text-wise-dark-gray text-xl font-bold tracking-tight">WISE</span>
+                </div>
+            </div>
+
+            <!-- Center Section - Search -->
+            <div class="flex-1 flex justify-center relative max-w-lg mx-4">
+                <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
+                    <div class="pl-4">
+                        <i class="fas fa-search text-wise-gray"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Search now..."
+                        class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
+                        oninput="handleSearch(this.value)"
+                        onfocus="showSearchHistory()"
+                        aria-label="Search configuration"
+                    />
+                    <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press" aria-label="Search button">
+                        <span class="hidden sm:inline">Search</span>
+                        <i class="fas fa-search sm:hidden"></i>
+                    </button>
+                </div>
+                
+                <!-- Search History Dropdown -->
+                <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
+                    <div class="p-2" id="search-history-content"></div>
+                </div>
+            </div>
+
+            <!-- Right Section - User -->
+            <div class="flex-1 flex justify-end items-center space-x-3 relative">
+                <span class="text-wise-dark-gray font-medium text-sm hidden lg:block">
+                    Welcome, <span id="username-display" class="font-semibold text-wise-primary">SuperAdmin</span>
+                </span>
+                <div
+                    class="w-9 h-9 bg-wise-dark-gray rounded-full flex items-center justify-center shadow-card cursor-pointer hover-lift transition-all-smooth active-press"
+                    onclick="toggleUserDropdown()"
+                    aria-label="User menu"
+                >
+                    <i class="fas fa-user text-white"></i>
+                </div>
+                
+                <!-- User Dropdown -->
+                <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
+                    <div class="p-2">
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="navigateToProfile()">
+                            <i class="fas fa-user-circle mr-3 text-wise-gray"></i>
+                            Profile
+                        </a>
+                        <a href="dashboard.html" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth">
+                            <i class="fas fa-cogs mr-3 text-wise-gray"></i>
+                            Dashboard
+                        </a>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="handleLogout()">
+                            <i class="fas fa-sign-out-alt mr-3 text-wise-gray"></i>
+                            Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Filters -->
+        <div id="search-filters" class="flex items-center space-x-2 mt-3 ml-0 md:ml-20 hidden flex-wrap animate-slide-up">
+            <span class="text-wise-gray text-xs font-medium">Filter:</span>
+            <div class="flex flex-wrap gap-2">
+                <span id="filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
+                    Articles 
+                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('articles')" aria-label="Remove article filter">
+                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                    </button>
+                </span>
+                <span id="filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
+                    Photography 
+                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('photography')" aria-label="Remove photography filter">
+                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                    </button>
+                </span>
+            </div>
+            <button class="text-wise-gray hover:text-wise-error hover:underline text-xs transition-colors" onclick="removeAllFilters()" aria-label="Remove all filters">
+                Remove all
+            </button>
+        </div>
+        
+        <!-- Search Results -->
+        <div id="search-results" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-xl border border-wise-border z-40 max-h-80 overflow-y-auto w-11/12 md:w-1/2 animate-slide-up">
+            <div id="search-results-content" class="p-3"></div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-25 hidden md:hidden transition-all-smooth" onclick="closeSidebar()" aria-label="Close sidebar"></div>
+
+    <div class="flex flex-1 pt-20 md:pt-24">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border h-screen overflow-y-auto fixed left-0 top-0 z-30 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+            <div class="p-4 pt-24 md:pt-6">
+                <div class="space-y-2">
+                    <!-- Configuration -->
+                    <div class="sidebar-section">
+                        <div id="sidebar-configuration" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('configuration')" tabindex="0" role="button" aria-expanded="false" aria-controls="configuration-children" aria-label="Toggle Configuration sub-menu">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-cogs text-wise-gray"></i>
+                            </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Configuration</span>
+                            <i id="configuration-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                        </div>
+                        <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-configuration">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button" aria-label="Select Warehouse">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-zone')" tabindex="0" role="button" aria-label="Select Zone">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Zone</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-location-type')" tabindex="0" role="button" aria-label="Select Location Type">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Type</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-strategies')" tabindex="0" role="button" aria-label="Select Locating Strategies">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Strategies</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-rule')" tabindex="0" role="button" aria-label="Select Locating Rule">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Rule</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('security-group')" tabindex="0" role="button" aria-label="Select Security Group">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Security Group</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('security-permission')" tabindex="0" role="button" aria-label="Select Security Permission">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Security Permission</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth" role="main">
+            <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Custom Alert/Confirm Modal -->
+            <div id="custom-modal-overlay" class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title" aria-describedby="custom-modal-message">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
+                    <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                    <p id="custom-modal-message" class="text-wise-gray mb-6"></p>
+                    <div class="flex justify-end space-x-3">
+                        <button id="custom-modal-cancel-btn" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press">Cancel</button>
+                        <button id="custom-modal-ok-btn" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-all-smooth active-press">OK</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Overlay -->
+            <div id="search-overlay" class="hidden fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Search overlay">
+                <div class="bg-white rounded-xl border border-wise-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col animate-slide-up">
+                    <div class="flex items-center bg-white rounded-t-xl border-b border-wise-border overflow-hidden p-4">
+                        <input 
+                            type="text" 
+                            id="overlay-search-input"
+                            placeholder="Search now..."
+                            class="flex-1 px-4 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
+                            oninput="performSearch(this.value, 'overlay')"
+                            aria-label="Overlay search input"
+                        />
+                        <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press rounded-r-lg" aria-label="Overlay search button">
+                            <span class="hidden sm:inline">Search</span>
+                            <i class="fas fa-search sm:hidden"></i>
+                        </button>
+                        <button class="ml-2 text-wise-gray hover:text-wise-dark-gray rounded-full p-1 hover:bg-gray-100 transition-all-smooth" onclick="closeSearchOverlay()" aria-label="Close search overlay">
+                            <i class="fas fa-times w-6 h-6 flex items-center justify-center"></i>
+                        </button>
+                    </div>
+                    <div id="overlay-search-filters" class="flex items-center space-x-2 mt-3 ml-4 text-xs flex-wrap animate-slide-up">
+                        <span class="text-wise-gray font-medium">Filter:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span id="overlay-filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
+                                Articles 
+                                <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('articles')" aria-label="Remove article filter from overlay">
+                                    <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                                </button>
+                            </span>
+                            <span id="overlay-filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
+                                Photography 
+                                <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('photography')" aria-label="Remove photography filter from overlay">
+                                    <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <button class="text-wise-gray hover:text-wise-error hover:underline" onclick="removeAllOverlayFilters()" aria-label="Remove all filters from overlay">
+                            Remove all
+                        </button>
+                    </div>
+                    <div class="flex flex-1 overflow-hidden mt-4">
+                        <div id="overlay-search-results-list-panel" class="w-full md:w-1/3 border-r border-wise-border p-4 overflow-y-auto text-wise-dark-gray">
+                        </div>
+                        <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-wise-dark-gray">
+                            <p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>

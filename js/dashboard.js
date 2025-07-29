@@ -1,5 +1,4 @@
 (function() {
-
     document.addEventListener('DOMContentLoaded', () => {
 
         const mainContent = document.getElementById('default-content-area');
@@ -66,42 +65,42 @@
             });
         };
 
-        // Data dummy untuk konten dashboard dan sub-kategori
+        // Dummy data for dashboard content and sub-categories
         const contentData = {
             dashboard: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Dashboard</h2>
-                    <p class="text-wise-gray mb-4">Selamat datang di dashboard Anda. Berikut ringkasan singkat operasi Anda.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Dashboard Overview</h2>
+                    <p class="text-wise-gray mb-4">Welcome to your dashboard. Here's a quick summary of your operations.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Pemesanan</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Orders</h3>
                             <p class="text-3xl font-bold text-wise-primary">1,250</p>
-                            <p class="text-wise-gray text-sm mt-1">30 hari terakhir</p>
+                            <p class="text-wise-gray text-sm mt-1">last 30 days</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kru Aktif</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews</h3>
                             <p class="text-3xl font-bold text-wise-info">85</p>
-                            <p class="text-wise-gray text-sm mt-1">Sedang bekerja</p>
+                            <p class="text-wise-gray text-sm mt-1">currently working</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-bold text-wise-success">$2.5M</p>
-                            <p class="text-wise-gray text-sm mt-1">Total aset</p>
+                            <p class="text-wise-gray text-sm mt-1">Total assets</p>
                         </div>
                     </div>
                     <div class="mt-8">
-                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Aktivitas Terbaru</h3>
+                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Recent Activity</h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Pemesanan baru untuk Proyek Alpha</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">5 menit yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">New order for Project Alpha</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">5 minutes ago</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Kru #123 menyelesaikan tugas</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">1 jam yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">Crew #123 completed task</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">1 hour ago</span>
                             </div>
                             <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Pembaruan inventaris: 10 unit ditambahkan ke Gudang</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">3 jam yang lalu</span>
+                                <h4 class="text-wise-dark-gray font-medium">Inventory update: 10 units added to Warehouse</h4>
+                                <span class="text-wise-gray text-xs md:text-sm">3 hours ago</span>
                             </div>
                         </div>
                     </div>
@@ -109,196 +108,325 @@
             },
             'yard-management': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Manamgement</h2>
-                    <p class="text-wise-gray mb-4">Kelola sumber daya dan peralatan halaman Anda di sini. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management</h2>
+                    <p class="text-wise-gray mb-4">Manage your yard resources and equipment here. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">List</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Kendaraan: 50, Tersedia: 35</li>
-                            <li>Total Peralatan: 120, Tersedia: 80</li>
+                            <li>Total Vehicles: 50, Available: 35</li>
+                            <li>Total Equipment: 120, Available: 80</li>
                         </ul>
                     </div>
                 `,
             },
             'yard-vehicles': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Vehicle</h2><p class="text-wise-gray">Ini adalah tampilan halaman penuh untuk Kendaraan di Halaman. Berisi daftar lengkap kendaraan, status, dan riwayat.</p><p class="text-wise-gray text-sm mt-2">Detail penuh kendaraan.</p>`,
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Vehicle</h2><p class="text-wise-gray">Daftar kendaraan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 35 unit</p>`,
+                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles (Full Page)</h2><p class="text-wise-gray">This is the full page view for Vehicles in the Yard. It contains a complete list of vehicles, their status, and history.</p><p class="text-wise-gray text-sm mt-2">Full vehicle details.</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles</h2><p class="text-wise-gray">List of vehicles available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 35 units</p>`,
             },
             'yard-equipment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Equipment</h2><p class="text-wise-gray">Daftar peralatan yang tersedia di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 80 unit</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Equipment</h2><p class="text-wise-gray">List of equipment available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 80 units</p>`,
             },
             'yard-personnel': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Personel</h2><p class="text-wise-gray">Daftar personel yang ditugaskan ke halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 15 orang</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Personnel</h2><p class="text-wise-gray">List of personnel assigned to the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 15 people</p>`,
             },
             receiving: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Management</h2>
-                    <p class="text-wise-gray mb-4">Lacak dan kelola semua pengiriman dan kiriman yang masuk. Pilih sub-kategori dari sidebar.</p>
+                    <p class="text-wise-gray mb-4">Track and manage all incoming shipments and deliveries. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Penerimaan Tertunda</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Pending Receiving</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Pengiriman #101 - Diharapkan: Hari Ini</li>
-                            <li>Pengiriman #102 - Diharapkan: Besok</li>
+                            <li>Shipment #101 - Expected: Today</li>
+                            <li>Shipment #102 - Expected: Tomorrow</li>
                         </ul>
                     </div>
                 `,
             },
             'receiving-deliveries': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Deliveries</h2><p class="text-wise-gray">Detail semua pengiriman yang masuk.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengiriman: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Deliveries</h2><p class="text-wise-gray">Details of all incoming deliveries.</p><p class="text-wise-gray text-sm mt-2">Number of deliveries: 5</p>`,
             },
             'receiving-returns': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Returns</h2><p class="text-wise-gray">Detail semua pengembalian yang diterima.</p><p class="text-wise-gray text-sm mt-2">Jumlah pengembalian: 2</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Returns</h2><p class="text-wise-gray">Details of all received returns.</p><p class="text-wise-gray text-sm mt-2">Number of returns: 2</p>`,
             },
             'receiving-vendors': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Vendors</h2><p class="text-wise-gray">Daftar vendor dan status pengiriman mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah vendor aktif: 10</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Vendors</h2><p class="text-wise-gray">List of vendors and their delivery status.</p><p class="text-wise-gray text-sm mt-2">Number of active vendors: 10</p>`,
             },
             order: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning</h2>
-                    <p class="text-wise-gray mb-4">Rencanakan dan optimalkan pesanan Anda. Lacak status pesanan, kelola pengiriman, dan perkiraan permintaan. Pilih sub-kategori dari sidebar.</p>
+                    <p class="text-wise-gray mb-4">Plan and optimize your orders. Track order status, manage shipments, and forecast demand. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Pesanan Tertunda</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Pending Orders</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Pengiriman #X123 - Status: Menunggu Persetujuan</li>
-                            <li>Pengiriman #Y456 - Status: Dalam Perjalanan</li>
+                            <li>Shipment #X123 - Status: Awaiting Approval</li>
+                            <li>Shipment #Y456 - Status: In Transit</li>
                         </ul>
                     </div>
                 `,
             },
             'order-new': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order New</h2><p class="text-wise-gray">Daftar pesanan baru yang perlu diproses.</p><p class="text-wise-gray text-sm mt-2">Pesanan baru: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - New Orders</h2><p class="text-wise-gray">List of new orders to be processed.</p><p class="text-wise-gray text-sm mt-2">New orders: 7</p>`,
             },
             'order-pending': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Pending</h2><p class="text-wise-gray">Daftar pesanan yang sedang dalam process atau menunggu tindakan.</p><p class="text-wise-gray text-sm mt-2">Pesanan tertunda: 12</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Pending Orders</h2><p class="text-wise-gray">List of orders that are in process or awaiting action.</p><p class="text-wise-gray text-sm mt-2">Pending orders: 12</p>`,
             },
             'order-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order History</h2><p class="text-wise-gray">Arsip semua pesanan yang telah selesai.</p><p class="text-wise-gray text-sm mt-2">Total pesanan selesai: 500</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order History</h2><p class="text-wise-gray">Archive of all completed orders.</p><p class="text-wise-gray text-sm mt-2">Total completed orders: 500</p>`,
             },
             work: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Management</h2>
-                    <p class="text-wise-gray mb-4">Tetapkan tugas, lacak kemajuan, dan kelola tenaga kerja Anda secara efisien. Pilih sub-kategori dari sidebar.</p>
+                    <p class="text-wise-gray mb-4">Assign tasks, track progress, and manage your workforce efficiently. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Tugas</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Tugas Selesai (Hari Ini): 5</li>
-                            <li>Tugas Tertunda: 12</li>
+                            <li>Tasks Completed (Today): 5</li>
+                            <li>Pending Tasks: 12</li>
                         </ul>
                     </div>
                 `,
             },
             'work-tasks': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Tasks</h2><p class="text-wise-gray">Daftar tugas yang ditugaskan dan statusnya.</p><p class="text-wise-gray text-sm mt-2">Tugas aktif: 8</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Tasks</h2><p class="text-wise-gray">List of assigned tasks and their status.</p><p class="text-wise-gray text-sm mt-2">Active tasks: 8</p>`,
             },
             'work-schedule': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Schedule</h2><p class="text-wise-gray">Jadwal kerja untuk semua tim dan individu.</p><p class="text-wise-gray text-sm mt-2">Jadwal hari ini: Penuh</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Schedule</h2><p class="text-wise-gray">Work schedule for all teams and individuals.</p><p class="text-wise-gray text-sm mt-2">Today's schedule: Full</p>`,
             },
             'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Teams</h2><p class="text-wise-gray">Daftar tim kerja dan anggota mereka.</p><p class="text-wise-gray text-sm mt-2">Jumlah: 5</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Teams</h2><p class="text-wise-gray">List of work teams and their members.</p><p class="text-wise-gray text-sm mt-2">Count: 5</p>`,
             },
             'cross-application': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application</h2>
-                    <p class="text-wise-gray mb-4">Kelola integrasi dan aliran data antar aplikasi yang berbeda. Pilih sub-kategori dari sidebar.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application Management</h2>
+                    <p class="text-wise-gray mb-4">Manage integrations and data flow between different applications. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Sistem Terhubung</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Connected Systems</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Sistem CRM (Aktif)</li>
-                            <li>Sistem ERP (Aktif)</li>
+                            <li>CRM System (Active)</li>
+                            <li>ERP System (Active)</li>
                         </ul>
                     </div>
                 `,
             },
             'cross-app-integrations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp Interagations</h2><p class="text-wise-gray">Status dan konfigurasi integrasi aplikasi.</p><p class="text-wise-gray text-sm mt-2">Integrasi aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Integrations</h2><p class="text-wise-gray">Status and configuration of application integrations.</p><p class="text-wise-gray text-sm mt-2">Active integrations: 3</p>`,
             },
             'cross-app-data-sync': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp Data Sync</h2><p class="text-wise-gray">Lacak status sinkronisasi data antar sistem.</p><p class="text-wise-gray text-sm mt-2">Sinkronisasi terakhir: 10 menit yang lalu</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Data Synchronization</h2><p class="text-wise-gray">Track data synchronization status between systems.</p><p class="text-wise-gray text-sm mt-2">Last sync: 10 minutes ago</p>`,
             },
             'cross-app-api': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Appp API</h2><p class="text-wise-gray">Kelola kunci API dan akses untuk integrasi.</p><p class="text-wise-gray text-sm mt-2">Kunci API aktif: 7</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - API Management</h2><p class="text-wise-gray">Manage API keys and access for integrations.</p><p class="text-wise-gray text-sm mt-2">Active API keys: 7</p>`,
             },
             inventory: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Management</h2>
-                    <p class="text-wise-gray mb-4">Pilih lokasi inventaris dari sidebar untuk melihat detailnya.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Overview</h2>
+                    <p class="text-wise-gray mb-4">Select an inventory location from the sidebar to view details.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan</h3>
-                        <p class="text-wise-gray text-sm mt-2">Total Item di Semua Lokasi: 1,500</p>
-                        <p class="text-wise-gray text-sm">Tersedia untuk Digunakan: 1,200</p>
+                        <h3 class="font-medium text-wise-dark-gray">Summary</h3>
+                        <p class="text-wise-gray text-sm mt-2">Total Items Across All Locations: 1,500</p>
+                        <p class="text-wise-gray text-sm">Available for Use: 1,200</p>
                     </div>
                 `,
             },
             yard: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Yard</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di halaman.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 150</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Yard</h2><p class="text-wise-gray">Manage inventory located in the yard.</p><p class="text-wise-gray text-sm mt-2">Item count: 150</p>`,
             },
             warehouse: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Warehouse</h2><p class="text-wise-gray">Kelola inventaris yang berlokasi di gudang.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 1000</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Warehouse</h2><p class="text-wise-gray">Manage inventory located in the warehouse.</p><p class="text-wise-gray text-sm mt-2">Item count: 1000</p>`,
             },
             storage: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Storage</h2><p class="text-wise-gray">Kelola penyimpanan jangka panjang atau overflow.</p><p class="text-wise-gray text-sm mt-2">Jumlah item: 350</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Storage</h2><p class="text-wise-gray">Manage long-term or overflow storage.</p><p class="text-wise-gray text-sm mt-2">Item count: 350</p>`,
             },
             performance: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management</h2>
-                    <p class="text-wise-gray mb-4">Pantau dan analisis metrik kinerja untuk berbagai operasi dan personel. Pilih sub-kategori dari sidebar.</p>
+                    <p class="text-wise-gray mb-4">Monitor and analyze performance metrics for various operations and personnel. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Indikator Kinerja Utama (KPI)</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Key Performance Indicators (KPIs)</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Tingkat Pengiriman Tepat Waktu: 98%</li>
-                            <li>Tingkat Penyelesaian Tugas: 95%</li>
+                            <li>On-Time Delivery Rate: 98%</li>
+                            <li>Task Completion Rate: 95%</li>
                         </ul>
                     </div>
                 `,
             },
             'performance-kpis': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance KPI</h2><p class="text-wise-gray">Lihat metrik kinerja utama.</p><p class="text-wise-gray text-sm mt-2">KPI: 5 aktif</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - KPIs</h2><p class="text-wise-gray">View key performance metrics.</p><p class="text-wise-gray text-sm mt-2">KPIs: 5 active</p>`,
             },
             'performance-analytics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Analytics</h2><p class="text-wise-gray">Analisis data kinerja terperinci.</p><p class="text-wise-gray text-sm mt-2">Laporan terakhir: Hari ini</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Analytics</h2><p class="text-wise-gray">Analyze detailed performance data.</p><p class="text-wise-gray text-sm mt-2">Last report: Today</p>`,
             },
             'performance-goals': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Goals</h2><p class="text-wise-gray">Lacak dan kelola sasaran kinerja.</p><p class="text-wise-gray text-sm mt-2">Sasaran aktif: 3</p>`,
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Goals</h2><p class="text-wise-gray">Track and manage performance goals.</p><p class="text-wise-gray text-sm mt-2">Active goals: 3</p>`,
             },
 
+            'setting-optimization': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization</h2>
+                    <p class="text-wise-gray mb-4">Manage settings to optimize system performance and notification preferences.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Setting Overview</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Optimization Status: Active</li>
+                            <li>Automatic Updates: Enabled</li>
+                            <li>Email Notifications: Enabled</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'setting-optimization-general': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">General Settings</h2>
+                    <p class="text-wise-gray">Configure basic system settings.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="auto-update" class="flex items-center">
+                                <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Automatic Updates</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Language:</label>
+                            <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                <option value="id">Indonesian</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                `,
+            },
+            'setting-optimization-performance': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Adjustments</h2>
+                    <p class="text-wise-gray">Optimize application performance.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Cache Size (MB):</label>
+                            <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                        </div>
+                        <div>
+                            <label for="data-compression" class="flex items-center">
+                                <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Data Compression</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+            },
+            'setting-optimization-notifications': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Notification Preferences</h2>
+                    <p class="text-wise-gray">Set how you receive notifications.</p>
+                    <div class="mt-4 space-y-4">
+                        <div>
+                            <label for="email-notifications" class="flex items-center">
+                                <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                <span class="ml-2 text-sm text-wise-dark-gray">Email Notifications</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="sms-notifications" class="flex items-center">
+                                <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                <span class="ml-2 text-sm text-wise-dark-gray">SMS Notifications</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+            },
+            'system-management-users': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
+                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
+                `
+            },
+            'system-management-logs': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
+                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
+                `,
+            },
+            'system-management-backup': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
+                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
+                `,
+            },
+            'archive': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
+                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Total Dokumen Diarsipkan: 150</li>
+                            <li>Total Media Diarsipkan: 75</li>
+                            <li>Total Arsip Keuangan: 40</li>
+                        </ul>
+                    </div>
+                `,
+            },
+            'archive-documents': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
+                `,
+            },
+            'archive-media': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
+                `,
+            },
+            'archive-financial': {
+                detail: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
+                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
+                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
+                `,
+            },
             configuration: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration System</h2>
-                    <p class="text-wise-gray mb-4">Di sini Anda dapat mengelola berbagai konfigurasi untuk sistem WISE. Pilih sub kategori dari sidebar untuk mengelola Warehouse, Zone, Location Type, Locating Strategy, atau Locating Rule.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Configuration</h2>
+                    <p class="text-wise-gray mb-4">Here you can manage various configurations for the WISE system. Select a sub-category from the sidebar to manage Warehouse, Zone, or Location Type.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2"> Warehouse Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengelola detail gudang, termasuk alamat dan pengguna resmi.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
-                                Warehouse Management
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Warehouse Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Manage warehouse details, including addresses and authorized users.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
+                                Manage Warehouses
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Menentukan dan mengelola berbagai zona dalam gudang.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
-                                Zone Management
+                            <p class="text-wise-gray text-sm mt-1">Define and manage various zones within the warehouse.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
+                                Manage Zones
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Location Type Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengonfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
-                                Location Type Management
+                            <p class="text-wise-gray text-sm mt-1">Configure storage location types based on dimensions and weight.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
+                                Manage Location Types
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Strategy Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Mengelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
-                                Locating Strategy Management
+                            <p class="text-wise-gray text-sm mt-1">Manage strategies used to place items in warehouse locations.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-strategies')">
+                                Manage Locating Strategies
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Locating Rule Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Menentukan aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
-                            <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
-                                Locating Rule Management
+                            <p class="text-wise-gray text-sm mt-1">Define rules that determine how items are placed in warehouse locations.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
+                                Manage Locating Rules
                             </button>
                         </div>
                     </div>
@@ -306,13 +434,13 @@
             },
             'configuration-warehouse': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse</h2>
-                    <p class="text-wise-gray mb-4">Kelola gudang yang ada atau tambahkan yang baru.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Warehouse </h2>
+                    <p class="text-wise-gray mb-4">Manage existing warehouses or add new ones.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
-                            Add new
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
+                            Create New Warehouse
                         </button>
-                        <input type="text" id="warehouse-search" placeholder="Cari gudang..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
+                        <input type="text" id="warehouse-search" placeholder="Search warehouse..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterWarehouseList(this.value)">
                     </div>
                     <div id="warehouse-list-container" class="overflow-x-auto">
                         </div>
@@ -365,10 +493,10 @@
                                                     <div class="w-full sm:w-24">
                                                         <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                            <option value="">--Pilih--</option>
-                                                            <option value="Jawa Barat">Jawa Barat</option>
-                                                            <option value="Jawa Tengah">Jawa Tengah</option>
-                                                            <option value="Jawa Timur">Jawa Timur</option>
+                                                            <option value="">--Select--</option>
+                                                            <option value="Jawa Barat">West Java</option>
+                                                            <option value="Jawa Tengah">Central Java</option>
+                                                            <option value="Jawa Timur">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -379,7 +507,7 @@
                                                 <div>
                                                     <label for="country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
                                                     <select id="country" name="country" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                        <option value="">--Pilih--</option>
+                                                        <option value="">--Select--</option>
                                                         <option value="Indonesia">Indonesia</option>
                                                         <option value="USA">USA</option>
                                                         <option value="Singapore">Singapore</option>
@@ -440,10 +568,10 @@
                                                     <div class="w-full sm:w-24">
                                                         <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                            <option value="">--Pilih--</option>
-                                                            <option value="Jawa Barat">Jawa Barat</option>
-                                                            <option value="Jawa Tengah">Jawa Tengah</option>
-                                                            <option value="Jawa Timur">Jawa Timur</option>
+                                                            <option value="">--Select--</option>
+                                                            <option value="Jawa Barat">West Java</option>
+                                                            <option value="Jawa Tengah">Central Java</option>
+                                                            <option value="Jawa Timur">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -454,7 +582,7 @@
                                                 <div>
                                                     <label for="return-country" class="block text-sm font-medium text-wise-dark-gray">Country:</label>
                                                     <select id="return-country" name="returnCountry" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                        <option value="">--Pilih--</option>
+                                                        <option value="">--Select--</option>
                                                         <option value="Indonesia">Indonesia</option>
                                                         <option value="USA">USA</option>
                                                         <option value="Singapore">Singapore</option>
@@ -484,7 +612,7 @@
                                         </div>
                                         <div id="freight-bill-to-address" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                             <h4 class="font-semibold text-wise-dark-gray mb-2">Freight Bill to Address</h4>
-                                            <p class="text-wise-gray text-sm">Formulir untuk Freight Bill to Address.</p>
+                                            <p class="text-wise-gray text-sm">Form for Freight Bill to Address.</p>
                                         </div>
                                         <div id="authorized-users" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                             <h4 class="font-semibold text-wise-dark-gray mb-2">Authorized Users</h4>
@@ -561,7 +689,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeWarehouseForm()">Cancel</button>
-                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-lg hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="warehouse-form" id="warehouse-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -569,13 +697,13 @@
             },
             'configuration-zone': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone</h2>
-                    <p class="text-wise-gray mb-4">Kelola tipe zona untuk berbagai area dalam gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone</h2>
+                    <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
-                            Add new
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
+                            Create New Zone
                         </button>
-                        <input type="text" id="zone-search" placeholder="Cari zona..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
+                        <input type="text" id="zone-search" placeholder="Search zone..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
                     </div>
                     <div id="zone-list-container" class="overflow-x-auto">
                         </div>
@@ -613,7 +741,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
-                                <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -621,13 +749,13 @@
             },
             'configuration-location-type': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location Type</h2>
-                    <p class="text-wise-gray mb-4">Konfigurasi tipe lokasi penyimpanan berdasarkan dimensi dan berat.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Location Type</h2>
+                    <p class="text-wise-gray mb-4">Configure storage location types based on dimensions and weight.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
-                            Add new
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
+                            Create New Location Type
                         </button>
-                        <input type="text" id="location-type-search" placeholder="Cari tipe lokasi..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
+                        <input type="text" id="location-type-search" placeholder="Search location type..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
                     </div>
                     <div id="location-type-list-container" class="overflow-x-auto">
                         </div>
@@ -676,7 +804,7 @@
                                     </div>
                                     <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
                                         <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
-                                        <p class="text-wise-gray text-sm">Tambahkan field kustom untuk tipe lokasi di sini.</p>
+                                        <p class="text-wise-gray text-sm">Add custom fields for location types here.</p>
                                     </div>
 
                                     <div class="mb-4 mt-4">
@@ -689,190 +817,42 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
-                                <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
                 `,
             },
-
             'article a': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Artikel A</h2>
-                    <p class="text-wise-gray">Ini adalah konten terperinci untuk Artikel A. Ini baru saja diperbarui dan berisi informasi penting mengenai pembaruan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 2 jam yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Article A Details</h2>
+                    <p class="text-wise-gray">This is the detailed content for Article A. It has just been updated and contains important information regarding system updates.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 2 hours ago</p>
                 `,
             },
             'paragraph b': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Paragraf B</h2>
-                    <p class="text-wise-gray">Di sini Anda akan menemukan informasi lebih lanjut tentang Paragraf B. Bagian ini mencakup berbagai aspek penanganan dan pemrosesan data.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 1 jam yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Paragraph B Details</h2>
+                    <p class="text-wise-gray">Here you will find more information about Paragraph B. This section covers various aspects of data handling and processing.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 1 hour ago</p>
                 `,
             },
             'method c': {
                 detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Detail Metode C</h2>
-                    <p class="text-wise-gray">Detail tentang Metode C, termasuk langkah-langkah implementasi dan praktik terbaiknya. Metode ini sangat penting untuk mengoptimalkan kinerja.</p>
-                    <p class="text-wise-gray text-sm mt-2">Terakhir diperbarui: 30 menit yang lalu</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Method C Details</h2>
+                    <p class="text-wise-gray">Details about Method C, including its implementation steps and best practices. This method is crucial for optimizing performance.</p>
+                    <p class="text-wise-gray text-sm mt-2">Last updated: 30 minutes ago</p>
                 `,
             },
-
-            'setting-optimization': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimzataion</h2>
-                    <p class="text-wise-gray mb-4">Kelola pengaturan untuk mengoptimalkan kinerja sistem dan preferensi notifikasi.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Dadtar Pengaturan</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Status Optimasi: Aktif</li>
-                            <li>Pembaruan Otomatis: Diaktifkan</li>
-                            <li>Notifikasi Email: Diaktifkan</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'setting-optimization-general': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimazation General</h2>
-                    <p class="text-wise-gray">Konfigurasi pengaturan dasar sistem.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="auto-update" class="flex items-center">
-                                <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Pembaruan Otomatis</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Bahasa:</label>
-                            <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                <option value="id">Bahasa Indonesia</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                    </div>
-                `,
-            },
-            'setting-optimization-performance': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimzation Performance</h2>
-                    <p class="text-wise-gray">Optimalkan kinerja aplikasi.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Ukuran Cache (MB):</label>
-                            <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                        </div>
-                        <div>
-                            <label for="data-compression" class="flex items-center">
-                                <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Aktifkan Kompresi Data</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
-            },
-            'setting-optimization-notifications': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimazation Notifications</h2>
-                    <p class="text-wise-gray">Atur bagaimana kamu menerima notifikasi.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="email-notifications" class="flex items-center">
-                                <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi Email</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="sms-notifications" class="flex items-center">
-                                <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Notifikasi SMS</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
-            },
-
-            'system-management': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management</h2>
-                    <p class="text-wise-gray mb-4">Kelola pengguna, log, dan cadangan sistem Anda di sini. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Sistem</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Pengguna: 5</li>
-                            <li>Total Log Hari Ini: 150</li>
-                            <li>Cadangan Terakhir: 25 Juli 2025 02:00 AM</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'system-management-users': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
-                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
-                `
-            },
-            'system-management-logs': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
-                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
-                `,
-            },
-            'system-management-backup': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
-                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
-                `,
-            },
-
-                'archive': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
-                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Dokumen Diarsipkan: 150</li>
-                            <li>Total Media Diarsipkan: 75</li>
-                            <li>Total Arsip Keuangan: 40</li>
-                        </ul>
-                    </div>
-                `,
-            },
-            'archive-documents': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
-                `,
-            },
-            'archive-media': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
-                `,
-            },
-            'archive-financial': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
-                `,
-            },
-
             'locating-strategies': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Strategy</h2>
-                    <p class="text-wise-gray mb-4">Kelola strategi yang digunakan untuk menempatkan item di lokasi gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Strategy</h2>
+                    <p class="text-wise-gray mb-4">Manage strategies used to place items in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
-                            Add new
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
+                            Create New Locating Strategy
                         </button>
-                        <input type="text" id="locating-strategy-search" placeholder="Cari strategi penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
+                        <input type="text" id="locating-strategy-search" placeholder="Search locating strategy..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingStrategyList(this.value)">
                     </div>
                     <div id="locating-strategy-list-container" class="overflow-x-auto">
                     </div>
@@ -910,7 +890,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingStrategyForm()">Cancel</button>
-                                <button type="submit" form="locating-strategy-form" id="locating-strategy-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="locating-strategy-form" id="locating-strategy-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -918,13 +898,13 @@
             },
             'locating-rule': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Rule</h2>
-                    <p class="text-wise-gray mb-4">Kelola aturan yang menentukan bagaimana item ditempatkan di lokasi gudang.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Rule</h2>
+                    <p class="text-wise-gray mb-4">Manage rules that determine how items are placed in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
-                            Add new
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
+                            Create New Locating Rule
                         </button>
-                        <input type="text" id="locating-rule-search" placeholder="Cari aturan penempatan..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
+                        <input type="text" id="locating-rule-search" placeholder="Search locating rule..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocatingRuleList(this.value)">
                     </div>
                     <div id="locating-rule-list-container" class="overflow-x-auto">
                     </div>
@@ -937,7 +917,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label for="locating-rule-name" class="block text-sm font-medium text-wise-dark-gray">Locating Rule Name:</label>
-                                             <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
+                                            <input type="text" id="locating-rule-name" name="ruleName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
                                         </div>
                                         <div>
                                             <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
@@ -963,14 +943,186 @@
                                             <p id="detail-records-placeholder" class="text-wise-gray text-sm">Input Locating Rule Name and Description first to enable detail records.</p>
                                             <div id="detail-records-list" class="space-y-2">
                                                 </div>
-                                            <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
+                                            <button type="button" id="add-detail-record-btn" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform" onclick="addDetailRecord()" disabled>Add Detail Record</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocatingRuleForm()">Cancel</button>
-                                <button type="submit" form="locating-rule-form" id="locating-rule-submit-button" class="px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="submit" form="locating-rule-form" id="locating-rule-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'security-group': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group Management</h2>
+                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
+                            Create New Security Group
+                        </button>
+                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
+                    </div>
+                    <div id="security-group-list-container" class="overflow-x-auto">
+                    </div>
+
+                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
+                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User defined data</button>
+                                        </div>
+
+                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                            <div class="flex justify-between items-center mb-2">
+                                                 <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                <label class="inline-flex items-center">
+                                                    <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                    <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                </label>
+                                            </div>
+                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
+                                                <!-- User checkboxes will be rendered here -->
+                                            </div>
+                                        </div>
+
+                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
+                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            // KATA KUNCI: HALAMAN UTAMA SECURITY PERMISSION (GANTI SEMUA)
+            'security-permission': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission</h2>
+                    <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
+                    
+                    <!-- Tombol Aksi dan Search -->
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
+                            Create New Permission
+                        </button>
+                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
+                    </div>
+
+                    <!-- Container untuk Tabel -->
+                    <div id="security-permission-list-container" class="overflow-x-auto">
+                        <!-- Tabel akan dirender oleh JavaScript di sini -->
+                    </div>
+
+                    <!-- Modal Form untuk Create/Edit -->
+                    <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
+                            <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
+                                    <!-- Input Nama & Deskripsi -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
+                                            <input type="text" id="sp-name" name="spName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="sp-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="sp-description" name="spDescription" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+
+                                    <!-- KATA KUNCI: BAGIAN MENU CHECKBOX -->
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
+                                    <div class="border border-wise-border rounded-md p-4">
+                                        <!-- Filter Radio Button -->
+                                        <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
+                                            <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)" checked><span class="ml-2">All</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Configurations</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Gadgets</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Processing</span></label>
+                                        </div>
+                                        <!-- Checkbox List Container -->
+                                        <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
+                                            <!-- Checkbox menu akan dirender oleh JavaScript -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Checkbox Inactive -->
+                                    <div class="mt-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Tombol OK dan Cancel -->
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
+                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
                             </div>
                         </div>
                     </div>
@@ -978,57 +1130,61 @@
             },
         };
 
-        // Data dummy untuk hasil pencarian
+        // Dummy data for search results
         const searchItems = [
-            { id: 'article a', title: 'Artikel A', category: 'Umum', lastUpdated: '2 jam yang lalu' },
-            { id: 'paragraph b', title: 'Paragraf B', category: 'Dokumentasi', lastUpdated: '1 jam yang lalu' },
-            { id: 'method c', title: 'Metode C', category: 'Teknis', lastUpdated: '30 menit yang lalu' },
-            { id: 'recent-booking', title: 'Pemesanan baru untuk Proyek Alpha', category: 'Pemesanan', lastUpdated: '5 menit yang lalu' },
-            { id: 'crew-task', title: 'Tugas kru #123 selesai', category: 'Pekerjaan', lastUpdated: '1 jam yang lalu' },
-            { id: 'inventory-update', title: 'Pembaruan inventaris: 10 unit ditambahkan ke Gudang', category: 'Inventaris', lastUpdated: '3 jam yang lalu' },
-            { id: 'vehicle-a', title: 'Loader Berat A', category: 'Manajemen Halaman', lastUpdated: '1 hari yang lalu' },
-            { id: 'delivery-x', title: 'Pengiriman X dari Pemasok A', category: 'Penerimaan', lastUpdated: '4 jam yang lalu' },
-            { id: 'order-123', title: 'Pesanan Pelanggan #123', category: 'Perencanaan Pesanan', lastUpdated: '1 hari yang lalu' },
-            { id: 'integration-crm', title: 'Status Integrasi CRM', category: 'Lintas Aplikasi', lastUpdated: '1 jam yang lalu' },
-            { id: 'report-q1', title: 'Laporan Kinerja Q1', category: 'Kinerja', lastUpdated: '2 minggu yang lalu' },
-            { id: 'setting-notifications', title: 'Preferensi Notifikasi', category: 'Optimasi Pengaturan', lastUpdated: 'Kemarin' },
-            { id: 'log-errors', title: 'Log Kesalahan', category: 'Manajemen Sistem', lastUpdated: '5 menit yang lalu' },
-            { id: 'archive-finance', title: 'Laporan Keuangan 2023', category: 'Pengarsipan Data', lastUpdated: 'Jan 2024' },
-            { id: 'yard-vehicles', title: 'Kendaraan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'yard-equipment', title: 'Peralatan Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'yard-personnel', title: 'Personel Halaman', category: 'Manajemen Halaman', lastUpdated: 'Baru saja diperbarui' },
-            { id: 'receiving-deliveries', title: 'Pengiriman Penerimaan', category: 'Penerimaan', lastUpdated: 'Hari ini' },
-            { id: 'receiving-returns', title: 'Pengembalian Penerimaan', category: 'Penerimaan', lastUpdated: 'Minggu lalu' },
-            { id: 'receiving-vendors', title: 'Vendor Penerimaan', category: 'Penerimaan', lastUpdated: 'Bulanan' },
-            { id: 'order-new', title: 'Pesanan Baru', category: 'Perencanaan Pesanan', lastUpdated: 'Hari ini' },
-            { id: 'order-pending', title: 'Pesanan Tertunda', category: 'Perencanaan Pesanan', lastUpdated: 'Berlangsung' },
-            { id: 'order-history', title: 'Riwayat Pesanan', category: 'Perencanaan Pesanan', lastUpdated: 'Sepanjang waktu' },
-            { id: 'work-tasks', title: 'Tugas Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
-            { id: 'work-schedule', title: 'Jadwal Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Harian' },
-            { id: 'work-teams', title: 'Tim Pekerjaan', category: 'Pekerjaan', lastUpdated: 'Aktif' },
-            { id: 'cross-app-integrations', title: 'Integrasi Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
-            { id: 'cross-app-data-sync', title: 'Sinkronisasi Data Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Terbaru' },
-            { id: 'cross-app-api', title: 'Manajemen API Lintas Aplikasi', category: 'Lintas Aplikasi', lastUpdated: 'Aktif' },
-            { id: 'performance-kpis', title: 'KPI Kinerja', category: 'Kinerja', lastUpdated: 'Langsung' },
-            { id: 'performance-analytics', title: 'Analitik Kinerja', category: 'Kinerja', lastUpdated: 'Harian' },
-            { id: 'performance-goals', title: 'Sasaran Kinerja', category: 'Kinerja', lastUpdated: 'Triwulanan' },
-            { id: 'configuration-warehouse', title: 'Konfigurasi Gudang', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'configuration-zone', title: 'Konfigurasi Zona', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'configuration-location-type', title: 'Konfigurasi Tipe Lokasi', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'sistem-pengguna', title: 'Pengguna Sistem', category: 'Manajemen Sistem', lastUpdated: 'Aktif' },
-            { id: 'log-sistem', title: 'Log Sistem', category: 'Manajemen Sistem', lastUpdated: 'Terbaru' },
-            { id: 'cadangan-sistem', title: 'Cadangan Sistem', category: 'Manajemen Sistem', lastUpdated: 'Harian' },
-            { id: 'pengarsipan-data', title: 'Pengarsipan Data', category: 'Manajemen Sistem', lastUpdated: 'Mingguan' },
-            { id: 'archive-documents', title: 'Dokumen Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            { id: 'archive-media', title: 'Media Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
-            { id: 'archive-financial', title: 'Keuangan Diarsipkan', category: 'Pengarsipan Data', lastUpdated: 'Lama' },
+            { id: 'article a', title: 'Article A', category: 'General', lastUpdated: '2 hours ago' },
+            { id: 'paragraph b', title: 'Paragraph B', category: 'Documentation', lastUpdated: '1 hour ago' },
+            { id: 'method c', title: 'Method C', category: 'Technical', lastUpdated: '30 minutes ago' },
+            { id: 'recent-booking', title: 'New order for Project Alpha', category: 'Orders', lastUpdated: '5 minutes ago' },
+            { id: 'crew-task', title: 'Crew #123 completed task', category: 'Work', lastUpdated: '1 hour ago' },
+            { id: 'inventory-update', title: 'Inventory update: 10 units added to Warehouse', category: 'Inventory', lastUpdated: '3 hours ago' },
+            { id: 'vehicle-a', title: 'Heavy Loader A', category: 'Yard Management', lastUpdated: '1 day ago' },
+            { id: 'delivery-x', title: 'Delivery X from Supplier A', category: 'Receiving', lastUpdated: '4 hours ago' },
+            { id: 'order-123', title: 'Customer Order #123', category: 'Order Planning', lastUpdated: '1 day ago' },
+            { id: 'integration-crm', title: 'CRM Integration Status', category: 'Cross Application', lastUpdated: '1 hour ago' },
+            { id: 'report-q1', title: 'Q1 Performance Report', category: 'Performance', lastUpdated: '2 weeks ago' },
+            { id: 'setting-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
+            { id: 'log-errors', title: 'Error Logs', category: 'System Management', lastUpdated: '5 minutes ago' },
+            { id: 'archive-finance', title: 'Financial Report 2023', category: 'Data Archiving', lastUpdated: 'Jan 2024' },
+            { id: 'yard-vehicles', title: 'Yard Vehicles', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'yard-equipment', title: 'Yard Equipment', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'yard-personnel', title: 'Yard Personnel', category: 'Yard Management', lastUpdated: 'Just updated' },
+            { id: 'receiving-deliveries', title: 'Receiving Deliveries', category: 'Receiving', lastUpdated: 'Today' },
+            { id: 'receiving-returns', title: 'Receiving Returns', category: 'Receiving', lastUpdated: 'Last week' },
+            { id: 'receiving-vendors', title: 'Receiving Vendors', category: 'Receiving', lastUpdated: 'Monthly' },
+            { id: 'order-new', title: 'New Orders', category: 'Order Planning', lastUpdated: 'Today' },
+            { id: 'order-pending', title: 'Pending Orders', category: 'Order Planning', lastUpdated: 'Ongoing' },
+            { id: 'order-history', title: 'Order History', category: 'Order Planning', lastUpdated: 'All time' },
+            { id: 'work-tasks', title: 'Work Tasks', category: 'Work', lastUpdated: 'Active' },
+            { id: 'work-schedule', title: 'Work Schedule', category: 'Work', lastUpdated: 'Daily' },
+            { id: 'work-teams', title: 'Work Teams', category: 'Work', lastUpdated: 'Active' },
+            { id: 'cross-app-integrations', title: 'Cross Application Integrations', category: 'Cross Application', lastUpdated: 'Active' },
+            { id: 'cross-app-data-sync', title: 'Cross Application Data Sync', category: 'Cross Application', lastUpdated: 'Latest' },
+            { id: 'cross-app-api', title: 'Cross Application API Management', category: 'Cross Application', lastUpdated: 'Active' },
+            { id: 'performance-kpis', title: 'Performance KPIs', category: 'Performance', lastUpdated: 'Live' },
+            { id: 'performance-analytics', title: 'Performance Analytics', category: 'Performance', lastUpdated: 'Daily' },
+            { id: 'performance-goals', title: 'Performance Goals', category: 'Performance', lastUpdated: 'Quarterly' },
+            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'system-users', title: 'System Users', category: 'System Management', lastUpdated: 'Active' },
+            { id: 'system-logs', title: 'System Logs', category: 'System Management', lastUpdated: 'Latest' },
+            { id: 'system-backup', title: 'System Backup', category: 'System Management', lastUpdated: 'Daily' },
+            { id: 'data-archiving', title: 'Data Archiving', category: 'System Management', lastUpdated: 'Weekly' },
+            { id: 'archive-documents', title: 'Archived Documents', category: 'Data Archiving', lastUpdated: 'Old' },
+            { id: 'archive-media', title: 'Archived Media', category: 'Data Archiving', lastUpdated: 'Old' },
+            { id: 'archive-financial', title: 'Archived Financial', category: 'Data Archiving', lastUpdated: 'Old' },
 
-            { id: 'setting-optimization-general', title: 'Pengaturan Umum', category: 'Setting Optimization', lastUpdated: 'Baru saja' },
-            { id: 'setting-optimization-performance', title: 'Penyesuaian Kinerja', category: 'Setting Optimization', lastUpdated: 'Hari ini' },
-            { id: 'setting-optimization-notifications', title: 'Preferensi Notifikasi', category: 'Setting Optimization', lastUpdated: 'Kemarin' },
+            { id: 'setting-optimization-general', title: 'General Settings', category: 'Setting Optimization', lastUpdated: 'Just now' },
+            { id: 'setting-optimization-performance', title: 'Performance Adjustments', category: 'Setting Optimization', lastUpdated: 'Today' },
+            { id: 'setting-optimization-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
 
-            { id: 'locating-strategies', title: 'Strategi Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
-            { id: 'locating-rule', title: 'Aturan Penempatan', category: 'Configuration', lastUpdated: 'Terbaru' },
+            { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
+
+            // New search items for Security Group and Security Permission
+            { id: 'security-group', title: 'Security Group Management', category: 'System Management', lastUpdated: 'Just now' },
+            { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
         ];
 
         let currentCategory = 'dashboard';
@@ -1044,7 +1200,7 @@
             'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
             'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
-            'sistem-pengguna': 'system', 'log-sistem': 'system', 'cadangan-sistem': 'system', 'pengarsipan-data': 'archive', // Updated for Indonesian names
+            'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system', 'data-archiving': 'archive', // Updated for English names
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
@@ -1053,6 +1209,8 @@
             'archive-documents': 'archive',
             'archive-media': 'archive',
             'archive-financial': 'archive',
+            'security-group': 'system', // New parent mapping
+            'security-permission': 'system', // New parent mapping
         };
 
         window.toggleChildren = function(category) {
@@ -1131,11 +1289,11 @@
                 defaultContentArea.innerHTML = content.detail;
                 defaultContentArea.classList.remove('hidden');
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten untuk ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Belum ada konten spesifik untuk kategori ini.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Content for ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No specific content available for this category yet.</p>`;
                 defaultContentArea.classList.remove('hidden');
             }
 
-            // Inisialisasi form dan tabel jika kategori terkait
+            // Initialize form and table if category is related
             if (category === 'configuration-warehouse') {
                 renderWarehouseList();
                 initializeTabButtons('warehouse-form-modal');
@@ -1143,7 +1301,7 @@
             } else if (category === 'configuration-zone') {
                 renderZoneList();
                 initializeTabButtons('zone-form-modal');
-                activateTab('general-zone', 'zone-form-modal');
+                // activateTab('general-zone', 'zone-form-modal');
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
                 initializeTabButtons('location-type-form-modal');
@@ -1151,15 +1309,19 @@
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
                 initializeTabButtons('locating-strategy-form-modal');
-                activateTab('general-strategy', 'locating-strategy-form-modal');
+                // activateTab('general-strategy', 'locating-strategy-form-modal');
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
                 initializeTabButtons('locating-rule-form-modal');
-                activateTab('general-rule', 'locating-rule-form-modal');
+                // activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
+            } else if (category === 'security-group') { 
+                renderSecurityGroupList();
+            } else if (category === 'security-permission') { 
+                renderSecurityPermissionList(); 
             }
 
-            // Tutup sidebar di tampilan mobile setelah memilih kategori
+            // Close sidebar in mobile view after selecting a category
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
@@ -1169,9 +1331,9 @@
         }
 
         /**
-         * Menangani input pencarian dari header atau overlay.
-         * @param {string} query - Kata kunci pencarian.
-         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         * Handles search input from header or overlay.
+         * @param {string} query - The search keyword.
+         * @param {string} source - The search source ('overlay' or otherwise).
          */
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
@@ -1191,9 +1353,9 @@
         }
 
         /**
-         * Melakukan pencarian dan menampilkan hasilnya.
-         * @param {string} query - Kata kunci pencarian.
-         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+         * Performs a search and displays the results.
+         * @param {string} query - The search keyword.
+         * @param {string} source - The search source ('overlay' or otherwise).
          */
         window.performSearch = function(query, source) {
             const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
@@ -1224,10 +1386,10 @@
                 resultsPanel.innerHTML = '';
 
                 if (filteredResults.length > 0) {
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('artikel') || item.title.toLowerCase().includes('artikel'))) {
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('article') || item.title.toLowerCase().includes('article'))) {
                         document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
                     }
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('fotografi') || item.title.toLowerCase().includes('foto'))) {
+                    if (filteredResults.some(item => item.category.toLowerCase().includes('photography') || item.title.toLowerCase().includes('photo'))) {
                         document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
                     }
 
@@ -1236,31 +1398,31 @@
                         resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
                         resultItem.innerHTML = `
                             <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                            <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+                            <p class="text-wise-gray text-xs">Category: ${item.category} | Last Updated: ${item.lastUpdated}</p>
                         `;
                         resultItem.onmouseenter = (event) => showPreview(item.id, event);
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
                         resultsPanel.appendChild(resultItem);
                     });
                 } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">No results found.</p>`;
                     filtersContainer.classList.add('hidden');
                 }
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
                 }
             } else {
                 resultsPanel.innerHTML = '';
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di sebelah kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
                 }
                 filtersContainer.classList.add('hidden');
             }
         }
 
         /**
-         * Menampilkan pratinjau konten di panel detail overlay pencarian.
-         * @param {string} id - ID konten yang akan ditampilkan pratinjaunya.
+         * Displays content preview in the search overlay detail panel.
+         * @param {string} id - The ID of the content to preview.
          */
         window.showPreview = function(id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
@@ -1269,20 +1431,20 @@
             if (content && (content.detail || content.full)) {
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail || content.full}
-                    <button class="mt-4 px-4 py-2 bg-white text-wise-dark-gray border border-wise-border rounded-md hover:bg-gray-100 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                        Tampilkan Halaman
+                    <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
+                        Display Page
                     </button>
                 `;
             } else {
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
+                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">No preview available for this item.</p>`;
             }
         }
 
         /**
-         * Memilih hasil pencarian dan menampilkan kontennya di dashboard utama.
-         * @param {string} id - ID konten yang dipilih.
-         * @param {string} title - Judul hasil pencarian.
-         * @param {string} query - Kata kunci pencarian yang menghasilkan hasil ini.
+         * Selects a search result and displays its content in the main dashboard.
+         * @param {string} id - The ID of the selected content.
+         * @param {string} title - The title of the search result.
+         * @param {string} query - The search keyword that led to this result.
          */
         window.selectSearchResult = function(id, title, query) {
             addSearchHistory(query);
@@ -1290,8 +1452,8 @@
         }
 
         /**
-         * Menampilkan konten di area dashboard utama.
-         * @param {string} id - ID konten yang akan ditampilkan.
+         * Displays content in the main dashboard area.
+         * @param {string} id - The ID of the content to display.
          */
         window.displayContentInMainDashboard = function(id) {
             const content = contentData[id];
@@ -1302,7 +1464,7 @@
             } else if (content && content.detail) {
                 defaultContentArea.innerHTML = content.detail;
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap tersedia.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Full Content for ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No full content available.</p>`;
             }
 
             closeSearchOverlay();
@@ -1310,8 +1472,8 @@
         }
 
         /**
-         * Menambahkan filter ke overlay pencarian.
-         * @param {string} filterName - Nama filter yang akan ditambahkan.
+         * Adds a filter to the search overlay.
+         * @param {string} filterName - The name of the filter to add.
          */
         window.addOverlayFilter = function(filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
@@ -1322,8 +1484,8 @@
         }
 
         /**
-         * Menghapus filter dari overlay pencarian.
-         * @param {string} filterName - Nama filter yang akan dihapus.
+         * Removes a filter from the search overlay.
+         * @param {string} filterName - The name of the filter to remove.
          */
         window.removeOverlayFilter = function(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
@@ -1332,7 +1494,7 @@
         }
 
         /**
-         * Menghapus semua filter dari overlay pencarian.
+         * Removes all filters from the search overlay.
          */
         window.removeAllOverlayFilters = function() {
             activeFilters = [];
@@ -1343,7 +1505,7 @@
         }
 
         /**
-         * Menutup overlay pencarian.
+         * Closes the search overlay.
          */
         window.closeSearchOverlay = function() {
             document.getElementById('search-overlay').classList.add('hidden');
@@ -1358,20 +1520,14 @@
         }
 
         /**
-         * Mengubah visibilitas dropdown pengguna.
+         * Toggles the visibility of the user dropdown.
          */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
-            if (userDropdown.style.display === 'block' || userDropdown.classList.contains('hidden')) {
-                userDropdown.style.display = 'block';
-                userDropdown.classList.remove('hidden');
-            } else {
-                userDropdown.style.display = 'none';
-                userDropdown.classList.add('hidden');
-            }
+            userDropdown.classList.toggle('hidden');
         }
 
-        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
+        // Closes user dropdown and search history when clicking outside the area.
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .relative.flex.items-center');
             const userDropdown = document.getElementById('user-dropdown');
@@ -1387,23 +1543,23 @@
         });
 
         /**
-         * Menangani proses logout.
+         * Handles the logout process.
          */
         window.handleLogout = async function() {
-            await showCustomAlert('Log Out', 'Kamu udah berhasil keluar.');
+            await showCustomAlert('Log Out', 'You have successfully logged out.');
             window.location.href = 'login.html';
         }
 
         /**
-         * Navigasi ke halaman profil.
+         * Navigates to the profile page.
          */
         window.navigateToProfile = function() {
             window.location.href = 'profile.html';
         }
 
         /**
-         * Menambahkan query pencarian ke riwayat.
-         * @param {string} query - Kata kunci pencarian.
+         * Adds a search query to history.
+         * @param {string} query - The search keyword.
          */
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
@@ -1414,7 +1570,7 @@
         }
 
         /**
-         * Menampilkan riwayat pencarian di dropdown.
+         * Displays search history in the dropdown.
          */
         window.showSearchHistory = function() {
             const historyDropdown = document.getElementById('search-history-dropdown');
@@ -1434,19 +1590,19 @@
                 });
                 const clearAllButton = document.createElement('div');
                 clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Hapus Semua Riwayat</button>`;
+                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Clear All History</button>`;
                 historyContent.appendChild(clearAllButton);
 
                 historyDropdown.classList.remove('hidden');
             } else {
-                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">No search history.</p>`;
                 historyDropdown.classList.remove('hidden');
             }
         }
 
         /**
-         * Menerapkan query dari riwayat pencarian.
-         * @param {string} query - Kata kunci dari riwayat.
+         * Applies a query from search history.
+         * @param {string} query - The keyword from history.
          */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
@@ -1455,8 +1611,8 @@
         }
 
         /**
-         * Menghapus item dari riwayat pencarian.
-         * @param {number} index - Indeks item yang akan dihapus.
+         * Removes an item from search history.
+         * @param {number} index - The index of the item to remove.
          */
         window.removeSearchHistory = function(index) {
             searchHistory.splice(index, 1);
@@ -1465,7 +1621,7 @@
         }
 
         /**
-         * Menghapus semua riwayat pencarian.
+         * Clears all search history.
          */
         window.clearAllSearchHistory = function() {
             searchHistory = [];
@@ -1473,9 +1629,9 @@
             showSearchHistory();
         }
 
-        // Data dummy untuk gudang (dari penyimpanan lokal atau default)
+        // Dummy data for warehouses (from local storage or default)
         let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
-            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'Jawa Barat', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'Jawa Barat', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
+            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'West Java', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
             { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
             { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
             { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
@@ -1561,6 +1717,30 @@
             },
         ];
 
+        // dummy data for Security Groups
+        let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
+            { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
+            { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
+            { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true, users: [], userDefinedFields: {} },
+        ];
+
+        // dummy data for Security Permissions
+        let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
+            { id: 'admin-access', name: 'Admin Full Access', description: 'Full access for administrators', inactive: false, menus: ['config-company', 'config-billing', 'proc-item-maintenance'] },
+            { id: 'viewer-access', name: 'Viewer Access', description: 'View-only access', inactive: false, menus: ['gadget-report'] },
+            { id: 'operator-access', name: 'Operator Standard', description: 'Standard access for operators', inactive: true, menus: ['proc-item-maintenance'] },
+        ];
+
+        const allMenus = [
+            { id: 'config-billing', name: 'Billing Record Trigger', category: 'Configurations' },
+            { id: 'config-company', name: 'Company', category: 'Configurations' },
+            { id: 'config-main', name: 'Configuration', category: 'Configurations' },
+            { id: 'gadget-report', name: 'Gadget Report', category: 'Gadgets' },
+            { id: 'gadget-dashboard', name: 'Gadget Dashboard', category: 'Gadgets' },
+            { id: 'proc-adjustment', name: 'Adjustment Reason', category: 'Processing' },
+            { id: 'proc-item-maintenance', name: 'Item Maintenance', category: 'Processing' },
+        ];
+
         const allUsers = [
             'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
             'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
@@ -1574,6 +1754,10 @@
         let currentLocationTypeId = null;
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
+        let currentSecurityGroupId = null; 
+        let currentSecurityPermissionId = null; 
+        let selectedPermissionNode = null;
+        let activePermissionItem = null;
 
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
@@ -1595,6 +1779,15 @@
             localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
         }
 
+        // New save functions for Security Groups and Permissions
+        function saveSecurityGroups() {
+            localStorage.setItem('securityGroups', JSON.stringify(securityGroups));
+        }
+
+        function saveSecurityPermissions() {
+            localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions));
+        }
+
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
             container.innerHTML = '';
@@ -1605,7 +1798,7 @@
             );
 
             if (filteredWarehouses.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada gudang ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No warehouses found.</p>`;
                 return;
             }
 
@@ -1665,14 +1858,18 @@
             currentWarehouseId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Add new';
+                title.textContent = 'Create New Warehouse';
                 document.getElementById('warehouse-submit-button').textContent = 'Create';
+                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('warehouse-name').disabled = false;
                 document.getElementById('warehouse-inactive').checked = false;
                 renderUserCheckboxes([]);
             } else {
-                title.textContent = 'Edit Gudang';
-                document.getElementById('warehouse-submit-button').textContent = 'Confirm';
+                title.textContent = 'Edit Warehouse';
+                document.getElementById('warehouse-submit-button').textContent = 'Save';
+                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('warehouse-name').disabled = true;
 
                 const warehouseToEdit = warehouses.find(wh => wh.id === id);
@@ -1702,7 +1899,7 @@
                     document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
                     document.getElementById('return-city').value = warehouseToEdit.returnCity;
                     document.getElementById('return-state').value = warehouseToEdit.returnState;
-                    document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
+                    document.getElementById('return-postal-code').value = warehouseToEdit.postalCode;
                     document.getElementById('return-country').value = warehouseToEdit.returnCountry;
                     document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                     document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
@@ -1786,7 +1983,7 @@
             const userDefinedField8 = document.getElementById('user-defined-field8').value;
 
             const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
-                                           .map(checkbox => checkbox.value);
+                                                       .map(checkbox => checkbox.value);
 
             const newWarehouse = {
                 id: warehouseId,
@@ -1806,7 +2003,7 @@
                 }
             } else {
                 if (warehouses.some(wh => wh.id === warehouseId)) {
-                    await showCustomAlert('Error', 'Warehouse ID sudah ada!');
+                    await showCustomAlert('Error', 'Warehouse ID already exists!');
                     return;
                 }
                 newWarehouse.id = warehouseId;
@@ -1818,7 +2015,7 @@
         }
 
         window.deleteWarehouse = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus gudang ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this warehouse ${id}?`);
             if (confirmed) {
                 warehouses = warehouses.filter(wh => wh.id !== id);
                 saveWarehouses();
@@ -1878,7 +2075,7 @@
             );
 
             if (filteredZones.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada zona ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No zones found.</p>`;
                 return;
             }
 
@@ -1926,14 +2123,18 @@
             currentZoneId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Add new';
+                title.textContent = 'Create New Zone';
                 document.getElementById('zone-submit-button').textContent = 'Create';
+                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('zone-identifier').disabled = false;
                 document.getElementById('zone-inactive').checked = false;
                 document.getElementById('zone-system-created').checked = false;
             } else {
-                title.textContent = 'Edit Zona';
-                document.getElementById('zone-submit-button').textContent = 'Confirm';
+                title.textContent = 'Edit Zone';
+                document.getElementById('zone-submit-button').textContent = 'Save';
+                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('zone-identifier').disabled = true;
 
                 const zoneToEdit = zones.find(z => z.id === id);
@@ -1982,7 +2183,7 @@
                 }
             } else {
                 if (zones.some(z => z.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Zone Identifier sudah ada!');
+                    await showCustomAlert('Error', 'Zone Identifier already exists!');
                     return;
                 }
                 newZone.id = identifier;
@@ -1994,7 +2195,7 @@
         }
 
         window.deleteZone = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus zona ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this zone ${id}?`);
             if (confirmed) {
                 zones = zones.filter(z => z.id !== id);
                 saveZones();
@@ -2015,7 +2216,7 @@
             );
 
             if (filteredLocationTypes.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada tipe lokasi ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No location types found.</p>`;
                 return;
             }
 
@@ -2083,13 +2284,17 @@
             currentLocationTypeId = id;
 
             if (mode === 'create') {
-                title.textContent = 'Add new';
+                title.textContent = 'Create New Location Type';
                 document.getElementById('location-type-submit-button').textContent = 'Create';
+                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('location-type-name').disabled = false;
                 document.getElementById('location-type-inactive').checked = false;
             } else {
-                title.textContent = 'Edit Tipe Lokasi';
-                document.getElementById('location-type-submit-button').textContent = 'Confirm';
+                title.textContent = 'Edit Location Type';
+                document.getElementById('location-type-submit-button').textContent = 'Save';
+                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('location-type-name').disabled = true;
 
                 const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
@@ -2147,7 +2352,7 @@
                 }
             } else {
                 if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
-                    await showCustomAlert('Error', 'Location Type name sudah ada!');
+                    await showCustomAlert('Error', 'Location Type name already exists!');
                     return;
                 }
                 newLocationType.id = locationTypeName;
@@ -2159,7 +2364,7 @@
         }
 
         window.deleteLocationType = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus tipe lokasi ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this location type ${id}?`);
             if (confirmed) {
                 locationTypes = locationTypes.filter(lt => lt.id !== id);
                 saveLocationTypes();
@@ -2184,7 +2389,7 @@
             });
 
             if (filteredStrategies.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada strategi penempatan ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No locating strategies found.</p>`;
                 return;
             }
 
@@ -2243,8 +2448,10 @@
             systemCreatedCheckbox.classList.remove('cursor-not-allowed');
 
             if (mode === 'create') {
-                title.textContent = 'Add new';
+                title.textContent = 'Create New Locating Strategy';
                 document.getElementById('locating-strategy-submit-button').textContent = 'Create';
+                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
 
                 identifierInput.disabled = false;
                 identifierInput.readOnly = false;
@@ -2257,8 +2464,10 @@
                 document.getElementById('locating-strategy-inactive').checked = false;
 
             } else {
-                title.textContent = 'Edit Strategi Penempatan';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Confirm';
+                title.textContent = 'Edit Locating Strategy';
+                document.getElementById('locating-strategy-submit-button').textContent = 'Save';
+                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
 
                 const strategyToEdit = locatingStrategies.find(s => s.id === id);
                 if (strategyToEdit) {
@@ -2310,7 +2519,7 @@
                 }
             } else {
                 if (locatingStrategies.some(s => s.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Strategy Identifier sudah ada!');
+                    await showCustomAlert('Error', 'Strategy Identifier already exists!');
                     return;
                 }
                 newStrategy.id = identifier;
@@ -2322,7 +2531,7 @@
         }
 
         window.deleteLocatingStrategy = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus strategi penempatan ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating strategy ${id}?`);
             if (confirmed) {
                 locatingStrategies = locatingStrategies.filter(s => s.id !== id);
                 saveLocatingStrategies();
@@ -2344,7 +2553,7 @@
             );
 
             if (filteredRules.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">Tidak ada aturan penempatan ditemukan.</p>`;
+                container.innerHTML = `<p class="text-wise-gray mt-4">No locating rules found.</p>`;
                 return;
             }
 
@@ -2400,8 +2609,10 @@
             detailRecordsList.innerHTML = '';
 
             if (mode === 'create') {
-                title.textContent = 'Add new';
-                document.getElementById('locating-rule-submit-button').textContent = 'Buat';
+                title.textContent = 'Create New Locating Rule';
+                document.getElementById('locating-rule-submit-button').textContent = 'Create';
+                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('locating-rule-name').disabled = false;
                 document.getElementById('locating-rule-delayed-locating').checked = false;
                 document.getElementById('locating-rule-inactive').checked = false;
@@ -2411,8 +2622,10 @@
                 addDetailRecordBtn.disabled = true;
 
             } else {
-                title.textContent = 'Edit Aturan Penempatan';
-                document.getElementById('locating-rule-submit-button').textContent = 'Confirm';
+                title.textContent = 'Edit Locating Rule';
+                document.getElementById('locating-rule-submit-button').textContent = 'Save';
+                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
+                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
                 document.getElementById('locating-rule-name').disabled = true;
 
                 const ruleToEdit = locatingRules.find(r => r.id === id);
@@ -2523,7 +2736,7 @@
                 }
             } else {
                 if (locatingRules.some(r => r.ruleName === ruleName)) {
-                    await showCustomAlert('Error', 'Locating Rule Name sudah ada!');
+                    await showCustomAlert('Error', 'Locating Rule Name already exists!');
                     return;
                 }
                 newRule.id = ruleName;
@@ -2535,7 +2748,7 @@
         }
 
         window.deleteLocatingRule = async function(id) {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', `Kamu yakin mau hapus aturan penempatan ${id} ini?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating rule ${id}?`);
             if (confirmed) {
                 locatingRules = locatingRules.filter(r => r.id !== id);
                 saveLocatingRules();
@@ -2546,6 +2759,412 @@
         window.filterLocatingRuleList = function(query) {
             renderLocatingRuleList(query);
         }
+
+        // New functions for Security Group management
+        window.renderSecurityGroupList = function(filterQuery = '') {
+            const container = document.getElementById('security-group-list-container');
+            container.innerHTML = '';
+
+            const filteredGroups = securityGroups.filter(group =>
+                group.groupName.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                group.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredGroups.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray mt-4">No security groups found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Group Name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border" id="security-group-table-body">
+                </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('security-group-table-body');
+            filteredGroups.forEach(group => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${group.groupName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.description}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.inactive ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showSecurityGroupForm('edit', '${group.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                        <button onclick="deleteSecurityGroup('${group.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                    </td>
+                `;
+            });
+        };
+
+        window.showSecurityGroupForm = function(mode, id = null) {
+            const modal = document.getElementById('security-group-form-modal');
+            const title = document.getElementById('security-group-form-title');
+            const form = document.getElementById('security-group-form');
+            form.reset();
+            currentSecurityGroupId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Security Group';
+                document.getElementById('security-group-submit-button').textContent = 'Create';
+                document.getElementById('security-group-name').disabled = false;
+                renderSecurityGroupUserCheckboxes([]); // Render empty user list
+            } else {
+                title.textContent = 'Edit Security Group';
+                document.getElementById('security-group-submit-button').textContent = 'Save';
+                document.getElementById('security-group-name').disabled = true;
+
+                const groupToEdit = securityGroups.find(group => group.id === id);
+                if (groupToEdit) {
+                    document.getElementById('security-group-name').value = groupToEdit.groupName;
+                    document.getElementById('security-group-description').value = groupToEdit.description;
+                    document.getElementById('security-group-inactive').checked = groupToEdit.inactive;
+                    
+                    const udf = groupToEdit.userDefinedFields || {};
+                    for (let i = 1; i <= 7; i++) {
+                        const field = document.getElementById(`sg-user-defined-field${i}`);
+                        if(field) field.value = udf[`field${i}`] || '';
+                    }
+
+                    renderSecurityGroupUserCheckboxes(groupToEdit.users || []);
+                }
+            }
+            
+            initializeTabButtons('security-group-form-modal');
+            activateTab('group-users-tab', 'security-group-form-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeSecurityGroupForm = function() {
+            document.getElementById('security-group-form-modal').classList.add('hidden');
+            document.getElementById('security-group-form-modal').classList.remove('flex');
+            currentSecurityGroupId = null;
+        };
+
+        window.handleSecurityGroupSubmit = async function(event) {
+            event.preventDefault();
+            const groupName = document.getElementById('security-group-name').value;
+            const description = document.getElementById('security-group-description').value;
+            const inactive = document.getElementById('security-group-inactive').checked;
+
+            const selectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked'))
+                                       .map(checkbox => checkbox.value);
+            
+            const userDefinedFields = {};
+            for (let i = 1; i <= 7; i++) {
+                const field = document.getElementById(`sg-user-defined-field${i}`);
+                if(field && field.value) userDefinedFields[`field${i}`] = field.value;
+            }
+
+            if (currentSecurityGroupId) {
+                const index = securityGroups.findIndex(group => group.id === currentSecurityGroupId);
+                if (index !== -1) {
+                    securityGroups[index].description = description;
+                    securityGroups[index].inactive = inactive;
+                    securityGroups[index].users = selectedUsers;
+                    securityGroups[index].userDefinedFields = userDefinedFields;
+                }
+            } else {
+                if (securityGroups.some(group => group.groupName.toLowerCase() === groupName.toLowerCase())) {
+                    await showCustomAlert('Error', 'Security Group Name already exists!');
+                    return;
+                }
+                const newGroup = { id: groupName, groupName, description, inactive, users: selectedUsers, userDefinedFields };
+                securityGroups.push(newGroup);
+            }
+            saveSecurityGroups();
+            renderSecurityGroupList();
+            closeSecurityGroupForm();
+        };
+
+        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = null, filter = '') {
+            const userListContainer = document.getElementById('security-group-user-checkbox-list');
+            if (!userListContainer) return;
+            
+            let currentSelectedUsers = selectedUsers;
+            if (currentSelectedUsers === null) {
+                currentSelectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
+
+            userListContainer.innerHTML = '';
+            const filteredAllUsers = allUsers.filter(user => user.toLowerCase().includes(filter.toLowerCase()));
+
+            filteredAllUsers.forEach(user => {
+                const isChecked = currentSelectedUsers.includes(user);
+                const div = document.createElement('div');
+                div.classList.add('flex', 'items-center');
+                div.innerHTML = `
+                    <input type="checkbox" id="sg-user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="sg-user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
+                `;
+                userListContainer.appendChild(div);
+            });
+            
+            const checkAllBox = document.getElementById('check-all-security-group-users');
+            if (checkAllBox) {
+                const allVisibleChecked = filteredAllUsers.length > 0 && filteredAllUsers.every(user => currentSelectedUsers.includes(user));
+                checkAllBox.checked = allVisibleChecked;
+            }
+        };
+
+        window.toggleAllSecurityGroupUsers = function() {
+            const checkAllCheckbox = document.getElementById('check-all-security-group-users');
+            const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = checkAllCheckbox.checked;
+            });
+        };
+
+        window.deleteSecurityGroup = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security group ${id}?`);
+            if (confirmed) {
+                securityGroups = securityGroups.filter(group => group.id !== id);
+                saveSecurityGroups();
+                renderSecurityGroupList();
+            }
+        };
+
+        window.filterSecurityGroupList = function(query) {
+            renderSecurityGroupList(query);
+        };
+
+        window.renderSecurityPermissionList = function(filterQuery = '') {
+            const container = document.getElementById('security-permission-list-container');
+            if (!container) return;
+
+            const filteredData = securityPermissions.filter(p =>
+                p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                (p.description && p.description.toLowerCase().includes(filterQuery.toLowerCase()))
+            );
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray text-center mt-4">No permissions found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Permission Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
+                        <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border">
+                    ${filteredData.map(p => `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${p.name}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.description}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.inactive ? 'No' : 'Yes'}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="showSecurityPermissionForm('edit', '${p.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                                <button onclick="deleteSecurityPermission('${p.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            container.innerHTML = '';
+            container.appendChild(table);
+        }
+
+        window.updatePermissionDetails = function(categoryId, itemId) {
+            const detailsContainer = document.getElementById('security-permission-details-container');
+            if (!detailsContainer) {
+                console.error('Container #security-permission-details-container tidak ditemukan!');
+                return;
+            }
+            
+            // Hapus highlight dari item yang aktif sebelumnya
+            if (activePermissionItem) {
+                activePermissionItem.classList.remove('bg-wise-primary', 'text-white', 'font-semibold');
+                activePermissionItem.classList.add('text-wise-gray');
+            }
+
+            // Cari item yang baru diklik
+            let item = null;
+            if (categoryId && itemId) {
+                const category = securityPermissions.find(c => c.id === categoryId);
+                if (category && category.children) {
+                    item = category.children.find(i => i.id === itemId);
+                }
+            }
+
+            // Jika item valid ditemukan, tampilkan detailnya.
+            if (item && item.details) {
+                const newActiveItem = document.getElementById(`perm-item-${itemId}`);
+                if (newActiveItem) {
+                    newActiveItem.classList.add('bg-wise-primary', 'text-white', 'font-semibold');
+                    newActiveItem.classList.remove('text-wise-gray');
+                    activePermissionItem = newActiveItem;
+                }
+
+                detailsContainer.innerHTML = `
+                    <div class="w-full h-full">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Security level</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">User security group</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System created</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-wise-border bg-white">
+                                <tr>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.securityLevel}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.userSecurityGroup}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.systemCreated}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                document.getElementById('sp-copy-btn').disabled = false;
+                document.getElementById('sp-delete-btn').disabled = false;
+            } else {
+                // Jika tidak ada item yang dipilih, reset panel detail
+                activePermissionItem = null;
+                // INI BARIS YANG SUDAH DIPERBAIKI (tanpa \)
+                detailsContainer.innerHTML = `<p class="text-wise-gray text-center">Select a permission from the list to see details.</p>`;
+                
+                document.getElementById('sp-copy-btn').disabled = true;
+                document.getElementById('sp-delete-btn').disabled = true;
+            }
+        };
+
+        window.showSecurityPermissionForm = function(mode, id = null) {
+            const modal = document.getElementById('security-permission-form-modal');
+            const title = document.getElementById('security-permission-form-title');
+            const form = document.getElementById('security-permission-form');
+            const nameInput = document.getElementById('sp-name');
+            form.reset();
+            currentSecurityPermissionId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Security Permission';
+                nameInput.disabled = false;
+                nameInput.value = ''; 
+                document.getElementById('sp-description').value = ''; 
+                renderMenuCheckboxes([], 'All'); 
+            } else {
+                title.textContent = 'Edit Security Permission';
+                nameInput.disabled = true;
+                const permission = securityPermissions.find(p => p.id === id);
+                if (permission) {
+                    nameInput.value = permission.name;
+                    document.getElementById('sp-description').value = permission.description;
+                    document.getElementById('sp-inactive').checked = permission.inactive;
+                    renderMenuCheckboxes(permission.menus || [], 'All'); 
+                }
+            }
+            document.querySelector('input[name="menuFilter"][value="All"]').checked = true; 
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.renderMenuCheckboxes = function(selectedMenus = [], filter = 'All') {
+            const container = document.getElementById('sp-menu-checkbox-list');
+            if (!container) return;
+
+            // Jika `selectedMenus` null (saat ganti filter), ambil dari checkbox yang sudah tercentang
+            if (selectedMenus === null) {
+                selectedMenus = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
+
+            let filteredMenus = allMenus;
+            if (filter !== 'All') {
+                filteredMenus = allMenus.filter(menu => menu.category === filter);
+            }
+            
+            container.innerHTML = filteredMenus.map(menu => `
+                <label class="flex items-center text-sm text-wise-dark-gray">
+                    <input type="checkbox" value="${menu.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedMenus.includes(menu.id) ? 'checked' : ''}>
+                    <span class="ml-2">${menu.name}</span>
+                </label>
+            `).join('');
+        }
+
+        window.filterPermissions = function() {
+            renderSecurityPermissionTree();
+        };
+
+        window.closeSecurityPermissionForm = function() {
+            document.getElementById('security-permission-form-modal').classList.add('hidden');
+            document.getElementById('security-permission-form-modal').classList.remove('flex');
+            currentSecurityPermissionId = null;
+        }
+
+        window.handleSecurityPermissionSubmit = async function(event) {
+            event.preventDefault();
+            const permissionName = document.getElementById('sp-name').value;
+            const description = document.getElementById('sp-description').value;
+            const inactive = document.getElementById('sp-inactive').checked;
+            
+            // Get all checked menus from the form
+            const selectedMenus = Array.from(document.querySelectorAll('#sp-menu-checkbox-list input[type="checkbox"]:checked'))
+                                       .map(checkbox => checkbox.value);
+
+            if (currentSecurityPermissionId) {
+                // UPDATE mode
+                const index = securityPermissions.findIndex(p => p.id === currentSecurityPermissionId);
+                if (index !== -1) {
+                    securityPermissions[index].name = permissionName;
+                    securityPermissions[index].description = description;
+                    securityPermissions[index].inactive = inactive;
+                    securityPermissions[index].menus = selectedMenus;
+                }
+            } else {
+                // CREATE mode
+                const newId = permissionName.toLowerCase().replace(/\s+/g, '-');
+                if (securityPermissions.some(p => p.id === newId)) {
+                    await showCustomAlert('Error', 'Security Permission name already exists!');
+                    return;
+                }
+                const newPermission = {
+                    id: newId,
+                    name: permissionName,
+                    description,
+                    inactive,
+                    menus: selectedMenus
+                };
+                securityPermissions.push(newPermission);
+            }
+            
+            saveSecurityPermissions();
+            renderSecurityPermissionList();
+            closeSecurityPermissionForm();
+        };
+
+        window.deleteSecurityPermission = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this permission: ${id}?`);
+            if (confirmed) {
+                securityPermissions = securityPermissions.filter(p => p.id !== id);
+                saveSecurityPermissions();
+                renderSecurityPermissionList();
+            }
+        }
+
+        window.filterSecurityPermissionList = function(query) {
+            renderSecurityPermissionList(query);
+        };
+
 
         window.initializeTabButtons = function(modalId) {
             const modal = document.getElementById(modalId);
@@ -2619,9 +3238,8 @@
                 mainContentArea.classList.remove('ml-0');
                 document.getElementById('sidebar-overlay').classList.add('hidden');
             } else {
-                sidebar.classList.add('-translate-x-full');
-                mainContentArea.classList.remove('md:ml-64');
-                mainContentArea.classList.add('ml-0');
+                mainContentArea.classList.add('md:ml-64');
+                mainContentArea.classList.remove('ml-0');
 
             }
         });
