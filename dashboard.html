@@ -36,13 +36,13 @@
             }
             
             ::-webkit-scrollbar-thumb {
-                background: rgba(156, 163, 175, 0.4); /* Tailwind gray-400 with opacity */
+                background: rgba(156, 163, 175, 0.4); /* wise-gray with opacity */
                 border-radius: 10px;
                 transition: all 0.2s ease;
             }
             
             ::-webkit-scrollbar-thumb:hover {
-                background: rgba(156, 163, 175, 0.7); /* Tailwind gray-400 with more opacity */
+                background: rgba(156, 163, 175, 0.7); /* darker wise-gray on hover */
             }
             
             /* Firefox scrollbar */
@@ -208,94 +208,88 @@
 <body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
     <!-- Header -->
     <header class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
-        <div class="flex items-center justify-between w-full">
-            <!-- Left Section -->
-            <div class="flex-1 flex justify-start items-center">
+        <div class="flex items-center justify-between w-full gap-6">
+            <div class="flex justify-start items-center gap-4">
                 <button 
                     id="sidebar-toggle-btn" 
-                    class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 mr-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
+                    class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
                     aria-label="Toggle sidebar"
                 >
                     <i class="fas fa-bars w-6 h-6 flex items-center justify-center transition-transform-smooth"></i>
                 </button>
-                <div class="flex items-center space-x-3"> <!-- Increased space-x for logo -->
-                    <div class="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center"> <!-- Increased size for 'W' -->
-                        <span class="text-white font-bold text-base">W</span> <!-- Increased font size for 'W' -->
-                    </div>
-                    <span class="text-wise-dark-gray text-2xl font-bold tracking-tight">WISE</span> <!-- Increased font size for 'WISE' -->
-                </div>
-            </div>
+                
+                <span class="ml-4 text-wise-dark-gray text-2xl font-extrabold tracking-tight drop-shadow-sm">WISE</span>
 
-            <!-- Center Section - Config Button, Search and Config Dropdown -->
-            <div class="flex-1 flex items-center justify-end"> <!-- Adjusted to allow more control over spacing -->
-                <!-- Group for Config and DCS -->
-                <div class="flex items-center gap-4 mr-6 md:mr-10"> <!-- Added mr-6/mr-10 to push them left, increased gap -->
-                    <!-- Direct Configuration Button -->
-                    <a href="configuration.html" 
-                    class="hidden md:flex items-center px-4 py-2 bg-wise-primary text-white rounded-lg shadow-md hover:bg-blue-700 transition-all-smooth active-press whitespace-nowrap"
-                    aria-label="Go to Configuration"
-                    >
-                        <i class="fas fa-cogs mr-2"></i>
-                        <span class="font-medium text-sm">Configuration</span>
-                    </a>
+                <div class="hidden md:flex items-center gap-2 ml-4">
+                    <div class="relative">
+                        <button
+                            id="main-config-toggle"
+                            class="flex items-center px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-lg hover:bg-gray-300 transition-all-smooth active-press whitespace-nowrap"
+                            onclick="window.location.href='configuration.html'"
+                        >
+                            <span class="font-medium text-sm">Configuration</span>
+                            <i class="fas fa-chevron-down ml-2 text-wise-gray text-xs"></i>
+                        </button>
+                    </div>
                     
-                    <!-- Config Dropdown -->
-                    <div class="relative hidden md:block">
+                    <div class="relative">
                         <button 
                             id="config-dropdown-toggle"
-                            class="flex items-center px-4 py-2 bg-white text-wise-dark-gray rounded-xl shadow-md border border-wise-border hover:bg-gray-100 transition-all-smooth active-press whitespace-nowrap"
+                            class="flex items-center px-4 py-2 bg-white text-wise-dark-gray rounded-lg border border-wise-border shadow-sm hover:bg-gray-50 transition-all-smooth active-press whitespace-nowrap"
                             onclick="toggleConfigDropdown()"
                             aria-label="DCS menu"
                         >
-                            <span class="font-medium text-sm">DCS</span> <!-- Placeholder for the dropdown value -->
-                            <i class="fas fa-chevron-down ml-2 text-wise-gray"></i>
+                            <span id="dcs-text-display" class="font-medium text-sm">DCS</span>
+                            <i class="fas fa-chevron-down ml-2 text-wise-gray text-xs"></i>
                         </button>
-                        <div id="config-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
+                        <div id="config-dropdown" class="absolute left-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
                             <div class="p-2">
-                                <a href="configuration.html?option=DCC" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCC')">DCC</a>
-                                <a href="configuration.html?option=DCE" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCE')">DCE</a>
-                                <a href="configuration.html?option=DCF" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCF')">DCF</a>
-                                <a href="configuration.html?option=DCJ" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCJ')">DCJ</a>
-                                <a href="configuration.html?option=DCK" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCK')">DCK</a>
-                                <a href="configuration.html?option=DCL" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCL')">DCL</a>
-                                <a href="configuration.html?option=DCM" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCM')">DCM</a>
-                                <a href="configuration.html?option=DCP" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCP')">DCP</a>
-                                <a href="configuration.html?option=DCS" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCS')">DCS</a>
-                                <a href="configuration.html?option=DCT" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCT')">DCT</a>
-                                <a href="configuration.html?option=DCY" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCY')">DCY</a>
-                                <a href="configuration.html?option=GBG" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('GBG')">GBG</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCC')">DCC</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCE')">DCE</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCF')">DCF</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCJ')">DCJ</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCK')">DCK</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCL')">DCL</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCM')">DCM</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCP')">DCP</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCS')">DCS</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCT')">DCT</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCY')">DCY</a>
+                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('GBG')">GBG</a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card flex-1 focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth max-w-lg"> <!-- max-w-lg retained for wider search bar -->
-                    <div class="pl-4">
-                        <i class="fas fa-search text-wise-gray"></i>
+            <div class="flex-1 flex justify-center">
+                <div class="relative w-full max-w-lg">
+                    <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
+                        <div class="pl-4">
+                            <i class="fas fa-search text-wise-gray"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="search-input"
+                            placeholder="Search now..."
+                            class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
+                            oninput="handleSearch(this.value)"
+                            onfocus="showSearchHistory()"
+                            aria-label="Search dashboard"
+                        />
+                        <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press" aria-label="Search button">
+                            <span class="hidden sm:inline">Search</span>
+                            <i class="fas fa-search sm:hidden"></i>
+                        </button>
                     </div>
-                    <input 
-                        type="text" 
-                        id="search-input"
-                        placeholder="Search now..."
-                        class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
-                        oninput="handleSearch(this.value)"
-                        onfocus="showSearchHistory()"
-                        aria-label="Search dashboard"
-                    />
-                    <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press" aria-label="Search button">
-                        <span class="hidden sm:inline">Search</span>
-                        <i class="fas fa-search sm:hidden"></i>
-                    </button>
-                </div>
-                
-                <!-- Search History Dropdown -->
-                <div id="search-history-dropdown" class="absolute right-0 top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
-                    <div class="p-2" id="search-history-content"></div>
+                    
+                    <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
+                        <div class="p-2" id="search-history-content"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Section - User -->
-            <div class="flex-1 flex justify-end items-center space-x-3 relative">
+            <div class="flex justify-end items-center space-x-3 relative">
                 <span class="text-wise-dark-gray font-medium text-sm hidden lg:block">
                     Welcome, <span id="username-display" class="font-semibold text-wise-primary">SuperAdmin</span>
                 </span>
@@ -307,7 +301,6 @@
                     <i class="fas fa-user text-white"></i>
                 </div>
                 
-                <!-- User Dropdown -->
                 <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
                     <div class="p-2">
                         <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="navigateToProfile()">
@@ -322,33 +315,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Search Filters -->
-        <div id="search-filters" class="flex items-center space-x-2 mt-3 ml-0 md:ml-20 hidden flex-wrap animate-slide-up">
-            <span class="text-wise-gray text-xs font-medium">Filter:</span>
-            <div class="flex flex-wrap gap-2">
-                <span id="filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
-                    Articles 
-                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('articles')" aria-label="Remove article filter">
-                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                    </button>
-                </span>
-                <span id="filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
-                    Photography 
-                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('photography')" aria-label="Remove photography filter">
-                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                    </button>
-                </span>
-            </div>
-            <button class="text-wise-gray hover:text-wise-error hover:underline text-xs transition-colors" onclick="removeAllFilters()" aria-label="Remove all filters">
-                Remove all
-            </button>
-        </div>
-        
-        <!-- Search Results -->
-        <div id="search-results" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-xl border border-wise-border z-40 max-h-80 overflow-y-auto w-11/12 md:w-1/2 animate-slide-up">
-            <div id="search-results-content" class="p-3"></div>
-        </div>
     </header>
 
     <!-- Mobile Sidebar Overlay -->
@@ -356,10 +322,10 @@
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border fixed left-0 z-30 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth" style="top: 5rem; height: calc(100vh - 5rem);"> <!-- Adjusted top and height for small screens -->
-            <div class="p-4 md:pt-6 h-full overflow-y-auto"> <!-- Added h-full and overflow-y-auto here for scrolling content -->
+        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-20 md:top-24 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+            <div class="p-4 pt-24 md:pt-6">
                 <div class="space-y-2">
-                    <!-- Dashboard Button (Always visible in sidebar on desktop, hidden in header) -->
+                    <!-- Dashboard Button (Always visible) -->
                     <div id="sidebar-dashboard-main" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press hover-scale" onclick="selectCategory('dashboard')" tabindex="0" role="button" aria-label="Select Dashboard category">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <i class="fas fa-tachometer-alt text-wise-primary"></i>
@@ -642,49 +608,18 @@
                                 <i id="performance-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                             </div>
                             <div id="performance-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-performance">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-management-dashboard')" tabindex="0" role="button" aria-label="Select Performance management dashboard">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Performance management dashboard</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-kpis')" tabindex="0" role="button" aria-label="Select KPIs">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">KPIs</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-quality-history')" tabindex="0" role="button" aria-label="Select Quality history">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Quality history</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-analytics')" tabindex="0" role="button" aria-label="Select Analytics">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Analytics</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-rfid-history')" tabindex="0" role="button" aria-label="Select RFID history">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">RFID history</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-supply-chain-intelligence')" tabindex="0" role="button" aria-label="Select Supply chain intelligence">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Supply chain intelligence</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-warehouse-alerts')" tabindex="0" role="button" aria-label="Select Warehouse alerts">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse alerts</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-warehouse-utilization-report')" tabindex="0" role="button" aria-label="Select Warehouse Utilization Report">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse Utilization Report</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-goals')" tabindex="0" role="button" aria-label="Select Goals">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Goals</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Slotting Optimization -->
-                        <div class="sidebar-section">
-                            <div id="sidebar-slotting-optimization" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('slotting-optimization')" tabindex="0" role="button" aria-expanded="false" aria-controls="slotting-optimization-children" aria-label="Toggle Slotting Optimization sub-menu">
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-sliders-h text-wise-gray"></i>
-                                </div>
-                                <span class="text-wise-dark-gray font-medium text-sm flex-1">Slotting Optimization</span>
-                                <i id="slotting-optimization-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
-                            </div>
-                            <div id="slotting-optimization-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-slotting-optimization">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('slotting-optimization-rules')" tabindex="0" role="button" aria-label="Select Optimization Rules">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Optimization Rules</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('slotting-optimization-reports')" tabindex="0" role="button" aria-label="Select Optimization Reports">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Optimization Reports</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('slotting-optimization-settings')" tabindex="0" role="button" aria-label="Select Optimization Settings">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Optimization Settings</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- System Management -->
                         <div class="sidebar-section">
                             <div id="sidebar-system-management" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('system-management')" tabindex="0" role="button" aria-expanded="false" aria-controls="system-management-children" aria-label="Toggle System Management sub-menu">
@@ -695,35 +630,36 @@
                                 <i id="system-management-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                             </div>
                             <div id="system-management-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-system-management">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-audit-log-viewer')" tabindex="0" role="button" aria-label="Select Audit log viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Audit log viewer</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-users')" tabindex="0" role="button" aria-label="Select Users">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Users</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-background-job-queue-viewer')" tabindex="0" role="button" aria-label="Select Background job queue viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Background job queue viewer</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-logs')" tabindex="0" role="button" aria-label="Select Logs">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Logs</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-dif-incoming-message-viewer')" tabindex="0" role="button" aria-label="Select DIF incoming message viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DIF incoming message viewer</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-backup')" tabindex="0" role="button" aria-label="Select Backup">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Backup</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-dif-outgoing-message-viewer')" tabindex="0" role="button" aria-label="Select DIF outgoing message viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DIF outgoing message viewer</span>
+                            </div>
+                        </div>
+
+                        <!-- Setting Optimization -->
+                        <div class="sidebar-section">
+                            <div id="sidebar-setting-optimization" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('setting-optimization')" tabindex="0" role="button" aria-expanded="false" aria-controls="setting-optimization-children" aria-label="Toggle Setting Optimization sub-menu">
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="fas fa-sliders-h text-wise-gray"></i>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-display-properties')" tabindex="0" role="button" aria-label="Select Display properties">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Display properties</span>
+                                <span class="text-wise-dark-gray font-medium text-sm flex-1">Setting Optimization</span>
+                                <i id="setting-optimization-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            </div>
+                            <div id="setting-optimization-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="sidebar-setting-optimization">
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-general')" tabindex="0" role="button" aria-label="Select General Settings">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">General</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-license-key-information')" tabindex="0" role="button" aria-label="Select License key information">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">License key information</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-performance')" tabindex="0" role="button" aria-label="Select Performance">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Performance</span>
                                 </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-manual-inventory-adjustment')" tabindex="0" role="button" aria-label="Select Manual Inventory adjustment">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Manual Inventory adjustment</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-scale-configuration')" tabindex="0" role="button" aria-label="Select Scale configuration">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Scale configuration</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-system-text-editor')" tabindex="0" role="button" aria-label="Select System text editor">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">System text editor</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-user-activity-viewer')" tabindex="0" role="button" aria-label="Select User activity viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">User activity viewer</span>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-notifications')" tabindex="0" role="button" aria-label="Select Notifications">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Notifications</span>
                                 </div>
                             </div>
                         </div>
@@ -751,657 +687,79 @@
                         </div>
                     </div>
                 </div>
-            </aside>
+            </div>
+        </aside>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth" role="main">
-                <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
-                    <!-- Content will be loaded here by JavaScript -->
+        <!-- Main Content Area -->
+        <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth" role="main">
+            <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Custom Alert/Confirm Modal -->
+            <div id="custom-modal-overlay" class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title" aria-describedby="custom-modal-message">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
+                    <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                    <p id="custom-modal-message" class="text-wise-gray mb-6"></p>
+                    <div class="flex justify-end space-x-3">
+                        <button id="custom-modal-cancel-btn" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press">Cancel</button>
+                        <button id="custom-modal-ok-btn" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-all-smooth active-press">OK</button>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Custom Alert/Confirm Modal -->
-                <div id="custom-modal-overlay" class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title" aria-describedby="custom-modal-message">
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
-                        <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <p id="custom-modal-message" class="text-wise-gray mb-6"></p>
-                        <div class="flex justify-end space-x-3">
-                            <button id="custom-modal-cancel-btn" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press">Cancel</button>
-                            <button id="custom-modal-ok-btn" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-all-smooth active-press">OK</button>
+            <!-- Search Overlay -->
+            <div id="search-overlay" class="hidden fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Search overlay">
+                <div class="bg-white rounded-xl border border-wise-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col animate-slide-up">
+                    <div class="flex items-center bg-white rounded-t-xl border-b border-wise-border overflow-hidden p-4">
+                        <input 
+                            type="text" 
+                            id="overlay-search-input"
+                            placeholder="Search now..."
+                            class="flex-1 px-4 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
+                            oninput="performSearch(this.value, 'overlay')"
+                            aria-label="Overlay search input"
+                        />
+                        <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press rounded-r-lg" aria-label="Overlay search button">
+                            <span class="hidden sm:inline">Search</span>
+                            <i class="fas fa-search sm:hidden"></i>
+                        </button>
+                        <button class="ml-2 text-wise-gray hover:text-wise-dark-gray rounded-full p-1 hover:bg-gray-100 transition-all-smooth" onclick="closeSearchOverlay()" aria-label="Close search overlay">
+                            <i class="fas fa-times w-6 h-6 flex items-center justify-center"></i>
+                        </button>
+                    </div>
+                    <div id="overlay-search-filters" class="flex items-center space-x-2 mt-3 ml-4 text-xs flex-wrap animate-slide-up">
+                        <span class="text-wise-gray font-medium">Filter:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span id="overlay-filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
+                                Articles 
+                                <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('articles')" aria-label="Remove article filter from overlay">
+                                    <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                                </button>
+                            </span>
+                            <span id="overlay-filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
+                                Photography 
+                                <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('photography')" aria-label="Remove photography filter from overlay">
+                                    <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <button class="text-wise-gray hover:text-wise-error hover:underline" onclick="removeAllOverlayFilters()" aria-label="Remove all filters from overlay">
+                            Remove all
+                        </button>
+                    </div>
+                    <div class="flex flex-1 overflow-hidden mt-4">
+                        <div id="overlay-search-results-list-panel" class="w-full md:w-1/3 border-r border-wise-border p-4 overflow-y-auto text-wise-dark-gray">
+                        </div>
+                        <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-wise-dark-gray">
+                            <p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Search Overlay -->
-                <div id="search-overlay" class="hidden fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Search overlay">
-                    <div class="bg-white rounded-xl border border-wise-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col animate-slide-up">
-                        <div class="flex items-center bg-white rounded-t-xl border-b border-wise-border overflow-hidden p-4">
-                            <input 
-                                type="text" 
-                                id="overlay-search-input"
-                                placeholder="Search now..."
-                                class="flex-1 px-4 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
-                                oninput="performSearch(this.value, 'overlay')"
-                                aria-label="Overlay search input"
-                            />
-                            <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press rounded-r-lg" aria-label="Overlay search button">
-                                <span class="hidden sm:inline">Search</span>
-                                <i class="fas fa-search sm:hidden"></i>
-                            </button>
-                            <button class="ml-2 text-wise-gray hover:text-wise-dark-gray rounded-full p-1 hover:bg-gray-100 transition-all-smooth" onclick="closeSearchOverlay()" aria-label="Close search overlay">
-                                <i class="fas fa-times w-6 h-6 flex items-center justify-center"></i>
-                            </button>
-                        </div>
-                        <div id="overlay-search-filters" class="flex items-center space-x-2 mt-3 ml-4 text-xs flex-wrap animate-slide-up">
-                            <span class="text-wise-gray font-medium">Filter:</span>
-                            <div class="flex flex-wrap gap-2">
-                                <span id="overlay-filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
-                                    Articles 
-                                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('articles')" aria-label="Remove article filter from overlay">
-                                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                                    </button>
-                                </span>
-                                <span id="overlay-filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center hover:bg-gray-200 transition-all-smooth">
-                                    Photography 
-                                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeOverlayFilter('photography')" aria-label="Remove photography filter from overlay">
-                                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            <button class="text-wise-gray hover:text-wise-error hover:underline" onclick="removeAllOverlayFilters()" aria-label="Remove all filters from overlay">
-                                Remove all
-                            </button>
-                        </div>
-                        <div class="flex flex-1 overflow-hidden mt-4">
-                            <div id="overlay-search-results-list-panel" class="w-full md:w-1/3 border-r border-wise-border p-4 overflow-y-auto text-wise-dark-gray">
-                            </div>
-                            <div id="overlay-detail-content-panel" class="flex-1 p-4 overflow-y-auto flex flex-col justify-center items-center text-wise-dark-gray">
-                                <p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-        
-        <script>
-            // Helper function for custom modal
-            function showCustomModal(title, message, isConfirm = false) {
-                return new Promise((resolve) => {
-                    const modalOverlay = document.getElementById('custom-modal-overlay');
-                    const modalTitle = document.getElementById('custom-modal-title');
-                    const modalMessage = document.getElementById('custom-modal-message');
-                    const okBtn = document.getElementById('custom-modal-ok-btn');
-                    const cancelBtn = document.getElementById('custom-modal-cancel-btn');
-
-                    modalTitle.textContent = title;
-                    modalMessage.textContent = message;
-                    modalOverlay.classList.remove('hidden');
-
-                    if (isConfirm) {
-                        cancelBtn.classList.remove('hidden');
-                        okBtn.textContent = 'Confirm';
-                    } else {
-                        cancelBtn.classList.add('hidden');
-                        okBtn.textContent = 'OK';
-                    }
-
-                    const handleOk = () => {
-                        modalOverlay.classList.add('hidden');
-                        okBtn.removeEventListener('click', handleOk);
-                        cancelBtn.removeEventListener('click', handleCancel);
-                        resolve(true);
-                    };
-
-                    const handleCancel = () => {
-                        modalOverlay.classList.add('hidden');
-                        okBtn.removeEventListener('click', handleOk);
-                        cancelBtn.removeEventListener('click', handleCancel);
-                        resolve(false);
-                    };
-
-                    okBtn.addEventListener('click', handleOk);
-                    cancelBtn.addEventListener('click', handleCancel);
-
-                    // Close modal on escape key
-                    const handleKeyDown = (event) => {
-                        if (event.key === 'Escape') {
-                            handleCancel();
-                            document.removeEventListener('keydown', handleKeyDown);
-                        }
-                    };
-                    document.addEventListener('keydown', handleKeyDown);
-                });
-            }
-
-            // Dummy data for content loading
-            const contentMap = {
-                'dashboard': `
-                    <h2 class="text-2xl font-bold text-wise-dark-gray mb-6">Dashboard Overview</h2>
-                    <p class="text-wise-gray mb-8">Welcome to your dashboard. Here's a quick summary of your operations.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-blue-500 text-white p-6 rounded-xl shadow-md flex flex-col justify-between hover-lift transition-all-smooth">
-                            <h3 class="text-lg font-semibold mb-2">Total Orders</h3>
-                            <p class="text-4xl font-extrabold">1,250</p>
-                            <p class="text-sm opacity-90">last 30 days</p>
-                        </div>
-                        <div class="bg-green-500 text-white p-6 rounded-xl shadow-md flex flex-col justify-between hover-lift transition-all-smooth">
-                            <h3 class="text-lg font-semibold mb-2">Active Crews</h3>
-                            <p class="text-4xl font-extrabold">85</p>
-                            <p class="text-sm opacity-90">currently working</p>
-                        </div>
-                        <div class="bg-purple-500 text-white p-6 rounded-xl shadow-md flex flex-col justify-between hover-lift transition-all-smooth">
-                            <h3 class="text-lg font-semibold mb-2">Total Assets</h3>
-                            <p class="text-4xl font-extrabold">$2.5M</p>
-                            <p class="text-sm opacity-90">in inventory value</p>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-wise-dark-gray mb-4">Recent Activity</h3>
-                    <ul class="space-y-4">
-                        <li class="bg-wise-light-gray p-4 rounded-lg shadow-card flex justify-between items-center animate-slide-up">
-                            <div>
-                                <p class="font-medium text-wise-dark-gray">New order for Project Alpha</p>
-                                <p class="text-sm text-wise-gray">Order #12345 placed by John Doe</p>
-                            </div>
-                            <span class="text-xs text-wise-gray">5 minutes ago</span>
-                        </li>
-                        <li class="bg-wise-light-gray p-4 rounded-lg shadow-card flex justify-between items-center animate-slide-up" style="animation-delay: 0.1s;">
-                            <div>
-                                <p class="font-medium text-wise-dark-gray">Crew #123 completed task</p>
-                                <p class="text-sm text-wise-gray">Task: Warehouse Cleanup in Zone B</p>
-                            </div>
-                            <span class="text-xs text-wise-gray">1 hour ago</span>
-                        </li>
-                        <li class="bg-wise-light-gray p-4 rounded-lg shadow-card flex justify-between items-center animate-slide-up" style="animation-delay: 0.2s;">
-                            <div>
-                                <p class="font-medium text-wise-dark-gray">Inventory update: 10 units added to Warehouse</p>
-                                <p class="text-sm text-wise-gray">SKU: ABC-789, Location: Aisle 3, Rack 5</p>
-                            </div>
-                            <span class="text-xs text-wise-gray">3 hours ago</span>
-                        </li>
-                        <li class="bg-wise-light-gray p-4 rounded-lg shadow-card flex justify-between items-center animate-slide-up" style="animation-delay: 0.3s;">
-                            <div>
-                                <p class="font-medium text-wise-dark-gray">Shipment #678 dispatched</p>
-                                <p class="text-sm text-wise-gray">Destination: Customer X, Tracking: XYZ987</p>
-                            </div>
-                            <span class="text-xs text-wise-gray">Yesterday</span>
-                        </li>
-                    </ul>
-                `,
-                'yard-vehicles': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Yard Management - Vehicles</h2><p class="text-wise-gray">Details about vehicles in the yard.</p>`,
-                'yard-equipment': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Yard Management - Equipment</h2><p class="text-wise-gray">Details about equipment in the yard.</p>`,
-                'yard-personnel': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Yard Management - Personnel</h2><p class="text-wise-gray">Details about personnel in the yard.</p>`,
-                'receiving-open-box-balance-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Open/Box Balance Viewer</h2><p class="text-wise-gray">View open and box balances for receiving.</p>`,
-                'receiving-po-quick-find': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Purchase Order Quick Find</h2><p class="text-wise-gray">Quickly find purchase orders.</p>`,
-                'receiving-receipt-closet-supplier': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Closet By Supplier</h2><p class="text-wise-gray">View receipts by supplier.</p>`,
-                'receiving-receipt-container-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Container Viewer</h2><p class="text-wise-gray">View receipt containers.</p>`,
-                'receiving-receipt-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2><p class="text-wise-gray">Explore receiving receipts.</p>`,
-                'receiving-receipt-monitoring-close': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Monitoring/Close Viewer</h2><p class="text-wise-gray">Monitor and close receipts.</p>`,
-                'receiving-receipt-no-close': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt No/Close Viewer</h2><p class="text-wise-gray">View receipts that are not closed.</p>`,
-                'receiving-receipt-open-closed': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Open And Closed Viewer</h2><p class="text-wise-gray">View both open and closed receipts.</p>`,
-                'receiving-receipt-shipment-closed': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receipt Shipment Closed Viewer</h2><p class="text-wise-gray">View closed shipment receipts.</p>`,
-                'receiving-performance-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receiving Performance Viewer</h2><p class="text-wise-gray">View receiving performance metrics.</p>`,
-                'receiving-workbench': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Receiving Workbench</h2><p class="text-wise-gray">Manage receiving operations.</p>`,
-                'receiving-shipment-closed-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Shipment Closed Viewer</h2><p class="text-wise-gray">View closed shipments.</p>`,
-                'receiving-virtual-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Receiving - Virtual Receiving Viewer</h2><p class="text-wise-gray">View virtual receiving details.</p>`,
-                'order-planning-consolidated-shipment-history': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Order Planning - Consolidated Shipment History</h2><p class="text-wise-gray">View consolidated shipment history.</p>`,
-                'order-planning-order-entry': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Order Planning - Order entry</h2><p class="text-wise-gray">Enter new orders.</p>`,
-                'order-planning-wave-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Order Planning - Wave explorer</h2><p class="text-wise-gray">Explore order waves.</p>`,
-                'order-planning-wave-quick-find': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Order Planning - Wave quick find</h2><p class="text-wise-gray">Quickly find order waves.</p>`,
-                'shipping-close-container': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Close container</h2><p class="text-wise-gray">Close shipping containers.</p>`,
-                'shipping-consolidated-container-location-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Consolidated container location viewer</h2><p class="text-wise-gray">View consolidated container locations.</p>`,
-                'shipping-containers-delivered': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Containers Delivered</h2><p class="text-wise-gray">View delivered containers.</p>`,
-                'shipping-outbound-surplus-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Outbound Surplus Viewer</h2><p class="text-wise-gray">View outbound surplus.</p>`,
-                'shipping-dock-scheduler': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Dock scheduler</h2><p class="text-wise-gray">Schedule dock appointments.</p>`,
-                'shipping-load-close-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Load Close Viewer</h2><p class="text-wise-gray">View load close details.</p>`,
-                'shipping-load-count-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Load Count Viewer</h2><p class="text-wise-gray">View load counts.</p>`,
-                'shipping-load-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Load Explorer</h2><p class="text-wise-gray">Explore shipping loads.</p>`,
-                'shipping-maxi-high-container-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Maxi High Container Viewer</h2><p class="text-wise-gray">View maxi high containers.</p>`,
-                'shipping-multiple-order-pallet-close': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Multiple order pallet close</h2><p class="text-wise-gray">Close multiple order pallets.</p>`,
-                'shipping-oos-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - OOS Viewer</h2><p class="text-wise-gray">View OOS details.</p>`,
-                'shipping-operator-surplus-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Operator Surplus Viewer</h2><p class="text-wise-gray">View operator surplus.</p>`,
-                'shipping-pallet-close': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Pallet Close</h2><p class="text-wise-gray">Close pallets.</p>`,
-                'shipping-pallet-in-staging-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Pallet In Staging Viewer</h2><p class="text-wise-gray">View pallets in staging.</p>`,
-                'shipping-put-to-store-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Put to store Viewer</h2><p class="text-wise-gray">View put to store details.</p>`,
-                'shipping-qc-workbench': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - QC workbench</h2><p class="text-wise-gray">Manage QC operations.</p>`,
-                'shipping-shipment-detail-allocation-rejection': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipment detail allocation rejection viewer</h2><p class="text-wise-gray">View shipment detail allocation rejections.</p>`,
-                'shipping-shipment-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipment explorer</h2><p class="text-wise-gray">Explore shipments.</p>`,
-                'shipping-shipment-quick-find': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipment quick find</h2><p class="text-wise-gray">Quickly find shipments.</p>`,
-                'shipping-shipment-start-pick-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipment Start/Pick Viewer</h2><p class="text-wise-gray">View shipment start and pick details.</p>`,
-                'shipping-shipment-stop-tuk-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipment Stop/Tuk Viewer</h2><p class="text-wise-gray">View shipment stop and tuk details.</p>`,
-                'shipping-container-identification': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipping container identification</h2><p class="text-wise-gray">Identify shipping containers.</p>`,
-                'shipping-container-workbench': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - Shipping container workbench</h2><p class="text-wise-gray">Manage shipping containers.</p>`,
-                'shipping-sit-workbench': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Shipping - SIT workbench</h2><p class="text-wise-gray">Manage SIT operations.</p>`,
-                'work-label-reprint-utility': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Label Reprint Utility</h2><p class="text-wise-gray">Utility for reprinting labels.</p>`,
-                'work-picking-management-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Picking management explorer</h2><p class="text-wise-gray">Explore picking management details.</p>`,
-                'work-picking-sigtion': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Picking sigtion</h2><p class="text-wise-gray">Picking sigtion details.</p>`,
-                'work-execution': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work execution</h2><p class="text-wise-gray">Execute work tasks.</p>`,
-                'work-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work explorer</h2><p class="text-wise-gray">Explore work details.</p>`,
-                'work-insight': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work insight</h2><p class="text-wise-gray">Gain insights into work operations.</p>`,
-                'work-monitoring-customer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work monitoring: Customer</h2><p class="text-wise-gray">Monitor work by customer.</p>`,
-                'work-monitoring-group': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work monitoring: Group</h2><p class="text-wise-gray">Monitor work by group.</p>`,
-                'work-quick-find': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Work - Work quick find</h2><p class="text-wise-gray">Quickly find work tasks.</p>`,
-                'cross-app-ar-upload-interface-data-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - AR Upload interface data viewer</h2><p class="text-wise-gray">View AR upload interface data.</p>`,
-                'cross-app-background-job-request-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Background Job Request Viewer</h2><p class="text-wise-gray">View background job requests.</p>`,
-                'cross-app-configurations': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Configurations</h2><p class="text-wise-gray">Manage cross-application configurations.</p>`,
-                'cross-app-interface-data': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Interface data</h2><p class="text-wise-gray">View interface data.</p>`,
-                'cross-app-interface-error-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Interface error viewer</h2><p class="text-wise-gray">View interface errors.</p>`,
-                'cross-app-progistics': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Progistics</h2><p class="text-wise-gray">Manage progistics.</p>`,
-                'cross-app-reupload-interface-data-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - ReUpload interface data viewer</h2><p class="text-wise-gray">Re-upload interface data.</p>`,
-                'cross-app-rf': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - RF</h2><p class="text-wise-gray">Manage RF operations.</p>`,
-                'cross-app-trading-partner-management': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Trading partner management</h2><p class="text-wise-gray">Manage trading partners.</p>`,
-                'cross-app-transaction-and-process-history': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Transaction and process history</h2><p class="text-wise-gray">View transaction and process history.</p>`,
-                'cross-app-upload-interface-data-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Upload interface data viewer</h2><p class="text-wise-gray">Upload interface data.</p>`,
-                'cross-app-wave-repost-ptl-rabbitmq': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Wave repost only for PTL Messages to RabbitMQ</h2><p class="text-wise-gray">Repost wave messages to RabbitMQ.</p>`,
-                'cross-app-web-statistics-generation': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Cross Application - Web statistics generation</h2><p class="text-wise-gray">Generate web statistics.</p>`,
-                'inventory-cycle-count-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Cycle count explorer</h2><p class="text-wise-gray">Explore cycle counts.</p>`,
-                'inventory-cycle-count-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Cycle Count Viewer</h2><p class="text-wise-gray">View cycle counts.</p>`,
-                'inventory-edit-customer-shelflife': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Edit Customer Shelflife</h2><p class="text-wise-gray">Edit customer shelflife.</p>`,
-                'inventory-finished-item-breakdown': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Finished item breakdown</h2><p class="text-wise-gray">View finished item breakdown.</p>`,
-                'inventory-immediate-needs-insight': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Immediate needs insight</h2><p class="text-wise-gray">Gain insights into immediate needs.</p>`,
-                'inventory-immediate-needs-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Immediate needs viewer</h2><p class="text-wise-gray">View immediate needs.</p>`,
-                'inventory-interdept': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Interdept</h2><p class="text-wise-gray">Interdepartmental inventory details.</p>`,
-                'inventory-adjustment-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Inventory Adjustment Viewer</h2><p class="text-wise-gray">View inventory adjustments.</p>`,
-                'inventory-insight': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Inventory insight</h2><p class="text-wise-gray">Gain insights into inventory.</p>`,
-                'inventory-management': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Inventory management</h2><p class="text-wise-gray">Manage inventory.</p>`,
-                'inventory-item-master-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Item Master Viewer</h2><p class="text-wise-gray">View item master details.</p>`,
-                'inventory-location-explorer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Location explorer</h2><p class="text-wise-gray">Explore locations.</p>`,
-                'inventory-location-inventory-attribute-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Location Inventory Attribute Viewer</h2><p class="text-wise-gray">View location inventory attributes.</p>`,
-                'inventory-location-inventory-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Location Inventory Viewer</h2><p class="text-wise-gray">View location inventory.</p>`,
-                'inventory-location-master-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Location Master Viewer</h2><p class="text-wise-gray">View location master details.</p>`,
-                'inventory-location-quick-find': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Location quick find</h2><p class="text-wise-gray">Quickly find locations.</p>`,
-                'inventory-lot-freight': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Lot freight</h2><p class="text-wise-gray">View lot freight details.</p>`,
-                'inventory-lot-workbench': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Lot workbench</h2><p class="text-wise-gray">Manage lot operations.</p>`,
-                'inventory-mismatch-company-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Inventory - Mismatch Company Viewer</h2><p class="text-wise-gray">View mismatch company details.</p>`,
-                'performance-management-dashboard': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - Dashboard</h2><p class="text-wise-gray">View performance management dashboard.</p>`,
-                'performance-quality-history': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - Quality history</h2><p class="text-wise-gray">View quality history.</p>`,
-                'performance-rfid-history': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - RFID history</h2><p class="text-wise-gray">View RFID history.</p>`,
-                'performance-supply-chain-intelligence': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - Supply chain intelligence</h2><p class="text-wise-gray">View supply chain intelligence.</p>`,
-                'performance-warehouse-alerts': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - Warehouse alerts</h2><p class="text-wise-gray">View warehouse alerts.</p>`,
-                'performance-warehouse-utilization-report': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Performance Management - Warehouse Utilization Report</h2><p class="text-wise-gray">View warehouse utilization report.</p>`,
-                'slotting-optimization-rules': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Rules</h2><p class="text-wise-gray">Manage slotting optimization rules.</p>`,
-                'slotting-optimization-reports': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Reports</h2><p class="text-wise-gray">View slotting optimization reports.</p>`,
-                'slotting-optimization-settings': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Settings</h2><p class="text-wise-gray">Configure slotting optimization settings.</p>`,
-                'system-management-audit-log-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - Audit log viewer</h2><p class="text-wise-gray">View audit logs.</p>`,
-                'system-management-background-job-queue-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - Background job queue viewer</h2><p class="text-wise-gray">View background job queue.</p>`,
-                'system-management-dif-incoming-message-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - DIF incoming message viewer</h2><p class="text-wise-gray">View DIF incoming messages.</p>`,
-                'system-management-dif-outgoing-message-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - DIF outgoing message viewer</h2><p class="text-wise-gray">View DIF outgoing messages.</p>`,
-                'system-management-display-properties': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - Display properties</h2><p class="text-wise-gray">Configure display properties.</p>`,
-                'system-management-license-key-information': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - License key information</h2><p class="text-wise-gray">View license key information.</p>`,
-                'system-management-manual-inventory-adjustment': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - Manual Inventory adjustment</h2><p class="text-wise-gray">Perform manual inventory adjustments.</p>`,
-                'system-management-scale-configuration': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - Scale configuration</h2><p class="text-wise-gray">Configure scale settings.</p>`,
-                'system-management-system-text-editor': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - System text editor</h2><p class="text-wise-gray">Edit system text.</p>`,
-                'system-management-user-activity-viewer': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">System Management - User activity viewer</h2><p class="text-wise-gray">View user activity.</p>`,
-                'archive-documents': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Data Archiving - Documents</h2><p class="text-wise-gray">Manage archived documents.</p>`,
-                'archive-media': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Data Archiving - Media</h2><p class="text-wise-gray">Manage archived media.</p>`,
-                'archive-financial': `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Data Archiving - Financial</h2><p class="text-wise-gray">Manage archived financial data.</p>`,
-            };
-
-            // Initial content load
-            document.addEventListener('DOMContentLoaded', () => {
-                selectCategory('dashboard');
-                // Set sidebar top and height dynamically on load and resize
-                updateSidebarPosition();
-                window.addEventListener('resize', updateSidebarPosition);
-            });
-
-            function updateSidebarPosition() {
-                const header = document.querySelector('header');
-                const sidebar = document.getElementById('sidebar');
-                if (header && sidebar) {
-                    const headerHeight = header.offsetHeight;
-                    sidebar.style.top = `${headerHeight}px`;
-                    sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
-                }
-            }
-
-            function selectCategory(category) {
-                const contentArea = document.getElementById('default-content-area');
-                if (contentMap[category]) {
-                    contentArea.innerHTML = contentMap[category];
-                } else {
-                    contentArea.innerHTML = `<h2 class="text-2xl font-bold text-wise-dark-gray mb-4">Content Not Found</h2><p class="text-wise-gray">The content for "${category}" is not available.</p>`;
-                }
-
-                // Update active state in sidebar
-                document.querySelectorAll('.sidebar-item').forEach(item => {
-                    item.classList.remove('bg-wise-light-gray', 'font-semibold');
-                    item.querySelector('i')?.classList.remove('text-wise-primary');
-                    item.querySelector('span')?.classList.remove('font-semibold');
-                });
-                document.querySelectorAll('.sidebar-child').forEach(item => {
-                    item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                });
-
-                const selectedSidebarItem = document.getElementById(`sidebar-${category}`);
-                if (selectedSidebarItem) {
-                    selectedSidebarItem.classList.add('bg-wise-light-gray', 'font-semibold');
-                    selectedSidebarItem.querySelector('i')?.classList.add('text-wise-primary');
-                    selectedSidebarItem.querySelector('span')?.classList.add('font-semibold');
-                } else {
-                    // Handle child items
-                    const parentSection = document.querySelector(`[onclick*="selectCategory('${category}')"]`);
-                    if (parentSection) {
-                        parentSection.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                        // Also highlight its parent if it's a child
-                        const parentToggle = parentSection.closest('.sidebar-section')?.querySelector('.sidebar-item');
-                        if (parentToggle) {
-                            parentToggle.classList.add('bg-wise-light-gray');
-                            parentToggle.querySelector('i')?.classList.add('text-wise-primary');
-                            parentToggle.querySelector('span')?.classList.add('font-semibold');
-                            // Ensure parent is expanded
-                            const childrenDiv = parentToggle.nextElementSibling;
-                            const arrowIcon = parentToggle.querySelector('i.fa-chevron-down, i.fa-chevron-up');
-                            if (childrenDiv && childrenDiv.classList.contains('hidden')) {
-                                childrenDiv.classList.remove('hidden');
-                                childrenDiv.style.maxHeight = childrenDiv.scrollHeight + "px";
-                                if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                                parentToggle.setAttribute('aria-expanded', 'true');
-                            }
-                        }
-                    }
-                }
-
-                // Close sidebar on mobile after selection
-                if (window.innerWidth < 768) {
-                    closeSidebar();
-                }
-            }
-
-            function toggleChildren(sectionId) {
-                const childrenDiv = document.getElementById(`${sectionId}-children`);
-                const arrowIcon = document.getElementById(`${sectionId}-arrow`);
-                const parentItem = document.getElementById(`sidebar-${sectionId}`);
-
-                if (childrenDiv.classList.contains('hidden')) {
-                    childrenDiv.classList.remove('hidden');
-                    // Set max-height to scrollHeight for smooth animation
-                    childrenDiv.style.maxHeight = childrenDiv.scrollHeight + "px";
-                    if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                    parentItem.setAttribute('aria-expanded', 'true');
-                } else {
-                    childrenDiv.style.maxHeight = "0"; // Collapse
-                    childrenDiv.addEventListener('transitionend', function handler() {
-                        childrenDiv.classList.add('hidden');
-                        childrenDiv.removeEventListener('transitionend', handler);
-                    });
-                    if (arrowIcon) arrowIcon.classList.remove('rotate-180');
-                    parentItem.setAttribute('aria-expanded', 'false');
-                }
-            }
-
-            // Sidebar toggle for mobile
-            const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
-
-            sidebarToggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('-translate-x-full');
-                sidebarOverlay.classList.toggle('hidden');
-                document.body.classList.toggle('overflow-hidden'); // Prevent scrolling body when sidebar is open
-            });
-
-            function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                sidebarOverlay.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }
-
-            // Header dropdowns
-            function toggleConfigDropdown() {
-                const dropdown = document.getElementById('config-dropdown');
-                dropdown.classList.toggle('hidden');
-                dropdown.classList.toggle('animate-slide-up');
-            }
-
-            function selectConfigOption(option) {
-                const toggleButton = document.getElementById('config-dropdown-toggle').querySelector('span');
-                toggleButton.textContent = option;
-                toggleConfigDropdown(); // Close dropdown
-            }
-
-            function toggleUserDropdown() {
-                const dropdown = document.getElementById('user-dropdown');
-                dropdown.classList.toggle('hidden');
-                dropdown.classList.toggle('animate-slide-up');
-            }
-
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', (event) => {
-                const configDropdown = document.getElementById('config-dropdown');
-                const configToggle = document.getElementById('config-dropdown-toggle');
-                if (configDropdown && !configDropdown.contains(event.target) && !configToggle.contains(event.target)) {
-                    configDropdown.classList.add('hidden');
-                }
-
-                const userDropdown = document.getElementById('user-dropdown');
-                const userToggle = userDropdown ? userDropdown.previousElementSibling : null; // Get the user avatar div
-                if (userDropdown && !userDropdown.contains(event.target) && (!userToggle || !userToggle.contains(event.target))) {
-                    userDropdown.classList.add('hidden');
-                }
-
-                const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-                const searchInput = document.getElementById('search-input');
-                if (searchHistoryDropdown && !searchHistoryDropdown.contains(event.target) && !searchInput.contains(event.target)) {
-                    searchHistoryDropdown.classList.add('hidden');
-                }
-            });
-
-            // Dummy functions for user actions
-            function navigateToProfile() {
-                showCustomModal('Profile', 'Navigating to your profile page.');
-            }
-
-            function handleLogout() {
-                showCustomModal('Log Out', 'You have been successfully logged out.', true).then(result => {
-                    if (result) {
-                        console.log('User logged out.');
-                        // Perform actual logout logic here
-                    }
-                });
-            }
-
-            // Search functionality (simplified)
-            const searchHistory = [];
-            const availableCategories = Object.keys(contentMap).map(key => key.replace(/-/g, ' ')); // Convert keys to readable strings
-
-            function handleSearch(query) {
-                const searchResultsDiv = document.getElementById('search-results');
-                const searchResultsContent = document.getElementById('search-results-content');
-                const searchFilters = document.getElementById('search-filters');
-
-                if (query.length > 0) {
-                    const filteredResults = availableCategories.filter(cat => cat.toLowerCase().includes(query.toLowerCase()));
-                    searchResultsContent.innerHTML = '';
-                    if (filteredResults.length > 0) {
-                        filteredResults.forEach(result => {
-                            const resultItem = document.createElement('div');
-                            resultItem.className = 'p-2 hover:bg-wise-light-gray rounded-lg cursor-pointer transition-all-smooth text-sm';
-                            resultItem.textContent = result.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); // Capitalize each word
-                            resultItem.onclick = () => {
-                                selectCategory(result.replace(/ /g, '-')); // Convert back to original key
-                                addSearchToHistory(result);
-                                searchResultsDiv.classList.add('hidden');
-                                document.getElementById('search-input').value = result.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                            };
-                            searchResultsContent.appendChild(resultItem);
-                        });
-                        searchResultsDiv.classList.remove('hidden');
-                    } else {
-                        searchResultsContent.innerHTML = '<p class="text-wise-gray p-2 text-sm">No results found.</p>';
-                        searchResultsDiv.classList.remove('hidden');
-                    }
-                    searchFilters.classList.remove('hidden'); // Show filters when searching
-                } else {
-                    searchResultsDiv.classList.add('hidden');
-                    searchFilters.classList.add('hidden'); // Hide filters when search is empty
-                }
-            }
-
-            function addSearchToHistory(query) {
-                if (!searchHistory.includes(query)) {
-                    searchHistory.unshift(query); // Add to the beginning
-                    if (searchHistory.length > 5) { // Keep history to max 5 items
-                        searchHistory.pop();
-                    }
-                }
-            }
-
-            function showSearchHistory() {
-                const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-                const searchHistoryContent = document.getElementById('search-history-content');
-                
-                if (searchHistory.length > 0) {
-                    searchHistoryContent.innerHTML = '<p class="text-xs text-wise-gray mb-2">Recent Searches:</p>';
-                    searchHistory.forEach(item => {
-                        const historyItem = document.createElement('div');
-                        historyItem.className = 'p-2 hover:bg-wise-light-gray rounded-lg cursor-pointer transition-all-smooth text-sm flex justify-between items-center';
-                        historyItem.innerHTML = `
-                            <span>${item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
-                            <button class="text-wise-gray hover:text-wise-error transition-colors text-xs" onclick="removeSearchHistoryItem(event, '${item}')" aria-label="Remove search history item">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        `;
-                        historyItem.onclick = () => {
-                            document.getElementById('search-input').value = item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                            handleSearch(item);
-                            searchHistoryDropdown.classList.add('hidden');
-                        };
-                        searchHistoryContent.appendChild(historyItem);
-                    });
-                    searchHistoryDropdown.classList.remove('hidden');
-                } else {
-                    searchHistoryContent.innerHTML = '<p class="text-wise-gray p-2 text-sm">No recent searches.</p>';
-                    searchHistoryDropdown.classList.remove('hidden');
-                }
-            }
-
-            function removeSearchHistoryItem(event, itemToRemove) {
-                event.stopPropagation(); // Prevent the parent div's click from firing
-                const index = searchHistory.indexOf(itemToRemove);
-                if (index > -1) {
-                    searchHistory.splice(index, 1);
-                }
-                showSearchHistory(); // Re-render history
-                if (searchHistory.length === 0) {
-                    document.getElementById('search-history-dropdown').classList.add('hidden');
-                }
-            }
-
-
-            function removeFilter(filterId) {
-                document.getElementById(`filter-${filterId}`).style.display = 'none';
-                // Add logic to actually filter results if implemented
-            }
-
-            function removeAllFilters() {
-                document.getElementById('filter-articles').style.display = 'none';
-                document.getElementById('filter-photography').style.display = 'none';
-                // Add logic to actually remove all filters if implemented
-            }
-
-            // Overlay Search Functionality
-            function openSearchOverlay() {
-                document.getElementById('search-overlay').classList.remove('hidden');
-                document.body.classList.add('overflow-hidden'); // Prevent body scroll
-                document.getElementById('overlay-search-input').focus();
-            }
-
-            function closeSearchOverlay() {
-                document.getElementById('search-overlay').classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-                document.getElementById('overlay-search-input').value = ''; // Clear input
-                document.getElementById('overlay-search-results-list-panel').innerHTML = ''; // Clear results
-                document.getElementById('overlay-detail-content-panel').innerHTML = '<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>'; // Reset detail panel
-                document.getElementById('overlay-search-filters').classList.add('hidden'); // Hide filters
-            }
-
-            function performSearch(query, context) {
-                const searchResultsPanel = document.getElementById(`${context}-search-results-list-panel`);
-                const searchFilters = document.getElementById(`${context}-search-filters`);
-                searchResultsPanel.innerHTML = ''; // Clear previous results
-
-                if (query.length > 0) {
-                    const filteredResults = availableCategories.filter(cat => cat.toLowerCase().includes(query.toLowerCase()));
-                    if (filteredResults.length > 0) {
-                        filteredResults.forEach(result => {
-                            const resultItem = document.createElement('div');
-                            resultItem.className = 'p-2 hover:bg-wise-light-gray rounded-lg cursor-pointer transition-all-smooth text-sm mb-1';
-                            resultItem.textContent = result.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                            resultItem.onmouseenter = () => showPreview(result.replace(/ /g, '-'), null, 'overlay');
-                            resultItem.onclick = () => {
-                                selectCategory(result.replace(/ /g, '-'));
-                                closeSearchOverlay();
-                            };
-                            searchResultsPanel.appendChild(resultItem);
-                        });
-                        searchFilters.classList.remove('hidden');
-                    } else {
-                        searchResultsPanel.innerHTML = '<p class="text-wise-gray p-2 text-sm">No results found.</p>';
-                        searchFilters.classList.add('hidden');
-                    }
-                } else {
-                    searchResultsPanel.innerHTML = '';
-                    searchFilters.classList.add('hidden');
-                }
-            }
-
-            function showPreview(category, event, context = 'default') {
-                const detailPanel = document.getElementById(`${context}-detail-content-panel`);
-                if (contentMap[category]) {
-                    detailPanel.innerHTML = contentMap[category];
-                } else {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">No preview available for "${category}".</p>`;
-                }
-            }
-
-            function removeOverlayFilter(filterId) {
-                document.getElementById(`overlay-filter-${filterId}`).style.display = 'none';
-                // Add logic to actually filter results if implemented
-            }
-
-            function removeAllOverlayFilters() {
-                document.getElementById('overlay-filter-articles').style.display = 'none';
-                document.getElementById('overlay-filter-photography').style.display = 'none';
-                // Add logic to actually remove all filters if implemented
-            }
-
-            // Event listener for the main search input to open the overlay on focus for mobile
-            document.getElementById('search-input').addEventListener('focus', () => {
-                if (window.innerWidth < 768) { // Only for mobile
-                    openSearchOverlay();
-                }
-            });
-
-            // Sync input value between main search and overlay search
-            document.getElementById('search-input').addEventListener('input', (event) => {
-                document.getElementById('overlay-search-input').value = event.target.value;
-                performSearch(event.target.value, 'overlay');
-            });
-
-            document.getElementById('overlay-search-input').addEventListener('input', (event) => {
-                document.getElementById('search-input').value = event.target.value;
-                handleSearch(event.target.value);
-            });
-
-            // Ensure sidebar position is correct on initial load and window resize
-            window.addEventListener('load', updateSidebarPosition);
-            window.addEventListener('resize', updateSidebarPosition);
-
-            // Media query for sidebar positioning on larger screens
-            const mediaQuery = window.matchMedia('(min-width: 768px)');
-            function handleMediaQueryChange(e) {
-                if (e.matches) {
-                    // Desktop view
-                    sidebar.style.top = '5rem'; // Based on md:pt-20
-                    sidebar.style.height = 'calc(100vh - 5rem)';
-                } else {
-                    // Mobile view
-                    sidebar.style.top = '4rem'; // Based on pt-16
-                    sidebar.style.height = 'calc(100vh - 4rem)';
-                }
-            }
-            mediaQuery.addListener(handleMediaQueryChange);
-            handleMediaQueryChange(mediaQuery); // Initial check
-        </script>
-    </body>
+            </div>
+        </main>
+    </div>
+    
+    <script src="./js/dashboard.js"></script>
+</body>
 </html>
