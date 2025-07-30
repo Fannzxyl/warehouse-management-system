@@ -1943,16 +1943,25 @@
                 document.getElementById('location-type-name').disabled = true;
 
                 const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
-                if (locationTypeToEdit) {
-                    document.getElementById('location-type-name').value = locationTypeToEdit.locationType;
-                    document.getElementById('location-type-length').value = locationTypeToEdit.length;
-                    document.getElementById('location-type-width').value = locationTypeToEdit.width;
-                    document.getElementById('location-type-height').value = locationTypeToEdit.height;
-                    document.getElementById('location-type-length-um').value = locationTypeToEdit.dimensionUM;
-                    document.getElementById('location-type-maximum-weight').value = locationTypeToEdit.maximumWeight;
-                    document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
-                    document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
-                }
+                    if (locationTypeToEdit) {
+                        document.getElementById('location-type-name').value = locationTypeToEdit.locationType;
+                        document.getElementById('location-type-length').value = locationTypeToEdit.length;
+                        document.getElementById('location-type-width').value = locationTypeToEdit.width;
+                        document.getElementById('location-type-height').value = locationTypeToEdit.height;
+                        document.getElementById('location-type-length-um').value = locationTypeToEdit.dimensionUM;
+                        document.getElementById('location-type-maximum-weight').value = locationTypeToEdit.maximumWeight;
+                        document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
+                        document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
+
+                        // TAMBAHKAN BLOK KODE DI BAWAH INI
+                        const udf = locationTypeToEdit.userDefinedFields || {};
+                        for (let i = 1; i <= 7; i++) {
+                            const field = document.getElementById(`lt-user-defined-field${i}`);
+                            if(field) {
+                                field.value = udf[`field${i}`] || '';
+                            }
+                        }
+                    }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -1976,6 +1985,14 @@
             const weightUM = document.getElementById('location-type-weight-um').value;
             const inactive = document.getElementById('location-type-inactive').checked;
             const active = !inactive;
+
+            const userDefinedFields = {};
+                for (let i = 1; i <= 7; i++) {
+                    const field = document.getElementById(`lt-user-defined-field${i}`);
+                    if (field && field.value) {
+                        userDefinedFields[`field${i}`] = field.value;
+                    }
+            }
 
             const newLocationType = {
                 id: currentLocationTypeId || locationTypeName,
