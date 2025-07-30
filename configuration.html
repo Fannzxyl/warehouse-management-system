@@ -226,9 +226,19 @@
                 </div>
             </div>
 
-            <!-- Center Section - Search -->
-            <div class="flex-1 flex justify-center relative max-w-lg mx-4">
-                <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
+            <!-- Center Section - Back to Dashboard Button, Search and Config Dropdown -->
+            <div class="flex-1 flex items-center justify-center gap-4">
+                <!-- Back to Dashboard Button -->
+                <a href="dashboard.html" 
+                   class="hidden md:flex items-center px-4 py-2 bg-wise-primary text-white rounded-lg shadow-md hover:bg-blue-700 transition-all-smooth active-press whitespace-nowrap"
+                   aria-label="Back to Dashboard"
+                >
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span class="font-medium text-sm">Back to Dashboard</span>
+                </a>
+                
+                <!-- Search Bar -->
+                <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card flex-1 focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth max-w-xs">
                     <div class="pl-4">
                         <i class="fas fa-search text-wise-gray"></i>
                     </div>
@@ -246,7 +256,36 @@
                         <i class="fas fa-search sm:hidden"></i>
                     </button>
                 </div>
-                
+
+                <!-- Config Dropdown -->
+                <div class="relative hidden md:block">
+                    <button 
+                        id="config-dropdown-toggle"
+                        class="flex items-center px-4 py-2 bg-white text-wise-dark-gray rounded-xl shadow-md border border-wise-border hover:bg-gray-100 transition-all-smooth active-press whitespace-nowrap"
+                        onclick="toggleConfigDropdown()"
+                        aria-label="DCS menu"
+                    >
+                        <span class="font-medium text-sm">DCS</span> <!-- Placeholder for the dropdown value -->
+                        <i class="fas fa-chevron-down ml-2 text-wise-gray"></i>
+                    </button>
+                    <div id="config-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
+                        <div class="p-2">
+                            <a href="configuration.html?option=DCC" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCC')">DCC</a>
+                            <a href="configuration.html?option=DCE" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCE')">DCE</a>
+                            <a href="configuration.html?option=DCF" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCF')">DCF</a>
+                            <a href="configuration.html?option=DCJ" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCJ')">DCJ</a>
+                            <a href="configuration.html?option=DCK" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCK')">DCK</a>
+                            <a href="configuration.html?option=DCL" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCL')">DCL</a>
+                            <a href="configuration.html?option=DCM" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCM')">DCM</a>
+                            <a href="configuration.html?option=DCP" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCP')">DCP</a>
+                            <a href="configuration.html?option=DCS" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCS')">DCS</a>
+                            <a href="configuration.html?option=DCT" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCT')">DCT</a>
+                            <a href="configuration.html?option=DCY" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCY')">DCY</a>
+                            <a href="configuration.html?option=GBG" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('GBG')">GBG</a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Search History Dropdown -->
                 <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
                     <div class="p-2" id="search-history-content"></div>
@@ -272,10 +311,6 @@
                         <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="navigateToProfile()">
                             <i class="fas fa-user-circle mr-3 text-wise-gray"></i>
                             Profile
-                        </a>
-                        <a href="dashboard.html" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth">
-                            <i class="fas fa-cogs mr-3 text-wise-gray"></i>
-                            Dashboard
                         </a>
                         <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="handleLogout()">
                             <i class="fas fa-sign-out-alt mr-3 text-wise-gray"></i>

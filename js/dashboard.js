@@ -18,6 +18,10 @@
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
+        // New elements for DCS dropdown
+        const configDropdownToggle = document.getElementById('config-dropdown-toggle');
+        const configDropdown = document.getElementById('config-dropdown');
+
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
@@ -142,14 +146,44 @@
                     </div>
                 `,
             },
-            'receiving-deliveries': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Deliveries</h2><p class="text-wise-gray">Details of all incoming deliveries.</p><p class="text-wise-gray text-sm mt-2">Number of deliveries: 5</p>`,
+            'receiving-open-box-balance-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Open/Box Balance Viewer</h2><p class="text-wise-gray">View open and box balances.</p>`,
             },
-            'receiving-returns': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Returns</h2><p class="text-wise-gray">Details of all received returns.</p><p class="text-wise-gray text-sm mt-2">Number of returns: 2</p>`,
+            'receiving-po-quick-find': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Purchase Order Quick Find</h2><p class="text-wise-gray">Quickly find purchase orders.</p>`,
             },
-            'receiving-vendors': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Vendors</h2><p class="text-wise-gray">List of vendors and their delivery status.</p><p class="text-wise-gray text-sm mt-2">Number of active vendors: 10</p>`,
+            'receiving-receipt-closet-supplier': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Closet By Supplier</h2><p class="text-wise-gray">Receipt details organized by supplier.</p>`,
+            },
+            'receiving-receipt-container-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Container Viewer</h2><p class="text-wise-gray">View receipt containers.</p>`,
+            },
+            'receiving-receipt-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2><p class="text-wise-gray">Explore all receipt details.</p>`,
+            },
+            'receiving-receipt-monitoring-close': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Monitoring/Close Viewer</h2><p class="text-wise-gray">Monitor and close receipts.</p>`,
+            },
+            'receiving-receipt-no-close': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt No/Close Viewer</h2><p class="text-wise-gray">View receipts that are not closed.</p>`,
+            },
+            'receiving-receipt-open-closed': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Open And Closed Viewer</h2><p class="text-wise-gray">View both open and closed receipts.</p>`,
+            },
+            'receiving-receipt-shipment-closed': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Shipment Closed Viewer</h2><p class="text-wise-gray">View closed receipt shipments.</p>`,
+            },
+            'receiving-performance-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Performance Viewer</h2><p class="text-wise-gray">Analyze receiving performance.</p>`,
+            },
+            'receiving-workbench': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Workbench</h2><p class="text-wise-gray">Workbench for receiving operations.</p>`,
+            },
+            'receiving-shipment-closed-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Shipment Closed Viewer</h2><p class="text-wise-gray">View closed shipments.</p>`,
+            },
+            'receiving-virtual-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Virtual Receiving Viewer</h2><p class="text-wise-gray">View virtual receiving details.</p>`,
             },
             order: {
                 full: `
@@ -164,14 +198,17 @@
                     </div>
                 `,
             },
-            'order-new': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - New Orders</h2><p class="text-wise-gray">List of new orders to be processed.</p><p class="text-wise-gray text-sm mt-2">New orders: 7</p>`,
+            'order-planning-consolidated-shipment-history': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Consolidated Shipment History</h2><p class="text-wise-gray">Review consolidated shipment history.</p>`,
             },
-            'order-pending': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Pending Orders</h2><p class="text-wise-gray">List of orders that are in process or awaiting action.</p><p class="text-wise-gray text-sm mt-2">Pending orders: 12</p>`,
+            'order-planning-order-entry': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order Entry</h2><p class="text-wise-gray">Enter new orders.</p>`,
             },
-            'order-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order History</h2><p class="text-wise-gray">Archive of all completed orders.</p><p class="text-wise-gray text-sm mt-2">Total completed orders: 500</p>`,
+            'order-planning-wave-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Explorer</h2><p class="text-wise-gray">Explore order waves.</p>`,
+            },
+            'order-planning-wave-quick-find': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Quick Find</h2><p class="text-wise-gray">Quickly find order waves.</p>`,
             },
             shipping: {
                 full: `
@@ -196,6 +233,78 @@
                     </div>
                 `,
             },
+            'shipping-close-container': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Close Container</h2><p class="text-wise-gray">Close shipping containers.</p>`,
+            },
+            'shipping-consolidated-container-location-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Consolidated Container Location Viewer</h2><p class="text-wise-gray">View consolidated container locations.</p>`,
+            },
+            'shipping-containers-delivered': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Containers Delivered</h2><p class="text-wise-gray">Track delivered containers.</p>`,
+            },
+            'shipping-outbound-surplus-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Outbound Surplus Viewer</h2><p class="text-wise-gray">View outbound surplus.</p>`,
+            },
+            'shipping-dock-scheduler': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Dock Scheduler</h2><p class="text-wise-gray">Schedule dock appointments.</p>`,
+            },
+            'shipping-load-close-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Close Viewer</h2><p class="text-wise-gray">View load close details.</p>`,
+            },
+            'shipping-load-count-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Count Viewer</h2><p class="text-wise-gray">View load counts.</p>`,
+            },
+            'shipping-load-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Explorer</h2><p class="text-wise-gray">Explore shipping loads.</p>`,
+            },
+            'shipping-maxi-high-container-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Maxi High Container Viewer</h2><p class="text-wise-gray">View maxi high containers.</p>`,
+            },
+            'shipping-multiple-order-pallet-close': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Multiple Order Pallet Close</h2><p class="text-wise-gray">Close multiple order pallets.</p>`,
+            },
+            'shipping-oos-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - OOS Viewer</h2><p class="text-wise-gray">View Out-of-Stock information.</p>`,
+            },
+            'shipping-operator-surplus-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Operator Surplus Viewer</h2><p class="text-wise-gray">View operator surplus.</p>`,
+            },
+            'shipping-pallet-close': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet Close</h2><p class="text-wise-gray">Close pallets.</p>`,
+            },
+            'shipping-pallet-in-staging-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet In Staging Viewer</h2><p class="text-wise-gray">View pallets in staging.</p>`,
+            },
+            'shipping-put-to-store-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Put to Store Viewer</h2><p class="text-wise-gray">View put-to-store details.</p>`,
+            },
+            'shipping-qc-workbench': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - QC Workbench</h2><p class="text-wise-gray">Quality Control workbench.</p>`,
+            },
+            'shipping-shipment-detail-allocation-rejection': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Detail Allocation Rejection Viewer</h2><p class="text-wise-gray">View shipment allocation rejections.</p>`,
+            },
+            'shipping-shipment-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Explorer</h2><p class="text-wise-gray">Explore shipments.</p>`,
+            },
+            'shipping-shipment-quick-find': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Quick Find</h2><p class="text-wise-gray">Quickly find shipments.</p>`,
+            },
+            'shipping-shipment-start-pick-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Start/Pick Viewer</h2><p class="text-wise-gray">View shipment start and pick details.</p>`,
+            },
+            'shipping-shipment-stop-tuk-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Stop/Tuk Viewer</h2><p class="text-wise-gray">View shipment stop/Tuk details.</p>`,
+            },
+            'shipping-container-identification': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Identification</h2><p class="text-wise-gray">Identify shipping containers.</p>`,
+            },
+            'shipping-container-workbench': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Workbench</h2><p class="text-wise-gray">Shipping container workbench.</p>`,
+            },
+            'shipping-sit-workbench': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - SIT Workbench</h2><p class="text-wise-gray">SIT workbench details.</p>`,
+            },
             work: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Management</h2>
@@ -209,14 +318,32 @@
                     </div>
                 `,
             },
-            'work-tasks': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Tasks</h2><p class="text-wise-gray">List of assigned tasks and their status.</p><p class="text-wise-gray text-sm mt-2">Active tasks: 8</p>`,
+            'work-label-reprint-utility': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Label Reprint Utility</h2><p class="text-wise-gray">Utility for reprinting labels.</p>`,
             },
-            'work-schedule': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Schedule</h2><p class="text-wise-gray">Work schedule for all teams and individuals.</p><p class="text-wise-gray text-sm mt-2">Today's schedule: Full</p>`,
+            'work-picking-management-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Management Explorer</h2><p class="text-wise-gray">Explore picking management.</p>`,
             },
-            'work-teams': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Teams</h2><p class="text-wise-gray">List of work teams and their members.</p><p class="text-wise-gray text-sm mt-2">Count: 5</p>`,
+            'work-picking-sigtion': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Sigtion</h2><p class="text-wise-gray">Picking sigtion details.</p>`,
+            },
+            'work-execution': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Execution</h2><p class="text-wise-gray">Monitor work execution.</p>`,
+            },
+            'work-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Explorer</h2><p class="text-wise-gray">Explore work tasks.</p>`,
+            },
+            'work-insight': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Insight</h2><p class="text-wise-gray">Gain insights into work processes.</p>`,
+            },
+            'work-monitoring-customer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Customer</h2><p class="text-wise-gray">Monitor work related to customers.</p>`,
+            },
+            'work-monitoring-group': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Group</h2><p class="text-wise-gray">Monitor work by groups.</p>`,
+            },
+            'work-quick-find': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Quick Find</h2><p class="text-wise-gray">Quickly find work tasks.</p>`,
             },
             'cross-application': {
                 full: `
@@ -231,14 +358,44 @@
                     </div>
                 `,
             },
-            'cross-app-integrations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Integrations</h2><p class="text-wise-gray">Status and configuration of application integrations.</p><p class="text-wise-gray text-sm mt-2">Active integrations: 3</p>`,
+            'cross-app-ar-upload-interface-data-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - AR Upload Interface Data Viewer</h2><p class="text-wise-gray">View AR upload interface data.</p>`,
             },
-            'cross-app-data-sync': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Data Synchronization</h2><p class="text-wise-gray">Track data synchronization status between systems.</p><p class="text-wise-gray text-sm mt-2">Last sync: 10 minutes ago</p>`,
+            'cross-app-background-job-request-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Background Job Request Viewer</h2><p class="text-wise-gray">View background job requests.</p>`,
             },
-            'cross-app-api': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - API Management</h2><p class="text-wise-gray">Manage API keys and access for integrations.</p><p class="text-wise-gray text-sm mt-2">Active API keys: 7</p>`,
+            'cross-app-configurations': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Configurations</h2><p class="text-wise-gray">Manage cross-application configurations.</p>`,
+            },
+            'cross-app-interface-data': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Data</h2><p class="text-wise-gray">View interface data.</p>`,
+            },
+            'cross-app-interface-error-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Error Viewer</h2><p class="text-wise-gray">View interface errors.</p>`,
+            },
+            'cross-app-progistics': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Progistics</h2><p class="text-wise-gray">Progistics details.</p>`,
+            },
+            'cross-app-reupload-interface-data-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - ReUpload Interface Data Viewer</h2><p class="text-wise-gray">View re-uploaded interface data.</p>`,
+            },
+            'cross-app-rf': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - RF</h2><p class="text-wise-gray">RF functionality details.</p>`,
+            },
+            'cross-app-trading-partner-management': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Trading Partner Management</h2><p class="text-wise-gray">Manage trading partners.</p>`,
+            },
+            'cross-app-transaction-and-process-history': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Transaction and Process History</h2><p class="text-wise-gray">View transaction and process history.</p>`,
+            },
+            'cross-app-upload-interface-data-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Upload Interface Data Viewer</h2><p class="text-wise-gray">View uploaded interface data.</p>`,
+            },
+            'cross-app-wave-repost-ptl-rabbitmq': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Wave repost only for PTL Messages to RabbitMQ</h2><p class="text-wise-gray">Wave repost details for PTL Messages to RabbitMQ.</p>`,
+            },
+            'cross-app-web-statistics-generation': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Web Statistics Generation</h2><p class="text-wise-gray">Generate web statistics.</p>`,
             },
             inventory: {
                 full: `
@@ -251,16 +408,64 @@
                     </div>
                 `,
             },
-            yard: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Yard</h2><p class="text-wise-gray">Manage inventory located in the yard.</p><p class="text-wise-gray text-sm mt-2">Item count: 150</p>`,
+            'inventory-cycle-count-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Explorer</h2><p class="text-wise-gray">Explore cycle counts.</p>`,
             },
-            warehouse: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Warehouse</h2><p class="text-wise-gray">Manage inventory located in the warehouse.</p><p class="text-wise-gray text-sm mt-2">Item count: 1000</p>`,
+            'inventory-cycle-count-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Viewer</h2><p class="text-wise-gray">View cycle counts.</p>`,
             },
-            storage: {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Storage</h2><p class="text-wise-gray">Manage long-term or overflow storage.</p><p class="text-wise-gray text-sm mt-2">Item count: 350</p>`,
+            'inventory-edit-customer-shelflife': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Edit Customer Shelflife</h2><p class="text-wise-gray">Edit customer shelflife.</p>`,
             },
-            performance: {
+            'inventory-finished-item-breakdown': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Finished Item Breakdown</h2><p class="text-wise-gray">View finished item breakdown.</p>`,
+            },
+            'inventory-immediate-needs-insight': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Insight</h2><p class="text-wise-gray">Gain insight into immediate needs.</p>`,
+            },
+            'inventory-immediate-needs-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Viewer</h2><p class="text-wise-gray">View immediate needs.</p>`,
+            },
+            'inventory-interdept': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Interdept</h2><p class="text-wise-gray">Interdepartmental inventory details.</p>`,
+            },
+            'inventory-adjustment-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Adjustment Viewer</h2><p class="text-wise-gray">View inventory adjustments.</p>`,
+            },
+            'inventory-insight': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Insight</h2><p class="text-wise-gray">Gain inventory insights.</p>`,
+            },
+            'inventory-management': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Management</h2><p class="text-wise-gray">Manage inventory.</p>`,
+            },
+            'inventory-item-master-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Item Master Viewer</h2><p class="text-wise-gray">View item master data.</p>`,
+            },
+            'inventory-location-explorer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Explorer</h2><p class="text-wise-gray">Explore locations.</p>`,
+            },
+            'inventory-location-inventory-attribute-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Attribute Viewer</h2><p class="text-wise-gray">View location inventory attributes.</p>`,
+            },
+            'inventory-location-inventory-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Viewer</h2><p class="text-wise-gray">View location inventory.</p>`,
+            },
+            'inventory-location-master-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Master Viewer</h2><p class="text-wise-gray">View location master data.</p>`,
+            },
+            'inventory-location-quick-find': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Quick Find</h2><p class="text-wise-gray">Quickly find locations.</p>`,
+            },
+            'inventory-lot-freight': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Freight</h2><p class="text-wise-gray">Lot freight details.</p>`,
+            },
+            'inventory-lot-workbench': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Workbench</h2><p class="text-wise-gray">Workbench for lot management.</p>`,
+            },
+            'inventory-mismatch-company-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Mismatch Company Viewer</h2><p class="text-wise-gray">View mismatch company details.</p>`,
+            },
+            'performance': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management</h2>
                     <p class="text-wise-gray mb-4">Monitor and analyze performance metrics for various operations and personnel. Select a sub-category from the sidebar.</p>
@@ -273,109 +478,88 @@
                     </div>
                 `,
             },
-            'performance-kpis': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - KPIs</h2><p class="text-wise-gray">View key performance metrics.</p><p class="text-wise-gray text-sm mt-2">KPIs: 5 active</p>`,
+            'performance-management-dashboard': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Dashboard</h2><p class="text-wise-gray">View performance metrics on the dashboard.</p>`,
             },
-            'performance-analytics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Analytics</h2><p class="text-wise-gray">Analyze detailed performance data.</p><p class="text-wise-gray text-sm mt-2">Last report: Today</p>`,
+            'performance-quality-history': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Quality History</h2><p class="text-wise-gray">Review quality history data.</p>`,
             },
-            'performance-goals': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance - Goals</h2><p class="text-wise-gray">Track and manage performance goals.</p><p class="text-wise-gray text-sm mt-2">Active goals: 3</p>`,
+            'performance-rfid-history': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - RFID History</h2><p class="text-wise-gray">View RFID history.</p>`,
             },
-
-            'setting-optimization': {
+            'performance-supply-chain-intelligence': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Supply Chain Intelligence</h2><p class="text-wise-gray">Access supply chain intelligence reports.</p>`,
+            },
+            'performance-warehouse-alerts': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Warehouse Alerts</h2><p class="text-wise-gray">View warehouse alerts.</p>`,
+            },
+            'performance-warehouse-utilization-report': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Warehouse Utilization Report</h2><p class="text-wise-gray">Generate warehouse utilization reports.</p>`,
+            },
+            'slotting-optimization': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization</h2>
-                    <p class="text-wise-gray mb-4">Manage settings to optimize system performance and notification preferences.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization</h2>
+                    <p class="text-wise-gray mb-4">Optimize slotting strategies for efficient warehouse operations. Select a sub-category from the sidebar.</p>
                     <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Setting Overview</h3>
+                        <h3 class="font-medium text-wise-dark-gray">Optimization Status</h3>
                         <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Optimization Status: Active</li>
-                            <li>Automatic Updates: Enabled</li>
-                            <li>Email Notifications: Enabled</li>
+                            <li>Last Run: Yesterday</li>
+                            <li>Next Scheduled Run: Tomorrow</li>
                         </ul>
                     </div>
                 `,
             },
-            'setting-optimization-general': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">General Settings</h2>
-                    <p class="text-wise-gray">Configure basic system settings.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="auto-update" class="flex items-center">
-                                <input type="checkbox" id="auto-update" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Automatic Updates</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="language-select" class="block text-sm font-medium text-wise-dark-gray mb-1">Language:</label>
-                            <select id="language-select" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                <option value="id">Indonesian</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
+            'slotting-optimization-rules': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Rules</h2><p class="text-wise-gray">Manage slotting optimization rules.</p>`,
+            },
+            'slotting-optimization-reports': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Reports</h2><p class="text-wise-gray">View slotting optimization reports.</p>`,
+            },
+            'slotting-optimization-settings': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Settings</h2><p class="text-wise-gray">Configure slotting optimization settings.</p>`,
+            },
+            'system-management': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management</h2>
+                    <p class="text-wise-gray mb-4">Manage system users, logs, and backups. Select a sub-category from the sidebar.</p>
+                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
+                        <h3 class="font-medium text-wise-dark-gray">System Health</h3>
+                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
+                            <li>Server Status: Online</li>
+                            <li>Last Backup: 2 hours ago</li>
+                        </ul>
                     </div>
                 `,
             },
-            'setting-optimization-performance': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Adjustments</h2>
-                    <p class="text-wise-gray">Optimize application performance.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="cache-size" class="block text-sm font-medium text-wise-dark-gray mb-1">Cache Size (MB):</label>
-                            <input type="number" id="cache-size" value="256" class="w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                        </div>
-                        <div>
-                            <label for="data-compression" class="flex items-center">
-                                <input type="checkbox" id="data-compression" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">Enable Data Compression</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
+            'system-management-audit-log-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Audit Log Viewer</h2><p class="text-wise-gray">View system audit logs.</p>`,
             },
-            'setting-optimization-notifications': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Notification Preferences</h2>
-                    <p class="text-wise-gray">Set how you receive notifications.</p>
-                    <div class="mt-4 space-y-4">
-                        <div>
-                            <label for="email-notifications" class="flex items-center">
-                                <input type="checkbox" id="email-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
-                                <span class="ml-2 text-sm text-wise-dark-gray">Email Notifications</span>
-                            </label>
-                        </div>
-                        <div>
-                            <label for="sms-notifications" class="flex items-center">
-                                <input type="checkbox" id="sms-notifications" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                <span class="ml-2 text-sm text-wise-dark-gray">SMS Notifications</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
+            'system-management-background-job-queue-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Background Job Queue Viewer</h2><p class="text-wise-gray">View background job queue.</p>`,
             },
-            'system-management-users': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Users</h2>
-                    <p class="text-wise-gray">Kelola semua pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Pengguna: 5</p>
-                `
+            'system-management-dif-incoming-message-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - DIF Incoming Message Viewer</h2><p class="text-wise-gray">View DIF incoming messages.</p>`,
             },
-            'system-management-logs': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Log</h2>
-                    <p class="text-wise-gray">Kelola semua log pengguna yang ada di dalam sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Log Pengguna: 5</p>
-                `,
+            'system-management-dif-outgoing-message-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - DIF Outgoing Message Viewer</h2><p class="text-wise-gray">View DIF outgoing messages.</p>`,
             },
-            'system-management-backup': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management Backup</h2>
-                    <p class="text-wise-gray">Kelola cadangan sistem.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total Cadangan Tersedia: 5</p>
-                `,
+            'system-management-display-properties': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Display Properties</h2><p class="text-wise-gray">Configure display properties.</p>`,
+            },
+            'system-management-license-key-information': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - License Key Information</h2><p class="text-wise-gray">View license key information.</p>`,
+            },
+            'system-management-manual-inventory-adjustment': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Manual Inventory Adjustment</h2><p class="text-wise-gray">Perform manual inventory adjustments.</p>`,
+            },
+            'system-management-scale-configuration': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Scale Configuration</h2><p class="text-wise-gray">Configure scale settings.</p>`,
+            },
+            'system-management-system-text-editor': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - System Text Editor</h2><p class="text-wise-gray">Edit system texts.</p>`,
+            },
+            'system-management-user-activity-viewer': {
+                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - User Activity Viewer</h2><p class="text-wise-gray">View user activity logs.</p>`,
             },
             'archive': {
                 full: `
@@ -491,23 +675,124 @@
 
         const parentMapping = {
             'yard-vehicles': 'yard-management', 'yard-equipment': 'yard-management', 'yard-personnel': 'yard-management',
+            'receiving-open-box-balance-viewer': 'receiving',
+            'receiving-po-quick-find': 'receiving',
+            'receiving-receipt-closet-supplier': 'receiving',
+            'receiving-receipt-container-viewer': 'receiving',
+            'receiving-receipt-explorer': 'receiving',
+            'receiving-receipt-monitoring-close': 'receiving',
+            'receiving-receipt-no-close': 'receiving',
+            'receiving-receipt-open-closed': 'receiving',
+            'receiving-receipt-shipment-closed': 'receiving',
+            'receiving-performance-viewer': 'receiving',
+            'receiving-workbench': 'receiving',
+            'receiving-shipment-closed-viewer': 'receiving',
+            'receiving-virtual-viewer': 'receiving',
+            'order-planning-consolidated-shipment-history': 'order',
+            'order-planning-order-entry': 'order',
+            'order-planning-wave-explorer': 'order',
+            'order-planning-wave-quick-find': 'order',
+            'shipping-close-container': 'shipping',
+            'shipping-consolidated-container-location-viewer': 'shipping',
+            'shipping-containers-delivered': 'shipping',
+            'shipping-outbound-surplus-viewer': 'shipping',
+            'shipping-dock-scheduler': 'shipping',
+            'shipping-load-close-viewer': 'shipping',
+            'shipping-load-count-viewer': 'shipping',
+            'shipping-load-explorer': 'shipping',
+            'shipping-maxi-high-container-viewer': 'shipping',
+            'shipping-multiple-order-pallet-close': 'shipping',
+            'shipping-oos-viewer': 'shipping',
+            'shipping-operator-surplus-viewer': 'shipping',
+            'shipping-pallet-close': 'shipping',
+            'shipping-pallet-in-staging-viewer': 'shipping',
+            'shipping-put-to-store-viewer': 'shipping',
+            'shipping-qc-workbench': 'shipping',
+            'shipping-shipment-detail-allocation-rejection': 'shipping',
+            'shipping-shipment-explorer': 'shipping',
+            'shipping-shipment-quick-find': 'shipping',
+            'shipping-shipment-start-pick-viewer': 'shipping',
+            'shipping-shipment-stop-tuk-viewer': 'shipping',
+            'shipping-container-identification': 'shipping',
+            'shipping-container-workbench': 'shipping',
+            'shipping-sit-workbench': 'shipping',
+            'work-label-reprint-utility': 'work',
+            'work-picking-management-explorer': 'work',
+            'work-picking-sigtion': 'work',
+            'work-execution': 'work',
+            'work-explorer': 'work',
+            'work-insight': 'work',
+            'work-monitoring-customer': 'work',
+            'work-monitoring-group': 'work',
+            'work-quick-find': 'work',
+            'cross-app-ar-upload-interface-data-viewer': 'cross-application',
+            'cross-app-background-job-request-viewer': 'cross-application',
+            'cross-app-configurations': 'cross-application',
+            'cross-app-interface-data': 'cross-application',
+            'cross-app-interface-error-viewer': 'cross-application',
+            'cross-app-progistics': 'cross-application',
+            'cross-app-reupload-interface-data-viewer': 'cross-application',
+            'cross-app-rf': 'cross-application',
+            'cross-app-trading-partner-management': 'cross-application',
+            'cross-app-transaction-and-process-history': 'cross-application',
+            'cross-app-upload-interface-data-viewer': 'cross-application',
+            'cross-app-wave-repost-ptl-rabbitmq': 'cross-application',
+            'cross-app-web-statistics-generation': 'cross-application',
+            'inventory-cycle-count-explorer': 'inventory',
+            'inventory-cycle-count-viewer': 'inventory',
+            'inventory-edit-customer-shelflife': 'inventory',
+            'inventory-finished-item-breakdown': 'inventory',
+            'inventory-immediate-needs-insight': 'inventory',
+            'inventory-immediate-needs-viewer': 'inventory',
+            'inventory-interdept': 'inventory',
+            'inventory-adjustment-viewer': 'inventory',
+            'inventory-insight': 'inventory',
+            'inventory-management': 'inventory',
+            'inventory-item-master-viewer': 'inventory',
+            'inventory-location-explorer': 'inventory',
+            'inventory-location-inventory-attribute-viewer': 'inventory',
+            'inventory-location-inventory-viewer': 'inventory',
+            'inventory-location-master-viewer': 'inventory',
+            'inventory-location-quick-find': 'inventory',
+            'inventory-lot-freight': 'inventory',
+            'inventory-lot-workbench': 'inventory',
+            'inventory-mismatch-company-viewer': 'inventory',
+            'performance-management-dashboard': 'performance',
+            'performance-quality-history': 'performance',
+            'performance-rfid-history': 'performance',
+            'performance-supply-chain-intelligence': 'performance',
+            'performance-warehouse-alerts': 'performance',
+            'performance-warehouse-utilization-report': 'performance',
+            'slotting-optimization-rules': 'slotting-optimization',
+            'slotting-optimization-reports': 'slotting-optimization',
+            'slotting-optimization-settings': 'slotting-optimization',
+            'system-management-audit-log-viewer': 'system-management',
+            'system-management-background-job-queue-viewer': 'system-management',
+            'system-management-dif-incoming-message-viewer': 'system-management',
+            'system-management-dif-outgoing-message-viewer': 'system-management',
+            'system-management-display-properties': 'system-management',
+            'system-management-license-key-information': 'system-management',
+            'system-management-manual-inventory-adjustment': 'system-management',
+            'system-management-scale-configuration': 'system-management',
+            'system-management-system-text-editor': 'system-management',
+            'system-management-user-activity-viewer': 'system-management',
+            'archive-documents': 'archive',
+            'archive-media': 'archive',
+            'archive-financial': 'archive',
             'receiving-deliveries': 'receiving', 'receiving-returns': 'receiving', 'receiving-vendors': 'receiving',
             'order-new': 'order', 'order-pending': 'order', 'order-history': 'order',
             'work-tasks': 'work', 'work-schedule': 'work', 'work-teams': 'work',
             'cross-app-integrations': 'cross-application', 'cross-app-data-sync': 'cross-application', 'cross-app-api': 'cross-application',
             'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
             'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
-            'system-users': 'system', 'system-logs': 'system', 'system-backup': 'system', 'data-archiving': 'archive', // Updated for English names
+            'system-users': 'system-management', 'system-logs': 'system-management', 'system-backup': 'system-management',
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            'locating-strategies': 'configuration',
-            'locating-rule': 'configuration',
-            'archive-documents': 'archive',
-            'archive-media': 'archive',
-            'archive-financial': 'archive',
-            'security-group': 'system', 
-            'security-permission': 'system', 
+            'locating-strategies': 'setting-optimization',
+            'locating-rule': 'setting-optimization',
+            'security-group': 'system-management',
+            'security-permission': 'system-management',
         };
 
         window.toggleChildren = function(category) {
@@ -515,6 +800,18 @@
             const arrowIcon = document.getElementById(`${category}-arrow`);
 
             if (childrenDiv && arrowIcon) {
+                // Close all other open sections
+                document.querySelectorAll('.sidebar-section .space-y-1:not(.hidden)').forEach(openContainer => {
+                    if (openContainer.id !== `${category}-children`) {
+                        openContainer.classList.add('hidden');
+                        const openArrow = document.getElementById(openContainer.id.replace('-children', '-arrow'));
+                        if (openArrow) {
+                            openArrow.classList.remove('rotate-90');
+                            openArrow.classList.add('rotate-0');
+                        }
+                    }
+                });
+
                 childrenDiv.classList.toggle('hidden');
                 arrowIcon.classList.toggle('rotate-90');
                 arrowIcon.classList.toggle('rotate-0');
@@ -824,16 +1121,23 @@
 
         // Closes user dropdown and search history when clicking outside the area.
         document.addEventListener('click', function(event) {
-            const userIconContainer = document.querySelector('header .relative.flex.items-center');
+            const userIconContainer = document.querySelector('header .flex.justify-end.items-center.space-x-3');
             const userDropdown = document.getElementById('user-dropdown');
             const searchInput = document.getElementById('search-input');
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+            const configDropdown = document.getElementById('config-dropdown');
+            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
 
-            if (userIconContainer && userDropdown && !userIconContainer.contains(event.target)) {
+
+            if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
             if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
                 searchHistoryDropdown.classList.add('hidden');
+            }
+            // Close config dropdown if click outside
+            if (configDropdown && !configDropdown.contains(event.target) && !configDropdownToggle.contains(event.target)) {
+                configDropdown.classList.add('hidden');
             }
         });
 
@@ -977,6 +1281,42 @@
             const username = "SuperAdmin";
             document.getElementById('username-display').textContent = username;
         };
+
+        // --- New DCS Dropdown Functionality ---
+        /**
+         * Toggles the visibility of the DCS dropdown.
+         */
+        window.toggleConfigDropdown = function() {
+            const configDropdown = document.getElementById('config-dropdown');
+            configDropdown.classList.toggle('hidden');
+            if (!configDropdown.classList.contains('hidden')) {
+                configDropdown.classList.remove('animate-slide-up'); // Reset animation for re-trigger
+                void configDropdown.offsetWidth; // Trigger reflow
+                configDropdown.classList.add('animate-slide-up');
+            }
+        };
+
+        /**
+         * Handles selection of an option from the DCS dropdown.
+         * @param {string} option - The selected option (e.g., 'DCC', 'DCS').
+         */
+        window.selectConfigOption = function(option) {
+            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
+            configDropdownToggle.querySelector('span').textContent = option; // Update button text
+            document.getElementById('config-dropdown').classList.add('hidden'); // Hide dropdown
+            // Redirect to configuration.html with the selected option
+            window.location.href = `configuration.html?option=${option}`;
+        };
+
+        // Close DCS dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            const configDropdown = document.getElementById('config-dropdown');
+            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
+            if (configDropdown && !configDropdown.contains(event.target) && !configDropdownToggle.contains(event.target)) {
+                configDropdown.classList.add('hidden');
+            }
+        });
+
     });
 
 })();
