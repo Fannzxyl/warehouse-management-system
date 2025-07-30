@@ -397,7 +397,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                        <input type="text" id="zone-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                                        <input type="text" id="zone-record-type" name="recordType" placeholder="ZONETYPE" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                     </div>
                                     <div class="mb-4">
                                         <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
@@ -411,7 +411,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="zone-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                            <input type="checkbox" id="zone-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                             <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                         </label>
                                     </div>
@@ -481,10 +481,38 @@
                                         </div>
                                     </div>
                                     <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data for Location Type</h4>
-                                        <p class="text-wise-gray text-sm">Add custom fields for location types here.</p>
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="lt-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                <input type="text" id="lt-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                <input type="text" id="lt-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                <input type="text" id="lt-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                <input type="text" id="lt-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                <input type="text" id="lt-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                <input type="text" id="lt-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="lt-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                <input type="text" id="lt-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
                                     </div>
-
                                     <div class="mb-4 mt-4">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
