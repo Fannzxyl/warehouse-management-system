@@ -12,16 +12,18 @@
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
 
+        // Elements for custom modal (alert/confirm)
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
+        // Function to display custom alert
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden');
+            customModalCancelBtn.classList.add('hidden'); // Hide cancel button for alerts
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -37,10 +39,11 @@
             });
         };
 
+        // Function to display custom confirm
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden');
+            customModalCancelBtn.classList.remove('hidden'); // Show cancel button for confirms
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -172,9 +175,9 @@
                                                         <label for="state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="state" name="state" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                             <option value="">--Select--</option>
-                                                            <option value="Jawa Barat">West Java</option>
-                                                            <option value="Jawa Tengah">Central Java</option>
-                                                            <option value="Jawa Timur">East Java</option>
+                                                            <option value="West Java">West Java</option>
+                                                            <option value="Central Java">Central Java</option>
+                                                            <option value="East Java">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -247,9 +250,9 @@
                                                         <label for="return-state" class="block text-sm font-medium text-wise-dark-gray">State:</label>
                                                         <select id="return-state" name="returnState" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                             <option value="">--Select--</option>
-                                                            <option value="Jawa Barat">West Java</option>
-                                                            <option value="Jawa Tengah">Central Java</option>
-                                                            <option value="Jawa Timur">East Java</option>
+                                                            <option value="West Java">West Java</option>
+                                                            <option value="Central Java">Central Java</option>
+                                                            <option value="East Java">East Java</option>
                                                         </select>
                                                     </div>
                                                     <div class="flex-1">
@@ -765,7 +768,7 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission</h2>
                     <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
                     
-                    <!-- Tombol Aksi dan Search -->
+                    <!-- Action and Search Buttons -->
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
                             Create New Permission
@@ -773,19 +776,19 @@
                         <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
                     </div>
 
-                    <!-- Container untuk Tabel -->
+                    <!-- Container for Table -->
                     <div id="security-permission-list-container" class="overflow-x-auto">
-                        <!-- Tabel akan dirender oleh JavaScript di sini -->
+                        <!-- Table will be rendered by JavaScript here -->
                     </div>
 
-                    <!-- Modal Form untuk Create/Edit -->
+                    <!-- Form Modal for Create/Edit -->
                     <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
                             <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
-                                    <!-- Input Nama & Deskripsi -->
+                                    <!-- Name & Description Inputs -->
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
@@ -797,10 +800,10 @@
                                         </div>
                                     </div>
 
-                                    <!-- KATA KUNCI: BAGIAN MENU CHECKBOX -->
+                                    <!-- KEYWORD: MENU CHECKBOX SECTION -->
                                     <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
                                     <div class="border border-wise-border rounded-md p-4">
-                                        <!-- Filter Radio Button -->
+                                        <!-- Filter Radio Buttons -->
                                         <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
                                             <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
                                             <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)" checked><span class="ml-2">All</span></label>
@@ -810,11 +813,11 @@
                                         </div>
                                         <!-- Checkbox List Container -->
                                         <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
-                                            <!-- Checkbox menu akan dirender oleh JavaScript -->
+                                            <!-- Menu checkboxes will be rendered by JavaScript -->
                                         </div>
                                     </div>
                                     
-                                    <!-- Checkbox Inactive -->
+                                    <!-- Inactive Checkbox -->
                                     <div class="mt-4">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
@@ -824,7 +827,7 @@
                                 </form>
                             </div>
 
-                            <!-- Tombol OK dan Cancel -->
+                            <!-- OK and Cancel Buttons -->
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
                                 <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
@@ -854,10 +857,11 @@
             'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
-            'security-group': 'system', 
-            'security-permission': 'system', 
+            'security-group': 'system',
+            'security-permission': 'system',
         };
 
+        // Function to toggle sidebar sub-menus
         window.toggleChildren = function(category) {
             const childrenDiv = document.getElementById(`${category}-children`);
             const arrowIcon = document.getElementById(`${category}-arrow`);
@@ -873,8 +877,10 @@
             }
         }
 
+        // Function to select a sidebar category and display corresponding content
         window.selectCategory = function(category) {
 
+            // Remove active classes from all sidebar items
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
             });
@@ -925,6 +931,7 @@
             const defaultContentArea = document.getElementById('default-content-area');
             const searchOverlay = document.getElementById('search-overlay');
 
+            // Hide search overlay when selecting a category
             searchOverlay.classList.add('hidden');
 
             if (content && content.full) {
@@ -960,10 +967,10 @@
                 initializeTabButtons('locating-rule-form-modal');
                 // activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
-            } else if (category === 'security-group') { 
+            } else if (category === 'security-group') {
                 renderSecurityGroupList();
-            } else if (category === 'security-permission') { 
-                renderSecurityPermissionList(); 
+            } else if (category === 'security-permission') {
+                renderSecurityPermissionList();
             }
 
             // Close sidebar in mobile view after selecting a category
@@ -978,7 +985,6 @@
         /**
          * Handles search input from header or overlay.
          * @param {string} query - The search keyword.
-         * @param {string} source - The search source ('overlay' or otherwise).
          */
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
@@ -986,14 +992,16 @@
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
 
             if (query.length > 0) {
+                // Show search overlay if there's a query
                 searchOverlay.classList.remove('hidden');
-                overlaySearchInput.value = query;
-                performSearch(query, 'overlay');
-                searchHistoryDropdown.classList.add('hidden');
+                overlaySearchInput.value = query; // Populate overlay input with the query
+                performSearch(query, 'overlay'); // Perform search in the overlay
+                searchHistoryDropdown.classList.add('hidden'); // Hide search history
             } else {
+                // Hide search overlay if query is empty
                 searchOverlay.classList.add('hidden');
-                selectCategory(currentCategory);
-                showSearchHistory();
+                selectCategory(currentCategory); // Revert to current category
+                showSearchHistory(); // Show search history
             }
         }
 
@@ -1007,10 +1015,14 @@
             const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
             const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
 
+            // Hide default filters
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
-            document.getElementById('filter-articles').classList.add('hidden');
-            document.getElementById('filter-photography').classList.add('hidden');
+            // Ensure filter elements exist before attempting to hide them
+            const filterArticles = document.getElementById('filter-articles');
+            if (filterArticles) filterArticles.classList.add('hidden');
+            const filterPhotography = document.getElementById('filter-photography');
+            if (filterPhotography) filterPhotography.classList.add('hidden');
 
 
             if (query.length > 0) {
@@ -1092,8 +1104,8 @@
          * @param {string} query - The search keyword that led to this result.
          */
         window.selectSearchResult = function(id, title, query) {
-            addSearchHistory(query);
-            displayContentInMainDashboard(id);
+            addSearchHistory(query); // Add query to search history
+            displayContentInMainDashboard(id); // Display content in main dashboard
         }
 
         /**
@@ -1112,8 +1124,8 @@
                 defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Full Content for ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No full content available.</p>`;
             }
 
-            closeSearchOverlay();
-            selectCategory(id);
+            closeSearchOverlay(); // Close search overlay
+            selectCategory(id); // Select the corresponding category in the sidebar
         }
 
         /**
@@ -1154,14 +1166,17 @@
          */
         window.closeSearchOverlay = function() {
             document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = '';
-            document.getElementById('overlay-search-input').value = '';
-            activeFilters = [];
+            document.getElementById('search-input').value = ''; // Clear header search input
+            document.getElementById('overlay-search-input').value = ''; // Clear overlay search input
+            activeFilters = []; // Clear all active filters
             document.getElementById('overlay-search-filters').classList.add('hidden');
-            document.getElementById('filter-articles').classList.add('hidden');
-            document.getElementById('filter-photography').classList.add('hidden');
-            document.getElementById('search-history-dropdown').classList.add('hidden');
-            selectCategory(currentCategory);
+            // Ensure filter elements exist before attempting to hide them
+            const filterArticles = document.getElementById('filter-articles');
+            if (filterArticles) filterArticles.classList.add('hidden');
+            const filterPhotography = document.getElementById('filter-photography');
+            if (filterPhotography) filterPhotography.classList.add('hidden');
+            document.getElementById('search-history-dropdown').classList.add('hidden'); // Hide search history
+            selectCategory(currentCategory); // Revert to current category
         }
 
         /**
@@ -1208,8 +1223,8 @@
          */
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query);
-                searchHistory = searchHistory.slice(0, 5);
+                searchHistory.unshift(query); // Add to the beginning of the array
+                searchHistory = searchHistory.slice(0, 5); // Limit to the last 5 items
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
         }
@@ -1221,7 +1236,7 @@
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
 
-            historyContent.innerHTML = '';
+            historyContent.innerHTML = ''; // Clear previous content
 
             if (searchHistory.length > 0) {
                 searchHistory.forEach((item, index) => {
@@ -1251,7 +1266,7 @@
          */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
-            handleSearch(query);
+            handleSearch(query); // Call handleSearch to trigger search and display overlay
             document.getElementById('search-history-dropdown').classList.add('hidden');
         }
 
@@ -1262,7 +1277,7 @@
         window.removeSearchHistory = function(index) {
             searchHistory.splice(index, 1);
             localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory();
+            showSearchHistory(); // Update history display
         }
 
         /**
@@ -1271,7 +1286,7 @@
         window.clearAllSearchHistory = function() {
             searchHistory = [];
             localStorage.removeItem('searchHistory');
-            showSearchHistory();
+            showSearchHistory(); // Update history display
         }
 
         // Dummy data for warehouses (from local storage or default)
@@ -1362,14 +1377,14 @@
             },
         ];
 
-        // dummy data for Security Groups
+        // Dummy data for Security Groups
         let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
             { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
             { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
             { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true, users: [], userDefinedFields: {} },
         ];
 
-        // dummy data for Security Permissions
+        // Dummy data for Security Permissions
         let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
             { id: 'admin-access', name: 'Admin Full Access', description: 'Full access for administrators', inactive: false, menus: ['config-company', 'config-billing', 'proc-item-maintenance'] },
             { id: 'viewer-access', name: 'Viewer Access', description: 'View-only access', inactive: false, menus: ['gadget-report'] },
@@ -1399,11 +1414,12 @@
         let currentLocationTypeId = null;
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
-        let currentSecurityGroupId = null; 
-        let currentSecurityPermissionId = null; 
+        let currentSecurityGroupId = null;
+        let currentSecurityPermissionId = null;
         let selectedPermissionNode = null;
         let activePermissionItem = null;
 
+        // Function to save data to local storage
         function saveWarehouses() {
             localStorage.setItem('warehouses', JSON.stringify(warehouses));
         }
@@ -1433,6 +1449,7 @@
             localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions));
         }
 
+        // Function to render the warehouse list
         window.renderWarehouseList = function(filterQuery = '') {
             const container = document.getElementById('warehouse-list-container');
             container.innerHTML = '';
@@ -1481,11 +1498,12 @@
             });
         }
 
+        // Function to display the warehouse form (create/edit)
         window.showWarehouseForm = function(mode, id = null) {
             const modal = document.getElementById('warehouse-form-modal');
             const title = document.getElementById('warehouse-form-title');
             const form = document.getElementById('warehouse-form');
-            form.reset();
+            form.reset(); // Reset form
 
             const tabButtons = form.querySelectorAll('.tab-button');
             tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
@@ -1498,30 +1516,31 @@
             document.getElementById('warehouse-address').classList.remove('hidden');
 
             document.getElementById('same-as-warehouse-address-return').checked = false;
-            toggleReturnAddressFields();
+            toggleReturnAddressFields(); // Ensure return address fields are correctly set
 
-            currentWarehouseId = id;
+            currentWarehouseId = id; // Store the ID of the warehouse being edited
 
             if (mode === 'create') {
                 title.textContent = 'Create New Warehouse';
                 document.getElementById('warehouse-submit-button').textContent = 'Create';
                 document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
                 document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('warehouse-name').disabled = false;
-                document.getElementById('warehouse-inactive').checked = false;
-                renderUserCheckboxes([]);
+                document.getElementById('warehouse-name').disabled = false; // Enable ID input for creation
+                document.getElementById('warehouse-inactive').checked = false; // Default to active
+                renderUserCheckboxes([]); // Render empty user checkboxes
             } else {
                 title.textContent = 'Edit Warehouse';
                 document.getElementById('warehouse-submit-button').textContent = 'Save';
                 document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
                 document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('warehouse-name').disabled = true;
+                document.getElementById('warehouse-name').disabled = true; // Disable ID input for editing
 
                 const warehouseToEdit = warehouses.find(wh => wh.id === id);
                 if (warehouseToEdit) {
+                    // Populate the form with existing warehouse data
                     document.getElementById('warehouse-name').value = warehouseToEdit.id;
                     document.getElementById('warehouse-description').value = warehouseToEdit.description;
-                    document.getElementById('warehouse-inactive').checked = !warehouseToEdit.active;
+                    document.getElementById('warehouse-inactive').checked = !warehouseToEdit.active; // 'Inactive' checkbox
 
                     document.getElementById('address1').value = warehouseToEdit.address1;
                     document.getElementById('address2').value = warehouseToEdit.address2;
@@ -1537,14 +1556,14 @@
                     document.getElementById('ucc-ean-number').value = warehouseToEdit.uccEanNumber;
 
                     document.getElementById('same-as-warehouse-address-return').checked = warehouseToEdit.returnAddressSame;
-                    toggleReturnAddressFields();
+                    toggleReturnAddressFields(); // Call again to set field status
                     document.getElementById('return-name').value = warehouseToEdit.returnName;
                     document.getElementById('return-address1').value = warehouseToEdit.returnAddress1;
                     document.getElementById('return-address2').value = warehouseToEdit.returnAddress2;
                     document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
                     document.getElementById('return-city').value = warehouseToEdit.returnCity;
                     document.getElementById('return-state').value = warehouseToEdit.returnState;
-                    document.getElementById('return-postal-code').value = warehouseToEdit.postalCode;
+                    document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
                     document.getElementById('return-country').value = warehouseToEdit.returnCountry;
                     document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
                     document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
@@ -1565,19 +1584,21 @@
                     document.getElementById('user-defined-field7').value = warehouseToEdit.userDefinedField7;
                     document.getElementById('user-defined-field8').value = warehouseToEdit.userDefinedField8;
 
-                    renderUserCheckboxes(warehouseToEdit.users || []);
+                    renderUserCheckboxes(warehouseToEdit.users || []); // Render user checkboxes with selected ones
                 }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
+        // Function to close the warehouse form
         window.closeWarehouseForm = function() {
             document.getElementById('warehouse-form-modal').classList.add('hidden');
             document.getElementById('warehouse-form-modal').classList.remove('flex');
             currentWarehouseId = null;
         }
 
+        // Function to handle warehouse form submission
         window.handleWarehouseSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
@@ -1642,36 +1663,41 @@
             };
 
             if (currentWarehouseId) {
+                // Edit mode
                 const index = warehouses.findIndex(wh => wh.id === currentWarehouseId);
                 if (index !== -1) {
-                    warehouses[index] = { ...warehouses[index], ...newWarehouse };
+                    warehouses[index] = { ...warehouses[index], ...newWarehouse }; // Update existing warehouse
                 }
             } else {
+                // Create new mode
                 if (warehouses.some(wh => wh.id === warehouseId)) {
                     await showCustomAlert('Error', 'Warehouse ID already exists!');
                     return;
                 }
-                newWarehouse.id = warehouseId;
-                warehouses.push(newWarehouse);
+                newWarehouse.id = warehouseId; // Assign ID for new warehouse
+                warehouses.push(newWarehouse); // Add new warehouse
             }
-            saveWarehouses();
-            renderWarehouseList();
-            closeWarehouseForm();
+            saveWarehouses(); // Save changes to local storage
+            renderWarehouseList(); // Re-render warehouse list
+            closeWarehouseForm(); // Close the form
         }
 
+        // Function to delete a warehouse
         window.deleteWarehouse = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this warehouse ${id}?`);
             if (confirmed) {
-                warehouses = warehouses.filter(wh => wh.id !== id);
-                saveWarehouses();
-                renderWarehouseList();
+                warehouses = warehouses.filter(wh => wh.id !== id); // Remove warehouse from array
+                saveWarehouses(); // Save changes
+                renderWarehouseList(); // Re-render list
             }
         }
 
+        // Function to filter the warehouse list
         window.filterWarehouseList = function(query) {
             renderWarehouseList(query);
         }
 
+        // Function to enable/disable return address fields
         window.toggleReturnAddressFields = function() {
             const sameAsCheckbox = document.getElementById('same-as-warehouse-address-return');
             const returnAddressFields = document.getElementById('return-address-fields');
@@ -1686,6 +1712,7 @@
             }
         }
 
+        // Function to render user checkboxes
         window.renderUserCheckboxes = function(selectedUsers) {
             const userListContainer = document.getElementById('user-checkbox-list');
             userListContainer.innerHTML = '';
@@ -1702,6 +1729,7 @@
             document.getElementById('check-all-users').checked = (selectedUsers.length === allUsers.length && allUsers.length > 0);
         }
 
+        // Function to toggle all user checkboxes
         window.toggleAllUsers = function() {
             const checkAllCheckbox = document.getElementById('check-all-users');
             const userCheckboxes = document.querySelectorAll('#user-checkbox-list input[type="checkbox"]');
@@ -1710,6 +1738,7 @@
             });
         }
 
+        // Function to render the zone list
         window.renderZoneList = function(filterQuery = '') {
             const container = document.getElementById('zone-list-container');
             container.innerHTML = '';
@@ -1760,6 +1789,7 @@
             });
         }
 
+        // Function to display the zone form (create/edit)
         window.showZoneForm = function(mode, id = null) {
             const modal = document.getElementById('zone-form-modal');
             const title = document.getElementById('zone-form-title');
@@ -1795,12 +1825,14 @@
             modal.classList.add('flex');
         }
 
+        // Function to close the zone form
         window.closeZoneForm = function() {
             document.getElementById('zone-form-modal').classList.add('hidden');
             document.getElementById('zone-form-modal').classList.remove('flex');
             currentZoneId = null;
         }
 
+        // Function to handle zone form submission
         window.handleZoneSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
@@ -1839,6 +1871,7 @@
             closeZoneForm();
         }
 
+        // Function to delete a zone
         window.deleteZone = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this zone ${id}?`);
             if (confirmed) {
@@ -1848,10 +1881,12 @@
             }
         }
 
+        // Function to filter the zone list
         window.filterZoneList = function(query) {
             renderZoneList(query);
         }
 
+        // Function to render the location type list
         window.renderLocationTypeList = function(filterQuery = '') {
             const container = document.getElementById('location-type-list-container');
             container.innerHTML = '';
@@ -1874,9 +1909,9 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Length</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Width</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Height</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Dimension um</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Dimension UM</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Maximum weight</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Weight um</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Weight UM</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
                         <th scope="col" class="relative px-6 py-3">
                             <span class="sr-only">Actions</span>
@@ -1909,6 +1944,7 @@
             });
         }
 
+        // Function to display the location type form (create/edit)
         window.showLocationTypeForm = function(mode, id = null) {
             const modal = document.getElementById('location-type-form-modal');
             const title = document.getElementById('location-type-form-title');
@@ -1953,7 +1989,7 @@
                         document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
                         document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
 
-                        // TAMBAHKAN BLOK KODE DI BAWAH INI
+                        // Add this block for user-defined fields
                         const udf = locationTypeToEdit.userDefinedFields || {};
                         for (let i = 1; i <= 7; i++) {
                             const field = document.getElementById(`lt-user-defined-field${i}`);
@@ -1967,12 +2003,14 @@
             modal.classList.add('flex');
         }
 
+        // Function to close the location type form
         window.closeLocationTypeForm = function() {
             document.getElementById('location-type-form-modal').classList.add('hidden');
             document.getElementById('location-type-form-modal').classList.remove('flex');
             currentLocationTypeId = null;
         }
 
+        // Function to handle location type form submission
         window.handleLocationTypeSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
@@ -2025,6 +2063,7 @@
             closeLocationTypeForm();
         }
 
+        // Function to delete a location type
         window.deleteLocationType = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this location type ${id}?`);
             if (confirmed) {
@@ -2034,10 +2073,12 @@
             }
         }
 
+        // Function to filter the location type list
         window.filterLocationTypeList = function(query) {
             renderLocationTypeList(query);
         }
 
+        // Function to render the locating strategy list
         window.renderLocatingStrategyList = function(filterQuery = '') {
             const container = document.getElementById('locating-strategy-list-container');
             container.innerHTML = '';
@@ -2093,6 +2134,7 @@
             });
         }
 
+        // Function to display the locating strategy form (create/edit)
         window.showLocatingStrategyForm = function(mode, id = null) {
             const modal = document.getElementById('locating-strategy-form-modal');
             const title = document.getElementById('locating-strategy-form-title');
@@ -2150,12 +2192,14 @@
             modal.classList.add('flex');
         }
 
+        // Function to close the locating strategy form
         window.closeLocatingStrategyForm = function() {
             document.getElementById('locating-strategy-form-modal').classList.add('hidden');
             document.getElementById('locating-strategy-form-modal').classList.remove('flex');
             currentLocatingStrategyId = null;
         }
 
+        // Function to handle locating strategy form submission
         window.handleLocatingStrategySubmit = async function(event) {
             event.preventDefault();
             const identifier = document.getElementById('locating-strategy-identifier').value;
@@ -2192,6 +2236,7 @@
             closeLocatingStrategyForm();
         }
 
+        // Function to delete a locating strategy
         window.deleteLocatingStrategy = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating strategy ${id}?`);
             if (confirmed) {
@@ -2201,10 +2246,12 @@
             }
         }
 
+        // Function to filter the locating strategy list
         window.filterLocatingStrategyList = function(query) {
             renderLocatingStrategyList(query);
         }
 
+        // Function to render the locating rule list
         window.renderLocatingRuleList = function(filterQuery = '') {
             const container = document.getElementById('locating-rule-list-container');
             container.innerHTML = '';
@@ -2255,6 +2302,7 @@
             });
         }
 
+        // Function to display the locating rule form (create/edit)
         window.showLocatingRuleForm = function(mode, id = null) {
             const modal = document.getElementById('locating-rule-form-modal');
             const title = document.getElementById('locating-rule-form-title');
@@ -2268,7 +2316,7 @@
             const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
             const detailRecordsList = document.getElementById('detail-records-list');
 
-            detailRecordsList.innerHTML = '';
+            detailRecordsList.innerHTML = ''; // Clear detail records list
 
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Rule';
@@ -2309,6 +2357,7 @@
             checkLocatingRuleFormValidity();
         }
 
+        // Function to close the locating rule form
         window.closeLocatingRuleForm = function() {
             document.getElementById('locating-rule-form-modal').classList.add('hidden');
             document.getElementById('locating-rule-form-modal').classList.remove('flex');
@@ -2316,6 +2365,7 @@
 
         }
 
+        // Function to check locating rule form validity (enables/disables detail records)
         window.checkLocatingRuleFormValidity = function() {
             const ruleName = document.getElementById('locating-rule-name').value;
             const description = document.getElementById('locating-rule-description').value;
@@ -2334,6 +2384,7 @@
             }
         }
 
+        // Function to add a detail record to the locating rule form
         window.addDetailRecord = function(record = {}) {
             const detailRecordsList = document.getElementById('detail-records-list');
             const newRecordDiv = document.createElement('div');
@@ -2355,6 +2406,7 @@
             detailRecordsList.appendChild(newRecordDiv);
         }
 
+        // Function to remove a detail record from the locating rule form
         window.removeDetailRecord = function(button) {
             const recordDiv = button.closest('.flex.flex-col.md\\:flex-row');
             if (recordDiv) {
@@ -2364,6 +2416,7 @@
             }
         }
 
+        // Function to handle locating rule form submission
         window.handleLocatingRuleSubmit = async function(event) {
             event.preventDefault();
             const ruleName = document.getElementById('locating-rule-name').value;
@@ -2409,6 +2462,7 @@
             closeLocatingRuleForm();
         }
 
+        // Function to delete a locating rule
         window.deleteLocatingRule = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating rule ${id}?`);
             if (confirmed) {
@@ -2418,6 +2472,7 @@
             }
         }
 
+        // Function to filter the locating rule list
         window.filterLocatingRuleList = function(query) {
             renderLocatingRuleList(query);
         }
@@ -2471,6 +2526,7 @@
             });
         };
 
+        // Function to display the security group form (create/edit)
         window.showSecurityGroupForm = function(mode, id = null) {
             const modal = document.getElementById('security-group-form-modal');
             const title = document.getElementById('security-group-form-title');
@@ -2493,7 +2549,7 @@
                     document.getElementById('security-group-name').value = groupToEdit.groupName;
                     document.getElementById('security-group-description').value = groupToEdit.description;
                     document.getElementById('security-group-inactive').checked = groupToEdit.inactive;
-                    
+
                     const udf = groupToEdit.userDefinedFields || {};
                     for (let i = 1; i <= 7; i++) {
                         const field = document.getElementById(`sg-user-defined-field${i}`);
@@ -2503,19 +2559,21 @@
                     renderSecurityGroupUserCheckboxes(groupToEdit.users || []);
                 }
             }
-            
+
             initializeTabButtons('security-group-form-modal');
             activateTab('group-users-tab', 'security-group-form-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         };
 
+        // Function to close the security group form
         window.closeSecurityGroupForm = function() {
             document.getElementById('security-group-form-modal').classList.add('hidden');
             document.getElementById('security-group-form-modal').classList.remove('flex');
             currentSecurityGroupId = null;
         };
 
+        // Function to handle security group form submission
         window.handleSecurityGroupSubmit = async function(event) {
             event.preventDefault();
             const groupName = document.getElementById('security-group-name').value;
@@ -2524,7 +2582,7 @@
 
             const selectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked'))
                                        .map(checkbox => checkbox.value);
-            
+
             const userDefinedFields = {};
             for (let i = 1; i <= 7; i++) {
                 const field = document.getElementById(`sg-user-defined-field${i}`);
@@ -2532,6 +2590,7 @@
             }
 
             if (currentSecurityGroupId) {
+                // UPDATE mode
                 const index = securityGroups.findIndex(group => group.id === currentSecurityGroupId);
                 if (index !== -1) {
                     securityGroups[index].description = description;
@@ -2540,11 +2599,13 @@
                     securityGroups[index].userDefinedFields = userDefinedFields;
                 }
             } else {
+                // CREATE mode
+                const newId = groupName.toLowerCase().replace(/\s+/g, '-');
                 if (securityGroups.some(group => group.groupName.toLowerCase() === groupName.toLowerCase())) {
                     await showCustomAlert('Error', 'Security Group Name already exists!');
                     return;
                 }
-                const newGroup = { id: groupName, groupName, description, inactive, users: selectedUsers, userDefinedFields };
+                const newGroup = { id: newId, groupName, description, inactive, users: selectedUsers, userDefinedFields };
                 securityGroups.push(newGroup);
             }
             saveSecurityGroups();
@@ -2552,10 +2613,11 @@
             closeSecurityGroupForm();
         };
 
+        // Function to render security group user checkboxes
         window.renderSecurityGroupUserCheckboxes = function(selectedUsers = null, filter = '') {
             const userListContainer = document.getElementById('security-group-user-checkbox-list');
             if (!userListContainer) return;
-            
+
             let currentSelectedUsers = selectedUsers;
             if (currentSelectedUsers === null) {
                 currentSelectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value);
@@ -2574,7 +2636,7 @@
                 `;
                 userListContainer.appendChild(div);
             });
-            
+
             const checkAllBox = document.getElementById('check-all-security-group-users');
             if (checkAllBox) {
                 const allVisibleChecked = filteredAllUsers.length > 0 && filteredAllUsers.every(user => currentSelectedUsers.includes(user));
@@ -2582,6 +2644,7 @@
             }
         };
 
+        // Function to toggle all security group user checkboxes
         window.toggleAllSecurityGroupUsers = function() {
             const checkAllCheckbox = document.getElementById('check-all-security-group-users');
             const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
@@ -2590,6 +2653,7 @@
             });
         };
 
+        // Function to delete a security group
         window.deleteSecurityGroup = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security group ${id}?`);
             if (confirmed) {
@@ -2599,10 +2663,12 @@
             }
         };
 
+        // Function to filter the security group list
         window.filterSecurityGroupList = function(query) {
             renderSecurityGroupList(query);
         };
 
+        // Function to render the security permission list
         window.renderSecurityPermissionList = function(filterQuery = '') {
             const container = document.getElementById('security-permission-list-container');
             if (!container) return;
@@ -2646,20 +2712,21 @@
             container.appendChild(table);
         }
 
+        // Function to update permission details
         window.updatePermissionDetails = function(categoryId, itemId) {
             const detailsContainer = document.getElementById('security-permission-details-container');
             if (!detailsContainer) {
-                console.error('Container #security-permission-details-container tidak ditemukan!');
+                console.error('Container #security-permission-details-container not found!');
                 return;
             }
-            
-            // Hapus highlight dari item yang aktif sebelumnya
+
+            // Remove highlight from previously active item
             if (activePermissionItem) {
                 activePermissionItem.classList.remove('bg-wise-primary', 'text-white', 'font-semibold');
                 activePermissionItem.classList.add('text-wise-gray');
             }
 
-            // Cari item yang baru diklik
+            // Find the newly clicked item
             let item = null;
             if (categoryId && itemId) {
                 const category = securityPermissions.find(c => c.id === categoryId);
@@ -2668,7 +2735,7 @@
                 }
             }
 
-            // Jika item valid ditemukan, tampilkan detailnya.
+            // If a valid item is found, display its details.
             if (item && item.details) {
                 const newActiveItem = document.getElementById(`perm-item-${itemId}`);
                 if (newActiveItem) {
@@ -2697,20 +2764,20 @@
                         </table>
                     </div>
                 `;
-                
+
                 document.getElementById('sp-copy-btn').disabled = false;
                 document.getElementById('sp-delete-btn').disabled = false;
             } else {
-                // Jika tidak ada item yang dipilih, reset panel detail
+                // If no item is selected, reset the detail panel
                 activePermissionItem = null;
-                // INI BARIS YANG SUDAH DIPERBAIKI (tanpa \)
                 detailsContainer.innerHTML = `<p class="text-wise-gray text-center">Select a permission from the list to see details.</p>`;
-                
+
                 document.getElementById('sp-copy-btn').disabled = true;
                 document.getElementById('sp-delete-btn').disabled = true;
             }
         };
 
+        // Function to display the security permission form (create/edit)
         window.showSecurityPermissionForm = function(mode, id = null) {
             const modal = document.getElementById('security-permission-form-modal');
             const title = document.getElementById('security-permission-form-title');
@@ -2722,9 +2789,9 @@
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
                 nameInput.disabled = false;
-                nameInput.value = ''; 
-                document.getElementById('sp-description').value = ''; 
-                renderMenuCheckboxes([], 'All'); 
+                nameInput.value = '';
+                document.getElementById('sp-description').value = '';
+                renderMenuCheckboxes([], 'All');
             } else {
                 title.textContent = 'Edit Security Permission';
                 nameInput.disabled = true;
@@ -2733,19 +2800,20 @@
                     nameInput.value = permission.name;
                     document.getElementById('sp-description').value = permission.description;
                     document.getElementById('sp-inactive').checked = permission.inactive;
-                    renderMenuCheckboxes(permission.menus || [], 'All'); 
+                    renderMenuCheckboxes(permission.menus || [], 'All');
                 }
             }
-            document.querySelector('input[name="menuFilter"][value="All"]').checked = true; 
+            document.querySelector('input[name="menuFilter"][value="All"]').checked = true;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
+        // Function to render security permission menu checkboxes
         window.renderMenuCheckboxes = function(selectedMenus = [], filter = 'All') {
             const container = document.getElementById('sp-menu-checkbox-list');
             if (!container) return;
 
-            // Jika `selectedMenus` null (saat ganti filter), ambil dari checkbox yang sudah tercentang
+            // If `selectedMenus` is null (when changing filter), get from already checked checkboxes
             if (selectedMenus === null) {
                 selectedMenus = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             }
@@ -2754,7 +2822,7 @@
             if (filter !== 'All') {
                 filteredMenus = allMenus.filter(menu => menu.category === filter);
             }
-            
+
             container.innerHTML = filteredMenus.map(menu => `
                 <label class="flex items-center text-sm text-wise-dark-gray">
                     <input type="checkbox" value="${menu.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedMenus.includes(menu.id) ? 'checked' : ''}>
@@ -2763,22 +2831,25 @@
             `).join('');
         }
 
+        // Function to filter permissions
         window.filterPermissions = function() {
             renderSecurityPermissionTree();
         };
 
+        // Function to close the security permission form
         window.closeSecurityPermissionForm = function() {
             document.getElementById('security-permission-form-modal').classList.add('hidden');
             document.getElementById('security-permission-form-modal').classList.remove('flex');
             currentSecurityPermissionId = null;
         }
 
+        // Function to handle security permission form submission
         window.handleSecurityPermissionSubmit = async function(event) {
             event.preventDefault();
             const permissionName = document.getElementById('sp-name').value;
             const description = document.getElementById('sp-description').value;
             const inactive = document.getElementById('sp-inactive').checked;
-            
+
             // Get all checked menus from the form
             const selectedMenus = Array.from(document.querySelectorAll('#sp-menu-checkbox-list input[type="checkbox"]:checked'))
                                        .map(checkbox => checkbox.value);
@@ -2808,12 +2879,13 @@
                 };
                 securityPermissions.push(newPermission);
             }
-            
+
             saveSecurityPermissions();
             renderSecurityPermissionList();
             closeSecurityPermissionForm();
         };
 
+        // Function to delete a security permission
         window.deleteSecurityPermission = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this permission: ${id}?`);
             if (confirmed) {
@@ -2823,11 +2895,13 @@
             }
         }
 
+        // Function to filter the security permission list
         window.filterSecurityPermissionList = function(query) {
             renderSecurityPermissionList(query);
         };
 
 
+        // Function to initialize tab buttons
         window.initializeTabButtons = function(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
@@ -2841,6 +2915,7 @@
             });
         }
 
+        // Function to activate a specific tab
         window.activateTab = function(tabId, modalId = null) {
             const parentElement = modalId ? document.getElementById(modalId) : document;
 
@@ -2860,6 +2935,7 @@
             }
         }
 
+        // Event listener for sidebar toggle button
         sidebarToggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
             const mainContentArea = document.querySelector('main');
@@ -2876,6 +2952,7 @@
             }
         });
 
+        // Event listener to close sidebar when clicking outside (mobile)
         document.addEventListener('click', (event) => {
             if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.add('-translate-x-full');
@@ -2885,6 +2962,7 @@
             }
         });
 
+        // Function to force close the sidebar
         window.closeSidebar = function() {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
@@ -2892,6 +2970,7 @@
             document.getElementById('sidebar-overlay').classList.add('hidden');
         }
 
+        // Event listener for window resize
         window.addEventListener('resize', () => {
             const mainContentArea = document.querySelector('main');
             if (window.innerWidth >= 768) {
@@ -2906,11 +2985,12 @@
             }
         });
 
+        // Function executed when the page loads
         window.onload = function() {
-            selectCategory('configuration'); 
+            selectCategory('configuration'); // Select 'configuration' category by default
 
-            const username = "SuperAdmin";
-            document.getElementById('username-display').textContent = username;
+            const username = "SuperAdmin"; // Set username
+            document.getElementById('username-display').textContent = username; // Display username
         };
     });
 

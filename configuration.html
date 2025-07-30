@@ -208,92 +208,54 @@
 <body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
     <!-- Header -->
     <header class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
-        <div class="flex items-center justify-between w-full">
-            <!-- Left Section -->
-            <div class="flex-1 flex justify-start items-center">
+        <div class="flex items-center justify-between w-full gap-6">
+            <div class="flex justify-start items-center gap-4">
                 <button 
                     id="sidebar-toggle-btn" 
-                    class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 mr-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
+                    class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
                     aria-label="Toggle sidebar"
                 >
                     <i class="fas fa-bars w-6 h-6 flex items-center justify-center transition-transform-smooth"></i>
                 </button>
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-sm">W</span>
-                    </div>
-                    <span class="text-wise-dark-gray text-xl font-bold tracking-tight">WISE</span>
-                </div>
-            </div>
-
-            <!-- Center Section - Back to Dashboard Button, Search and Config Dropdown -->
-            <div class="flex-1 flex items-center justify-center gap-4">
-                <!-- Back to Dashboard Button -->
-                <a href="dashboard.html" 
-                   class="hidden md:flex items-center px-4 py-2 bg-wise-primary text-white rounded-lg shadow-md hover:bg-blue-700 transition-all-smooth active-press whitespace-nowrap"
-                   aria-label="Back to Dashboard"
-                >
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    <span class="font-medium text-sm">Back to Dashboard</span>
-                </a>
                 
-                <!-- Search Bar -->
-                <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card flex-1 focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth max-w-xs">
-                    <div class="pl-4">
-                        <i class="fas fa-search text-wise-gray"></i>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="search-input"
-                        placeholder="Search now..."
-                        class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
-                        oninput="handleSearch(this.value)"
-                        onfocus="showSearchHistory()"
-                        aria-label="Search configuration"
-                    />
-                    <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press" aria-label="Search button">
-                        <span class="hidden sm:inline">Search</span>
-                        <i class="fas fa-search sm:hidden"></i>
-                    </button>
-                </div>
+                <a href="dashboard.html" class="ml-4 text-wise-dark-gray text-2xl font-extrabold tracking-tight drop-shadow-sm">WISE</a>
 
-                <!-- Config Dropdown -->
-                <div class="relative hidden md:block">
-                    <button 
-                        id="config-dropdown-toggle"
-                        class="flex items-center px-4 py-2 bg-white text-wise-dark-gray rounded-xl shadow-md border border-wise-border hover:bg-gray-100 transition-all-smooth active-press whitespace-nowrap"
-                        onclick="toggleConfigDropdown()"
-                        aria-label="DCS menu"
-                    >
-                        <span class="font-medium text-sm">DCS</span> <!-- Placeholder for the dropdown value -->
-                        <i class="fas fa-chevron-down ml-2 text-wise-gray"></i>
-                    </button>
-                    <div id="config-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
-                        <div class="p-2">
-                            <a href="configuration.html?option=DCC" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCC')">DCC</a>
-                            <a href="configuration.html?option=DCE" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCE')">DCE</a>
-                            <a href="configuration.html?option=DCF" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCF')">DCF</a>
-                            <a href="configuration.html?option=DCJ" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCJ')">DCJ</a>
-                            <a href="configuration.html?option=DCK" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCK')">DCK</a>
-                            <a href="configuration.html?option=DCL" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCL')">DCL</a>
-                            <a href="configuration.html?option=DCM" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCM')">DCM</a>
-                            <a href="configuration.html?option=DCP" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCP')">DCP</a>
-                            <a href="configuration.html?option=DCS" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCS')">DCS</a>
-                            <a href="configuration.html?option=DCT" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCT')">DCT</a>
-                            <a href="configuration.html?option=DCY" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCY')">DCY</a>
-                            <a href="configuration.html?option=GBG" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('GBG')">GBG</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search History Dropdown -->
-                <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
-                    <div class="p-2" id="search-history-content"></div>
+                <div class="hidden md:flex items-center gap-2 ml-4">
+                    <a href="dashboard.html" class="flex items-center px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-lg hover:bg-gray-300 transition-all-smooth active-press whitespace-nowrap">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span class="font-medium text-sm">Back to Dashboard</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- Right Section - User -->
-            <div class="flex-1 flex justify-end items-center space-x-3 relative">
+            <div class="flex-1 flex justify-center">
+                <div class="relative w-full max-w-lg">
+                    <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
+                        <div class="pl-4">
+                            <i class="fas fa-search text-wise-gray"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="search-input"
+                            placeholder="Search now..."
+                            class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
+                            oninput="handleSearch(this.value)"
+                            onfocus="showSearchHistory()"
+                            aria-label="Search dashboard"
+                        />
+                        <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press" aria-label="Search button">
+                            <span class="hidden sm:inline">Search</span>
+                            <i class="fas fa-search sm:hidden"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
+                        <div class="p-2" id="search-history-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end items-center space-x-3 relative">
                 <span class="text-wise-dark-gray font-medium text-sm hidden lg:block">
                     Welcome, <span id="username-display" class="font-semibold text-wise-primary">SuperAdmin</span>
                 </span>
@@ -305,7 +267,6 @@
                     <i class="fas fa-user text-white"></i>
                 </div>
                 
-                <!-- User Dropdown -->
                 <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
                     <div class="p-2">
                         <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="navigateToProfile()">
@@ -320,33 +281,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Search Filters -->
-        <div id="search-filters" class="flex items-center space-x-2 mt-3 ml-0 md:ml-20 hidden flex-wrap animate-slide-up">
-            <span class="text-wise-gray text-xs font-medium">Filter:</span>
-            <div class="flex flex-wrap gap-2">
-                <span id="filter-articles" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
-                    Articles 
-                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('articles')" aria-label="Remove article filter">
-                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                    </button>
-                </span>
-                <span id="filter-photography" class="bg-wise-light-gray text-wise-dark-gray px-3 py-1 rounded-full flex items-center text-xs hover:bg-gray-200 transition-all-smooth">
-                    Photography 
-                    <button class="ml-2 text-wise-gray hover:text-wise-error transition-colors" onclick="removeFilter('photography')" aria-label="Remove photography filter">
-                        <i class="fas fa-times w-3 h-3 flex items-center justify-center"></i>
-                    </button>
-                </span>
-            </div>
-            <button class="text-wise-gray hover:text-wise-error hover:underline text-xs transition-colors" onclick="removeAllFilters()" aria-label="Remove all filters">
-                Remove all
-            </button>
-        </div>
-        
-        <!-- Search Results -->
-        <div id="search-results" class="hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-xl border border-wise-border z-40 max-h-80 overflow-y-auto w-11/12 md:w-1/2 animate-slide-up">
-            <div id="search-results-content" class="p-3"></div>
-        </div>
     </header>
 
     <!-- Mobile Sidebar Overlay -->
@@ -354,7 +288,7 @@
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border h-screen overflow-y-auto fixed left-0 top-0 z-30 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-20 md:top-24 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
             <div class="p-4 pt-24 md:pt-6">
                 <div class="space-y-2">
                     <!-- Configuration -->
