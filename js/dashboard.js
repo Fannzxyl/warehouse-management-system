@@ -107,30 +107,140 @@
                     </div>
                 `,
             },
-            // Added content for DCS based on the image (Dashboard Overview)
-            dcs: {
+            // Konten untuk opsi dropdown DCS (sesuai dengan gambar dashboard)
+            'DCC': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS Overview</h2>
-                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS. Anda dapat melihat metrik utama dan status operasional.</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCC Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCC.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews (DCC)</h3>
                             <p class="text-wise-primary text-3xl font-bold">85</p>
                             <p class="text-wise-gray text-sm mt-1">currently working</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Assets</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Assets (DCC)</h3>
                             <p class="text-wise-success text-3xl font-bold">$2.5M</p>
                             <p class="text-wise-gray text-sm mt-1">Total assets under management.</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Crew #123 completed task</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Crew #123 completed task (DCC)</h3>
                             <p class="text-wise-info text-sm mt-1">5 minutes ago</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Inventory update: 10 units added to Warehouse</h3>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Inventory update: 10 units added to Warehouse (DCC)</h3>
                             <p class="text-wise-info text-sm mt-1">3 hours ago</p>
                         </div>
+                    </div>
+                `,
+            },
+            'DCE': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCE Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCE.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCE</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCE akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCF': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCF Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCF.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCF</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCF akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCJ': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCJ Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCJ.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCJ</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCJ akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCK': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCK Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCK.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCK</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCK akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCL': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCL Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCL.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCL</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCL akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCM': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCM Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCM.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCM</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCM akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCP': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCP Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCP.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCP</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCP akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCS': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCS Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCS.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCS</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCS akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCT': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCT Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCT.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCT</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCT akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'DCY': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - DCY Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS DCY.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail DCY</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai DCY akan ditampilkan di sini.</p>
+                    </div>
+                `,
+            },
+            'GBG': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS - GBG Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS GBG.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Detail GBG</h3>
+                        <p class="text-wise-gray text-sm mt-1">Informasi spesifik mengenai GBG akan ditampilkan di sini.</p>
                     </div>
                 `,
             },
@@ -1118,7 +1228,18 @@
         // Data dummy untuk hasil pencarian
         const searchItems = [
             { id: 'dashboard', title: 'Dashboard Overview', category: 'Dashboard', lastUpdated: 'Just now' },
-            { id: 'dcs', title: 'DCS Overview', category: 'Configuration', lastUpdated: 'Just now' }, // Added DCS to search items
+            { id: 'DCC', title: 'DCS - DCC', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCE', title: 'DCS - DCE', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCF', title: 'DCS - DCF', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCJ', title: 'DCS - DCJ', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCK', title: 'DCS - DCK', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCL', title: 'DCS - DCL', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCM', title: 'DCS - DCM', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCP', title: 'DCS - DCP', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCS', title: 'DCS - DCS', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCT', title: 'DCS - DCT', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'DCY', title: 'DCS - DCY', category: 'DCS', lastUpdated: 'Just now' },
+            { id: 'GBG', title: 'DCS - GBG', category: 'DCS', lastUpdated: 'Just now' },
             { id: 'yard-vehicles', title: 'Yard Management - Vehicles', category: 'Yard Management', lastUpdated: '1 hour ago' },
             { id: 'yard-equipment', title: 'Yard Management - Equipment', category: 'Yard Management', lastUpdated: '1 hour ago' },
             { id: 'yard-personnel', title: 'Yard Management - Personnel', category: 'Yard Management', lastUpdated: '1 hour ago' },
@@ -1321,18 +1442,19 @@
             'archive-documents': 'archive',
             'archive-media': 'archive',
             'archive-financial': 'archive',
-            'dcc': 'configuration', // Assuming 'configuration' is the parent for DCC, DCE, etc.
-            'dce': 'configuration',
-            'dcf': 'configuration',
-            'dcj': 'configuration',
-            'dck': 'configuration',
-            'dcl': 'configuration',
-            'dcm': 'configuration',
-            'dcp': 'configuration',
-            'dcs': 'configuration', // Added DCS to parent mapping
-            'dct': 'configuration',
-            'dcy': 'configuration',
-            'gbg': 'configuration',
+            // Menambahkan pemetaan untuk opsi dropdown DCS
+            'DCC': 'DCS',
+            'DCE': 'DCS',
+            'DCF': 'DCS',
+            'DCJ': 'DCS',
+            'DCK': 'DCS',
+            'DCL': 'DCS',
+            'DCM': 'DCS',
+            'DCP': 'DCS',
+            'DCS': 'DCS', // Ini adalah item utama, bisa juga tidak ada parent jika tidak perlu toggle
+            'DCT': 'DCS',
+            'DCY': 'DCS',
+            'GBG': 'DCS',
         };
 
         /**
@@ -1433,6 +1555,33 @@
                 document.getElementById('sidebar-overlay').classList.add('hidden');
             }
         };
+
+        /**
+         * Mengganti visibilitas dropdown konfigurasi (DCS).
+         */
+        window.toggleConfigDropdown = function() {
+            const configDropdown = document.getElementById('config-dropdown');
+            configDropdown.classList.toggle('hidden');
+            if (!configDropdown.classList.contains('hidden')) {
+                configDropdown.classList.remove('animate-slide-up'); // Reset animation for re-trigger
+                void configDropdown.offsetWidth; // Trigger reflow
+                configDropdown.classList.add('animate-slide-up');
+            }
+        };
+
+        /**
+         * Memilih opsi dari dropdown konfigurasi (DCS) dan menampilkan kontennya.
+         * @param {string} option - Opsi yang dipilih (misalnya, 'DCC', 'DCE').
+         */
+        window.selectConfigOption = function(option) {
+            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
+            configDropdownToggle.querySelector('span').textContent = option; // Update teks tombol
+            document.getElementById('config-dropdown').classList.add('hidden'); // Sembunyikan dropdown
+
+            // Tampilkan konten yang sesuai di area utama
+            selectCategory(option);
+        };
+
 
         /**
          * Menangani input pencarian dari header atau overlay.
@@ -1643,12 +1792,19 @@
             const userDropdown = document.getElementById('user-dropdown');
             const searchInput = document.getElementById('search-input');
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
+            const configDropdown = document.getElementById('config-dropdown');
+
 
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
             if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
                 searchHistoryDropdown.classList.add('hidden');
+            }
+            // Menutup dropdown konfigurasi jika klik di luar
+            if (configDropdownToggle && configDropdown && !configDropdownToggle.contains(event.target) && !configDropdown.contains(event.target)) {
+                configDropdown.classList.add('hidden');
             }
         });
 
