@@ -19,34 +19,6 @@
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        // --- MULAI PENAMBAHAN KODE DI SINI ---
-        // Anda bisa menempatkannya tepat setelah deklarasi variabel-variabel di atas.
-
-        // Di dalam blok document.addEventListener('DOMContentLoaded', () => { ... });
-window.toggleChildren = function(parentId) {
-    const childrenContainer = document.getElementById(parentId + '-children'); // Kontainer sub-menu
-    const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
-    const arrowIcon = document.getElementById(parentId + '-arrow');            // Icon panah
-
-    if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
-        childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
-
-        // Mengupdate atribut aria-expanded untuk aksesibilitas
-        const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
-        parentElement.setAttribute('aria-expanded', isExpanded);
-
-        // Rotasi panah: Tambah/hapus kelas 'rotate-180'
-        arrowIcon.classList.toggle('rotate-180');
-
-        console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${isExpanded}`);
-    } else {
-        console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
-    }
-};
-
-        // --- AKHIR PENAMBAHAN KODE DI SINI ---
-
-
         // Function to display custom alert
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
@@ -136,6 +108,20 @@ window.toggleChildren = function(parentId) {
                             <p class="text-wise-gray text-sm mt-1">Define rules that determine how items are placed in warehouse locations.</p>
                             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('locating-rule')">
                                 Manage Locating Rules
+                            </button>
+                        </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Security Group Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Manage Security Permission that determine how security are placed in warehouse locations.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('security-group')">
+                                Manage Security Group
+                            </button>
+                        </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Security Permission Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Define Security Group that determine how security are placed in warehouse locations.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('security-permission')">
+                                Manage Security Permission
                             </button>
                         </div>
                            <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
@@ -995,7 +981,217 @@ window.toggleChildren = function(parentId) {
             },
         };
 
+        // --- FUNGSI-FUNGSI BARU UNTUK SEARCH BAR & OVERLAY (VERSI LENGKAP) ---
+
+/**
+ * Menangani input pencarian dari header atau overlay.
+ * @param {string} query - Kata kunci pencarian.
+ */
+window.handleSearch = function(query) {
+    const searchOverlay = document.getElementById('search-overlay');
+    const overlaySearchInput = document.getElementById('overlay-search-input');
+    const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
+    if (query.length > 0) {
+        // Tampilkan overlay pencarian jika ada query
+        searchOverlay.classList.remove('hidden');
+        overlaySearchInput.value = query; // Isi input overlay dengan query
+        performSearch(query, 'overlay'); // Lakukan pencarian di overlay
+        searchHistoryDropdown.classList.add('hidden'); // Sembunyikan riwayat pencarian
+    } else {
+        // Sembunyikan overlay pencarian jika query kosong
+        searchOverlay.classList.add('hidden');
+        selectCategory(currentCategory); // Kembali ke kategori saat ini
+        showSearchHistory(); // Tampilkan riwayat pencarian
+    }
+};
+
+/**
+ * Melakukan pencarian dan menampilkan hasilnya.
+ * @param {string} query - Kata kunci pencarian.
+ * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
+ */
+window.performSearch = function(query, source) {
+    const resultsPanel = document.getElementById('overlay-search-results-list-panel');
+    const detailPanel = document.getElementById('overlay-detail-content-panel');
+    const filtersContainer = document.getElementById('overlay-search-filters');
+
+    if (query.length > 0) {
+        let filteredResults = searchItems.filter(item =>
+            item.title.toLowerCase().includes(query.toLowerCase()) ||
+            item.category.toLowerCase().includes(query.toLowerCase())
+        );
+
+        resultsPanel.innerHTML = '';
+        if (filteredResults.length > 0) {
+            filteredResults.forEach(item => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'py-2 px-3 bg-wise-light-gray rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
+                resultItem.innerHTML = `
+                    <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
+                    <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+                `;
+                resultItem.onmouseenter = () => showPreview(item.id);
+                resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
+                resultsPanel.appendChild(resultItem);
+            });
+        } else {
+            resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+        }
+        if (detailPanel) {
+            detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
+        }
+    } else {
+        resultsPanel.innerHTML = '';
+        if (detailPanel) {
+            detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
+        }
+    }
+};
+
+/**
+ * Menampilkan pratinjau konten di panel detail overlay pencarian.
+ * @param {string} id - ID konten yang akan dipratinjau.
+ */
+window.showPreview = function(id) {
+    const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
+    const content = contentData[id];
+
+    if (content && (content.full)) {
+        // Kita potong kontennya biar nggak terlalu panjang untuk preview
+        const previewContent = content.full.substring(0, 500) + (content.full.length > 500 ? '...' : '');
+        overlayDetailContentPanel.innerHTML = `
+            <div class="p-4 overflow-y-auto h-full">
+                ${previewContent}
+                <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
+                    Tampilkan Halaman
+                </button>
+            </div>
+        `;
+    } else {
+        overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia.</p>`;
+    }
+};
+
+/**
+ * Menampilkan konten di area dashboard utama.
+ * @param {string} id - ID konten yang akan ditampilkan.
+ */
+window.displayContentInMainDashboard = function(id) {
+    selectCategory(id);
+    closeSearchOverlay();
+};
+
+/**
+ * Memilih hasil pencarian dan menampilkan kontennya.
+ * @param {string} id - ID konten yang dipilih.
+ * @param {string} title - Judul hasil pencarian.
+ * @param {string} query - Kata kunci pencarian.
+ */
+window.selectSearchResult = function(id, title, query) {
+    addSearchHistory(query); // Fungsi ini harusnya udah ada buat nambahin riwayat
+    displayContentInMainDashboard(id);
+};
+
+/**
+ * Menampilkan konten di area dashboard utama.
+ * @param {string} id - ID konten yang akan ditampilkan.
+ */
+window.displayContentInMainDashboard = function(id) {
+    selectCategory(id); // Memilih kategori yang sesuai di sidebar
+    closeSearchOverlay(); // Menutup overlay pencarian
+};
+
+/**
+ * Menutup overlay pencarian.
+ */
+window.closeSearchOverlay = function() {
+    document.getElementById('search-overlay').classList.add('hidden');
+    document.getElementById('search-input').value = '';
+    document.getElementById('overlay-search-input').value = '';
+    activeFilters = [];
+    document.getElementById('search-history-dropdown').classList.add('hidden');
+};
+
+/**
+ * Menambahkan query pencarian ke riwayat.
+ * @param {string} query - Kata kunci pencarian.
+ */
+function addSearchHistory(query) {
+    if (query && !searchHistory.includes(query)) {
+        searchHistory.unshift(query);
+        searchHistory = searchHistory.slice(0, 5);
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    }
+}
+
+/**
+ * Menampilkan riwayat pencarian di dropdown.
+ */
+window.showSearchHistory = function() {
+    const historyDropdown = document.getElementById('search-history-dropdown');
+    const historyContent = document.getElementById('search-history-content');
+
+    historyContent.innerHTML = '';
+
+    if (searchHistory.length > 0) {
+        searchHistory.forEach((item, index) => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-wise-light-gray rounded-md';
+            historyItem.innerHTML = `
+                <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
+                <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
+            `;
+            historyContent.appendChild(historyItem);
+        });
+        const clearAllButton = document.createElement('div');
+        clearAllButton.className = 'text-right pt-2 pb-1 px-3';
+        clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">clear All Search History</button>`;
+        historyContent.appendChild(clearAllButton);
+        historyDropdown.classList.remove('hidden');
+    } else {
+        historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+        historyDropdown.classList.remove('hidden');
+    }
+};
+
+        /**
+         * Menerapkan query dari riwayat pencarian.
+         * @param {string} query - Kata kunci dari riwayat.
+         */
+        window.applySearchHistory = function(query) {
+            document.getElementById('search-input').value = query;
+            handleSearch(query);
+            document.getElementById('search-history-dropdown').classList.add('hidden');
+        };
+
+        /**
+         * Menghapus item dari riwayat pencarian.
+         * @param {number} index - Indeks item yang akan dihapus.
+         */
+        window.removeSearchHistory = function(index) {
+            event.stopPropagation();
+            searchHistory.splice(index, 1);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            showSearchHistory();
+        };
+
+        /**
+         * Menghapus semua riwayat pencarian.
+         */
+        window.clearAllSearchHistory = function() {
+            event.stopPropagation();
+            searchHistory = [];
+            localStorage.removeItem('searchHistory');
+            showSearchHistory();
+        };
+
         // Dummy data for search results
+        let currentCategory = 'configuration';
+        let activeFilters = [];
+        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+        // Data dummy untuk hasil pencarian
         const searchItems = [
             { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
@@ -1007,10 +1203,7 @@ window.toggleChildren = function(parentId) {
             { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
         ];
 
-        let currentCategory = 'configuration';
-        let activeFilters = [];
-        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
+        // Pemetaan untuk navigasi sidebar saat hasil pencarian diklik
         const parentMapping = {
             'configuration-warehouse': 'configuration',
             'configuration-zone': 'configuration',
@@ -1018,9 +1211,19 @@ window.toggleChildren = function(parentId) {
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
             'configuration-user-profile': 'configuration',
-            'security-group': 'system',
-            'security-permission': 'system',
+            'security-group': 'configuration',  // Ganti 'system' jika ID parent-nya beda
+            'security-permission': 'configuration', // Ganti 'system' jika ID parent-nya beda
         };
+
+        // --- FUNGSI UNTUK MENYIMPAN DATA KE LOCALSTORAGE ---
+        function saveWarehouses() { localStorage.setItem('warehouses', JSON.stringify(warehouses)); }
+        function saveZones() { localStorage.setItem('zones', JSON.stringify(zones)); }
+        function saveLocationTypes() { localStorage.setItem('locationTypes', JSON.stringify(locationTypes)); }
+        function saveLocatingStrategies() { localStorage.setItem('locatingStrategies', JSON.stringify(locatingStrategies)); }
+        function saveLocatingRules() { localStorage.setItem('locatingRules', JSON.stringify(locatingRules)); }
+        function saveUserProfiles() { localStorage.setItem('userProfiles', JSON.stringify(userProfiles)); }
+        function saveSecurityGroups() { localStorage.setItem('securityGroups', JSON.stringify(securityGroups)); }
+        function saveSecurityPermissions() { localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions)); }
 
         // Dummy data for warehouses (for configuration-warehouse)
         let warehouses = [
@@ -1092,46 +1295,79 @@ window.toggleChildren = function(parentId) {
             { name: 'Shipping', category: 'Processing' },
         ];
 
+        // Fungsi untuk expand/collapse sub-menu sidebar
+window.toggleChildren = function(parentId) {
+    const childrenContainer = document.getElementById(parentId + '-children');
+    const parentElement = document.getElementById(parentId);
+    const arrowIcon = document.getElementById(parentId + '-arrow');
+
+    if (childrenContainer && parentElement && arrowIcon) {
+        childrenContainer.classList.toggle('hidden');
+        const isExpanded = !childrenContainer.classList.contains('hidden');
+        parentElement.setAttribute('aria-expanded', isExpanded);
+        arrowIcon.classList.toggle('rotate-180', isExpanded);
+    }
+};
 
         // Function to render content based on category
         window.selectCategory = function(category) {
-            currentCategory = category;
-            mainContent.innerHTML = contentData[category].full;
-            // Highlight selected sidebar item
-            sidebarItems.forEach(item => item.classList.remove('bg-wise-blue-hover', 'text-wise-primary'));
-            const selectedSidebarItem = document.querySelector(`.sidebar-item[onclick="selectCategory('${category}')"]`);
-            if (selectedSidebarItem) {
-                selectedSidebarItem.classList.add('bg-wise-blue-hover', 'text-wise-primary');
-            }
+    // Hapus kelas aktif dari semua item sidebar
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('bg-wise-light-gray', 'font-semibold');
+    });
+    document.querySelectorAll('.sidebar-child').forEach(item => {
+        item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+        item.classList.add('text-wise-gray');
+    });
 
-            // Handle specific category initializations
-            if (category === 'configuration-warehouse') {
-                renderWarehouseList();
-                setupTabSwitching('warehouse-form-modal');
-            } else if (category === 'configuration-zone') {
-                renderZoneList();
-                setupTabSwitching('zone-form-modal');
-            } else if (category === 'configuration-location-type') {
-                renderLocationTypeList();
-                setupTabSwitching('location-type-form-modal');
-            } else if (category === 'locating-strategies') {
-                renderLocatingStrategyList();
-                setupTabSwitching('locating-strategy-form-modal');
-            } else if (category === 'locating-rule') {
-                renderLocatingRuleList();
-                setupTabSwitching('locating-rule-form-modal');
-                checkLocatingRuleFormValidity(); // Initial check for detail records section
-            } else if (category === 'configuration-user-profile') {
-                renderUserProfileList();
-                setupTabSwitching('user-profile-form-modal'); // Setup tab switching for user profile form
-            } else if (category === 'security-group') {
-                renderSecurityGroupList();
-                setupTabSwitching('security-group-form-modal');
-            } else if (category === 'security-permission') {
-                renderSecurityPermissionList();
-                setupTabSwitching('security-permission-form-modal');
+    const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
+    if (childElement) {
+        childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+        childElement.classList.remove('text-wise-gray');
+
+        const parentId = parentMapping[category];
+        if (parentId) {
+            const parentElement = document.getElementById(parentId);
+            const parentChildrenContainer = document.getElementById(parentId + '-children');
+            const parentArrow = document.getElementById(parentId + '-arrow');
+
+            if (parentElement) {
+                parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
             }
-        };
+            if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
+                toggleChildren(parentId); // Gunakan fungsi toggleChildren yang sudah ada
+            }
+        }
+    } else {
+        const mainElement = document.getElementById(category);
+        if(mainElement) {
+            mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
+        }
+    }
+
+    currentCategory = category;
+    const content = contentData[category];
+    if (content && content.full) {
+        mainContent.innerHTML = content.full;
+    } else {
+        mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
+    }
+
+    // Panggil fungsi render yang sesuai setelah konten dimuat
+    if (category === 'configuration-warehouse') renderWarehouseList();
+    else if (category === 'configuration-zone') renderZoneList();
+    else if (category === 'configuration-location-type') renderLocationTypeList();
+    else if (category === 'locating-strategies') renderLocatingStrategyList();
+    else if (category === 'locating-rule') renderLocatingRuleList();
+    else if (category === 'configuration-user-profile') renderUserProfileList();
+    else if (category === 'security-group') renderSecurityGroupList();
+    else if (category === 'security-permission') renderSecurityPermissionList();
+
+    // Tutup sidebar di mobile setelah memilih
+    if (window.innerWidth < 768) {
+        closeSidebar();
+    }
+};
 
         // Function to toggle sidebar visibility
         window.toggleSidebar = function() {
@@ -1519,6 +1755,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Warehouse updated successfully!');
                 }
             }
+            saveWarehouses(); 
             closeWarehouseForm();
             renderWarehouseList();
         };
@@ -1527,6 +1764,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this warehouse?');
             if (confirmed) {
                 warehouses = warehouses.filter(wh => wh.id !== id);
+                saveWarehouses();
                 renderWarehouseList();
                 await showCustomAlert('Deleted', 'Warehouse deleted successfully!');
             }
@@ -1761,6 +1999,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Zone updated successfully!');
                 }
             }
+            saveZones();
             closeZoneForm();
             renderZoneList();
         };
@@ -1769,6 +2008,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this zone?');
             if (confirmed) {
                 zones = zones.filter(zone => zone.id !== id);
+                saveZones();
                 renderZoneList();
                 await showCustomAlert('Deleted', 'Zone deleted successfully!');
             }
@@ -1934,6 +2174,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Location Type updated successfully!');
                 }
             }
+            saveLocationTypes();
             closeLocationTypeForm();
             renderLocationTypeList();
         };
@@ -1942,6 +2183,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location type?');
             if (confirmed) {
                 locationTypes = locationTypes.filter(lt => lt.id !== id);
+                saveLocationTypes();
                 renderLocationTypeList();
                 await showCustomAlert('Deleted', 'Location Type deleted successfully!');
             }
@@ -2098,6 +2340,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Locating Strategy updated successfully!');
                 }
             }
+            saveLocatingStrategies
             closeLocatingStrategyForm();
             renderLocatingStrategyList();
         };
@@ -2106,6 +2349,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating strategy?');
             if (confirmed) {
                 locatingStrategies = locatingStrategies.filter(ls => ls.id !== id);
+                saveLocatingStrategies
                 renderLocatingStrategyList();
                 await showCustomAlert('Deleted', 'Locating Strategy deleted successfully!');
             }
@@ -2258,6 +2502,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Locating Rule updated successfully!');
                 }
             }
+            saveLocatingRules
             closeLocatingRuleForm();
             renderLocatingRuleList();
         };
@@ -2266,6 +2511,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating rule?');
             if (confirmed) {
                 locatingRules = locatingRules.filter(lr => lr.id !== id);
+                saveLocatingRules
                 renderLocatingRuleList();
                 await showCustomAlert('Deleted', 'Locating Rule deleted successfully!');
             }
@@ -2511,6 +2757,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'User Profile updated successfully!');
                 }
             }
+            saveUserProfiles
             closeUserProfileForm();
             renderUserProfileList();
         };
@@ -2519,6 +2766,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this user profile?');
             if (confirmed) {
                 userProfiles = userProfiles.filter(up => up.id !== id);
+                saveUserProfiles
                 renderUserProfileList();
                 await showCustomAlert('Deleted', 'User Profile deleted successfully!');
             }
@@ -2586,8 +2834,62 @@ window.toggleChildren = function(parentId) {
             container.innerHTML = tableHtml;
         };
 
-        window.filterSecurityGroupList = function(value) {
-            renderSecurityGroupList(value);
+        // --- Security Permission Management Functions ---
+        window.renderSecurityPermissionList = function(filter = '') {
+            const container = document.getElementById('security-permission-list-container');
+            if (!container) return;
+
+            const filteredPermissions = securityPermissions.filter(sp =>
+                sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
+                sp.spDescription.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Security Permission</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredPermissions.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredPermissions.forEach(sp => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
+                            <td class="py-3 px-6 text-left">${sp.spDescription}</td>
+                            <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHtml;
         };
 
         window.showSecurityGroupForm = function(mode, id = null) {
@@ -2663,6 +2965,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Security Group updated successfully!');
                 }
             }
+            saveSecurityGroups
             closeSecurityGroupForm();
             renderSecurityGroupList();
         };
@@ -2671,6 +2974,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security group?');
             if (confirmed) {
                 securityGroups = securityGroups.filter(sg => sg.id !== id);
+                saveSecurityGroups
                 renderSecurityGroupList();
                 await showCustomAlert('Deleted', 'Security Group deleted successfully!');
             }
@@ -2711,70 +3015,70 @@ window.toggleChildren = function(parentId) {
         };
 
         // --- Security Permission Management Functions ---
-        window.renderSecurityPermissionList = function(filter = '') {
-            const container = document.getElementById('security-permission-list-container');
-            if (!container) return;
+        // window.renderSecurityPermissionList = function(filter = '') {
+        //     const container = document.getElementById('security-permission-list-container');
+        //     if (!container) return;
 
-            const filteredPermissions = securityPermissions.filter(sp =>
-                sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
-                sp.spDescription.toLowerCase().includes(filter.toLowerCase())
-            );
+        //     const filteredPermissions = securityPermissions.filter(sp =>
+        //         sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
+        //         sp.spDescription.toLowerCase().includes(filter.toLowerCase())
+        //     );
 
-            let tableHtml = `
-                <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Security Permission</th>
-                            <th class="py-3 px-6 text-left">Description</th>
-                            <th class="py-3 px-6 text-left">Inactive</th>
-                            <th class="py-3 px-6 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-wise-gray text-sm font-light">
-            `;
+        //     let tableHtml = `
+        //         <table class="min-w-full bg-white rounded-lg shadow-md">
+        //             <thead>
+        //                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+        //                     <th class="py-3 px-6 text-left">Security Permission</th>
+        //                     <th class="py-3 px-6 text-left">Description</th>
+        //                     <th class="py-3 px-6 text-left">Inactive</th>
+        //                     <th class="py-3 px-6 text-center">Actions</th>
+        //                 </tr>
+        //             </thead>
+        //             <tbody class="text-wise-gray text-sm font-light">
+        //     `;
 
-            if (filteredPermissions.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
-                    </tr>
-                `;
-            } else {
-                filteredPermissions.forEach(sp => {
-                    tableHtml += `
-                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
-                            <td class="py-3 px-6 text-left">${sp.spDescription}</td>
-                            <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
+        //     if (filteredPermissions.length === 0) {
+        //         tableHtml += `
+        //             <tr>
+        //                 <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
+        //             </tr>
+        //         `;
+        //     } else {
+        //         filteredPermissions.forEach(sp => {
+        //             tableHtml += `
+        //                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+        //                     <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
+        //                     <td class="py-3 px-6 text-left">${sp.spDescription}</td>
+        //                     <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
+        //                     <td class="py-3 px-6 text-center">
+        //                         <div class="flex item-center justify-center">
+        //                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
+        //                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        //                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        //                                 </svg>
+        //                             </button>
+        //                             <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
+        //                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        //                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        //                                 </svg>
+        //                             </button>
+        //                         </div>
+        //                     </td>
+        //                 </tr>
+        //             `;
+        //         });
+        //     }
 
-            tableHtml += `
-                    </tbody>
-                </table>
-            `;
-            container.innerHTML = tableHtml;
-        };
+        //     tableHtml += `
+        //             </tbody>
+        //         </table>
+        //     `;
+        //     container.innerHTML = tableHtml;
+        // };
 
-        window.renderSecurityPermissionList = function(value) {
-            renderSecurityPermissionList(value);
-        };
+        // window.renderSecurityPermissionList = function(value) {
+        //     renderSecurityPermissionList(value);
+        // };
 
         window.showSecurityPermissionForm = function(mode, id = null) {
             const modal = document.getElementById('security-permission-form-modal');
@@ -2840,6 +3144,7 @@ window.toggleChildren = function(parentId) {
                     await showCustomAlert('Success', 'Security Permission updated successfully!');
                 }
             }
+            saveSecurityPermissions
             closeSecurityPermissionForm();
             renderSecurityPermissionList();
         };
@@ -2848,6 +3153,7 @@ window.toggleChildren = function(parentId) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security permission?');
             if (confirmed) {
                 securityPermissions = securityPermissions.filter(sp => sp.id !== id);
+                saveSecurityPermissions
                 renderSecurityPermissionList();
                 await showCustomAlert('Deleted', 'Security Permission deleted successfully!');
             }
