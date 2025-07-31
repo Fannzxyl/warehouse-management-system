@@ -77,6 +77,28 @@
             });
         };
 
+        // Fungsi untuk menoggle tampilan elemen anak (sub-menu)
+        window.toggleChildren = function(parentId) {
+            const childrenContainer = document.getElementById(parentId + '-children'); // Kontainer sub-menu
+            const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
+            const arrowIcon = document.getElementById(parentId + '-arrow');            // Icon panah
+
+            if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
+                childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
+
+                // Mengupdate atribut aria-expanded untuk aksesibilitas
+                const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
+                parentElement.setAttribute('aria-expanded', isExpanded);
+
+                // Rotasi panah: Tambah/hapus kelas 'rotate-180'
+                arrowIcon.classList.toggle('rotate-180');
+
+                console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${isExpanded}`);
+            } else {
+                console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
+            }
+        };
+
         // Data dummy untuk konten dashboard dan sub-kategori
         const contentData = {
             dashboard: {
@@ -323,16 +345,87 @@
                     </div>
                 `,
             },
+            // START: Konten Receipt Explorer yang Diperbarui
             'receiving-receipt-explorer': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
-                    <p class="text-wise-gray mb-4">Jelajahi detail penerimaan.</p>
-                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Penerimaan</h3>
-                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Explorer.</p>
+                    <p class="text-wise-gray mb-4">Jelajahi detail penerimaan dengan filter dan tabel.</p>
+
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md mb-6">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-4">Filter Penerimaan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label for="filter-delivery-date" class="block text-sm font-medium text-wise-dark-gray">Delivery Date:</label>
+                                <input type="date" id="filter-delivery-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-tr-req-no" class="block text-sm font-medium text-wise-dark-gray">Tr Req No:</label>
+                                <input type="text" id="filter-tr-req-no" placeholder="e.g., TR0000155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-to-site" class="block text-sm font-medium text-wise-dark-gray">To Site:</label>
+                                <input type="text" id="filter-to-site" placeholder="e.g., 70307 - DFB" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-order-group" class="block text-sm font-medium text-wise-dark-gray">Order Group:</label>
+                                <input type="text" id="filter-order-group" placeholder="e.g., Finish Product" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-from-site" class="block text-sm font-medium text-wise-dark-gray">From Site:</label>
+                                <select id="filter-from-site" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <option value="">-SELECT-</option>
+                                    <option value="70307 - DFB">70307 - DFB</option>
+                                    <option value="70306 - CFB">70306 - CFB</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="filter-collect-date" class="block text-sm font-medium text-wise-dark-gray">Collect Date:</label>
+                                <input type="date" id="filter-collect-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-status" class="block text-sm font-medium text-wise-dark-gray">Status:</label>
+                                <input type="text" id="filter-status" placeholder="e.g., Confirm Ship" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            </div>
+                            <div>
+                                <label for="filter-collected" class="block text-sm font-medium text-wise-dark-gray">Collected:</label>
+                                <select id="filter-collected" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <option value="">All</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="applyReceiptFilters()">
+                                GO
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-lg shadow-md">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2">
+                                <label for="show-entries" class="text-sm text-wise-dark-gray">Show</label>
+                                <select id="show-entries" class="px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray" onchange="renderReceiptTable()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span class="text-sm text-wise-dark-gray">entries</span>
+                            </div>
+                            <input type="text" id="receipt-search-table" placeholder="Search..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="renderReceiptTable()">
+                        </div>
+                        <div id="receipt-table-container" class="overflow-x-auto">
+                            <!-- Tabel data akan dirender di sini oleh JavaScript -->
+                        </div>
+                        <div id="receipt-pagination" class="flex justify-between items-center mt-4">
+                            <!-- Pagination akan dirender di sini -->
+                        </div>
                     </div>
                 `,
             },
+            // END: Konten Receipt Explorer yang Diperbarui
             'receiving-receipt-monitoring-close': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Monitoring/Close Viewer</h2>
@@ -1462,18 +1555,21 @@
          * @param {string} category - ID kategori induk.
          */
         window.toggleChildren = function(category) {
-            const childrenDiv = document.getElementById(`${category}-children`);
+            const childrenContainer = document.getElementById(`${category}-children`);
+            const parentElement = document.getElementById(category);
             const arrowIcon = document.getElementById(`${category}-arrow`);
 
-            if (childrenDiv && arrowIcon) {
-                childrenDiv.classList.toggle('hidden');
-                arrowIcon.classList.toggle('rotate-90');
-                arrowIcon.classList.toggle('rotate-0');
-            }
+            if (childrenContainer && parentElement && arrowIcon) {
+                childrenContainer.classList.toggle('hidden');
+                arrowIcon.classList.toggle('rotate-180'); // Menggunakan rotate-180 untuk rotasi penuh
+                
+                // Update aria-expanded attribute
+                const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
+                parentElement.setAttribute('aria-expanded', isExpanded);
 
-            // Jika sub-menu dibuka, pilih kategori utama jika ada konten yang sesuai
-            if (!childrenDiv.classList.contains('hidden') && contentData[category] && contentData[category].full) {
-                selectCategory(category);
+                console.log(`Sub-menu untuk ID "${category}" berhasil di-toggle. Status expanded: ${isExpanded}`);
+            } else {
+                console.warn(`Elemen anak dengan ID "${category}-children", parent dengan ID "${category}", atau panah dengan ID "${category}-arrow" tidak ditemukan.`);
             }
         };
 
@@ -1493,7 +1589,7 @@
 
             // Tambahkan kelas aktif ke item yang dipilih
             const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
-            const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
+            const selectedCollapsibleGroup = document.getElementById(category); // Menggunakan ID langsung karena sudah diperbaiki
 
             if (category === 'dashboard' && selectedMainDashboardItem) {
                 selectedMainDashboardItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
@@ -1507,7 +1603,7 @@
 
                     const parentCategory = parentMapping[category];
                     if (parentCategory) {
-                        const parentSidebarItem = document.getElementById(`sidebar-${parentCategory}`);
+                        const parentSidebarItem = document.getElementById(parentCategory); // Menggunakan ID langsung
                         if (parentSidebarItem) {
                             parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
                         }
@@ -1517,7 +1613,7 @@
                             parentChildrenDiv.classList.remove('hidden');
                             if (parentArrowIcon) {
                                 parentArrowIcon.classList.remove('rotate-0');
-                                parentArrowIcon.classList.add('rotate-90');
+                                parentArrowIcon.classList.add('rotate-180'); // Rotasi 180 untuk membuka
                             }
                         }
                     }
@@ -1544,8 +1640,10 @@
             }
 
             // Inisialisasi formulir atau tabel jika kategori terkait
-            // (Tidak ada fungsionalitas formulir/tabel kompleks di dashboard.js ini,
-            // tetapi bisa ditambahkan di sini jika diperlukan di masa mendatang)
+            // Khusus untuk Receipt Explorer, panggil renderReceiptTable()
+            if (category === 'receiving-receipt-explorer') {
+                renderReceiptTable();
+            }
             
             // Tutup sidebar di tampilan mobile setelah memilih kategori
             if (window.innerWidth < 768) {
@@ -1951,6 +2049,214 @@
                 mainContentArea.classList.remove('ml-0');
             }
         });
+
+        // Fungsi yang dieksekusi saat halaman dimuat
+        window.onload = function() {
+            selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
+
+            const username = "SuperAdmin"; // Atur nama pengguna
+            document.getElementById('username-display').textContent = username; // Tampilkan nama pengguna
+        };
+
+
+        // --- RECEIPT EXPLORER FUNCTIONS ---
+
+        // Dummy data for Receipt Explorer table
+        let receiptData = [
+            { trReqNo: 'TR0000155737', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-28 09:04:50', shipDate: '2025-07-30 08:36:21', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000155746', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 11:13:19', shipDate: '2025-07-30 11:11:19', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156066', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 11:52:44', shipDate: '2025-07-30 11:20:20', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156089', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 12:40:11', shipDate: '2025-07-30 11:20:20', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156146', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 15:52:44', shipDate: '2025-07-30 11:32:59', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156192', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 09:34:21', shipDate: '2025-07-30 09:38:13', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156239', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 10:42:01', shipDate: '2025-07-30 10:42:01', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156260', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 11:15:50', shipDate: '2025-07-30 11:10:44', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156269', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:40:09', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156293', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 12:54:48', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156300', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156312', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156320', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156331', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156345', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { trReqNo: 'TR0000156350', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+        ];
+
+        let currentPage = 1;
+        let rowsPerPage = 10;
+        let filteredReceiptData = [];
+
+        /**
+         * Menerapkan filter dan merender tabel penerimaan.
+         */
+        window.applyReceiptFilters = function() {
+            const deliveryDate = document.getElementById('filter-delivery-date').value;
+            const trReqNo = document.getElementById('filter-tr-req-no').value.toLowerCase();
+            const toSite = document.getElementById('filter-to-site').value.toLowerCase();
+            const orderGroup = document.getElementById('filter-order-group').value.toLowerCase();
+            const fromSite = document.getElementById('filter-from-site').value.toLowerCase();
+            const collectDate = document.getElementById('filter-collect-date').value;
+            const status = document.getElementById('filter-status').value.toLowerCase();
+            const collected = document.getElementById('filter-collected').value;
+
+            filteredReceiptData = receiptData.filter(receipt => {
+                const matchesDeliveryDate = !deliveryDate || receipt.deliveryDate === deliveryDate;
+                const matchesTrReqNo = !trReqNo || receipt.trReqNo.toLowerCase().includes(trReqNo);
+                const matchesToSite = !toSite || receipt.toSite.toLowerCase().includes(toSite);
+                const matchesOrderGroup = !orderGroup || receipt.orderGroup.toLowerCase().includes(orderGroup);
+                const matchesFromSite = !fromSite || receipt.fromSite.toLowerCase().includes(fromSite);
+                const matchesCollectDate = !collectDate || receipt.collectDate.startsWith(collectDate); // Match date part only
+                const matchesStatus = !status || receipt.status.toLowerCase().includes(status);
+                const matchesCollected = !collected || (collected === 'Yes' && receipt.collected) || (collected === 'No' && !receipt.collected);
+
+                return matchesDeliveryDate && matchesTrReqNo && matchesToSite && matchesOrderGroup &&
+                       matchesFromSite && matchesCollectDate && matchesStatus && matchesCollected;
+            });
+
+            currentPage = 1; // Reset to first page after applying filters
+            renderReceiptTable();
+        };
+
+        /**
+         * Merender tabel penerimaan berdasarkan data yang difilter dan paginasi.
+         */
+        window.renderReceiptTable = function() {
+            const tableContainer = document.getElementById('receipt-table-container');
+            const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
+            rowsPerPage = parseInt(document.getElementById('show-entries').value);
+
+            let dataToRender = filteredReceiptData.length > 0 ? filteredReceiptData : receiptData;
+
+            // Apply table search filter
+            if (searchTableInput) {
+                dataToRender = dataToRender.filter(item => 
+                    Object.values(item).some(value => 
+                        String(value).toLowerCase().includes(searchTableInput)
+                    )
+                );
+            }
+
+            const totalPages = Math.ceil(dataToRender.length / rowsPerPage);
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = dataToRender.slice(start, end);
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Tr Req No</th>
+                            <th class="py-3 px-6 text-left">From Site</th>
+                            <th class="py-3 px-6 text-left">To Site</th>
+                            <th class="py-3 px-6 text-left">Order Group</th>
+                            <th class="py-3 px-6 text-left">Delivery Date</th>
+                            <th class="py-3 px-6 text-left">Collect Date</th>
+                            <th class="py-3 px-6 text-left">Ship Date</th>
+                            <th class="py-3 px-6 text-left">Status</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (paginatedData.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="9" class="py-3 px-6 text-center">Tidak ada data penerimaan ditemukan.</td>
+                    </tr>
+                `;
+            } else {
+                paginatedData.forEach(item => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${item.trReqNo}</td>
+                            <td class="py-3 px-6 text-left">${item.fromSite}</td>
+                            <td class="py-3 px-6 text-left">${item.toSite}</td>
+                            <td class="py-3 px-6 text-left">${item.orderGroup}</td>
+                            <td class="py-3 px-6 text-left">${item.deliveryDate}</td>
+                            <td class="py-3 px-6 text-left">${item.collectDate}</td>
+                            <td class="py-3 px-6 text-left">${item.shipDate}</td>
+                            <td class="py-3 px-6 text-left">${item.status}</td>
+                            <td class="py-3 px-6 text-center">
+                                <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.trReqNo}')">Details</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            tableContainer.innerHTML = tableHtml;
+
+            renderReceiptPagination(totalPages);
+        };
+
+        /**
+         * Merender kontrol paginasi untuk tabel penerimaan.
+         * @param {number} totalPages - Jumlah total halaman.
+         */
+        function renderReceiptPagination(totalPages) {
+            const paginationContainer = document.getElementById('receipt-pagination');
+            paginationContainer.innerHTML = '';
+
+            let paginationHtml = `
+                <span class="text-sm text-wise-gray">Showing ${((currentPage - 1) * rowsPerPage) + 1} to ${Math.min(currentPage * rowsPerPage, filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length)} of ${filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length} entries</span>
+                <nav class="flex space-x-1" aria-label="Pagination">
+                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHtml += `
+                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : ''}" onclick="goToReceiptPage(${i})">${i}</button>
+                `;
+            }
+
+            paginationHtml += `
+                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+                </nav>
+            `;
+            paginationContainer.innerHTML = paginationHtml;
+        }
+
+        /**
+         * Navigasi ke halaman tertentu di tabel penerimaan.
+         * @param {number} page - Nomor halaman yang akan dituju.
+         */
+        window.goToReceiptPage = function(page) {
+            const totalEntries = filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length;
+            const totalPages = Math.ceil(totalEntries / rowsPerPage);
+
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderReceiptTable();
+            }
+        };
+
+        /**
+         * Menampilkan detail penerimaan dalam modal kustom.
+         * @param {string} trReqNo - Nomor permintaan transaksi dari penerimaan.
+         */
+        window.showReceiptDetails = async function(trReqNo) {
+            const receipt = receiptData.find(item => item.trReqNo === trReqNo);
+            if (receipt) {
+                let detailsHtml = `
+                    <p><strong>Tr Req No:</strong> ${receipt.trReqNo}</p>
+                    <p><strong>From Site:</strong> ${receipt.fromSite}</p>
+                    <p><strong>To Site:</strong> ${receipt.toSite}</p>
+                    <p><strong>Order Group:</strong> ${receipt.orderGroup}</p>
+                    <p><strong>Delivery Date:</strong> ${receipt.deliveryDate}</p>
+                    <p><strong>Collect Date:</strong> ${receipt.collectDate}</p>
+                    <p><strong>Ship Date:</strong> ${receipt.shipDate}</p>
+                    <p><strong>Status:</strong> ${receipt.status}</p>
+                    <p class="mt-4 text-wise-gray text-sm">Ini adalah detail dummy untuk penerimaan.</p>
+                `;
+                await showCustomAlert(`Detail Penerimaan: ${trReqNo}`, detailsHtml);
+            } else {
+                await showCustomAlert('Error', 'Detail penerimaan tidak ditemukan.');
+            }
+        };
 
         // Fungsi yang dieksekusi saat halaman dimuat
         window.onload = function() {

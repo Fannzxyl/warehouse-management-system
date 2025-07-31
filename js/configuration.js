@@ -19,6 +19,34 @@
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
+        // --- MULAI PENAMBAHAN KODE DI SINI ---
+        // Anda bisa menempatkannya tepat setelah deklarasi variabel-variabel di atas.
+
+        // Di dalam blok document.addEventListener('DOMContentLoaded', () => { ... });
+window.toggleChildren = function(parentId) {
+    const childrenContainer = document.getElementById(parentId + '-children'); // Kontainer sub-menu
+    const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
+    const arrowIcon = document.getElementById(parentId + '-arrow');            // Icon panah
+
+    if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
+        childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
+
+        // Mengupdate atribut aria-expanded untuk aksesibilitas
+        const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
+        parentElement.setAttribute('aria-expanded', isExpanded);
+
+        // Rotasi panah: Tambah/hapus kelas 'rotate-180'
+        arrowIcon.classList.toggle('rotate-180');
+
+        console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${isExpanded}`);
+    } else {
+        console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
+    }
+};
+
+        // --- AKHIR PENAMBAHAN KODE DI SINI ---
+
+
         // Function to display custom alert
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
@@ -110,13 +138,13 @@
                                 Manage Locating Rules
                             </button>
                         </div>
-                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">User Profile Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Manage user profiles, permissions, and other user-specific settings.</p>
-                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-user-profile')">
-                                Manage User Profiles
-                            </button>
-                        </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                               <h3 class="text-lg font-medium text-wise-dark-gray mb-2">User Profile Management</h3>
+                               <p class="text-wise-gray text-sm mt-1">Manage user profiles, permissions, and other user-specific settings.</p>
+                               <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-user-profile')">
+                                   Manage User Profiles
+                               </button>
+                           </div>
                     </div>
                 `,
             },
@@ -448,7 +476,7 @@
                     <div id="location-type-list-container" class="overflow-x-auto">
                         </div>
 
-                    <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
                             <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
@@ -706,27 +734,27 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
-                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-default-warehouse" class="block text-sm font-medium text-wise-dark-gray">Default warehouse:</label>
-                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-shift" class="block text-sm font-medium text-wise-dark-gray">Shift:</label>
-                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-menu" class="block text-sm font-medium text-wise-dark-gray">Menu:</label>
-                                                <input type="text" id="up-menu" name="menu" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-menu" name="menu" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-language" class="block text-sm font-medium text-wise-dark-gray">Language:</label>
-                                                <input type="text" id="up-language" name="language" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-language" name="language" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                         </div>
                                         <div class="mt-4">
@@ -742,11 +770,11 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="up-default-label-printer" class="block text-sm font-medium text-wise-dark-gray">Default label printer:</label>
-                                                <input type="text" id="up-default-label-printer" name="defaultLabelPrinter" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-default-label-printer" name="defaultLabelPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-default-report-printer" class="block text-sm font-medium text-wise-dark-gray">Default report printer:</label>
-                                                <input type="text" id="up-default-report-printer" name="defaultReportPrinter" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-default-report-printer" name="defaultReportPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                         </div>
                                     </div>
@@ -779,7 +807,7 @@
                                             ${Array.from({ length: 8 }, (_, i) => `
                                             <div>
                                                 <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full input-field">
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             `).join('')}
                                         </div>
@@ -831,11 +859,11 @@
 
                                         <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
                                             <div class="flex justify-between items-center mb-2">
-                                                 <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
-                                                <label class="inline-flex items-center">
-                                                    <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
-                                                    <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
-                                                </label>
+                                                   <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                   <label class="inline-flex items-center">
+                                                        <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                        <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                   </label>
                                             </div>
                                             <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
                                                 <!-- User checkboxes will be rendered here -->
@@ -984,8 +1012,8 @@
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
         const parentMapping = {
-            'configuration-warehouse': 'configuration', 
-            'configuration-zone': 'configuration', 
+            'configuration-warehouse': 'configuration',
+            'configuration-zone': 'configuration',
             'configuration-location-type': 'configuration',
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
@@ -994,1995 +1022,1686 @@
             'security-permission': 'system',
         };
 
-        // Function to toggle sidebar sub-menus
-        window.toggleChildren = function(category) {
-            const childrenDiv = document.getElementById(`${category}-children`);
-            const arrowIcon = document.getElementById(`${category}-arrow`);
+        // Dummy data for warehouses (for configuration-warehouse)
+        let warehouses = [
+            { id: 'WH001', warehouse: 'Main Warehouse', description: 'Central storage facility', inactive: false, address1: '123 Warehouse St', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40001', country: 'Indonesia', faxNumber: '123-456-7890', attentionTo: 'Warehouse Manager', phoneNumber: '08123456789', emailAddress: 'main@warehouse.com', uccEanNumber: '1234567890123', sameAsWarehouseAddressReturn: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '/mnt/slotting', defaultLocationForUnslottedItems: 'UNSLOTTED', renderedDocumentPdfFileDirectory: '/reports/pdf', userDefinedField1: 'UDF1_WH001', userDefinedField2: 'UDF2_WH001', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '' },
+            { id: 'WH002', warehouse: 'East Distribution Center', description: 'Handles eastern region distribution', inactive: true, address1: '456 Distribution Ave', address2: '', address3: '', city: 'Surabaya', state: 'East Java', postalCode: '60001', country: 'Indonesia', faxNumber: '098-765-4321', attentionTo: 'Distribution Manager', phoneNumber: '08198765432', emailAddress: 'east@distribution.com', uccEanNumber: '9876543210987', sameAsWarehouseAddressReturn: true, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: 'UDF1_WH002', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '' },
+        ];
 
-            if (childrenDiv && arrowIcon) {
-                childrenDiv.classList.toggle('hidden');
-                arrowIcon.classList.toggle('rotate-90');
-                arrowIcon.classList.toggle('rotate-0');
-            }
+        // Dummy data for zones (for configuration-zone)
+        let zones = [
+            { id: 'ZONE001', identifier: 'ZONE_A', recordType: 'ZONETYPE', description: 'Picking Zone A', inactive: false, systemCreated: true },
+            { id: 'ZONE002', identifier: 'ZONE_B', recordType: 'ZONETYPE', description: 'Storage Zone B', inactive: false, systemCreated: false },
+            { id: 'ZONE003', identifier: 'ZONE_C', recordType: 'ZONETYPE', description: 'Receiving Zone C', inactive: true, systemCreated: false },
+        ];
 
-            if (!childrenDiv.classList.contains('hidden') && contentData[category] && contentData[category].full) {
-                selectCategory(category);
-            }
-        }
+        // Dummy data for location types (for configuration-location-type)
+        let locationTypes = [
+            { id: 'LT001', locationType: 'PALLET', length: 120, lengthUM: 'Centimeters', width: 100, height: 150, maximumWeight: 1000, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'PALLET_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
+            { id: 'LT002', locationType: 'SHELF', length: 60, lengthUM: 'Centimeters', width: 40, height: 30, maximumWeight: 50, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'SHELF_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
+        ];
 
-        // Function to select a sidebar category and display corresponding content
+        // Dummy data for locating strategies (for locating-strategies)
+        let locatingStrategies = [
+            { id: 'LS001', identifier: 'FIFO', recordType: 'LOCSTRAT', description: 'First-In, First-Out', inactive: false, systemCreated: true },
+            { id: 'LS002', identifier: 'LIFO', recordType: 'LOCSTRAT', description: 'Last-In, First-Out', inactive: false, systemCreated: false },
+            { id: 'LS003', identifier: 'CLOSEST', recordType: 'LOCSTRAT', description: 'Closest Location', inactive: true, systemCreated: false },
+        ];
+
+        // Dummy data for locating rules (for locating-rule)
+        let locatingRules = [
+            { id: 'LR001', ruleName: 'Standard Putaway', description: 'Default rule for new items', delayedLocating: false, inactive: false, detailRecords: [] },
+            { id: 'LR002', ruleName: 'Bulk Storage', description: 'Rule for large volume items', delayedLocating: true, inactive: false, detailRecords: [] },
+        ];
+
+        // Dummy data for user profiles (for configuration-user-profile)
+        let userProfiles = [
+            { id: 'UP001', user: 'admin', description: 'System Administrator', defaultWarehouse: 'WH001', shift: 'Day', menu: 'Full Access', language: 'English', inactive: false, defaultLabelPrinter: 'PRINTER_A', defaultReportPrinter: 'PRINTER_B', locateEmptyLpn: true, locateEmptyItem: true, locateLpnStaging: false, locateItemStaging: false, udf1: 'Admin_UDF1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' },
+            { id: 'UP002', user: 'picker1', description: 'Warehouse Picker', defaultWarehouse: 'WH002', shift: 'Night', menu: 'Picking Menu', language: 'English', inactive: false, defaultLabelPrinter: 'PRINTER_C', defaultReportPrinter: 'PRINTER_D', locateEmptyLpn: false, locateEmptyItem: true, locateLpnStaging: true, locateItemStaging: false, udf1: 'Picker_UDF1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' },
+        ];
+
+        // Dummy data for security groups (for security-group)
+        let securityGroups = [
+            { id: 'SG001', groupName: 'Administrators', description: 'Full system access', inactive: false, users: ['admin'], userDefinedField1: 'SG_UDF1_Admin', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
+            { id: 'SG002', groupName: 'Warehouse Staff', description: 'Access to warehouse operations', inactive: false, users: ['picker1'], userDefinedField1: 'SG_UDF1_Warehouse', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
+        ];
+
+        // Dummy data for security permissions (for security-permission)
+        let securityPermissions = [
+            { id: 'SP001', spName: 'Admin_Permissions', spDescription: 'All administrative menus', inactive: false, menus: ['Configuration', 'System Management', 'Gadgets', 'Processing'] },
+            { id: 'SP002', spName: 'Picker_Permissions', spDescription: 'Picking and locating menus', inactive: false, menus: ['Picking Menu', 'Locating'] },
+        ];
+
+        // Dummy data for all available menus (for security-permission)
+        const allMenus = [
+            { name: 'Configuration', category: 'Configurations' },
+            { name: 'Warehouse', category: 'Configurations' },
+            { name: 'Zone', category: 'Configurations' },
+            { name: 'Location Type', category: 'Configurations' },
+            { name: 'Locating Strategies', category: 'Configurations' },
+            { name: 'Locating Rule', category: 'Configurations' },
+            { name: 'User Profile', category: 'Configurations' },
+            { name: 'System Management', category: 'System Management' },
+            { name: 'Security Group', category: 'System Management' },
+            { name: 'Security Permission', category: 'System Management' },
+            { name: 'Gadgets', category: 'Gadgets' },
+            { name: 'Dashboard', category: 'Gadgets' },
+            { name: 'Processing', category: 'Processing' },
+            { name: 'Receiving', category: 'Processing' },
+            { name: 'Picking', category: 'Processing' },
+            { name: 'Shipping', category: 'Processing' },
+        ];
+
+
+        // Function to render content based on category
         window.selectCategory = function(category) {
-
-            // Remove active classes from all sidebar items
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
-            });
-            document.querySelectorAll('.sidebar-child').forEach(item => {
-                item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                item.classList.add('text-wise-gray');
-            });
-
-            document.querySelectorAll('.sidebar-child').forEach(item => {
-                item.classList.remove('border-l-2', 'border-wise-primary');
-            });
-
-
-            const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
-            const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
-
-            if (category === 'dashboard' && selectedMainDashboardItem) {
-                selectedMainDashboardItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-            } else if (selectedCollapsibleGroup) {
-                selectedCollapsibleGroup.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-            } else {
-                const childElement = document.querySelector(`[onclick="selectCategory('${category}')"]`);
-                if (childElement) {
-                    childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                    childElement.classList.remove('text-wise-gray');
-
-                    const parentCategory = parentMapping[category];
-                    if (parentCategory) {
-                        const parentSidebarItem = document.getElementById(`sidebar-${parentCategory}`);
-                        if (parentSidebarItem) {
-                            parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-                        }
-                        const parentChildrenDiv = document.getElementById(`${parentCategory}-children`);
-                        const parentArrowIcon = document.getElementById(`${parentCategory}-arrow`);
-                        if (parentChildrenDiv && parentChildrenDiv.classList.contains('hidden')) {
-                            parentChildrenDiv.classList.remove('hidden');
-                            if (parentArrowIcon) {
-                                parentArrowIcon.classList.remove('rotate-0');
-                                parentArrowIcon.classList.add('rotate-90');
-                            }
-                        }
-                    }
-                }
-            }
-
             currentCategory = category;
-            const content = contentData[category];
-            const defaultContentArea = document.getElementById('default-content-area');
-            const searchOverlay = document.getElementById('search-overlay');
-
-            // Hide search overlay when selecting a category
-            searchOverlay.classList.add('hidden');
-
-            if (content && content.full) {
-                defaultContentArea.innerHTML = content.full;
-                defaultContentArea.classList.remove('hidden');
-            } else if (content && content.detail) {
-                defaultContentArea.innerHTML = content.detail;
-                defaultContentArea.classList.remove('hidden');
-            } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Content for ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No specific content available for this category yet.</p>`;
-                defaultContentArea.classList.remove('hidden');
+            mainContent.innerHTML = contentData[category].full;
+            // Highlight selected sidebar item
+            sidebarItems.forEach(item => item.classList.remove('bg-wise-blue-hover', 'text-wise-primary'));
+            const selectedSidebarItem = document.querySelector(`.sidebar-item[onclick="selectCategory('${category}')"]`);
+            if (selectedSidebarItem) {
+                selectedSidebarItem.classList.add('bg-wise-blue-hover', 'text-wise-primary');
             }
 
-            // Initialize form and table if category is related
+            // Handle specific category initializations
             if (category === 'configuration-warehouse') {
                 renderWarehouseList();
-                initializeTabButtons('warehouse-form-modal');
-                activateTab('warehouse-address', 'warehouse-form-modal');
+                setupTabSwitching('warehouse-form-modal');
             } else if (category === 'configuration-zone') {
                 renderZoneList();
-                initializeTabButtons('zone-form-modal');
+                setupTabSwitching('zone-form-modal');
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
-                initializeTabButtons('location-type-form-modal');
-                activateTab('general-location', 'location-type-form-modal');
+                setupTabSwitching('location-type-form-modal');
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
-                initializeTabButtons('locating-strategy-form-modal');
+                setupTabSwitching('locating-strategy-form-modal');
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
-                initializeTabButtons('locating-rule-form-modal');
-                checkLocatingRuleFormValidity();
-            } else if (category === 'configuration-user-profile') { // ### INISIALISASI UNTUK USER PROFILE
+                setupTabSwitching('locating-rule-form-modal');
+                checkLocatingRuleFormValidity(); // Initial check for detail records section
+            } else if (category === 'configuration-user-profile') {
                 renderUserProfileList();
-                initializeTabButtons('user-profile-form-modal');
-                activateTab('up-general', 'user-profile-form-modal');
+                setupTabSwitching('user-profile-form-modal'); // Setup tab switching for user profile form
             } else if (category === 'security-group') {
                 renderSecurityGroupList();
+                setupTabSwitching('security-group-form-modal');
             } else if (category === 'security-permission') {
                 renderSecurityPermissionList();
+                setupTabSwitching('security-permission-form-modal');
             }
+        };
 
-            // Close sidebar in mobile view after selecting a category
-            if (window.innerWidth < 768) {
-                sidebar.classList.add('-translate-x-full');
-                mainContent.classList.remove('ml-64');
-                mainContent.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
-            }
-        }
+        // Function to toggle sidebar visibility
+        window.toggleSidebar = function() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('translate-x-0');
+            mainContent.classList.toggle('md:ml-64');
+        };
 
-        /**
-         * Handles search input from header or overlay.
-         * @param {string} query - The search keyword.
-         */
-        window.handleSearch = function(query) {
-            const searchOverlay = document.getElementById('search-overlay');
-            const overlaySearchInput = document.getElementById('overlay-search-input');
-            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+        // Initial content load
+        selectCategory('configuration');
 
-            if (query.length > 0) {
-                // Show search overlay if there's a query
-                searchOverlay.classList.remove('hidden');
-                overlaySearchInput.value = query; // Populate overlay input with the query
-                performSearch(query, 'overlay'); // Perform search in the overlay
-                searchHistoryDropdown.classList.add('hidden'); // Hide search history
-            } else {
-                // Hide search overlay if query is empty
-                searchOverlay.classList.add('hidden');
-                selectCategory(currentCategory); // Revert to current category
-                showSearchHistory(); // Show search history
-            }
-        }
+        // Search Overlay Functions
+        window.openSearchOverlay = function() {
+            searchOverlay.classList.remove('hidden');
+            searchOverlay.classList.add('flex');
+            overlaySearchInput.focus();
+            renderSearchHistory();
+        };
 
-        /**
-         * Performs a search and displays the results.
-         * @param {string} query - The search keyword.
-         * @param {string} source - The search source ('overlay' or otherwise).
-         */
-        window.performSearch = function(query, source) {
-            const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
-            const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
-            const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
-
-            // Hide default filters
-            document.getElementById('overlay-filter-articles').classList.add('hidden');
-            document.getElementById('overlay-filter-photography').classList.add('hidden');
-            // Ensure filter elements exist before attempting to hide them
-            const filterArticles = document.getElementById('filter-articles');
-            if (filterArticles) filterArticles.classList.add('hidden');
-            const filterPhotography = document.getElementById('filter-photography');
-            if (filterPhotography) filterPhotography.classList.add('hidden');
-
-
-            if (query.length > 0) {
-                filtersContainer.classList.remove('hidden');
-
-                let filteredResults = searchItems.filter(item =>
-                    item.title.toLowerCase().includes(query.toLowerCase()) ||
-                    item.category.toLowerCase().includes(query.toLowerCase()) ||
-                    (item.id && item.id.toLowerCase().includes(query.toLowerCase()))
-                );
-
-                if (activeFilters.length > 0) {
-                    filteredResults = filteredResults.filter(item =>
-                        activeFilters.some(filter => item.category.toLowerCase().includes(filter.toLowerCase()))
-                    );
-                }
-
-                resultsPanel.innerHTML = '';
-
-                if (filteredResults.length > 0) {
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('article') || item.title.toLowerCase().includes('article'))) {
-                        document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
-                    }
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('photography') || item.title.toLowerCase().includes('photo'))) {
-                        document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
-                    }
-
-                    filteredResults.forEach(item => {
-                        const resultItem = document.createElement('div');
-                        resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
-                        resultItem.innerHTML = `
-                            <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                            <p class="text-wise-gray text-xs">Category: ${item.category} | Last Updated: ${item.lastUpdated}</p>
-                        `;
-                        resultItem.onmouseenter = (event) => showPreview(item.id, event);
-                        resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
-                        resultsPanel.appendChild(resultItem);
-                    });
-                } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">No results found.</p>`;
-                    filtersContainer.classList.add('hidden');
-                }
-                if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
-                }
-            } else {
-                resultsPanel.innerHTML = '';
-                if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
-                }
-                filtersContainer.classList.add('hidden');
-            }
-        }
-
-        /**
-         * Displays content preview in the search overlay detail panel.
-         * @param {string} id - The ID of the content to preview.
-         */
-        window.showPreview = function(id) {
-            const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
-            const content = contentData[id];
-
-            if (content && (content.detail || content.full)) {
-                overlayDetailContentPanel.innerHTML = `
-                    ${content.detail || content.full}
-                    <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                        Display Page
-                    </button>
-                `;
-            } else {
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">No preview available for this item.</p>`;
-            }
-        }
-
-        /**
-         * Selects a search result and displays its content in the main dashboard.
-         * @param {string} id - The ID of the selected content.
-         * @param {string} title - The title of the search result.
-         * @param {string} query - The search keyword that led to this result.
-         */
-        window.selectSearchResult = function(id, title, query) {
-            addSearchHistory(query); // Add query to search history
-            displayContentInMainDashboard(id); // Display content in main dashboard
-        }
-
-        /**
-         * Displays content in the main dashboard area.
-         * @param {string} id - The ID of the content to display.
-         */
-        window.displayContentInMainDashboard = function(id) {
-            const content = contentData[id];
-            const defaultContentArea = document.getElementById('default-content-area');
-
-            if (content && content.full) {
-                defaultContentArea.innerHTML = content.full;
-            } else if (content && content.detail) {
-                defaultContentArea.innerHTML = content.detail;
-            } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Full Content for ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No full content available.</p>`;
-            }
-
-            closeSearchOverlay(); // Close search overlay
-            selectCategory(id); // Select the corresponding category in the sidebar
-        }
-
-        /**
-         * Adds a filter to the search overlay.
-         * @param {string} filterName - The name of the filter to add.
-         */
-        window.addOverlayFilter = function(filterName) {
-            if (!activeFilters.includes(filterName.toLowerCase())) {
-                activeFilters.push(filterName.toLowerCase());
-                document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.remove('hidden');
-                performSearch(document.getElementById('overlay-search-input').value, 'overlay');
-            }
-        }
-
-        /**
-         * Removes a filter from the search overlay.
-         * @param {string} filterName - The name of the filter to remove.
-         */
-        window.removeOverlayFilter = function(filterName) {
-            activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
-            document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
-            performSearch(document.getElementById('overlay-search-input').value, 'overlay');
-        }
-
-        /**
-         * Removes all filters from the search overlay.
-         */
-        window.removeAllOverlayFilters = function() {
-            activeFilters = [];
-            document.getElementById('overlay-filter-articles').classList.add('hidden');
-            document.getElementById('overlay-filter-photography').classList.add('hidden');
-            document.getElementById('overlay-search-input').value = '';
-            performSearch('', 'overlay');
-        }
-
-        /**
-         * Closes the search overlay.
-         */
         window.closeSearchOverlay = function() {
-            document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = ''; // Clear header search input
-            document.getElementById('overlay-search-input').value = ''; // Clear overlay search input
-            activeFilters = []; // Clear all active filters
-            document.getElementById('overlay-search-filters').classList.add('hidden');
-            // Ensure filter elements exist before attempting to hide them
-            const filterArticles = document.getElementById('filter-articles');
-            if (filterArticles) filterArticles.classList.add('hidden');
-            const filterPhotography = document.getElementById('filter-photography');
-            if (filterPhotography) filterPhotography.classList.add('hidden');
-            document.getElementById('search-history-dropdown').classList.add('hidden'); // Hide search history
-            selectCategory(currentCategory); // Revert to current category
-        }
+            searchOverlay.classList.add('hidden');
+            searchOverlay.classList.remove('flex');
+            overlaySearchResultsListPanel.innerHTML = '';
+            overlayDetailContentPanel.innerHTML = '';
+            overlaySearchInput.value = '';
+            overlaySearchFilters.innerHTML = '';
+            activeFilters = [];
+        };
 
-        /**
-         * Toggles the visibility of the user dropdown.
-         */
-        window.toggleUserDropdown = function() {
-            const userDropdown = document.getElementById('user-dropdown');
-            userDropdown.classList.toggle('hidden');
-        }
-
-        // Closes user dropdown and search history when clicking outside the area.
-        document.addEventListener('click', function(event) {
-            const userIconContainer = document.querySelector('header .relative.flex.items-center');
-            const userDropdown = document.getElementById('user-dropdown');
-            const searchInput = document.getElementById('search-input');
-            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-
-            if (userIconContainer && userDropdown && !userIconContainer.contains(event.target)) {
-                userDropdown.classList.add('hidden');
-            }
-            if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
-                searchHistoryDropdown.classList.add('hidden');
-            }
-        });
-
-        /**
-         * Handles the logout process.
-         */
-        window.handleLogout = async function() {
-            await showCustomAlert('Log Out', 'You have successfully logged out.');
-            window.location.href = 'login.html';
-        }
-
-        /**
-         * Navigates to the profile page.
-         */
-        window.navigateToProfile = function() {
-            window.location.href = 'profile.html';
-        }
-
-        /**
-         * Adds a search query to history.
-         * @param {string} query - The search keyword.
-         */
-        function addSearchHistory(query) {
-            if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query); // Add to the beginning of the array
-                searchHistory = searchHistory.slice(0, 5); // Limit to the last 5 items
-                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            }
-        }
-
-        /**
-         * Displays search history in the dropdown.
-         */
-        window.showSearchHistory = function() {
-            const historyDropdown = document.getElementById('search-history-dropdown');
-            const historyContent = document.getElementById('search-history-content');
-
-            historyContent.innerHTML = ''; // Clear previous content
-
-            if (searchHistory.length > 0) {
-                searchHistory.forEach((item, index) => {
-                    const historyItem = document.createElement('div');
-                    historyItem.classList.add('flex', 'items-center', 'justify-between', 'px-3', 'py-2', 'cursor-pointer', 'hover:bg-wise-light-gray', 'rounded-md', 'transition-all-smooth');
-                    historyItem.innerHTML = `
-                        <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
-                        <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
-                    `;
-                    historyContent.appendChild(historyItem);
-                });
-                const clearAllButton = document.createElement('div');
-                clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Clear All History</button>`;
-                historyContent.appendChild(clearAllButton);
-
-                historyDropdown.classList.remove('hidden');
-            } else {
-                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">No search history.</p>`;
-                historyDropdown.classList.remove('hidden');
-            }
-        }
-
-        /**
-         * Applies a query from search history.
-         * @param {string} query - The keyword from history.
-         */
-        window.applySearchHistory = function(query) {
-            document.getElementById('search-input').value = query;
-            handleSearch(query); // Call handleSearch to trigger search and display overlay
-            document.getElementById('search-history-dropdown').classList.add('hidden');
-        }
-
-        /**
-         * Removes an item from search history.
-         * @param {number} index - The index of the item to remove.
-         */
-        window.removeSearchHistory = function(index) {
-            searchHistory.splice(index, 1);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory(); // Update history display
-        }
-
-        /**
-         * Clears all search history.
-         */
-        window.clearAllSearchHistory = function() {
-            searchHistory = [];
-            localStorage.removeItem('searchHistory');
-            showSearchHistory(); // Update history display
-        }
-
-        // Dummy data for warehouses (from local storage or default)
-        let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
-            { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'West Java', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
-            { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-        ];
-
-        let zones = JSON.parse(localStorage.getItem('zones')) || [
-            { id: 'Allocation', identifier: 'Allocation', recordType: 'ZONETYPE', description: 'Allocation', systemValue1: 'Yes', systemCreated: true, active: true },
-            { id: 'Locating', identifier: 'Locating', recordType: 'ZONETYPE', description: 'Locating', systemValue1: 'Yes', systemCreated: true, active: true },
-            { id: 'Work', identifier: 'Work', recordType: 'ZONETYPE', description: 'Work', systemValue1: 'Yes', systemCreated: true, active: true },
-        ];
-
-        let locationTypes = JSON.parse(localStorage.getItem('locationTypes')) || [
-            { id: 'CFLOW RESV TYPE 1', locationType: 'CFLOW RESV TYPE 1', length: 120.00, width: 30.00, height: 120.00, dimensionUM: 'CM', maximumWeight: 1000.00, weightUM: 'KG', active: true, lastUpdated: '01-07-2019 9:46:38 AM User: suhartono' },
-            { id: 'CARTON FLOW', locationType: 'CARTON FLOW', length: 180.00, width: 60.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-        ];
-
-        let locatingStrategies = JSON.parse(localStorage.getItem('locatingStrategies')) || [
-            { id: 'LOCSTRAT_DEFAULT', identifier: 'DEFAULT', recordType: 'LOCSTRAT', description: 'Default Locating Strategy', inactive: false, systemCreated: true, lastUpdated: '01-01-2023 10:00:00 AM User: SYSTEM' },
-            { id: 'LOCSTRAT_FAST_MOVERS', identifier: 'FAST_MOVERS', recordType: 'LOCSTRAT', description: 'Strategy for fast moving items', inactive: false, systemCreated: false, lastUpdated: '01-01-2023 10:00:00 AM User: Admin' },
-        ];
-
-        let locatingRules = JSON.parse(localStorage.getItem('locatingRules')) || [
-            {
-                id: 'LOC_RULE_A',
-                ruleName: 'LOC_RULE_A',
-                description: 'Rule for small items',
-                delayedLocating: false,
-                inactive: false,
-                detailRecords: [
-                    { sequence: 1, field: 'Item Size', operator: '<', value: 'Small' },
-                    { sequence: 2, field: 'Zone Type', operator: '=', value: 'PICKING' }
-                ],
-                lastUpdated: '01-01-2023 11:00:00 AM User: SYSTEM'
-            },
-        ];
-
-        // ### DATA DUMMY UNTUK USER PROFILE ###
-        let userProfiles = JSON.parse(localStorage.getItem('userProfiles')) || [
-            { 
-                id: 'SUPERADMIN', 
-                description: 'Super Administrator', 
-                defaultWarehouse: 'DCB', 
-                shift: 'PAGI', 
-                menu: 'ADMIN_MENU', 
-                language: 'INDONESIA', 
-                active: true,
-                defaultLabelPrinter: 'PRINTER_LABEL_1',
-                defaultReportPrinter: 'PRINTER_REPORT_1',
-                locateEmptyLpn: true,
-                locateEmptyItem: false,
-                locateLpnStaging: true,
-                locateItemStaging: false,
-                udf1: 'Data 1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
-            },
-            { 
-                id: 'AGUNG15050074', 
-                description: 'Agung', 
-                defaultWarehouse: 'DCC', 
-                shift: 'SIANG', 
-                menu: 'OPERATOR_MENU', 
-                language: 'ENGLISH', 
-                active: true,
-                defaultLabelPrinter: 'PRINTER_LABEL_2',
-                defaultReportPrinter: 'PRINTER_REPORT_2',
-                locateEmptyLpn: false,
-                locateEmptyItem: true,
-                locateLpnStaging: false,
-                locateItemStaging: true,
-                udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
-            },
-             { 
-                id: 'USER_INACTIVE', 
-                description: 'User Tidak Aktif', 
-                defaultWarehouse: 'DCB', 
-                shift: 'MALAM', 
-                menu: 'VIEWER_MENU', 
-                language: 'INDONESIA', 
-                active: false,
-                defaultLabelPrinter: '',
-                defaultReportPrinter: '',
-                locateEmptyLpn: false,
-                locateEmptyItem: false,
-                locateLpnStaging: false,
-                locateItemStaging: false,
-                udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
-            },
-        ];
-
-        let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
-            { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
-            { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
-        ];
-
-        let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
-            { id: 'admin-access', name: 'Admin Full Access', description: 'Full access for administrators', inactive: false, menus: ['config-company', 'config-billing', 'proc-item-maintenance'] },
-            { id: 'viewer-access', name: 'Viewer Access', description: 'View-only access', inactive: false, menus: ['gadget-report'] },
-        ];
-
-        const allMenus = [
-            { id: 'config-billing', name: 'Billing Record Trigger', category: 'Configurations' },
-            { id: 'config-company', name: 'Company', category: 'Configurations' },
-            { id: 'config-main', name: 'Configuration', category: 'Configurations' },
-            { id: 'gadget-report', name: 'Gadget Report', category: 'Gadgets' },
-            { id: 'gadget-dashboard', name: 'Gadget Dashboard', category: 'Gadgets' },
-            { id: 'proc-adjustment', name: 'Adjustment Reason', category: 'Processing' },
-            { id: 'proc-item-maintenance', name: 'Item Maintenance', category: 'Processing' },
-        ];
-
-        const allUsers = [
-            'Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284',
-            'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301',
-            'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115',
-            'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'
-        ];
-
-
-        let currentWarehouseId = null;
-        let currentZoneId = null;
-        let currentLocationTypeId = null;
-        let currentLocatingStrategyId = null;
-        let currentLocatingRuleId = null;
-        let currentUserProfileId = null; // ### ID UNTUK USER PROFILE
-        let currentSecurityGroupId = null;
-        let currentSecurityPermissionId = null;
-        let selectedPermissionNode = null;
-        let activePermissionItem = null;
-
-        // Function to save data to local storage
-        function saveWarehouses() {
-            localStorage.setItem('warehouses', JSON.stringify(warehouses));
-        }
-
-        function saveZones() {
-            localStorage.setItem('zones', JSON.stringify(zones));
-        }
-
-        function saveLocationTypes() {
-            localStorage.setItem('locationTypes', JSON.stringify(locationTypes));
-        }
-
-        function saveLocatingStrategies() {
-            localStorage.setItem('locatingStrategies', JSON.stringify(locatingStrategies));
-        }
-
-        function saveLocatingRules() {
-            localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
-        }
-        
-        // ### FUNGSI SAVE UNTUK USER PROFILE ###
-        function saveUserProfiles() {
-            localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
-        }
-
-        function saveSecurityGroups() {
-            localStorage.setItem('securityGroups', JSON.stringify(securityGroups));
-        }
-
-        function saveSecurityPermissions() {
-            localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions));
-        }
-
-        // Function to render the warehouse list
-        window.renderWarehouseList = function(filterQuery = '') {
-            const container = document.getElementById('warehouse-list-container');
-            container.innerHTML = '';
-
-            const filteredWarehouses = warehouses.filter(wh =>
-                wh.id.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                wh.description.toLowerCase().includes(filterQuery.toLowerCase())
+        window.performSearch = function(query) {
+            const searchTerm = query.toLowerCase();
+            const filteredItems = searchItems.filter(item =>
+                item.title.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
             );
+            renderSearchResults(filteredItems);
+            saveSearchQuery(query);
+        };
 
-            if (filteredWarehouses.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No warehouses found.</p>`;
+        window.renderSearchResults = function(results) {
+            overlaySearchResultsListPanel.innerHTML = '';
+            if (results.length === 0) {
+                overlaySearchResultsListPanel.innerHTML = '<p class="text-wise-gray p-4">No results found.</p>';
                 return;
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Warehouse</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="warehouse-table-body">
-                    </tbody>
-            `;
-            container.appendChild(table);
-
-            const tbody = document.getElementById('warehouse-table-body');
-            filteredWarehouses.forEach(wh => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${wh.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${wh.active ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showWarehouseForm('edit', '${wh.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteWarehouse('${wh.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
+            const ul = document.createElement('ul');
+            ul.className = 'divide-y divide-wise-border';
+            results.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'p-4 hover:bg-wise-light-gray cursor-pointer transition-colors duration-200';
+                li.innerHTML = `
+                    <h3 class="text-wise-dark-gray font-semibold">${item.title}</h3>
+                    <p class="text-wise-gray text-sm">${item.category} - ${item.lastUpdated}</p>
                 `;
+                li.onclick = () => showDetailContent(item.id);
+                ul.appendChild(li);
             });
-        }
+            overlaySearchResultsListPanel.appendChild(ul);
+        };
 
-        // Function to display the warehouse form (create/edit)
+        window.showDetailContent = function(id) {
+            const content = contentData[id];
+            if (content && content.detail) {
+                overlayDetailContentPanel.innerHTML = content.detail;
+            } else if (content && content.full) {
+                // If no specific detail content, show the full content
+                overlayDetailContentPanel.innerHTML = `<div class="p-4">${content.full}</div>`;
+            } else {
+                overlayDetailContentPanel.innerHTML = '<p class="text-wise-gray p-4">No detailed content available for this item.</p>';
+            }
+        };
+
+        window.saveSearchQuery = function(query) {
+            if (query.trim() === '') return;
+            // Add to the beginning if not already present
+            if (!searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                // Keep only the last 5 searches
+                searchHistory = searchHistory.slice(0, 5);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
+        };
+
+        window.renderSearchHistory = function() {
+            const historyContainer = document.getElementById('search-history');
+            if (!historyContainer) return;
+
+            historyContainer.innerHTML = '';
+            if (searchHistory.length === 0) {
+                historyContainer.innerHTML = '<p class="text-wise-gray text-sm">No recent searches.</p>';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            ul.className = 'space-y-2';
+            searchHistory.forEach(query => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between text-wise-dark-gray text-sm hover:text-wise-primary cursor-pointer transition-colors duration-200';
+                li.innerHTML = `
+                    <span onclick="overlaySearchInput.value='${query}'; performSearch('${query}')">${query}</span>
+                    <button class="text-wise-gray hover:text-red-500 ml-2" onclick="removeSearchHistoryItem('${query}', event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                `;
+                ul.appendChild(li);
+            });
+            historyContainer.appendChild(ul);
+        };
+
+        window.removeSearchHistoryItem = function(queryToRemove, event) {
+            event.stopPropagation(); // Prevent triggering search
+            searchHistory = searchHistory.filter(query => query !== queryToRemove);
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            renderSearchHistory();
+        };
+
+        // Event listener for search input in overlay
+        overlaySearchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+
+        // Universal Tab Switching Logic
+        window.setupTabSwitching = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+
+            const tabButtons = modal.querySelectorAll('.tab-button');
+            const tabContents = modal.querySelectorAll('.tab-content');
+
+            // Function to activate a tab
+            const activateTab = (tabName) => {
+                tabButtons.forEach(button => {
+                    if (button.dataset.tab === tabName) {
+                        button.classList.add('text-wise-primary', 'border-wise-primary');
+                        button.classList.remove('text-wise-gray', 'border-transparent');
+                    } else {
+                        button.classList.remove('text-wise-primary', 'border-wise-primary');
+                        button.classList.add('text-wise-gray', 'border-transparent');
+                    }
+                });
+
+                tabContents.forEach(content => {
+                    if (content.id === tabName) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            };
+
+            // Add click listeners to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    activateTab(button.dataset.tab);
+                });
+            });
+
+            // Activate the first tab by default when the modal is shown
+            // This needs to be called when the modal is actually opened,
+            // not just when setupTabSwitching is called.
+            // For now, we'll activate the first tab immediately.
+            if (tabButtons.length > 0) {
+                activateTab(tabButtons[0].dataset.tab);
+            }
+        };
+
+        // --- Warehouse Management Functions ---
+        window.renderWarehouseList = function(filter = '') {
+            const container = document.getElementById('warehouse-list-container');
+            if (!container) return;
+
+            const filteredWarehouses = warehouses.filter(wh =>
+                wh.warehouse.toLowerCase().includes(filter.toLowerCase()) ||
+                wh.description.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Warehouse</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredWarehouses.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="4" class="py-3 px-6 text-center">No warehouses found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredWarehouses.forEach(wh => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${wh.warehouse}</td>
+                            <td class="py-3 px-6 text-left">${wh.description}</td>
+                            <td class="py-3 px-6 text-left">${wh.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showWarehouseForm('edit', '${wh.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteWarehouse('${wh.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHtml;
+        };
+
+        window.filterWarehouseList = function(value) {
+            renderWarehouseList(value);
+        };
+
         window.showWarehouseForm = function(mode, id = null) {
             const modal = document.getElementById('warehouse-form-modal');
-            const title = document.getElementById('warehouse-form-title');
             const form = document.getElementById('warehouse-form');
-            form.reset(); // Reset form
+            const title = document.getElementById('warehouse-form-title');
+            const submitButton = document.getElementById('warehouse-submit-button');
 
-            const tabButtons = form.querySelectorAll('.tab-button');
-            tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
-            const firstTabButton = tabButtons[0];
-            if (firstTabButton) {
-                firstTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
-            }
-            const tabContents = form.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.add('hidden'));
-            document.getElementById('warehouse-address').classList.remove('hidden');
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
-            document.getElementById('same-as-warehouse-address-return').checked = false;
-            toggleReturnAddressFields(); // Ensure return address fields are correctly set
+            // Reset tab to default (Warehouse Address)
+            setupTabSwitching('warehouse-form-modal'); // Re-run setup to ensure first tab is active
 
-            currentWarehouseId = id; // Store the ID of the warehouse being edited
+            // Reset all input fields to default styling
+            form.querySelectorAll('input, select').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New Warehouse';
-                document.getElementById('warehouse-submit-button').textContent = 'Create';
-                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('warehouse-name').disabled = false; // Enable ID input for creation
-                document.getElementById('warehouse-inactive').checked = false; // Default to active
-                renderUserCheckboxes([]); // Render empty user checkboxes
-            } else {
+                submitButton.textContent = 'Save';
+                document.getElementById('same-as-warehouse-address-return').checked = false;
+                toggleReturnAddressFields(); // Ensure return address fields are visible for new creation by default
+            } else { // edit mode
                 title.textContent = 'Edit Warehouse';
-                document.getElementById('warehouse-submit-button').textContent = 'Save';
-                document.getElementById('warehouse-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('warehouse-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('warehouse-name').disabled = true; // Disable ID input for editing
+                submitButton.textContent = 'Update';
+                const warehouse = warehouses.find(wh => wh.id === id);
+                if (warehouse) {
+                    document.getElementById('warehouse-name').value = warehouse.warehouse;
+                    document.getElementById('warehouse-description').value = warehouse.description;
+                    document.getElementById('address1').value = warehouse.address1;
+                    document.getElementById('address2').value = warehouse.address2;
+                    document.getElementById('address3').value = warehouse.address3;
+                    document.getElementById('city').value = warehouse.city;
+                    document.getElementById('state').value = warehouse.state;
+                    document.getElementById('postal-code').value = warehouse.postalCode;
+                    document.getElementById('country').value = warehouse.country;
+                    document.getElementById('fax-number').value = warehouse.faxNumber;
+                    document.getElementById('attention-to').value = warehouse.attentionTo;
+                    document.getElementById('phone-number').value = warehouse.phoneNumber;
+                    document.getElementById('email-address').value = warehouse.emailAddress;
+                    document.getElementById('ucc-ean-number').value = warehouse.uccEanNumber;
+                    document.getElementById('warehouse-inactive').checked = warehouse.inactive;
+                    document.getElementById('slotting-move-file-directory').value = warehouse.slottingMoveFileDirectory;
+                    document.getElementById('default-location-for-unslotted-items').value = warehouse.defaultLocationForUnslottedItems;
+                    document.getElementById('rendered-document-pdf-file-directory').value = warehouse.renderedDocumentPdfFileDirectory;
+                    document.getElementById('user-defined-field1').value = warehouse.userDefinedField1;
+                    document.getElementById('user-defined-field2').value = warehouse.userDefinedField2;
+                    document.getElementById('user-defined-field3').value = warehouse.userDefinedField3;
+                    document.getElementById('user-defined-field4').value = warehouse.userDefinedField4;
+                    document.getElementById('user-defined-field5').value = warehouse.userDefinedField5;
+                    document.getElementById('user-defined-field6').value = warehouse.userDefinedField6;
+                    document.getElementById('user-defined-field7').value = warehouse.userDefinedField7;
+                    document.getElementById('user-defined-field8').value = warehouse.userDefinedField8;
 
-                const warehouseToEdit = warehouses.find(wh => wh.id === id);
-                if (warehouseToEdit) {
-                    // Populate the form with existing warehouse data
-                    document.getElementById('warehouse-name').value = warehouseToEdit.id;
-                    document.getElementById('warehouse-description').value = warehouseToEdit.description;
-                    document.getElementById('warehouse-inactive').checked = !warehouseToEdit.active; // 'Inactive' checkbox
+                    document.getElementById('same-as-warehouse-address-return').checked = warehouse.sameAsWarehouseAddressReturn;
+                    toggleReturnAddressFields(); // Adjust fields based on checkbox state
 
-                    document.getElementById('address1').value = warehouseToEdit.address1;
-                    document.getElementById('address2').value = warehouseToEdit.address2;
-                    document.getElementById('address3').value = warehouseToEdit.address3;
-                    document.getElementById('city').value = warehouseToEdit.city;
-                    document.getElementById('state').value = warehouseToEdit.state;
-                    document.getElementById('postal-code').value = warehouseToEdit.postalCode;
-                    document.getElementById('country').value = warehouseToEdit.country;
-                    document.getElementById('fax-number').value = warehouseToEdit.faxNumber;
-                    document.getElementById('attention-to').value = warehouseToEdit.attentionTo;
-                    document.getElementById('phone-number').value = warehouseToEdit.phoneNumber;
-                    document.getElementById('email-address').value = warehouseToEdit.emailAddress;
-                    document.getElementById('ucc-ean-number').value = warehouseToEdit.uccEanNumber;
+                    document.getElementById('return-name').value = warehouse.returnName;
+                    document.getElementById('return-address1').value = warehouse.returnAddress1;
+                    document.getElementById('return-address2').value = warehouse.returnAddress2;
+                    document.getElementById('return-address3').value = warehouse.returnAddress3;
+                    document.getElementById('return-city').value = warehouse.returnCity;
+                    document.getElementById('return-state').value = warehouse.returnState;
+                    document.getElementById('return-postal-code').value = warehouse.returnPostalCode;
+                    document.getElementById('return-country').value = warehouse.returnCountry;
+                    document.getElementById('return-fax-number').value = warehouse.returnFaxNumber;
+                    document.getElementById('return-attention-to').value = warehouse.returnAttentionTo;
+                    document.getElementById('return-phone-number').value = warehouse.returnPhoneNumber;
+                    document.getElementById('return-email-address').value = warehouse.returnEmailAddress;
+                    document.getElementById('return-ucc-ean-number').value = warehouse.returnUccEanNumber;
 
-                    document.getElementById('same-as-warehouse-address-return').checked = warehouseToEdit.returnAddressSame;
-                    toggleReturnAddressFields(); // Call again to set field status
-                    document.getElementById('return-name').value = warehouseToEdit.returnName;
-                    document.getElementById('return-address1').value = warehouseToEdit.returnAddress1;
-                    document.getElementById('return-address2').value = warehouseToEdit.returnAddress2;
-                    document.getElementById('return-address3').value = warehouseToEdit.returnAddress3;
-                    document.getElementById('return-city').value = warehouseToEdit.returnCity;
-                    document.getElementById('return-state').value = warehouseToEdit.returnState;
-                    document.getElementById('return-postal-code').value = warehouseToEdit.returnPostalCode;
-                    document.getElementById('return-country').value = warehouseToEdit.returnCountry;
-                    document.getElementById('return-fax-number').value = warehouseToEdit.returnFaxNumber;
-                    document.getElementById('return-attention-to').value = warehouseToEdit.returnAttentionTo;
-                    document.getElementById('return-phone-number').value = warehouseToEdit.returnPhoneNumber;
-                    document.getElementById('return-email-address').value = warehouseToEdit.returnEmailAddress;
-                    document.getElementById('return-ucc-ean-number').value = warehouseToEdit.returnUccEanNumber;
-
-                    document.getElementById('slotting-move-file-directory').value = warehouseToEdit.slottingMoveFileDirectory;
-                    document.getElementById('default-location-for-unslotted-items').value = warehouseToEdit.defaultLocationForUnslottedItems;
-                    document.getElementById('rendered-document-pdf-file-directory').value = warehouseToEdit.renderedDocumentPdfFileDirectory;
-
-                    document.getElementById('user-defined-field1').value = warehouseToEdit.userDefinedField1;
-                    document.getElementById('user-defined-field2').value = warehouseToEdit.userDefinedField2;
-                    document.getElementById('user-defined-field3').value = warehouseToEdit.userDefinedField3;
-                    document.getElementById('user-defined-field4').value = warehouseToEdit.userDefinedField4;
-                    document.getElementById('user-defined-field5').value = warehouseToEdit.userDefinedField5;
-                    document.getElementById('user-defined-field6').value = warehouseToEdit.userDefinedField6;
-                    document.getElementById('user-defined-field7').value = warehouseToEdit.userDefinedField7;
-                    document.getElementById('user-defined-field8').value = warehouseToEdit.userDefinedField8;
-
-                    renderUserCheckboxes(warehouseToEdit.users || []); // Render user checkboxes with selected ones
+                    // Populate authorized users
+                    renderUserCheckboxes(warehouse.users);
                 }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
+        };
 
-        // Function to close the warehouse form
         window.closeWarehouseForm = function() {
             document.getElementById('warehouse-form-modal').classList.add('hidden');
             document.getElementById('warehouse-form-modal').classList.remove('flex');
-            currentWarehouseId = null;
-        }
+        };
 
-        // Function to handle warehouse form submission
         window.handleWarehouseSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
-            const warehouseId = document.getElementById('warehouse-name').value;
-            const description = document.getElementById('warehouse-description').value;
-            const inactive = document.getElementById('warehouse-inactive').checked;
-            const active = !inactive;
-
-            const address1 = document.getElementById('address1').value;
-            const address2 = document.getElementById('address2').value;
-            const address3 = document.getElementById('address3').value;
-            const city = document.getElementById('city').value;
-            const state = document.getElementById('state').value;
-            const postalCode = document.getElementById('postal-code').value;
-            const country = document.getElementById('country').value;
-            const faxNumber = document.getElementById('fax-number').value;
-            const attentionTo = document.getElementById('attention-to').value;
-            const phoneNumber = document.getElementById('phone-number').value;
-            const emailAddress = document.getElementById('email-address').value;
-            const uccEanNumber = document.getElementById('ucc-ean-number').value;
-
-            const returnAddressSame = document.getElementById('same-as-warehouse-address-return').checked;
-            const returnName = document.getElementById('return-name').value;
-            const returnAddress1 = document.getElementById('return-address1').value;
-            const returnAddress2 = document.getElementById('return-address2').value;
-            const returnAddress3 = document.getElementById('return-address3').value;
-            const returnCity = document.getElementById('return-city').value;
-            const returnState = document.getElementById('return-state').value;
-            const returnPostalCode = document.getElementById('return-postal-code').value;
-            const returnCountry = document.getElementById('return-country').value;
-            const returnFaxNumber = document.getElementById('return-fax-number').value;
-            const returnAttentionTo = document.getElementById('return-attention-to').value;
-            const returnPhoneNumber = document.getElementById('return-phone-number').value;
-            const returnEmailAddress = document.getElementById('return-email-address').value;
-            const returnUccEanNumber = document.getElementById('return-ucc-ean-number').value;
-
-            const slottingMoveFileDirectory = document.getElementById('slotting-move-file-directory').value;
-            const defaultLocationForUnslottedItems = document.getElementById('default-location-for-unslotted-items').value;
-            const renderedDocumentPdfFileDirectory = document.getElementById('rendered-document-pdf-file-directory').value;
-
-            const userDefinedField1 = document.getElementById('user-defined-field1').value;
-            const userDefinedField2 = document.getElementById('user-defined-field2').value;
-            const userDefinedField3 = document.getElementById('user-defined-field3').value;
-            const userDefinedField4 = document.getElementById('user-defined-field4').value;
-            const userDefinedField5 = document.getElementById('user-defined-field5').value;
-            const userDefinedField6 = document.getElementById('user-defined-field6').value;
-            const userDefinedField7 = document.getElementById('user-defined-field7').value;
-            const userDefinedField8 = document.getElementById('user-defined-field8').value;
-
-            const selectedUsers = Array.from(document.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked'))
-                                                       .map(checkbox => checkbox.value);
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
             const newWarehouse = {
-                id: warehouseId,
-                description,
-                active,
-                address1, address2, address3, city, state, postalCode, country, faxNumber, attentionTo, phoneNumber, emailAddress, uccEanNumber,
-                returnAddressSame, returnName, returnAddress1, returnAddress2, returnAddress3, returnCity, returnState, returnPostalCode, returnCountry, returnFaxNumber, returnAttentionTo, returnPhoneNumber, returnEmailAddress, returnUccEanNumber,
-                slottingMoveFileDirectory, defaultLocationForUnslottedItems, renderedDocumentPdfFileDirectory,
-                userDefinedField1, userDefinedField2, userDefinedField3, userDefinedField4, userDefinedField5, userDefinedField6, userDefinedField7, userDefinedField8,
-                users: selectedUsers,
+                warehouse: form['warehouse'].value,
+                description: form['description'].value,
+                address1: form['address1'].value,
+                address2: form['address2'].value,
+                address3: form['address3'].value,
+                city: form['city'].value,
+                state: form['state'].value,
+                postalCode: form['postalCode'].value,
+                country: form['country'].value,
+                faxNumber: form['faxNumber'].value,
+                attentionTo: form['attentionTo'].value,
+                phoneNumber: form['phoneNumber'].value,
+                emailAddress: form['emailAddress'].value,
+                uccEanNumber: form['uccEanNumber'].value,
+                inactive: form['warehouse-inactive'].checked,
+                sameAsWarehouseAddressReturn: form['same-as-warehouse-address-return'].checked,
+                returnName: form['returnName'].value,
+                returnAddress1: form['returnAddress1'].value,
+                returnAddress2: form['returnAddress2'].value,
+                returnAddress3: form['returnAddress3'].value,
+                returnCity: form['returnCity'].value,
+                returnState: form['returnState'].value,
+                returnPostalCode: form['returnPostalCode'].value,
+                returnCountry: form['returnCountry'].value,
+                returnFaxNumber: form['returnFaxNumber'].value,
+                returnAttentionTo: form['returnAttentionTo'].value,
+                returnPhoneNumber: form['returnPhoneNumber'].value,
+                returnEmailAddress: form['returnEmailAddress'].value,
+                returnUccEanNumber: form['returnUccEanNumber'].value,
+                slottingMoveFileDirectory: form['slottingMoveFileDirectory'].value,
+                defaultLocationForUnslottedItems: form['defaultLocationForUnslottedItems'].value,
+                renderedDocumentPdfFileDirectory: form['renderedDocumentPdfFileDirectory'].value,
+                userDefinedField1: form['userDefinedField1'].value,
+                userDefinedField2: form['userDefinedField2'].value,
+                userDefinedField3: form['userDefinedField3'].value,
+                userDefinedField4: form['userDefinedField4'].value,
+                userDefinedField5: form['userDefinedField5'].value,
+                userDefinedField6: form['userDefinedField6'].value,
+                userDefinedField7: form['userDefinedField7'].value,
+                userDefinedField8: form['userDefinedField8'].value,
+
+
+                
+                // Get selected authorized users
+                users: Array.from(form.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value)
             };
 
-            if (currentWarehouseId) {
-                // Edit mode
-                const index = warehouses.findIndex(wh => wh.id === currentWarehouseId);
+            if (mode === 'create') {
+                newWarehouse.id = 'WH' + String(warehouses.length + 1).padStart(3, '0');
+                warehouses.push(newWarehouse);
+                await showCustomAlert('Success', 'Warehouse created successfully!');
+            } else {
+                const index = warehouses.findIndex(wh => wh.id === id);
                 if (index !== -1) {
-                    warehouses[index] = { ...warehouses[index], ...newWarehouse }; // Update existing warehouse
+                    warehouses[index] = { ...warehouses[index], ...newWarehouse };
+                    await showCustomAlert('Success', 'Warehouse updated successfully!');
                 }
-            } else {
-                // Create new mode
-                if (warehouses.some(wh => wh.id === warehouseId)) {
-                    await showCustomAlert('Error', 'Warehouse ID already exists!');
-                    return;
-                }
-                newWarehouse.id = warehouseId; // Assign ID for new warehouse
-                warehouses.push(newWarehouse); // Add new warehouse
             }
-            saveWarehouses(); // Save changes to local storage
-            renderWarehouseList(); // Re-render warehouse list
-            closeWarehouseForm(); // Close the form
-        }
+            closeWarehouseForm();
+            renderWarehouseList();
+        };
 
-        // Function to delete a warehouse
         window.deleteWarehouse = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this warehouse ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this warehouse?');
             if (confirmed) {
-                warehouses = warehouses.filter(wh => wh.id !== id); // Remove warehouse from array
-                saveWarehouses(); // Save changes
-                renderWarehouseList(); // Re-render list
+                warehouses = warehouses.filter(wh => wh.id !== id);
+                renderWarehouseList();
+                await showCustomAlert('Deleted', 'Warehouse deleted successfully!');
             }
-        }
+        };
 
-        // Function to filter the warehouse list
-        window.filterWarehouseList = function(query) {
-            renderWarehouseList(query);
-        }
+        // Dummy user data for authorized users
+        const allUsers = [
+            { id: 'user1', name: 'John Doe' },
+            { id: 'user2', name: 'Jane Smith' },
+            { id: 'user3', name: 'Peter Jones' },
+            { id: 'user4', name: 'Alice Brown' },
+            { id: 'user5', name: 'Bob White' },
+            { id: 'user6', name: 'Charlie Green' },
+        ];
 
-        // Function to enable/disable return address fields
-        window.toggleReturnAddressFields = function() {
-            const sameAsCheckbox = document.getElementById('same-as-warehouse-address-return');
-            const returnAddressFields = document.getElementById('return-address-fields');
-            const fields = returnAddressFields.querySelectorAll('input, select');
+        window.renderUserCheckboxes = function(selectedUsers = []) {
+            const container = document.getElementById('user-checkbox-list');
+            if (!container) return;
 
-            if (sameAsCheckbox.checked) {
-                returnAddressFields.classList.add('hidden');
-                fields.forEach(field => field.disabled = true);
-            } else {
-                returnAddressFields.classList.remove('hidden');
-                fields.forEach(field => field.disabled = false);
-            }
-        }
-
-        // Function to render user checkboxes
-        window.renderUserCheckboxes = function(selectedUsers) {
-            const userListContainer = document.getElementById('user-checkbox-list');
-            userListContainer.innerHTML = '';
-
+            container.innerHTML = '';
             allUsers.forEach(user => {
+                const isChecked = selectedUsers.includes(user.id);
                 const div = document.createElement('div');
-                div.classList.add('flex', 'items-center');
+                div.className = 'flex items-center';
                 div.innerHTML = `
-                    <input type="checkbox" id="user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedUsers.includes(user) ? 'checked' : ''}>
-                    <label for="user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
+                    <input type="checkbox" id="user-${user.id}" name="authorizedUsers" value="${user.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="user-${user.id}" class="ml-2 text-sm text-wise-dark-gray">${user.name}</label>
                 `;
-                userListContainer.appendChild(div);
+                container.appendChild(div);
             });
-            document.getElementById('check-all-users').checked = (selectedUsers.length === allUsers.length && allUsers.length > 0);
-        }
+        };
 
-        // Function to toggle all user checkboxes
         window.toggleAllUsers = function() {
             const checkAllCheckbox = document.getElementById('check-all-users');
             const userCheckboxes = document.querySelectorAll('#user-checkbox-list input[type="checkbox"]');
             userCheckboxes.forEach(checkbox => {
                 checkbox.checked = checkAllCheckbox.checked;
             });
-        }
+        };
 
-        // Function to render the zone list
-        window.renderZoneList = function(filterQuery = '') {
+        window.toggleReturnAddressFields = function() {
+            const sameAsCheckbox = document.getElementById('same-as-warehouse-address-return');
+            const returnAddressFields = document.getElementById('return-address-fields');
+            const fields = returnAddressFields.querySelectorAll('input, select');
+
+            if (sameAsCheckbox.checked) {
+                // Copy values from warehouse address fields
+                document.getElementById('return-name').value = document.getElementById('attention-to').value;
+                document.getElementById('return-address1').value = document.getElementById('address1').value;
+                document.getElementById('return-address2').value = document.getElementById('address2').value;
+                document.getElementById('return-address3').value = document.getElementById('address3').value;
+                document.getElementById('return-city').value = document.getElementById('city').value;
+                document.getElementById('return-state').value = document.getElementById('state').value;
+                document.getElementById('return-postal-code').value = document.getElementById('postal-code').value;
+                document.getElementById('return-country').value = document.getElementById('country').value;
+                document.getElementById('return-fax-number').value = document.getElementById('fax-number').value;
+                document.getElementById('return-attention-to').value = document.getElementById('attention-to').value;
+                document.getElementById('return-phone-number').value = document.getElementById('phone-number').value;
+                document.getElementById('return-email-address').value = document.getElementById('email-address').value;
+                document.getElementById('return-ucc-ean-number').value = document.getElementById('ucc-ean-number').value;
+
+                fields.forEach(field => {
+                    field.setAttribute('readonly', true);
+                    field.classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                });
+            } else {
+                fields.forEach(field => {
+                    field.removeAttribute('readonly');
+                    field.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                });
+                // Clear return address fields if not same as warehouse
+                document.getElementById('return-name').value = '';
+                document.getElementById('return-address1').value = '';
+                document.getElementById('return-address2').value = '';
+                document.getElementById('return-address3').value = '';
+                document.getElementById('return-city').value = '';
+                document.getElementById('return-state').value = '';
+                document.getElementById('return-postal-code').value = '';
+                document.getElementById('return-country').value = '';
+                document.getElementById('return-fax-number').value = '';
+                document.getElementById('return-attention-to').value = '';
+                document.getElementById('return-phone-number').value = '';
+                document.getElementById('return-email-address').value = '';
+                document.getElementById('return-ucc-ean-number').value = '';
+            }
+        };
+
+
+        // --- Zone Management Functions ---
+        window.renderZoneList = function(filter = '') {
             const container = document.getElementById('zone-list-container');
-            container.innerHTML = '';
+            if (!container) return;
 
             const filteredZones = zones.filter(zone =>
-                zone.identifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                zone.description.toLowerCase().includes(filterQuery.toLowerCase())
+                zone.identifier.toLowerCase().includes(filter.toLowerCase()) ||
+                zone.description.toLowerCase().includes(filter.toLowerCase())
             );
 
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Record Type</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-left">System Created</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
             if (filteredZones.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No zones found.</p>`;
-                return;
+                tableHtml += `
+                    <tr>
+                        <td colspan="6" class="py-3 px-6 text-center">No zones found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredZones.forEach(zone => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${zone.identifier}</td>
+                            <td class="py-3 px-6 text-left">${zone.recordType}</td>
+                            <td class="py-3 px-6 text-left">${zone.description}</td>
+                            <td class="py-3 px-6 text-left">${zone.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${zone.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showZoneForm('edit', '${zone.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteZone('${zone.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Identifier</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System created</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="zone-table-body">
+            tableHtml += `
                     </tbody>
+                </table>
             `;
-            container.appendChild(table);
+            container.innerHTML = tableHtml;
+        };
 
-            const tbody = document.getElementById('zone-table-body');
-            filteredZones.forEach(zone => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${zone.identifier}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.systemCreated ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${zone.active ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showZoneForm('edit', '${zone.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteZone('${zone.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
-        }
+        window.filterZoneList = function(value) {
+            renderZoneList(value);
+        };
 
-        // Function to display the zone form (create/edit)
         window.showZoneForm = function(mode, id = null) {
             const modal = document.getElementById('zone-form-modal');
-            const title = document.getElementById('zone-form-title');
             const form = document.getElementById('zone-form');
-            form.reset();
-            currentZoneId = id;
+            const title = document.getElementById('zone-form-title');
+            const submitButton = document.getElementById('zone-submit-button');
+
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset all input fields to default styling
+            form.querySelectorAll('input').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New Zone';
-                document.getElementById('zone-submit-button').textContent = 'Create';
-                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('zone-identifier').disabled = false;
-                document.getElementById('zone-inactive').checked = false;
-                document.getElementById('zone-system-created').checked = false;
-            } else {
+                submitButton.textContent = 'Save';
+                document.getElementById('zone-record-type').value = 'ZONETYPE'; // Default value for new zone
+                document.getElementById('zone-record-type').setAttribute('readonly', true);
+                document.getElementById('zone-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+            } else { // edit mode
                 title.textContent = 'Edit Zone';
-                document.getElementById('zone-submit-button').textContent = 'Save';
-                document.getElementById('zone-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('zone-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('zone-identifier').disabled = true;
+                submitButton.textContent = 'Update';
+                const zone = zones.find(z => z.id === id);
+                if (zone) {
+                    document.getElementById('zone-identifier').value = zone.identifier;
+                    document.getElementById('zone-record-type').value = zone.recordType;
+                    document.getElementById('zone-description').value = zone.description;
+                    document.getElementById('zone-inactive').checked = zone.inactive;
+                    document.getElementById('zone-system-created').checked = zone.systemCreated;
 
-                const zoneToEdit = zones.find(z => z.id === id);
-                if (zoneToEdit) {
-                    document.getElementById('zone-identifier').value = zoneToEdit.identifier;
-                    document.getElementById('zone-record-type').value = zoneToEdit.recordType;
-                    document.getElementById('zone-description').value = zoneToEdit.description;
-                    document.getElementById('zone-inactive').checked = !zoneToEdit.active;
-                    document.getElementById('zone-system-created').checked = zoneToEdit.systemCreated;
+                    // Make identifier and recordType readonly for system-created zones
+                    if (zone.systemCreated) {
+                        document.getElementById('zone-identifier').setAttribute('readonly', true);
+                        document.getElementById('zone-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('zone-record-type').setAttribute('readonly', true);
+                        document.getElementById('zone-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
                 }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
+        };
 
-        // Function to close the zone form
         window.closeZoneForm = function() {
             document.getElementById('zone-form-modal').classList.add('hidden');
             document.getElementById('zone-form-modal').classList.remove('flex');
-            currentZoneId = null;
-        }
+        };
 
-        // Function to handle zone form submission
         window.handleZoneSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
-            const identifier = document.getElementById('zone-identifier').value;
-            const recordType = document.getElementById('zone-record-type').value;
-            const description = document.getElementById('zone-description').value;
-            const inactive = document.getElementById('zone-inactive').checked;
-            const active = !inactive;
-            const systemCreated = document.getElementById('zone-system-created').checked;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
             const newZone = {
-                id: currentZoneId || identifier,
-                identifier,
-                recordType,
-                description,
-                systemValue1: systemCreated ? 'Yes' : 'No',
-                systemCreated,
-                active,
+                identifier: form['identifier'].value,
+                recordType: form['recordType'].value,
+                description: form['description'].value,
+                inactive: form['zone-inactive'].checked,
+                systemCreated: form['zone-system-created'].checked,
             };
 
-            if (currentZoneId) {
-                const index = zones.findIndex(z => z.id === currentZoneId);
+            if (mode === 'create') {
+                newZone.id = 'ZONE' + String(zones.length + 1).padStart(3, '0');
+                zones.push(newZone);
+                await showCustomAlert('Success', 'Zone created successfully!');
+            } else {
+                const index = zones.findIndex(z => z.id === id);
                 if (index !== -1) {
                     zones[index] = { ...zones[index], ...newZone };
+                    await showCustomAlert('Success', 'Zone updated successfully!');
                 }
-            } else {
-                if (zones.some(z => z.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Zone Identifier already exists!');
-                    return;
-                }
-                newZone.id = identifier;
-                zones.push(newZone);
             }
-            saveZones();
-            renderZoneList();
             closeZoneForm();
-        }
+            renderZoneList();
+        };
 
-        // Function to delete a zone
         window.deleteZone = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this zone ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this zone?');
             if (confirmed) {
-                zones = zones.filter(z => z.id !== id);
-                saveZones();
+                zones = zones.filter(zone => zone.id !== id);
                 renderZoneList();
+                await showCustomAlert('Deleted', 'Zone deleted successfully!');
             }
-        }
+        };
 
-        // Function to filter the zone list
-        window.filterZoneList = function(query) {
-            renderZoneList(query);
-        }
-
-        // Function to render the location type list
-        window.renderLocationTypeList = function(filterQuery = '') {
+        // --- Location Type Management Functions ---
+        window.renderLocationTypeList = function(filter = '') {
             const container = document.getElementById('location-type-list-container');
-            container.innerHTML = '';
+            if (!container) return;
 
             const filteredLocationTypes = locationTypes.filter(lt =>
-                lt.locationType.toLowerCase().includes(filterQuery.toLowerCase())
+                lt.locationType.toLowerCase().includes(filter.toLowerCase()) ||
+                lt.inactive.toString().toLowerCase().includes(filter.toLowerCase())
             );
 
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Location Type</th>
+                            <th class="py-3 px-6 text-left">Length (${filteredLocationTypes[0]?.lengthUM || 'CM'})</th>
+                            <th class="py-3 px-6 text-left">Width (${filteredLocationTypes[0]?.lengthUM || 'CM'})</th>
+                            <th class="py-3 px-6 text-left">Height (${filteredLocationTypes[0]?.lengthUM || 'CM'})</th>
+                            <th class="py-3 px-6 text-left">Max Weight (${filteredLocationTypes[0]?.weightUM || 'KG'})</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
             if (filteredLocationTypes.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No location types found.</p>`;
-                return;
+                tableHtml += `
+                    <tr>
+                        <td colspan="7" class="py-3 px-6 text-center">No location types found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredLocationTypes.forEach(lt => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${lt.locationType}</td>
+                            <td class="py-3 px-6 text-left">${lt.length}</td>
+                            <td class="py-3 px-6 text-left">${lt.width}</td>
+                            <td class="py-3 px-6 text-left">${lt.height}</td>
+                            <td class="py-3 px-6 text-left">${lt.maximumWeight}</td>
+                            <td class="py-3 px-6 text-left">${lt.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showLocationTypeForm('edit', '${lt.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteLocationType('${lt.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Location type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Length</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Width</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Height</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Dimension UM</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Maximum weight</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Weight UM</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="location-type-table-body">
+            tableHtml += `
                     </tbody>
+                </table>
             `;
-            container.appendChild(table);
+            container.innerHTML = tableHtml;
+        };
 
-            const tbody = document.getElementById('location-type-table-body');
-            filteredLocationTypes.forEach(lt => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${lt.locationType}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.length.toFixed(2)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.width.toFixed(2)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.height.toFixed(2)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.dimensionUM}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.maximumWeight.toFixed(2)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.weightUM}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${lt.active ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showLocationTypeForm('edit', '${lt.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteLocationType('${lt.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
-        }
+        window.filterLocationTypeList = function(value) {
+            renderLocationTypeList(value);
+        };
 
-        // Function to display the location type form (create/edit)
         window.showLocationTypeForm = function(mode, id = null) {
             const modal = document.getElementById('location-type-form-modal');
-            const title = document.getElementById('location-type-form-title');
             const form = document.getElementById('location-type-form');
-            form.reset();
+            const title = document.getElementById('location-type-form-title');
+            const submitButton = document.getElementById('location-type-submit-button');
 
-            const tabButtons = form.querySelectorAll('.tab-button');
-            tabButtons.forEach(btn => btn.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary'));
-            const firstTabButton = tabButtons[0];
-            if (firstTabButton) {
-                firstTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
-            }
-            const tabContents = form.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.add('hidden'));
-            document.getElementById('general-location').classList.remove('hidden');
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
+            // Reset tab to default (General)
+            setupTabSwitching('location-type-form-modal');
 
-            currentLocationTypeId = id;
+            // Reset all input fields to default styling
+            form.querySelectorAll('input').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New Location Type';
-                document.getElementById('location-type-submit-button').textContent = 'Create';
-                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('location-type-name').disabled = false;
-                document.getElementById('location-type-inactive').checked = false;
-            } else {
+                submitButton.textContent = 'Save';
+            } else { // edit mode
                 title.textContent = 'Edit Location Type';
-                document.getElementById('location-type-submit-button').textContent = 'Save';
-                document.getElementById('location-type-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('location-type-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('location-type-name').disabled = true;
-
-                const locationTypeToEdit = locationTypes.find(lt => lt.id === id);
-                    if (locationTypeToEdit) {
-                        document.getElementById('location-type-name').value = locationTypeToEdit.locationType;
-                        document.getElementById('location-type-length').value = locationTypeToEdit.length;
-                        document.getElementById('location-type-width').value = locationTypeToEdit.width;
-                        document.getElementById('location-type-height').value = locationTypeToEdit.height;
-                        document.getElementById('location-type-length-um').value = locationTypeToEdit.dimensionUM;
-                        document.getElementById('location-type-maximum-weight').value = locationTypeToEdit.maximumWeight;
-                        document.getElementById('location-type-weight-um').value = locationTypeToEdit.weightUM;
-                        document.getElementById('location-type-inactive').checked = !locationTypeToEdit.active;
-
-                        // Add this block for user-defined fields
-                        const udf = locationTypeToEdit.userDefinedFields || {};
-                        for (let i = 1; i <= 7; i++) {
-                            const field = document.getElementById(`lt-user-defined-field${i}`);
-                            if(field) {
-                                field.value = udf[`field${i}`] || '';
-                            }
-                        }
-                    }
+                submitButton.textContent = 'Update';
+                const locationType = locationTypes.find(lt => lt.id === id);
+                if (locationType) {
+                    document.getElementById('location-type-name').value = locationType.locationType;
+                    document.getElementById('location-type-length').value = locationType.length;
+                    document.getElementById('location-type-length-um').value = locationType.lengthUM;
+                    document.getElementById('location-type-width').value = locationType.width;
+                    document.getElementById('location-type-height').value = locationType.height;
+                    document.getElementById('location-type-maximum-weight').value = locationType.maximumWeight;
+                    document.getElementById('location-type-weight-um').value = locationType.weightUM;
+                    document.getElementById('location-type-inactive').checked = locationType.inactive;
+                    document.getElementById('lt-user-defined-field1').value = locationType.userDefinedField1;
+                    document.getElementById('lt-user-defined-field2').value = locationType.userDefinedField2;
+                    document.getElementById('lt-user-defined-field3').value = locationType.userDefinedField3;
+                    document.getElementById('lt-user-defined-field4').value = locationType.userDefinedField4;
+                    document.getElementById('lt-user-defined-field5').value = locationType.userDefinedField5;
+                    document.getElementById('lt-user-defined-field6').value = locationType.userDefinedField6;
+                    document.getElementById('lt-user-defined-field7').value = locationType.userDefinedField7;
+                }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
+        };
 
-        // Function to close the location type form
         window.closeLocationTypeForm = function() {
             document.getElementById('location-type-form-modal').classList.add('hidden');
             document.getElementById('location-type-form-modal').classList.remove('flex');
-            currentLocationTypeId = null;
-        }
+        };
 
-        // Function to handle location type form submission
         window.handleLocationTypeSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
-            const locationTypeName = document.getElementById('location-type-name').value;
-            const length = parseFloat(document.getElementById('location-type-length').value) || 0;
-            const width = parseFloat(document.getElementById('location-type-width').value) || 0;
-            const height = parseFloat(document.getElementById('location-type-height').value) || 0;
-            const dimensionUM = document.getElementById('location-type-length-um').value;
-            const maximumWeight = parseFloat(document.getElementById('location-type-maximum-weight').value) || 0;
-            const weightUM = document.getElementById('location-type-weight-um').value;
-            const inactive = document.getElementById('location-type-inactive').checked;
-            const active = !inactive;
-
-            const userDefinedFields = {};
-                for (let i = 1; i <= 7; i++) {
-                    const field = document.getElementById(`lt-user-defined-field${i}`);
-                    if (field && field.value) {
-                        userDefinedFields[`field${i}`] = field.value;
-                    }
-            }
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
             const newLocationType = {
-                id: currentLocationTypeId || locationTypeName,
-                locationType: locationTypeName,
-                length,
-                width,
-                height,
-                dimensionUM,
-                maximumWeight,
-                weightUM,
-                active,
-                lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
+                locationType: form['locationType'].value,
+                length: parseFloat(form['length'].value),
+                lengthUM: form['lengthUM'].value,
+                width: parseFloat(form['width'].value),
+                height: parseFloat(form['height'].value),
+                maximumWeight: parseFloat(form['maximumWeight'].value),
+                weightUM: form['weightUM'].value,
+                inactive: form['location-type-inactive'].checked,
+                userDefinedField1: form['userDefinedField1'].value,
+                userDefinedField2: form['userDefinedField2'].value,
+                userDefinedField3: form['userDefinedField3'].value,
+                userDefinedField4: form['userDefinedField4'].value,
+                userDefinedField5: form['userDefinedField5'].value,
+                userDefinedField6: form['userDefinedField6'].value,
+                userDefinedField7: form['userDefinedField7'].value,
             };
 
-            if (currentLocationTypeId) {
-                const index = locationTypes.findIndex(lt => lt.id === currentLocationTypeId);
+            if (mode === 'create') {
+                newLocationType.id = 'LT' + String(locationTypes.length + 1).padStart(3, '0');
+                locationTypes.push(newLocationType);
+                await showCustomAlert('Success', 'Location Type created successfully!');
+            } else {
+                const index = locationTypes.findIndex(lt => lt.id === id);
                 if (index !== -1) {
                     locationTypes[index] = { ...locationTypes[index], ...newLocationType };
+                    await showCustomAlert('Success', 'Location Type updated successfully!');
                 }
-            } else {
-                if (locationTypes.some(lt => lt.locationType === locationTypeName)) {
-                    await showCustomAlert('Error', 'Location Type name already exists!');
-                    return;
-                }
-                newLocationType.id = locationTypeName;
-                locationTypes.push(newLocationType);
             }
-            saveLocationTypes();
-            renderLocationTypeList();
             closeLocationTypeForm();
-        }
+            renderLocationTypeList();
+        };
 
-        // Function to delete a location type
         window.deleteLocationType = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this location type ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location type?');
             if (confirmed) {
                 locationTypes = locationTypes.filter(lt => lt.id !== id);
-                saveLocationTypes();
                 renderLocationTypeList();
+                await showCustomAlert('Deleted', 'Location Type deleted successfully!');
             }
-        }
+        };
 
-        // Function to filter the location type list
-        window.filterLocationTypeList = function(query) {
-            renderLocationTypeList(query);
-        }
-
-        // Function to render the locating strategy list
-        window.renderLocatingStrategyList = function(filterQuery = '') {
+        // --- Locating Strategy Management Functions ---
+        window.renderLocatingStrategyList = function(filter = '') {
             const container = document.getElementById('locating-strategy-list-container');
-            container.innerHTML = '';
+            if (!container) return;
 
-            const filteredStrategies = locatingStrategies.filter(strategy => {
-                const strategyIdOrIdentifier = strategy.id || strategy.identifier;
-                return (
-                    strategyIdOrIdentifier.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                    strategy.description.toLowerCase().includes(filterQuery.toLowerCase())
-                );
-            });
+            const filteredStrategies = locatingStrategies.filter(ls =>
+                ls.identifier.toLowerCase().includes(filter.toLowerCase()) ||
+                ls.description.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Record Type</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-left">System Created</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
 
             if (filteredStrategies.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No locating strategies found.</p>`;
-                return;
+                tableHtml += `
+                    <tr>
+                        <td colspan="6" class="py-3 px-6 text-center">No locating strategies found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredStrategies.forEach(ls => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${ls.identifier}</td>
+                            <td class="py-3 px-6 text-left">${ls.recordType}</td>
+                            <td class="py-3 px-6 text-left">${ls.description}</td>
+                            <td class="py-3 px-6 text-left">${ls.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${ls.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showLocatingStrategyForm('edit', '${ls.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteLocatingStrategy('${ls.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Identifier</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Record Type</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System Created</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="locating-strategy-table-body">
-                </tbody>
+            tableHtml += `
+                    </tbody>
+                </table>
             `;
-            container.appendChild(table);
+            container.innerHTML = tableHtml;
+        };
 
-            const tbody = document.getElementById('locating-strategy-table-body');
-            filteredStrategies.forEach(strategy => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${strategy.identifier}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.recordType}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.systemCreated ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${strategy.inactive ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showLocatingStrategyForm('edit', '${strategy.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteLocatingStrategy('${strategy.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
-        }
+        window.filterLocatingStrategyList = function(value) {
+            renderLocatingStrategyList(value);
+        };
 
-        // Function to display the locating strategy form (create/edit)
         window.showLocatingStrategyForm = function(mode, id = null) {
             const modal = document.getElementById('locating-strategy-form-modal');
-            const title = document.getElementById('locating-strategy-form-title');
             const form = document.getElementById('locating-strategy-form');
-            form.reset();
+            const title = document.getElementById('locating-strategy-form-title');
+            const submitButton = document.getElementById('locating-strategy-submit-button');
 
-            currentLocatingStrategyId = id;
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
-            const identifierInput = document.getElementById('locating-strategy-identifier');
-            const recordTypeInput = document.getElementById('locating-strategy-record-type');
-            const systemCreatedCheckbox = document.getElementById('locating-strategy-system-created');
-
-            identifierInput.classList.remove('cursor-not-allowed', 'bg-gray-100');
-            recordTypeInput.classList.remove('cursor-not-allowed', 'bg-gray-100');
-            systemCreatedCheckbox.classList.remove('cursor-not-allowed');
+            // Reset all input fields to default styling
+            form.querySelectorAll('input').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Strategy';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Create';
-                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-
-                identifierInput.disabled = false;
-                identifierInput.readOnly = false;
-                recordTypeInput.disabled = false;
-                recordTypeInput.readOnly = false;
-                recordTypeInput.value = 'LOCSTRAT';
-                systemCreatedCheckbox.disabled = false;
-                systemCreatedCheckbox.checked = false;
-
-                document.getElementById('locating-strategy-inactive').checked = false;
-
-            } else {
+                submitButton.textContent = 'Save';
+                document.getElementById('locating-strategy-record-type').value = 'LOCSTRAT'; // Default value for new strategy
+                document.getElementById('locating-strategy-record-type').setAttribute('readonly', true);
+                document.getElementById('locating-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                document.getElementById('locating-strategy-system-created').checked = false; // Default to unchecked
+                document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); // Disable for new creation
+            } else { // edit mode
                 title.textContent = 'Edit Locating Strategy';
-                document.getElementById('locating-strategy-submit-button').textContent = 'Save';
-                document.getElementById('locating-strategy-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('locating-strategy-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
+                submitButton.textContent = 'Update';
+                const strategy = locatingStrategies.find(ls => ls.id === id);
+                if (strategy) {
+                    document.getElementById('locating-strategy-identifier').value = strategy.identifier;
+                    document.getElementById('locating-strategy-record-type').value = strategy.recordType;
+                    document.getElementById('locating-strategy-description').value = strategy.description;
+                    document.getElementById('locating-strategy-inactive').checked = strategy.inactive;
+                    document.getElementById('locating-strategy-system-created').checked = strategy.systemCreated;
 
-                const strategyToEdit = locatingStrategies.find(s => s.id === id);
-                if (strategyToEdit) {
-                    identifierInput.value = strategyToEdit.identifier;
-                    recordTypeInput.value = strategyToEdit.recordType;
-                    document.getElementById('locating-strategy-description').value = strategyToEdit.description;
-                    document.getElementById('locating-strategy-inactive').checked = strategyToEdit.inactive;
-                    systemCreatedCheckbox.checked = strategyToEdit.systemCreated;
-
-                    identifierInput.disabled = false;
-                    identifierInput.readOnly = false;
-                    recordTypeInput.disabled = false;
-                    recordTypeInput.readOnly = false;
-                    systemCreatedCheckbox.disabled = false;
+                    // Make identifier and recordType readonly for system-created strategies
+                    if (strategy.systemCreated) {
+                        document.getElementById('locating-strategy-identifier').setAttribute('readonly', true);
+                        document.getElementById('locating-strategy-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('locating-strategy-record-type').setAttribute('readonly', true);
+                        document.getElementById('locating-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); // Keep disabled
+                    } else {
+                        document.getElementById('locating-strategy-system-created').removeAttribute('disabled'); // Enable if not system created
+                    }
                 }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
+        };
 
-        // Function to close the locating strategy form
         window.closeLocatingStrategyForm = function() {
             document.getElementById('locating-strategy-form-modal').classList.add('hidden');
             document.getElementById('locating-strategy-form-modal').classList.remove('flex');
-            currentLocatingStrategyId = null;
-        }
+        };
 
-        // Function to handle locating strategy form submission
         window.handleLocatingStrategySubmit = async function(event) {
             event.preventDefault();
-            const identifier = document.getElementById('locating-strategy-identifier').value;
-            const recordType = document.getElementById('locating-strategy-record-type').value;
-            const description = document.getElementById('locating-strategy-description').value;
-            const inactive = document.getElementById('locating-strategy-inactive').checked;
-            const systemCreated = document.getElementById('locating-strategy-system-created').checked;
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
             const newStrategy = {
-                id: currentLocatingStrategyId || identifier,
-                identifier,
-                recordType,
-                description,
-                inactive,
-                systemCreated,
-                lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
+                identifier: form['identifier'].value,
+                recordType: form['recordType'].value,
+                description: form['description'].value,
+                inactive: form['locating-strategy-inactive'].checked,
+                systemCreated: form['locating-strategy-system-created'].checked,
             };
 
-            if (currentLocatingStrategyId) {
-                const index = locatingStrategies.findIndex(s => s.id === currentLocatingStrategyId);
+            if (mode === 'create') {
+                newStrategy.id = 'LS' + String(locatingStrategies.length + 1).padStart(3, '0');
+                locatingStrategies.push(newStrategy);
+                await showCustomAlert('Success', 'Locating Strategy created successfully!');
+            } else {
+                const index = locatingStrategies.findIndex(ls => ls.id === id);
                 if (index !== -1) {
                     locatingStrategies[index] = { ...locatingStrategies[index], ...newStrategy };
+                    await showCustomAlert('Success', 'Locating Strategy updated successfully!');
                 }
-            } else {
-                if (locatingStrategies.some(s => s.identifier === identifier)) {
-                    await showCustomAlert('Error', 'Strategy Identifier already exists!');
-                    return;
-                }
-                newStrategy.id = identifier;
-                locatingStrategies.push(newStrategy);
             }
-            saveLocatingStrategies();
-            renderLocatingStrategyList();
             closeLocatingStrategyForm();
-        }
+            renderLocatingStrategyList();
+        };
 
-        // Function to delete a locating strategy
         window.deleteLocatingStrategy = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating strategy ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating strategy?');
             if (confirmed) {
-                locatingStrategies = locatingStrategies.filter(s => s.id !== id);
-                saveLocatingStrategies();
+                locatingStrategies = locatingStrategies.filter(ls => ls.id !== id);
                 renderLocatingStrategyList();
+                await showCustomAlert('Deleted', 'Locating Strategy deleted successfully!');
             }
-        }
+        };
 
-        // Function to filter the locating strategy list
-        window.filterLocatingStrategyList = function(query) {
-            renderLocatingStrategyList(query);
-        }
-
-        // Function to render the locating rule list
-        window.renderLocatingRuleList = function(filterQuery = '') {
+        // --- Locating Rule Management Functions ---
+        window.renderLocatingRuleList = function(filter = '') {
             const container = document.getElementById('locating-rule-list-container');
-            container.innerHTML = '';
+            if (!container) return;
 
-            const filteredRules = locatingRules.filter(rule =>
-                rule.ruleName.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                rule.description.toLowerCase().includes(filterQuery.toLowerCase())
+            const filteredRules = locatingRules.filter(lr =>
+                lr.ruleName.toLowerCase().includes(filter.toLowerCase()) ||
+                lr.description.toLowerCase().includes(filter.toLowerCase())
             );
 
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Rule Name</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Delayed Locating</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
             if (filteredRules.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No locating rules found.</p>`;
-                return;
+                tableHtml += `
+                    <tr>
+                        <td colspan="5" class="py-3 px-6 text-center">No locating rules found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredRules.forEach(lr => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${lr.ruleName}</td>
+                            <td class="py-3 px-6 text-left">${lr.description}</td>
+                            <td class="py-3 px-6 text-left">${lr.delayedLocating ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${lr.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showLocatingRuleForm('edit', '${lr.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteLocatingRule('${lr.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Rule Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Delayed Locating</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="locating-rule-table-body">
-                </tbody>
+            tableHtml += `
+                    </tbody>
+                </table>
             `;
-            container.appendChild(table);
+            container.innerHTML = tableHtml;
+        };
 
-            const tbody = document.getElementById('locating-rule-table-body');
-            filteredRules.forEach(rule => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${rule.ruleName}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.delayedLocating ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${rule.inactive ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showLocatingRuleForm('edit', '${rule.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteLocatingRule('${rule.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
-        }
+        window.filterLocatingRuleList = function(value) {
+            renderLocatingRuleList(value);
+        };
 
-        // Function to display the locating rule form (create/edit)
         window.showLocatingRuleForm = function(mode, id = null) {
             const modal = document.getElementById('locating-rule-form-modal');
-            const title = document.getElementById('locating-rule-form-title');
             const form = document.getElementById('locating-rule-form');
-            form.reset();
+            const title = document.getElementById('locating-rule-form-title');
+            const submitButton = document.getElementById('locating-rule-submit-button');
 
-            currentLocatingRuleId = id;
-
-            const detailRecordsContainer = document.getElementById('locating-rule-detail-records-container');
-            const detailRecordsPlaceholder = document.getElementById('detail-records-placeholder');
-            const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
-            const detailRecordsList = document.getElementById('detail-records-list');
-
-            detailRecordsList.innerHTML = ''; // Clear detail records list
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Rule';
-                document.getElementById('locating-rule-submit-button').textContent = 'Create';
-                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('locating-rule-name').disabled = false;
-                document.getElementById('locating-rule-delayed-locating').checked = false;
-                document.getElementById('locating-rule-inactive').checked = false;
-
-                detailRecordsPlaceholder.classList.remove('hidden');
-                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50');
-                addDetailRecordBtn.disabled = true;
-
-            } else {
+                submitButton.textContent = 'Save';
+                // Initially disable detail records section for new rules
+                document.getElementById('locating-rule-detail-records-container').classList.add('bg-wise-light-gray', 'cursor-not-allowed');
+                document.getElementById('detail-records-placeholder').classList.remove('hidden');
+                document.getElementById('detail-records-list').innerHTML = '';
+                document.getElementById('add-detail-record-btn').setAttribute('disabled', true);
+            } else { // edit mode
                 title.textContent = 'Edit Locating Rule';
-                document.getElementById('locating-rule-submit-button').textContent = 'Save';
-                document.getElementById('locating-rule-submit-button').classList.remove('bg-white', 'text-wise-dark-gray', 'hover:bg-gray-100');
-                document.getElementById('locating-rule-submit-button').classList.add('bg-wise-primary', 'text-white', 'hover:bg-blue-700');
-                document.getElementById('locating-rule-name').disabled = true;
+                submitButton.textContent = 'Update';
+                const rule = locatingRules.find(lr => lr.id === id);
+                if (rule) {
+                    document.getElementById('locating-rule-name').value = rule.ruleName;
+                    document.getElementById('locating-rule-description').value = rule.description;
+                    document.getElementById('locating-rule-delayed-locating').checked = rule.delayedLocating;
+                    document.getElementById('locating-rule-inactive').checked = rule.inactive;
 
-                const ruleToEdit = locatingRules.find(r => r.id === id);
-                if (ruleToEdit) {
-                    document.getElementById('locating-rule-name').value = ruleToEdit.ruleName;
-                    document.getElementById('locating-rule-description').value = ruleToEdit.description;
-                    document.getElementById('locating-rule-delayed-locating').checked = ruleToEdit.delayedLocating;
-                    document.getElementById('locating-rule-inactive').checked = ruleToEdit.inactive;
-
-                    detailRecordsPlaceholder.classList.add('hidden');
-                    detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50');
-                    addDetailRecordBtn.disabled = false;
-
-                    ruleToEdit.detailRecords.forEach(record => addDetailRecord(record));
+                    // Enable detail records section and populate
+                    document.getElementById('locating-rule-detail-records-container').classList.remove('bg-wise-light-gray', 'cursor-not-allowed');
+                    document.getElementById('detail-records-placeholder').classList.add('hidden');
+                    document.getElementById('add-detail-record-btn').removeAttribute('disabled');
+                    renderDetailRecords(rule.detailRecords);
                 }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            checkLocatingRuleFormValidity();
-        }
+        };
 
-        // Function to close the locating rule form
         window.closeLocatingRuleForm = function() {
             document.getElementById('locating-rule-form-modal').classList.add('hidden');
             document.getElementById('locating-rule-form-modal').classList.remove('flex');
-            currentLocatingRuleId = null;
+        };
 
-        }
+        window.handleLocatingRuleSubmit = async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
-        // Function to check locating rule form validity (enables/disables detail records)
+            const detailRecords = Array.from(document.querySelectorAll('#detail-records-list .detail-record-item')).map(item => {
+                return {
+                    sequence: parseInt(item.querySelector('[name="detail-sequence"]').value),
+                    locatingStrategy: item.querySelector('[name="detail-locating-strategy"]').value,
+                    locationType: item.querySelector('[name="detail-location-type"]').value,
+                    zone: item.querySelector('[name="detail-zone"]').value,
+                    inactive: item.querySelector('[name="detail-inactive"]').checked,
+                };
+            });
+
+            const newRule = {
+                ruleName: form['ruleName'].value,
+                description: form['description'].value,
+                delayedLocating: form['locating-rule-delayed-locating'].checked,
+                inactive: form['locating-rule-inactive'].checked,
+                detailRecords: detailRecords
+            };
+
+            if (mode === 'create') {
+                newRule.id = 'LR' + String(locatingRules.length + 1).padStart(3, '0');
+                locatingRules.push(newRule);
+                await showCustomAlert('Success', 'Locating Rule created successfully!');
+            } else {
+                const index = locatingRules.findIndex(lr => lr.id === id);
+                if (index !== -1) {
+                    locatingRules[index] = { ...locatingRules[index], ...newRule };
+                    await showCustomAlert('Success', 'Locating Rule updated successfully!');
+                }
+            }
+            closeLocatingRuleForm();
+            renderLocatingRuleList();
+        };
+
+        window.deleteLocatingRule = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating rule?');
+            if (confirmed) {
+                locatingRules = locatingRules.filter(lr => lr.id !== id);
+                renderLocatingRuleList();
+                await showCustomAlert('Deleted', 'Locating Rule deleted successfully!');
+            }
+        };
+
         window.checkLocatingRuleFormValidity = function() {
-            const ruleName = document.getElementById('locating-rule-name').value;
-            const description = document.getElementById('locating-rule-description').value;
+            const ruleNameInput = document.getElementById('locating-rule-name');
+            const descriptionInput = document.getElementById('locating-rule-description');
             const detailRecordsContainer = document.getElementById('locating-rule-detail-records-container');
             const detailRecordsPlaceholder = document.getElementById('detail-records-placeholder');
             const addDetailRecordBtn = document.getElementById('add-detail-record-btn');
 
-            if (ruleName && description) {
-                detailRecordsContainer.classList.remove('pointer-events-none', 'opacity-50');
+            if (ruleNameInput.value.trim() !== '' && descriptionInput.value.trim() !== '') {
+                detailRecordsContainer.classList.remove('bg-wise-light-gray', 'cursor-not-allowed');
                 detailRecordsPlaceholder.classList.add('hidden');
-                addDetailRecordBtn.disabled = false;
+                addDetailRecordBtn.removeAttribute('disabled');
             } else {
-                detailRecordsContainer.classList.add('pointer-events-none', 'opacity-50');
+                detailRecordsContainer.classList.add('bg-wise-light-gray', 'cursor-not-allowed');
                 detailRecordsPlaceholder.classList.remove('hidden');
-                addDetailRecordBtn.disabled = true;
+                addDetailRecordBtn.setAttribute('disabled', true);
+                document.getElementById('detail-records-list').innerHTML = ''; // Clear existing records if disabled
             }
-        }
+        };
 
-        // Function to add a detail record to the locating rule form
         window.addDetailRecord = function(record = {}) {
             const detailRecordsList = document.getElementById('detail-records-list');
-            const newRecordDiv = document.createElement('div');
+            const newIndex = detailRecordsList.children.length;
 
-            newRecordDiv.classList.add('flex', 'flex-col', 'md:flex-row', 'gap-2', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm');
-            newRecordDiv.innerHTML = `
-                <input type="number" placeholder="Seq" value="${record.sequence || ''}" class="detail-record-sequence w-12 px-2 py-1 border border-wise-border rounded-md text-sm text-center bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-
-                <input type="text" placeholder="Field" value="${record.field || ''}" class="detail-record-field flex-grow px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-
-                <input type="text" placeholder="Op" value="${record.operator || ''}" class="detail-record-operator w-12 px-2 py-1 border border-wise-border rounded-md text-sm text-center bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-
-                <input type="text" placeholder="Value" value="${record.value || ''}" class="detail-record-value flex-grow px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-
-                <button type="button" onclick="window.removeDetailRecord(this)" class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-wise-error text-white rounded-md hover:bg-red-600 transition-colors duration-200 shadow-sm active-press transform">
-                    <i class="fas fa-times text-xs"></i>
+            const div = document.createElement('div');
+            div.className = 'detail-record-item p-3 border border-wise-border rounded-md bg-white relative';
+            div.innerHTML = `
+                <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700" onclick="removeDetailRecord(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label for="detail-sequence-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Sequence:</label>
+                        <input type="number" id="detail-sequence-${newIndex}" name="detail-sequence" value="${record.sequence || (newIndex + 1) * 10}" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                    </div>
+                    <div>
+                        <label for="detail-locating-strategy-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Locating Strategy:</label>
+                        <select id="detail-locating-strategy-${newIndex}" name="detail-locating-strategy" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            <option value="">--Select--</option>
+                            ${locatingStrategies.map(ls => `<option value="${ls.identifier}" ${record.locatingStrategy === ls.identifier ? 'selected' : ''}>${ls.identifier} - ${ls.description}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="detail-location-type-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Location Type:</label>
+                        <select id="detail-location-type-${newIndex}" name="detail-location-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            <option value="">--Select--</option>
+                            ${locationTypes.map(lt => `<option value="${lt.locationType}" ${record.locationType === lt.locationType ? 'selected' : ''}>${lt.locationType}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="detail-zone-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Zone:</label>
+                        <select id="detail-zone-${newIndex}" name="detail-zone" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                            <option value="">--Select--</option>
+                            ${zones.map(z => `<option value="${z.identifier}" ${record.zone === z.identifier ? 'selected' : ''}>${z.identifier}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="col-span-full">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="detail-inactive-${newIndex}" name="detail-inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${record.inactive ? 'checked' : ''}>
+                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                        </label>
+                    </div>
+                </div>
             `;
-            detailRecordsList.appendChild(newRecordDiv);
-        }
+            detailRecordsList.appendChild(div);
+        };
 
-        // Function to remove a detail record from the locating rule form
+        window.renderDetailRecords = function(records) {
+            const detailRecordsList = document.getElementById('detail-records-list');
+            detailRecordsList.innerHTML = '';
+            records.sort((a, b) => a.sequence - b.sequence); // Sort by sequence
+            records.forEach(record => addDetailRecord(record));
+        };
+
         window.removeDetailRecord = function(button) {
-            const recordDiv = button.closest('.flex.flex-col.md\\:flex-row');
-            if (recordDiv) {
-                recordDiv.remove();
-            } else {
-                console.error("Could not find the parent record div to remove.");
+            const recordItem = button.closest('.detail-record-item');
+            if (recordItem) {
+                recordItem.remove();
             }
-        }
+        };
 
-        // Function to handle locating rule form submission
-        window.handleLocatingRuleSubmit = async function(event) {
-            event.preventDefault();
-            const ruleName = document.getElementById('locating-rule-name').value;
-            const description = document.getElementById('locating-rule-description').value;
-            const delayedLocating = document.getElementById('locating-rule-delayed-locating').checked;
-            const inactive = document.getElementById('locating-rule-inactive').checked;
-
-            const detailRecords = [];
-            document.querySelectorAll('#detail-records-list > div').forEach(recordDiv => {
-                detailRecords.push({
-                    sequence: parseInt(recordDiv.querySelector('.detail-record-sequence').value) || 0,
-                    field: recordDiv.querySelector('.detail-record-field').value,
-                    operator: recordDiv.querySelector('.detail-record-operator').value,
-                    value: recordDiv.querySelector('.detail-record-value').value,
-                });
-            });
-
-            const newRule = {
-                id: currentLocatingRuleId || ruleName,
-                ruleName,
-                description,
-                delayedLocating,
-                inactive,
-                detailRecords,
-                lastUpdated: `Now User: ${document.getElementById('username-display').textContent}`
-            };
-
-            if (currentLocatingRuleId) {
-                const index = locatingRules.findIndex(r => r.id === currentLocatingRuleId);
-                if (index !== -1) {
-                    locatingRules[index] = { ...locatingRules[index], ...newRule };
-                }
-            } else {
-                if (locatingRules.some(r => r.ruleName === ruleName)) {
-                    await showCustomAlert('Error', 'Locating Rule Name already exists!');
-                    return;
-                }
-                newRule.id = ruleName;
-                locatingRules.push(newRule);
-            }
-            saveLocatingRules();
-            renderLocatingRuleList();
-            closeLocatingRuleForm();
-        }
-
-        // Function to delete a locating rule
-        window.deleteLocatingRule = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this locating rule ${id}?`);
-            if (confirmed) {
-                locatingRules = locatingRules.filter(r => r.id !== id);
-                saveLocatingRules();
-                renderLocatingRuleList();
-            }
-        }
-
-        // Function to filter the locating rule list
-        window.filterLocatingRuleList = function(query) {
-            renderLocatingRuleList(query);
-        }
-
-        // ### START: FUNGSI-FUNGSI UNTUK USER PROFILE ###
-
-        /**
-         * Merender daftar user profile ke dalam tabel.
-         * @param {string} filterQuery - Kata kunci untuk memfilter daftar.
-         */
-        window.renderUserProfileList = function(filterQuery = '') {
+        // --- User Profile Management Functions ---
+        window.renderUserProfileList = function(filter = '') {
             const container = document.getElementById('user-profile-list-container');
-            container.innerHTML = '';
+            if (!container) return;
 
-            const filteredProfiles = userProfiles.filter(up =>
-                up.id.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                up.description.toLowerCase().includes(filterQuery.toLowerCase())
+            const filteredUserProfiles = userProfiles.filter(up =>
+                up.user.toLowerCase().includes(filter.toLowerCase()) ||
+                up.description.toLowerCase().includes(filter.toLowerCase())
             );
 
-            if (filteredProfiles.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No user profiles found.</p>`;
-                return;
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">User</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Default Warehouse</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredUserProfiles.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="5" class="py-3 px-6 text-center">No user profiles found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredUserProfiles.forEach(up => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${up.user}</td>
+                            <td class="py-3 px-6 text-left">${up.description}</td>
+                            <td class="py-3 px-6 text-left">${up.defaultWarehouse}</td>
+                            <td class="py-3 px-6 text-left">${up.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showUserProfileForm('edit', '${up.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteUserProfile('${up.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
 
-            const table = document.createElement('table');
-            table.className = 'min-w-full divide-y divide-wise-border mt-4 shadow-md rounded-lg';
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th class="table-header">User</th>
-                        <th class="table-header">Description</th>
-                        <th class="table-header">Default Warehouse</th>
-                        <th class="table-header">Shift</th>
-                        <th class="table-header">Menu</th>
-                        <th class="table-header">Active</th>
-                        <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="user-profile-table-body">
-                </tbody>
+            tableHtml += `
+                    </tbody>
+                </table>
             `;
-            container.appendChild(table);
+            container.innerHTML = tableHtml;
+        };
 
-            const tbody = document.getElementById('user-profile-table-body');
-            filteredProfiles.forEach(up => {
-                const row = tbody.insertRow();
-                row.className = 'hover:bg-wise-light-gray transition-colors duration-150';
-                row.innerHTML = `
-                    <td class="table-cell font-medium text-wise-dark-gray">${up.id}</td>
-                    <td class="table-cell">${up.description}</td>
-                    <td class="table-cell">${up.defaultWarehouse}</td>
-                    <td class="table-cell">${up.shift}</td>
-                    <td class="table-cell">${up.menu}</td>
-                    <td class="table-cell">${up.active ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showUserProfileForm('edit', '${up.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteUserProfile('${up.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
-        }
+        window.filterUserProfileList = function(value) {
+            renderUserProfileList(value);
+        };
 
-        /**
-         * Menampilkan form modal untuk membuat atau mengedit user profile.
-         * @param {string} mode - 'create' atau 'edit'.
-         * @param {string|null} id - ID dari user profile yang akan diedit.
-         */
         window.showUserProfileForm = function(mode, id = null) {
             const modal = document.getElementById('user-profile-form-modal');
-            const title = document.getElementById('user-profile-form-title');
             const form = document.getElementById('user-profile-form');
-            form.reset();
-            currentUserProfileId = id;
+            const title = document.getElementById('user-profile-form-title');
+            const submitButton = document.getElementById('user-profile-submit-button');
+
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset tab to default (General)
+            setupTabSwitching('user-profile-form-modal');
+
+            // Reset all input fields to default styling
+            form.querySelectorAll('input, select').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New User Profile';
-                document.getElementById('user-profile-submit-button').textContent = 'Create';
-                document.getElementById('up-user').disabled = false;
-            } else {
+                submitButton.textContent = 'Save';
+            } else { // edit mode
                 title.textContent = 'Edit User Profile';
-                document.getElementById('user-profile-submit-button').textContent = 'Save';
-                document.getElementById('up-user').disabled = true;
-
-                const profileToEdit = userProfiles.find(up => up.id === id);
-                if (profileToEdit) {
-                    // General Tab
-                    document.getElementById('up-user').value = profileToEdit.id;
-                    document.getElementById('up-description').value = profileToEdit.description;
-                    document.getElementById('up-default-warehouse').value = profileToEdit.defaultWarehouse;
-                    document.getElementById('up-shift').value = profileToEdit.shift;
-                    document.getElementById('up-menu').value = profileToEdit.menu;
-                    document.getElementById('up-language').value = profileToEdit.language;
-                    document.getElementById('up-inactive').checked = !profileToEdit.active;
-
-                    // Printers Tab
-                    document.getElementById('up-default-label-printer').value = profileToEdit.defaultLabelPrinter;
-                    document.getElementById('up-default-report-printer').value = profileToEdit.defaultReportPrinter;
-
-                    // Locating Tab
-                    document.getElementById('up-locate-empty-lpn').checked = profileToEdit.locateEmptyLpn;
-                    document.getElementById('up-locate-empty-item').checked = profileToEdit.locateEmptyItem;
-                    document.getElementById('up-locate-lpn-staging').checked = profileToEdit.locateLpnStaging;
-                    document.getElementById('up-locate-item-staging').checked = profileToEdit.locateItemStaging;
-                    
-                    // User Defined Data Tab
+                submitButton.textContent = 'Update';
+                const userProfile = userProfiles.find(up => up.id === id);
+                if (userProfile) {
+                    document.getElementById('up-user').value = userProfile.user;
+                    document.getElementById('up-description').value = userProfile.description;
+                    document.getElementById('up-default-warehouse').value = userProfile.defaultWarehouse;
+                    document.getElementById('up-shift').value = userProfile.shift;
+                    document.getElementById('up-menu').value = userProfile.menu;
+                    document.getElementById('up-language').value = userProfile.language;
+                    document.getElementById('up-inactive').checked = userProfile.inactive;
+                    document.getElementById('up-default-label-printer').value = userProfile.defaultLabelPrinter;
+                    document.getElementById('up-default-report-printer').value = userProfile.defaultReportPrinter;
+                    document.getElementById('up-locate-empty-lpn').checked = userProfile.locateEmptyLpn;
+                    document.getElementById('up-locate-empty-item').checked = userProfile.locateEmptyItem;
+                    document.getElementById('up-locate-lpn-staging').checked = userProfile.locateLpnStaging;
+                    document.getElementById('up-locate-item-staging').checked = userProfile.locateItemStaging;
                     for (let i = 1; i <= 8; i++) {
-                        document.getElementById(`up-udf${i}`).value = profileToEdit[`udf${i}`] || '';
+                        document.getElementById(`up-udf${i}`).value = userProfile[`udf${i}`] || '';
                     }
                 }
             }
-            // Activate the first tab by default
-            activateTab('up-general', 'user-profile-form-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
+        };
 
-        /**
-         * Menutup form modal user profile.
-         */
         window.closeUserProfileForm = function() {
             document.getElementById('user-profile-form-modal').classList.add('hidden');
             document.getElementById('user-profile-form-modal').classList.remove('flex');
-            currentUserProfileId = null;
-        }
-
-        /**
-         * Menangani submit form user profile.
-         * @param {Event} event - Event submit.
-         */
-        window.handleUserProfileSubmit = async function(event) {
-            event.preventDefault();
-            const userId = document.getElementById('up-user').value.toUpperCase();
-            
-            if (!userId) {
-                await showCustomAlert('Error', 'User ID is required.');
-                return;
-            }
-
-            const profileData = {
-                id: currentUserProfileId || userId,
-                description: document.getElementById('up-description').value,
-                defaultWarehouse: document.getElementById('up-default-warehouse').value,
-                shift: document.getElementById('up-shift').value,
-                menu: document.getElementById('up-menu').value,
-                language: document.getElementById('up-language').value,
-                active: !document.getElementById('up-inactive').checked,
-                defaultLabelPrinter: document.getElementById('up-default-label-printer').value,
-                defaultReportPrinter: document.getElementById('up-default-report-printer').value,
-                locateEmptyLpn: document.getElementById('up-locate-empty-lpn').checked,
-                locateEmptyItem: document.getElementById('up-locate-empty-item').checked,
-                locateLpnStaging: document.getElementById('up-locate-lpn-staging').checked,
-                locateItemStaging: document.getElementById('up-locate-item-staging').checked,
-                udf1: document.getElementById('up-udf1').value,
-                udf2: document.getElementById('up-udf2').value,
-                udf3: document.getElementById('up-udf3').value,
-                udf4: document.getElementById('up-udf4').value,
-                udf5: document.getElementById('up-udf5').value,
-                udf6: document.getElementById('up-udf6').value,
-                udf7: document.getElementById('up-udf7').value,
-                udf8: document.getElementById('up-udf8').value,
-            };
-
-            if (currentUserProfileId) {
-                // Edit mode
-                const index = userProfiles.findIndex(up => up.id === currentUserProfileId);
-                if (index !== -1) {
-                    userProfiles[index] = { ...userProfiles[index], ...profileData };
-                }
-            } else {
-                // Create mode
-                if (userProfiles.some(up => up.id === userId)) {
-                    await showCustomAlert('Error', 'User Profile ID already exists!');
-                    return;
-                }
-                userProfiles.push(profileData);
-            }
-            
-            saveUserProfiles();
-            renderUserProfileList();
-            closeUserProfileForm();
-        }
-
-        /**
-         * Menghapus user profile.
-         * @param {string} id - ID user profile yang akan dihapus.
-         */
-        window.deleteUserProfile = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete user profile ${id}?`);
-            if (confirmed) {
-                userProfiles = userProfiles.filter(up => up.id !== id);
-                saveUserProfiles();
-                renderUserProfileList();
-            }
-        }
-
-        /**
-         * Memfilter daftar user profile berdasarkan input pencarian.
-         * @param {string} query - Kata kunci pencarian.
-         */
-        window.filterUserProfileList = function(query) {
-            renderUserProfileList(query);
-        }
-
-        // ### END: FUNGSI-FUNGSI UNTUK USER PROFILE ###
-
-
-        // New functions for Security Group management
-        window.renderSecurityGroupList = function(filterQuery = '') {
-            const container = document.getElementById('security-group-list-container');
-            container.innerHTML = '';
-
-            const filteredGroups = securityGroups.filter(group =>
-                group.groupName.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                group.description.toLowerCase().includes(filterQuery.toLowerCase())
-            );
-
-            if (filteredGroups.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray mt-4">No security groups found.</p>`;
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Group Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Inactive</th>
-                        <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border" id="security-group-table-body">
-                </tbody>
-            `;
-            container.appendChild(table);
-
-            const tbody = document.getElementById('security-group-table-body');
-            filteredGroups.forEach(group => {
-                const row = tbody.insertRow();
-                row.classList.add('hover:bg-wise-light-gray', 'transition-colors', 'duration-150');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${group.groupName}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.description}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${group.inactive ? 'Yes' : 'No'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick="showSecurityGroupForm('edit', '${group.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                        <button onclick="deleteSecurityGroup('${group.id}')" class="text-wise-error hover:text-red-700">Delete</button>
-                    </td>
-                `;
-            });
         };
 
-        // Function to display the security group form (create/edit)
+        window.handleUserProfileSubmit = async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+
+            const newUserProfile = {
+                user: form['user'].value,
+                description: form['description'].value,
+                defaultWarehouse: form['defaultWarehouse'].value,
+                shift: form['shift'].value,
+                menu: form['menu'].value,
+                language: form['language'].value,
+                inactive: form['up-inactive'].checked,
+                defaultLabelPrinter: form['defaultLabelPrinter'].value,
+                defaultReportPrinter: form['defaultReportPrinter'].value,
+                locateEmptyLpn: form['locateEmptyLpn'].checked,
+                locateEmptyItem: form['locateEmptyItem'].checked,
+                locateLpnStaging: form['locateLpnStaging'].checked,
+                locateItemStaging: form['locateItemStaging'].checked,
+            };
+            for (let i = 1; i <= 8; i++) {
+                newUserProfile[`udf${i}`] = form[`udf${i}`].value;
+            }
+
+            if (mode === 'create') {
+                newUserProfile.id = 'UP' + String(userProfiles.length + 1).padStart(3, '0');
+                userProfiles.push(newUserProfile);
+                await showCustomAlert('Success', 'User Profile created successfully!');
+            } else {
+                const index = userProfiles.findIndex(up => up.id === id);
+                if (index !== -1) {
+                    userProfiles[index] = { ...userProfiles[index], ...newUserProfile };
+                    await showCustomAlert('Success', 'User Profile updated successfully!');
+                }
+            }
+            closeUserProfileForm();
+            renderUserProfileList();
+        };
+
+        window.deleteUserProfile = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this user profile?');
+            if (confirmed) {
+                userProfiles = userProfiles.filter(up => up.id !== id);
+                renderUserProfileList();
+                await showCustomAlert('Deleted', 'User Profile deleted successfully!');
+            }
+        };
+
+        // --- Security Group Management Functions ---
+        window.renderSecurityGroupList = function(filter = '') {
+            const container = document.getElementById('security-group-list-container');
+            if (!container) return;
+
+            const filteredGroups = securityGroups.filter(sg =>
+                sg.groupName.toLowerCase().includes(filter.toLowerCase()) ||
+                sg.description.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Security Group</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredGroups.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="4" class="py-3 px-6 text-center">No security groups found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredGroups.forEach(sg => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${sg.groupName}</td>
+                            <td class="py-3 px-6 text-left">${sg.description}</td>
+                            <td class="py-3 px-6 text-left">${sg.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityGroupForm('edit', '${sg.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityGroup('${sg.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHtml;
+        };
+
+        window.filterSecurityGroupList = function(value) {
+            renderSecurityGroupList(value);
+        };
+
         window.showSecurityGroupForm = function(mode, id = null) {
             const modal = document.getElementById('security-group-form-modal');
-            const title = document.getElementById('security-group-form-title');
             const form = document.getElementById('security-group-form');
-            form.reset();
-            currentSecurityGroupId = id;
+            const title = document.getElementById('security-group-form-title');
+            const submitButton = document.getElementById('security-group-submit-button');
+
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset tab to default (Group users)
+            setupTabSwitching('security-group-form-modal');
+
+            // Reset all input fields to default styling
+            form.querySelectorAll('input, select').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
 
             if (mode === 'create') {
                 title.textContent = 'Create New Security Group';
-                document.getElementById('security-group-submit-button').textContent = 'Create';
-                document.getElementById('security-group-name').disabled = false;
-                renderSecurityGroupUserCheckboxes([]); // Render empty user list
-            } else {
+                submitButton.textContent = 'Save';
+                renderSecurityGroupUserCheckboxes([]); // Render all users unchecked for new group
+            } else { // edit mode
                 title.textContent = 'Edit Security Group';
-                document.getElementById('security-group-submit-button').textContent = 'Save';
-                document.getElementById('security-group-name').disabled = true;
-
-                const groupToEdit = securityGroups.find(group => group.id === id);
-                if (groupToEdit) {
-                    document.getElementById('security-group-name').value = groupToEdit.groupName;
-                    document.getElementById('security-group-description').value = groupToEdit.description;
-                    document.getElementById('security-group-inactive').checked = groupToEdit.inactive;
-
-                    const udf = groupToEdit.userDefinedFields || {};
-                    for (let i = 1; i <= 7; i++) {
-                        const field = document.getElementById(`sg-user-defined-field${i}`);
-                        if(field) field.value = udf[`field${i}`] || '';
+                submitButton.textContent = 'Update';
+                const securityGroup = securityGroups.find(sg => sg.id === id);
+                if (securityGroup) {
+                    document.getElementById('security-group-name').value = securityGroup.groupName;
+                    document.getElementById('security-group-description').value = securityGroup.description;
+                    document.getElementById('security-group-inactive').checked = securityGroup.inactive;
+                    renderSecurityGroupUserCheckboxes(securityGroup.users); // Render users with selected ones checked
+                    for (let i = 1; i <= 7; i++) { // UDFs 1-7
+                        document.getElementById(`sg-user-defined-field${i}`).value = securityGroup[`userDefinedField${i}`] || '';
                     }
-
-                    renderSecurityGroupUserCheckboxes(groupToEdit.users || []);
                 }
             }
-
-            initializeTabButtons('security-group-form-modal');
-            activateTab('group-users-tab', 'security-group-form-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         };
 
-        // Function to close the security group form
         window.closeSecurityGroupForm = function() {
             document.getElementById('security-group-form-modal').classList.add('hidden');
             document.getElementById('security-group-form-modal').classList.remove('flex');
-            currentSecurityGroupId = null;
         };
 
-        // Function to handle security group form submission
         window.handleSecurityGroupSubmit = async function(event) {
             event.preventDefault();
-            const groupName = document.getElementById('security-group-name').value;
-            const description = document.getElementById('security-group-description').value;
-            const inactive = document.getElementById('security-group-inactive').checked;
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
-            const selectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked'))
-                                       .map(checkbox => checkbox.value);
-
-            const userDefinedFields = {};
-            for (let i = 1; i <= 7; i++) {
-                const field = document.getElementById(`sg-user-defined-field${i}`);
-                if(field && field.value) userDefinedFields[`field${i}`] = field.value;
+            const newSecurityGroup = {
+                groupName: form['groupName'].value,
+                description: form['description'].value,
+                inactive: form['security-group-inactive'].checked,
+                users: Array.from(form.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value),
+            };
+            for (let i = 1; i <= 7; i++) { // UDFs 1-7
+                newSecurityGroup[`userDefinedField${i}`] = form[`sg-user-defined-field${i}`].value;
             }
 
-            if (currentSecurityGroupId) {
-                // UPDATE mode
-                const index = securityGroups.findIndex(group => group.id === currentSecurityGroupId);
-                if (index !== -1) {
-                    securityGroups[index].description = description;
-                    securityGroups[index].inactive = inactive;
-                    securityGroups[index].users = selectedUsers;
-                    securityGroups[index].userDefinedFields = userDefinedFields;
-                }
+            if (mode === 'create') {
+                newSecurityGroup.id = 'SG' + String(securityGroups.length + 1).padStart(3, '0');
+                securityGroups.push(newSecurityGroup);
+                await showCustomAlert('Success', 'Security Group created successfully!');
             } else {
-                // CREATE mode
-                const newId = groupName.toLowerCase().replace(/\s+/g, '-');
-                if (securityGroups.some(group => group.groupName.toLowerCase() === groupName.toLowerCase())) {
-                    await showCustomAlert('Error', 'Security Group Name already exists!');
-                    return;
+                const index = securityGroups.findIndex(sg => sg.id === id);
+                if (index !== -1) {
+                    securityGroups[index] = { ...securityGroups[index], ...newSecurityGroup };
+                    await showCustomAlert('Success', 'Security Group updated successfully!');
                 }
-                const newGroup = { id: newId, groupName, description, inactive, users: selectedUsers, userDefinedFields };
-                securityGroups.push(newGroup);
             }
-            saveSecurityGroups();
-            renderSecurityGroupList();
             closeSecurityGroupForm();
+            renderSecurityGroupList();
         };
 
-        // Function to render security group user checkboxes
-        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = null, filter = '') {
-            const userListContainer = document.getElementById('security-group-user-checkbox-list');
-            if (!userListContainer) return;
+        window.deleteSecurityGroup = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security group?');
+            if (confirmed) {
+                securityGroups = securityGroups.filter(sg => sg.id !== id);
+                renderSecurityGroupList();
+                await showCustomAlert('Deleted', 'Security Group deleted successfully!');
+            }
+        };
 
-            let currentSelectedUsers = selectedUsers;
-            if (currentSelectedUsers === null) {
-                currentSelectedUsers = Array.from(document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value);
+        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = [], filter = '') {
+            const container = document.getElementById('security-group-user-checkbox-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const lowerCaseFilter = filter.toLowerCase();
+
+            const filteredUsers = allUsers.filter(user => user.name.toLowerCase().includes(lowerCaseFilter));
+
+            if (filteredUsers.length === 0) {
+                container.innerHTML = '<p class="text-wise-gray text-sm p-2">No users found matching your filter.</p>';
+                return;
             }
 
-            userListContainer.innerHTML = '';
-            const filteredAllUsers = allUsers.filter(user => user.toLowerCase().includes(filter.toLowerCase()));
-
-            filteredAllUsers.forEach(user => {
-                const isChecked = currentSelectedUsers.includes(user);
+            filteredUsers.forEach(user => {
+                const isChecked = selectedUsers.includes(user.id);
                 const div = document.createElement('div');
-                div.classList.add('flex', 'items-center');
+                div.className = 'flex items-center';
                 div.innerHTML = `
-                    <input type="checkbox" id="sg-user-${user}" value="${user}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
-                    <label for="sg-user-${user}" class="ml-2 text-sm text-wise-dark-gray">${user}</label>
+                    <input type="checkbox" id="sg-user-${user.id}" name="securityGroupUsers" value="${user.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="sg-user-${user.id}" class="ml-2 text-sm text-wise-dark-gray">${user.name}</label>
                 `;
-                userListContainer.appendChild(div);
+                container.appendChild(div);
             });
-
-            const checkAllBox = document.getElementById('check-all-security-group-users');
-            if (checkAllBox) {
-                const allVisibleChecked = filteredAllUsers.length > 0 && filteredAllUsers.every(user => currentSelectedUsers.includes(user));
-                checkAllBox.checked = allVisibleChecked;
-            }
         };
 
-        // Function to toggle all security group user checkboxes
         window.toggleAllSecurityGroupUsers = function() {
             const checkAllCheckbox = document.getElementById('check-all-security-group-users');
             const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
@@ -2991,349 +2710,178 @@
             });
         };
 
-        // Function to delete a security group
-        window.deleteSecurityGroup = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this security group ${id}?`);
-            if (confirmed) {
-                securityGroups = securityGroups.filter(group => group.id !== id);
-                saveSecurityGroups();
-                renderSecurityGroupList();
-            }
-        };
-
-        // Function to filter the security group list
-        window.filterSecurityGroupList = function(query) {
-            renderSecurityGroupList(query);
-        };
-
-        // Function to render the security permission list
-        window.renderSecurityPermissionList = function(filterQuery = '') {
+        // --- Security Permission Management Functions ---
+        window.renderSecurityPermissionList = function(filter = '') {
             const container = document.getElementById('security-permission-list-container');
             if (!container) return;
 
-            const filteredData = securityPermissions.filter(p =>
-                p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-                (p.description && p.description.toLowerCase().includes(filterQuery.toLowerCase()))
+            const filteredPermissions = securityPermissions.filter(sp =>
+                sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
+                sp.spDescription.toLowerCase().includes(filter.toLowerCase())
             );
 
-            if (filteredData.length === 0) {
-                container.innerHTML = `<p class="text-wise-gray text-center mt-4">No permissions found.</p>`;
-                return;
-            }
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Security Permission</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
 
-            const table = document.createElement('table');
-            table.classList.add('min-w-full', 'divide-y', 'divide-wise-border', 'mt-4', 'shadow-md', 'rounded-lg');
-            table.innerHTML = `
-                <thead class="bg-wise-light-gray">
+            if (filteredPermissions.length === 0) {
+                tableHtml += `
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Permission Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Description</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Active</th>
-                        <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                        <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
                     </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-wise-border">
-                    ${filteredData.map(p => `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-wise-dark-gray">${p.name}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.description}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-wise-gray">${p.inactive ? 'No' : 'Yes'}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button onclick="showSecurityPermissionForm('edit', '${p.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
-                                <button onclick="deleteSecurityPermission('${p.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                `;
+            } else {
+                filteredPermissions.forEach(sp => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
+                            <td class="py-3 px-6 text-left">${sp.spDescription}</td>
+                            <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
-                    `).join('')}
-                </tbody>
+                    `;
+                });
+            }
+
+            tableHtml += `
+                    </tbody>
+                </table>
             `;
-            container.innerHTML = '';
-            container.appendChild(table);
-        }
-
-        // Function to update permission details
-        window.updatePermissionDetails = function(categoryId, itemId) {
-            const detailsContainer = document.getElementById('security-permission-details-container');
-            if (!detailsContainer) {
-                console.error('Container #security-permission-details-container not found!');
-                return;
-            }
-
-            // Remove highlight from previously active item
-            if (activePermissionItem) {
-                activePermissionItem.classList.remove('bg-wise-primary', 'text-white', 'font-semibold');
-                activePermissionItem.classList.add('text-wise-gray');
-            }
-
-            // Find the newly clicked item
-            let item = null;
-            if (categoryId && itemId) {
-                const category = securityPermissions.find(c => c.id === categoryId);
-                if (category && category.children) {
-                    item = category.children.find(i => i.id === itemId);
-                }
-            }
-
-            // If a valid item is found, display its details.
-            if (item && item.details) {
-                const newActiveItem = document.getElementById(`perm-item-${itemId}`);
-                if (newActiveItem) {
-                    newActiveItem.classList.add('bg-wise-primary', 'text-white', 'font-semibold');
-                    newActiveItem.classList.remove('text-wise-gray');
-                    activePermissionItem = newActiveItem;
-                }
-
-                detailsContainer.innerHTML = `
-                    <div class="w-full h-full">
-                        <table class="min-w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">Security level</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">User security group</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-wise-gray uppercase tracking-wider">System created</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-wise-border bg-white">
-                                <tr>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.securityLevel}</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.userSecurityGroup}</td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm text-wise-dark-gray">${item.details.systemCreated}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-
-                document.getElementById('sp-copy-btn').disabled = false;
-                document.getElementById('sp-delete-btn').disabled = false;
-            } else {
-                // If no item is selected, reset the detail panel
-                activePermissionItem = null;
-                detailsContainer.innerHTML = `<p class="text-wise-gray text-center">Select a permission from the list to see details.</p>`;
-
-                document.getElementById('sp-copy-btn').disabled = true;
-                document.getElementById('sp-delete-btn').disabled = true;
-            }
+            container.innerHTML = tableHtml;
         };
 
-        // Function to display the security permission form (create/edit)
+        window.renderSecurityPermissionList = function(value) {
+            renderSecurityPermissionList(value);
+        };
+
         window.showSecurityPermissionForm = function(mode, id = null) {
             const modal = document.getElementById('security-permission-form-modal');
-            const title = document.getElementById('security-permission-form-title');
             const form = document.getElementById('security-permission-form');
-            const nameInput = document.getElementById('sp-name');
-            form.reset();
-            currentSecurityPermissionId = id;
+            const title = document.getElementById('security-permission-form-title');
+            const submitButton = document.getElementById('security-permission-submit-button');
+
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset tab to default (Group users)
+            setupTabSwitching('security-permission-form-modal');
+            // Ensure the 'All' filter is selected by default when opening the form
+            document.querySelector('#sp-menu-filter input[value="All"]').checked = true;
+
 
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
-                nameInput.disabled = false;
-                nameInput.value = '';
-                document.getElementById('sp-description').value = '';
-                renderMenuCheckboxes([], 'All');
-            } else {
+                submitButton.textContent = 'Save';
+                renderMenuCheckboxes([]); // Render all menus unchecked for new permission
+            } else { // edit mode
                 title.textContent = 'Edit Security Permission';
-                nameInput.disabled = true;
-                const permission = securityPermissions.find(p => p.id === id);
-                if (permission) {
-                    nameInput.value = permission.name;
-                    document.getElementById('sp-description').value = permission.description;
-                    document.getElementById('sp-inactive').checked = permission.inactive;
-                    renderMenuCheckboxes(permission.menus || [], 'All');
+                submitButton.textContent = 'Update';
+                const securityPermission = securityPermissions.find(sp => sp.id === id);
+                if (securityPermission) {
+                    document.getElementById('sp-name').value = securityPermission.spName;
+                    document.getElementById('sp-description').value = securityPermission.spDescription;
+                    document.getElementById('sp-inactive').checked = securityPermission.inactive;
+                    renderMenuCheckboxes(securityPermission.menus); // Render menus with selected ones checked
                 }
             }
-            document.querySelector('input[name="menuFilter"][value="All"]').checked = true;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-        }
-
-        // Function to render security permission menu checkboxes
-        window.renderMenuCheckboxes = function(selectedMenus = [], filter = 'All') {
-            const container = document.getElementById('sp-menu-checkbox-list');
-            if (!container) return;
-
-            // If `selectedMenus` is null (when changing filter), get from already checked checkboxes
-            if (selectedMenus === null) {
-                selectedMenus = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-            }
-
-            let filteredMenus = allMenus;
-            if (filter !== 'All') {
-                filteredMenus = allMenus.filter(menu => menu.category === filter);
-            }
-
-            container.innerHTML = filteredMenus.map(menu => `
-                <label class="flex items-center text-sm text-wise-dark-gray">
-                    <input type="checkbox" value="${menu.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${selectedMenus.includes(menu.id) ? 'checked' : ''}>
-                    <span class="ml-2">${menu.name}</span>
-                </label>
-            `).join('');
-        }
-
-        // Function to filter permissions
-        window.filterPermissions = function() {
-            renderSecurityPermissionTree();
         };
 
-        // Function to close the security permission form
         window.closeSecurityPermissionForm = function() {
             document.getElementById('security-permission-form-modal').classList.add('hidden');
             document.getElementById('security-permission-form-modal').classList.remove('flex');
-            currentSecurityPermissionId = null;
-        }
+        };
 
-        // Function to handle security permission form submission
         window.handleSecurityPermissionSubmit = async function(event) {
             event.preventDefault();
-            const permissionName = document.getElementById('sp-name').value;
-            const description = document.getElementById('sp-description').value;
-            const inactive = document.getElementById('sp-inactive').checked;
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
-            // Get all checked menus from the form
-            const selectedMenus = Array.from(document.querySelectorAll('#sp-menu-checkbox-list input[type="checkbox"]:checked'))
-                                       .map(checkbox => checkbox.value);
+            const newSecurityPermission = {
+                spName: form['spName'].value,
+                spDescription: form['spDescription'].value,
+                inactive: form['sp-inactive'].checked,
+                menus: Array.from(form.querySelectorAll('#sp-menu-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value),
+            };
 
-            if (currentSecurityPermissionId) {
-                // UPDATE mode
-                const index = securityPermissions.findIndex(p => p.id === currentSecurityPermissionId);
+            if (mode === 'create') {
+                newSecurityPermission.id = 'SP' + String(securityPermissions.length + 1).padStart(3, '0');
+                securityPermissions.push(newSecurityPermission);
+                await showCustomAlert('Success', 'Security Permission created successfully!');
+            } else {
+                const index = securityPermissions.findIndex(sp => sp.id === id);
                 if (index !== -1) {
-                    securityPermissions[index].name = permissionName;
-                    securityPermissions[index].description = description;
-                    securityPermissions[index].inactive = inactive;
-                    securityPermissions[index].menus = selectedMenus;
+                    securityPermissions[index] = { ...securityPermissions[index], ...newSecurityPermission };
+                    await showCustomAlert('Success', 'Security Permission updated successfully!');
                 }
-            } else {
-                // CREATE mode
-                const newId = permissionName.toLowerCase().replace(/\s+/g, '-');
-                if (securityPermissions.some(p => p.id === newId)) {
-                    await showCustomAlert('Error', 'Security Permission name already exists!');
-                    return;
-                }
-                const newPermission = {
-                    id: newId,
-                    name: permissionName,
-                    description,
-                    inactive,
-                    menus: selectedMenus
-                };
-                securityPermissions.push(newPermission);
             }
-
-            saveSecurityPermissions();
-            renderSecurityPermissionList();
             closeSecurityPermissionForm();
+            renderSecurityPermissionList();
         };
 
-        // Function to delete a security permission
         window.deleteSecurityPermission = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete this permission: ${id}?`);
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security permission?');
             if (confirmed) {
-                securityPermissions = securityPermissions.filter(p => p.id !== id);
-                saveSecurityPermissions();
+                securityPermissions = securityPermissions.filter(sp => sp.id !== id);
                 renderSecurityPermissionList();
+                await showCustomAlert('Deleted', 'Security Permission deleted successfully!');
             }
-        }
-
-        // Function to filter the security permission list
-        window.filterSecurityPermissionList = function(query) {
-            renderSecurityPermissionList(query);
         };
 
+        window.renderMenuCheckboxes = function(selectedMenus = [], filterCategory = 'All') {
+            const container = document.getElementById('sp-menu-checkbox-list');
+            if (!container) return;
 
-        // Function to initialize tab buttons
-        window.initializeTabButtons = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-
-            const tabButtons = modal.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => {
-                button.onclick = () => {
-                    const tabId = button.dataset.tab;
-                    activateTab(tabId, modalId);
-                };
-            });
-        }
-
-        // Function to activate a specific tab
-        window.activateTab = function(tabId, modalId = null) {
-            const parentElement = modalId ? document.getElementById(modalId) : document;
-
-            parentElement.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            parentElement.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active-tab', 'border-wise-primary', 'text-wise-primary');
-                button.classList.add('text-wise-gray', 'border-transparent');
-            });
-
-            const tabContent = document.getElementById(tabId)
-            if (tabContent) {
-                tabContent.classList.remove('hidden');
-            }
+            container.innerHTML = '';
             
-            const activeTabButton = parentElement.querySelector(`.tab-button[data-tab="${tabId}"]`);
-            if (activeTabButton) {
-                activeTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');
-                activeTabButton.classList.remove('text-wise-gray', 'border-transparent');
-            }
-        }
-
-        // Event listener for sidebar toggle button
-        sidebarToggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            const mainContentArea = document.querySelector('main');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                mainContentArea.classList.remove('md:ml-64');
-                mainContentArea.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
-            } else {
-                mainContentArea.classList.add('md:ml-64');
-                mainContentArea.classList.remove('ml-0');
-                if (window.innerWidth < 768) {
-                    document.getElementById('sidebar-overlay').classList.remove('hidden');
+            const filteredMenus = allMenus.filter(menu => {
+                if (filterCategory === 'All') {
+                    return true;
                 }
+                return menu.category === filterCategory;
+            });
+
+            if (filteredMenus.length === 0) {
+                container.innerHTML = '<p class="text-wise-gray text-sm p-2">No menus found for this category.</p>';
+                return;
             }
-        });
 
-        // Event listener to close sidebar when clicking outside (mobile)
-        document.addEventListener('click', (event) => {
-            if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.add('-translate-x-full');
-                mainContent.classList.remove('ml-64');
-                mainContent.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
-            }
-        });
-
-        // Function to force close the sidebar
-        window.closeSidebar = function() {
-            sidebar.classList.add('-translate-x-full');
-            mainContent.classList.remove('ml-64');
-            mainContent.classList.add('ml-0');
-            document.getElementById('sidebar-overlay').classList.add('hidden');
-        }
-
-        // Event listener for window resize
-        window.addEventListener('resize', () => {
-            const mainContentArea = document.querySelector('main');
-            if (window.innerWidth >= 768) {
-                sidebar.classList.remove('-translate-x-full');
-                mainContentArea.classList.add('md:ml-64');
-                mainContentArea.classList.remove('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
-            } else {
-                mainContentArea.classList.add('md:ml-64');
-                mainContentArea.classList.remove('ml-0');
-
-            }
-        });
-
-        // Function executed when the page loads
-        window.onload = function() {
-            selectCategory('configuration'); // Select 'configuration' category by default
-
-            const username = "SuperAdmin"; // Set username
-            document.getElementById('username-display').textContent = username; // Display username
+            filteredMenus.forEach(menu => {
+                const isChecked = selectedMenus.includes(menu.name);
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="menu-${menu.name.replace(/\s/g, '-')}" name="securityPermissionMenus" value="${menu.name}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="menu-${menu.name.replace(/\s/g, '-')}" class="ml-2 text-sm text-wise-dark-gray">${menu.name}</label>
+                `;
+                container.appendChild(div);
+            });
         };
-    });
 
+    });
 })();
