@@ -110,6 +110,13 @@
                                 Manage Locating Rules
                             </button>
                         </div>
+                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">User Profile Management</h3>
+                            <p class="text-wise-gray text-sm mt-1">Manage user profiles, permissions, and other user-specific settings.</p>
+                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-user-profile')">
+                                Manage User Profiles
+                            </button>
+                        </div>
                     </div>
                 `,
             },
@@ -665,6 +672,128 @@
                     </div>
                 `,
             },
+            // ### KONTEN USER PROFILE BARU DITAMBAHKAN DI SINI ###
+            'configuration-user-profile': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
+                    <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">
+                            Create New User Profile
+                        </button>
+                        <input type="text" id="user-profile-search" placeholder="Search user profile..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterUserProfileList(this.value)">
+                    </div>
+                    <div id="user-profile-list-container" class="overflow-x-auto">
+                        <!-- User profile list table will be rendered here -->
+                    </div>
+                    
+                    <!-- User Profile Form Modal -->
+                    <div id="user-profile-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl flex flex-col max-h-[90vh]">
+                            <h3 id="user-profile-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="user-profile-form" onsubmit="handleUserProfileSubmit(event)">
+                                    <!-- Tab Buttons -->
+                                    <div class="flex space-x-2 mb-2 border-b">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-printers">Printers</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-locating">Locating</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User defined data</button>
+                                    </div>
+
+                                    <!-- General Tab -->
+                                    <div id="up-general" class="tab-content">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
+                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-warehouse" class="block text-sm font-medium text-wise-dark-gray">Default warehouse:</label>
+                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-shift" class="block text-sm font-medium text-wise-dark-gray">Shift:</label>
+                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-menu" class="block text-sm font-medium text-wise-dark-gray">Menu:</label>
+                                                <input type="text" id="up-menu" name="menu" class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-language" class="block text-sm font-medium text-wise-dark-gray">Language:</label>
+                                                <input type="text" id="up-language" name="language" class="mt-1 block w-full input-field">
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="up-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Printers Tab -->
+                                    <div id="up-printers" class="tab-content hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-default-label-printer" class="block text-sm font-medium text-wise-dark-gray">Default label printer:</label>
+                                                <input type="text" id="up-default-label-printer" name="defaultLabelPrinter" class="mt-1 block w-full input-field">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-report-printer" class="block text-sm font-medium text-wise-dark-gray">Default report printer:</label>
+                                                <input type="text" id="up-default-report-printer" name="defaultReportPrinter" class="mt-1 block w-full input-field">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Locating Tab -->
+                                    <div id="up-locating" class="tab-content hidden">
+                                        <div class="space-y-3">
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-empty-lpn" name="locateEmptyLpn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for LPN</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-empty-item" name="locateEmptyItem" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for item</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-lpn-staging" name="locateLpnStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate LPN to staging</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-item-staging" name="locateItemStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate item to staging</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- User Defined Data Tab -->
+                                    <div id="up-user-defined" class="tab-content hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full input-field">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
+                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
             'security-group': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group Management</h2>
@@ -845,6 +974,7 @@
             { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-user-profile', title: 'User Profile Management', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'security-group', title: 'Security Group Management', category: 'System Management', lastUpdated: 'Just now' },
             { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
         ];
@@ -854,9 +984,12 @@
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
         const parentMapping = {
-            'configuration-warehouse': 'configuration', 'configuration-zone': 'configuration', 'configuration-location-type': 'configuration',
+            'configuration-warehouse': 'configuration', 
+            'configuration-zone': 'configuration', 
+            'configuration-location-type': 'configuration',
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
+            'configuration-user-profile': 'configuration',
             'security-group': 'system',
             'security-permission': 'system',
         };
@@ -953,7 +1086,6 @@
             } else if (category === 'configuration-zone') {
                 renderZoneList();
                 initializeTabButtons('zone-form-modal');
-                // activateTab('general-zone', 'zone-form-modal');
             } else if (category === 'configuration-location-type') {
                 renderLocationTypeList();
                 initializeTabButtons('location-type-form-modal');
@@ -961,12 +1093,14 @@
             } else if (category === 'locating-strategies') {
                 renderLocatingStrategyList();
                 initializeTabButtons('locating-strategy-form-modal');
-                // activateTab('general-strategy', 'locating-strategy-form-modal');
             } else if (category === 'locating-rule') {
                 renderLocatingRuleList();
                 initializeTabButtons('locating-rule-form-modal');
-                // activateTab('general-rule', 'locating-rule-form-modal');
                 checkLocatingRuleFormValidity();
+            } else if (category === 'configuration-user-profile') { // ### INISIALISASI UNTUK USER PROFILE
+                renderUserProfileList();
+                initializeTabButtons('user-profile-form-modal');
+                activateTab('up-general', 'user-profile-form-modal');
             } else if (category === 'security-group') {
                 renderSecurityGroupList();
             } else if (category === 'security-permission') {
@@ -1293,17 +1427,6 @@
         let warehouses = JSON.parse(localStorage.getItem('warehouses')) || [
             { id: 'DCB', description: 'DC BUAH BATU', active: true, address1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40266', country: 'Indonesia', faxNumber: '(022)-88884377', attentionTo: '', phoneNumber: '(022)-7540576 / 77', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: 'DC BUAH BATU', returnAddress1: 'JL TERUSAN BUAH BATU NO 12, BATUNUNGGAL, BANDUNG.', returnAddress2: '', returnAddress3: '', returnCity: 'Bandung', returnState: 'West Java', returnPostalCode: '40266', returnCountry: 'Indonesia', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '\\\\scale\\fs\\vls\\Report\\DCB', userDefinedField1: 'PT. AKUR PRATAMA', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '8.00000', userDefinedField8: '0.00000', users: ['Abdu23074560', 'Abdul04120625', 'Abdul9100020', 'Ades17080031', 'Adil2010099', 'Adil2020284', 'Adi22110060', 'Adli23070426', 'Adli24070022', 'Administrator', 'ADMReturDCB', 'Alfandi24051301', 'Agung15050074', 'Agung92060006', 'AgusHDA182', 'Aji18100334', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 'Angg', 'Anthc', 'Anwa', 'Apep', 'Arif14', 'anueu03090082'] },
             { id: 'DCC', description: 'DC CIKONENG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCE', description: 'DC EXTENTION', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCF', description: 'DC BUAH BATU FRESH', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCJ', description: 'DC JAKARTA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCK', description: 'DC KAYU MANIS', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCL', description: 'DC LEUWIPANJANG', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCM', description: 'DC MOCHAMAD TOHA', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCP', description: 'DC PELABUHAN RATU', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCS', description: 'DC SUMBER', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCT', description: 'DC TEGAL', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'DCY', description: 'DC YOMIMART', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
-            { id: 'GBG', description: 'DC GEDE BAGE', active: true, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', attentionTo: '', phoneNumber: '', emailAddress: '', uccEanNumber: '', returnAddressSame: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', postalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: '', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '', users: [] },
         ];
 
         let zones = JSON.parse(localStorage.getItem('zones')) || [
@@ -1315,39 +1438,11 @@
         let locationTypes = JSON.parse(localStorage.getItem('locationTypes')) || [
             { id: 'CFLOW RESV TYPE 1', locationType: 'CFLOW RESV TYPE 1', length: 120.00, width: 30.00, height: 120.00, dimensionUM: 'CM', maximumWeight: 1000.00, weightUM: 'KG', active: true, lastUpdated: '01-07-2019 9:46:38 AM User: suhartono' },
             { id: 'CARTON FLOW', locationType: 'CARTON FLOW', length: 180.00, width: 60.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 100/120/80', locationType: 'CARTON FLOW 100/120/80', length: 100.00, width: 120.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 140/73/40', locationType: 'CARTON FLOW 140/73/40', length: 140.00, width: 73.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 37/130/60', locationType: 'CARTON FLOW 37/130/60', length: 37.00, width: 130.00, height: 60.00, dimensionUM: 'CM', maximumWeight: 500.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 40/18/40', locationType: 'CARTON FLOW 40/18/40', length: 40.00, width: 18.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 40/37/40', locationType: 'CARTON FLOW 40/37/40', length: 40.00, width: 37.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 5 SLOT', locationType: 'CARTON FLOW 5 SLOT', length: 46.00, width: 120.00, height: 88.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 55/70/45', locationType: 'CARTON FLOW 55/70/45', length: 55.00, width: 70.00, height: 45.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 7 SLOT', locationType: 'CARTON FLOW 7 SLOT', length: 32.00, width: 120.00, height: 94.00, dimensionUM: 'CM', maximumWeight: 300.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 70/28/40', locationType: 'CARTON FLOW 70/28/40', length: 70.00, width: 28.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 70/50/40', locationType: 'CARTON FLOW 70/50/40', length: 70.00, width: 50.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CARTON FLOW 80/40/55', locationType: 'CARTON FLOW 80/40/55', length: 80.00, width: 40.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW.TYPE A', locationType: 'CFLOW.TYPE A', length: 82.00, width: 30.00, height: 93.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW.TYPE B', locationType: 'CFLOW.TYPE B', length: 42.00, width: 38.00, height: 50.00, dimensionUM: 'CM', maximumWeight: 70.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV 115cm', locationType: 'CFLOW RESERVE 115cm', length: 239.00, width: 122.00, height: 115.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV 55cm', locationType: 'CFLOW RESERVE 55cm', length: 239.00, width: 122.00, height: 55.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV 70cm', locationType: 'CFLOW RESERVE 70cm', length: 239.00, width: 122.00, height: 70.00, dimensionUM: 'CM', maximumWeight: 400.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV 90cm', locationType: 'CFLOW RESERVE 90cm', length: 239.00, width: 122.00, height: 90.00, dimensionUM: 'CM', maximumWeight: 250.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV TYPE A', locationType: 'CFLOW RESV TYPE A', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV TYPE B', locationType: 'CFLOW RESV TYPE B', length: 40.00, width: 80.00, height: 80.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CFLOW RESV TYPE C', locationType: 'CFLOW RESV TYPE C', length: 37.00, width: 40.00, height: 40.00, dimensionUM: 'CM', maximumWeight: 200.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER FACE', locationType: 'CONTAINER FACE', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER PINK 2002', locationType: 'CONTAINER PINK 2002', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER PINK 2004', locationType: 'CONTAINER PINK 2004', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER PINK 2006', locationType: 'CONTAINER PINK 2006', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER PINK 2010', locationType: 'CONTAINER PINK 2010', length: 63.00, width: 43.00, height: 25.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'CONTAINER PINK 2055', locationType: 'CONTAINER PINK 2055', length: 62.00, width: 42.00, height: 26.00, dimensionUM: 'CM', maximumWeight: 150.00, weightUM: 'KG', active: true, lastUpdated: '' },
-            { id: 'DCB LOADING LANE', locationType: 'DCB LOADING LANE', length: 0.00, width: 0.00, height: 0.00, dimensionUM: 'CM', maximumWeight: 0.00, weightUM: 'KG', active: true, lastUpdated: '' },
         ];
 
         let locatingStrategies = JSON.parse(localStorage.getItem('locatingStrategies')) || [
             { id: 'LOCSTRAT_DEFAULT', identifier: 'DEFAULT', recordType: 'LOCSTRAT', description: 'Default Locating Strategy', inactive: false, systemCreated: true, lastUpdated: '01-01-2023 10:00:00 AM User: SYSTEM' },
             { id: 'LOCSTRAT_FAST_MOVERS', identifier: 'FAST_MOVERS', recordType: 'LOCSTRAT', description: 'Strategy for fast moving items', inactive: false, systemCreated: false, lastUpdated: '01-01-2023 10:00:00 AM User: Admin' },
-            { id: 'LOCSTRAT_OVERSTOCK', identifier: 'OVERSTOCK', recordType: 'LOCSTRAT', description: 'Strategy for overstock items', inactive: true, systemCreated: false, lastUpdated: '01-01-2023 10:00:00 AM User: Admin' },
         ];
 
         let locatingRules = JSON.parse(localStorage.getItem('locatingRules')) || [
@@ -1363,32 +1458,68 @@
                 ],
                 lastUpdated: '01-01-2023 11:00:00 AM User: SYSTEM'
             },
-            {
-                id: 'LOC_RULE_B',
-                ruleName: 'LOC_RULE_B',
-                description: 'Second Locating Rule',
-                delayedLocating: true,
-                inactive: false,
-                detailRecords: [
-                    { sequence: 1, field: 'Weight', operator: '>', value: '50KG' },
-                    { sequence: 2, field: 'Location Type', operator: '=', value: 'PALLET' }
-                ],
-                lastUpdated: '01-01-2023 11:00:00 AM User: Admin'
+        ];
+
+        // ### DATA DUMMY UNTUK USER PROFILE ###
+        let userProfiles = JSON.parse(localStorage.getItem('userProfiles')) || [
+            { 
+                id: 'SUPERADMIN', 
+                description: 'Super Administrator', 
+                defaultWarehouse: 'DCB', 
+                shift: 'PAGI', 
+                menu: 'ADMIN_MENU', 
+                language: 'INDONESIA', 
+                active: true,
+                defaultLabelPrinter: 'PRINTER_LABEL_1',
+                defaultReportPrinter: 'PRINTER_REPORT_1',
+                locateEmptyLpn: true,
+                locateEmptyItem: false,
+                locateLpnStaging: true,
+                locateItemStaging: false,
+                udf1: 'Data 1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
+            },
+            { 
+                id: 'AGUNG15050074', 
+                description: 'Agung', 
+                defaultWarehouse: 'DCC', 
+                shift: 'SIANG', 
+                menu: 'OPERATOR_MENU', 
+                language: 'ENGLISH', 
+                active: true,
+                defaultLabelPrinter: 'PRINTER_LABEL_2',
+                defaultReportPrinter: 'PRINTER_REPORT_2',
+                locateEmptyLpn: false,
+                locateEmptyItem: true,
+                locateLpnStaging: false,
+                locateItemStaging: true,
+                udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
+            },
+             { 
+                id: 'USER_INACTIVE', 
+                description: 'User Tidak Aktif', 
+                defaultWarehouse: 'DCB', 
+                shift: 'MALAM', 
+                menu: 'VIEWER_MENU', 
+                language: 'INDONESIA', 
+                active: false,
+                defaultLabelPrinter: '',
+                defaultReportPrinter: '',
+                locateEmptyLpn: false,
+                locateEmptyItem: false,
+                locateLpnStaging: false,
+                locateItemStaging: false,
+                udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: ''
             },
         ];
 
-        // Dummy data for Security Groups
         let securityGroups = JSON.parse(localStorage.getItem('securityGroups')) || [
             { id: 'ADMIN', groupName: 'ADMIN', description: 'Administrator Group', inactive: false, users: ['Administrator', 'Agung15050074', 'Aji18100334'], userDefinedFields: { field1: 'Data Admin 1', field2: 'Data Admin 2'} },
             { id: 'OPERATOR', groupName: 'OPERATOR', description: 'Operator Group', inactive: false, users: ['Operator1', 'Operator2'], userDefinedFields: {} },
-            { id: 'VIEWER', groupName: 'VIEWER', description: 'Viewer Group', inactive: true, users: [], userDefinedFields: {} },
         ];
 
-        // Dummy data for Security Permissions
         let securityPermissions = JSON.parse(localStorage.getItem('securityPermissions')) || [
             { id: 'admin-access', name: 'Admin Full Access', description: 'Full access for administrators', inactive: false, menus: ['config-company', 'config-billing', 'proc-item-maintenance'] },
             { id: 'viewer-access', name: 'Viewer Access', description: 'View-only access', inactive: false, menus: ['gadget-report'] },
-            { id: 'operator-access', name: 'Operator Standard', description: 'Standard access for operators', inactive: true, menus: ['proc-item-maintenance'] },
         ];
 
         const allMenus = [
@@ -1414,6 +1545,7 @@
         let currentLocationTypeId = null;
         let currentLocatingStrategyId = null;
         let currentLocatingRuleId = null;
+        let currentUserProfileId = null; // ### ID UNTUK USER PROFILE
         let currentSecurityGroupId = null;
         let currentSecurityPermissionId = null;
         let selectedPermissionNode = null;
@@ -1439,8 +1571,12 @@
         function saveLocatingRules() {
             localStorage.setItem('locatingRules', JSON.stringify(locatingRules));
         }
+        
+        // ### FUNGSI SAVE UNTUK USER PROFILE ###
+        function saveUserProfiles() {
+            localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+        }
 
-        // New save functions for Security Groups and Permissions
         function saveSecurityGroups() {
             localStorage.setItem('securityGroups', JSON.stringify(securityGroups));
         }
@@ -2477,6 +2613,208 @@
             renderLocatingRuleList(query);
         }
 
+        // ### START: FUNGSI-FUNGSI UNTUK USER PROFILE ###
+
+        /**
+         * Merender daftar user profile ke dalam tabel.
+         * @param {string} filterQuery - Kata kunci untuk memfilter daftar.
+         */
+        window.renderUserProfileList = function(filterQuery = '') {
+            const container = document.getElementById('user-profile-list-container');
+            container.innerHTML = '';
+
+            const filteredProfiles = userProfiles.filter(up =>
+                up.id.toLowerCase().includes(filterQuery.toLowerCase()) ||
+                up.description.toLowerCase().includes(filterQuery.toLowerCase())
+            );
+
+            if (filteredProfiles.length === 0) {
+                container.innerHTML = `<p class="text-wise-gray mt-4">No user profiles found.</p>`;
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'min-w-full divide-y divide-wise-border mt-4 shadow-md rounded-lg';
+            table.innerHTML = `
+                <thead class="bg-wise-light-gray">
+                    <tr>
+                        <th class="table-header">User</th>
+                        <th class="table-header">Description</th>
+                        <th class="table-header">Default Warehouse</th>
+                        <th class="table-header">Shift</th>
+                        <th class="table-header">Menu</th>
+                        <th class="table-header">Active</th>
+                        <th class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-wise-border" id="user-profile-table-body">
+                </tbody>
+            `;
+            container.appendChild(table);
+
+            const tbody = document.getElementById('user-profile-table-body');
+            filteredProfiles.forEach(up => {
+                const row = tbody.insertRow();
+                row.className = 'hover:bg-wise-light-gray transition-colors duration-150';
+                row.innerHTML = `
+                    <td class="table-cell font-medium text-wise-dark-gray">${up.id}</td>
+                    <td class="table-cell">${up.description}</td>
+                    <td class="table-cell">${up.defaultWarehouse}</td>
+                    <td class="table-cell">${up.shift}</td>
+                    <td class="table-cell">${up.menu}</td>
+                    <td class="table-cell">${up.active ? 'Yes' : 'No'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showUserProfileForm('edit', '${up.id}')" class="text-wise-primary hover:text-blue-700 mr-3">Edit</button>
+                        <button onclick="deleteUserProfile('${up.id}')" class="text-wise-error hover:text-red-700">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        /**
+         * Menampilkan form modal untuk membuat atau mengedit user profile.
+         * @param {string} mode - 'create' atau 'edit'.
+         * @param {string|null} id - ID dari user profile yang akan diedit.
+         */
+        window.showUserProfileForm = function(mode, id = null) {
+            const modal = document.getElementById('user-profile-form-modal');
+            const title = document.getElementById('user-profile-form-title');
+            const form = document.getElementById('user-profile-form');
+            form.reset();
+            currentUserProfileId = id;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New User Profile';
+                document.getElementById('user-profile-submit-button').textContent = 'Create';
+                document.getElementById('up-user').disabled = false;
+            } else {
+                title.textContent = 'Edit User Profile';
+                document.getElementById('user-profile-submit-button').textContent = 'Save';
+                document.getElementById('up-user').disabled = true;
+
+                const profileToEdit = userProfiles.find(up => up.id === id);
+                if (profileToEdit) {
+                    // General Tab
+                    document.getElementById('up-user').value = profileToEdit.id;
+                    document.getElementById('up-description').value = profileToEdit.description;
+                    document.getElementById('up-default-warehouse').value = profileToEdit.defaultWarehouse;
+                    document.getElementById('up-shift').value = profileToEdit.shift;
+                    document.getElementById('up-menu').value = profileToEdit.menu;
+                    document.getElementById('up-language').value = profileToEdit.language;
+                    document.getElementById('up-inactive').checked = !profileToEdit.active;
+
+                    // Printers Tab
+                    document.getElementById('up-default-label-printer').value = profileToEdit.defaultLabelPrinter;
+                    document.getElementById('up-default-report-printer').value = profileToEdit.defaultReportPrinter;
+
+                    // Locating Tab
+                    document.getElementById('up-locate-empty-lpn').checked = profileToEdit.locateEmptyLpn;
+                    document.getElementById('up-locate-empty-item').checked = profileToEdit.locateEmptyItem;
+                    document.getElementById('up-locate-lpn-staging').checked = profileToEdit.locateLpnStaging;
+                    document.getElementById('up-locate-item-staging').checked = profileToEdit.locateItemStaging;
+                    
+                    // User Defined Data Tab
+                    for (let i = 1; i <= 8; i++) {
+                        document.getElementById(`up-udf${i}`).value = profileToEdit[`udf${i}`] || '';
+                    }
+                }
+            }
+            // Activate the first tab by default
+            activateTab('up-general', 'user-profile-form-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        /**
+         * Menutup form modal user profile.
+         */
+        window.closeUserProfileForm = function() {
+            document.getElementById('user-profile-form-modal').classList.add('hidden');
+            document.getElementById('user-profile-form-modal').classList.remove('flex');
+            currentUserProfileId = null;
+        }
+
+        /**
+         * Menangani submit form user profile.
+         * @param {Event} event - Event submit.
+         */
+        window.handleUserProfileSubmit = async function(event) {
+            event.preventDefault();
+            const userId = document.getElementById('up-user').value.toUpperCase();
+            
+            if (!userId) {
+                await showCustomAlert('Error', 'User ID is required.');
+                return;
+            }
+
+            const profileData = {
+                id: currentUserProfileId || userId,
+                description: document.getElementById('up-description').value,
+                defaultWarehouse: document.getElementById('up-default-warehouse').value,
+                shift: document.getElementById('up-shift').value,
+                menu: document.getElementById('up-menu').value,
+                language: document.getElementById('up-language').value,
+                active: !document.getElementById('up-inactive').checked,
+                defaultLabelPrinter: document.getElementById('up-default-label-printer').value,
+                defaultReportPrinter: document.getElementById('up-default-report-printer').value,
+                locateEmptyLpn: document.getElementById('up-locate-empty-lpn').checked,
+                locateEmptyItem: document.getElementById('up-locate-empty-item').checked,
+                locateLpnStaging: document.getElementById('up-locate-lpn-staging').checked,
+                locateItemStaging: document.getElementById('up-locate-item-staging').checked,
+                udf1: document.getElementById('up-udf1').value,
+                udf2: document.getElementById('up-udf2').value,
+                udf3: document.getElementById('up-udf3').value,
+                udf4: document.getElementById('up-udf4').value,
+                udf5: document.getElementById('up-udf5').value,
+                udf6: document.getElementById('up-udf6').value,
+                udf7: document.getElementById('up-udf7').value,
+                udf8: document.getElementById('up-udf8').value,
+            };
+
+            if (currentUserProfileId) {
+                // Edit mode
+                const index = userProfiles.findIndex(up => up.id === currentUserProfileId);
+                if (index !== -1) {
+                    userProfiles[index] = { ...userProfiles[index], ...profileData };
+                }
+            } else {
+                // Create mode
+                if (userProfiles.some(up => up.id === userId)) {
+                    await showCustomAlert('Error', 'User Profile ID already exists!');
+                    return;
+                }
+                userProfiles.push(profileData);
+            }
+            
+            saveUserProfiles();
+            renderUserProfileList();
+            closeUserProfileForm();
+        }
+
+        /**
+         * Menghapus user profile.
+         * @param {string} id - ID user profile yang akan dihapus.
+         */
+        window.deleteUserProfile = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', `Are you sure you want to delete user profile ${id}?`);
+            if (confirmed) {
+                userProfiles = userProfiles.filter(up => up.id !== id);
+                saveUserProfiles();
+                renderUserProfileList();
+            }
+        }
+
+        /**
+         * Memfilter daftar user profile berdasarkan input pencarian.
+         * @param {string} query - Kata kunci pencarian.
+         */
+        window.filterUserProfileList = function(query) {
+            renderUserProfileList(query);
+        }
+
+        // ### END: FUNGSI-FUNGSI UNTUK USER PROFILE ###
+
+
         // New functions for Security Group management
         window.renderSecurityGroupList = function(filterQuery = '') {
             const container = document.getElementById('security-group-list-container');
@@ -2927,7 +3265,11 @@
                 button.classList.add('text-wise-gray', 'border-transparent');
             });
 
-            document.getElementById(tabId).classList.remove('hidden');
+            const tabContent = document.getElementById(tabId)
+            if (tabContent) {
+                tabContent.classList.remove('hidden');
+            }
+            
             const activeTabButton = parentElement.querySelector(`.tab-button[data-tab="${tabId}"]`);
             if (activeTabButton) {
                 activeTabButton.classList.add('active-tab', 'border-wise-primary', 'text-wise-primary');

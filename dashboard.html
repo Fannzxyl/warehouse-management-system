@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - WISE</title>
+    <title>Configuration - WISE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,13 +36,13 @@
             }
             
             ::-webkit-scrollbar-thumb {
-                background: rgba(156, 163, 175, 0.4); /* wise-gray with opacity */
+                background: rgba(156, 163, 175, 0.4); 
                 border-radius: 10px;
                 transition: all 0.2s ease;
             }
             
             ::-webkit-scrollbar-thumb:hover {
-                background: rgba(156, 163, 175, 0.7); /* darker wise-gray on hover */
+                background: rgba(156, 163, 175, 0.7); 
             }
             
             /* Firefox scrollbar */
@@ -173,11 +173,11 @@
                             'border': '#E5E7EB',
                             'pink': '#FEE2E2',
                             'brown': '#991B1B',
-                            'primary': '#3B82F6',    // Blue
+                            'primary': '#3B82F6',   // Blue
                             'secondary': '#8B5CF6', // Purple
-                            'success': '#10B981',    // Emerald
-                            'warning': '#F59E0B',    // Yellow/Orange
-                            'error': '#EF4444',      // Red
+                            'success': '#10B981',   // Emerald
+                            'warning': '#F59E0B',   // Yellow/Orange
+                            'error': '#EF4444',     // Red
                             'info': '#06B6D4',      // Cyan
                         }
                     },
@@ -218,10 +218,11 @@
                     <i class="fas fa-bars w-6 h-6 flex items-center justify-center transition-transform-smooth"></i>
                 </button>
                 
-                <span class="ml-4 text-wise-dark-gray text-2xl font-extrabold tracking-tight drop-shadow-sm">WISE</span>
+                <a href="dashboard.html" class="ml-4 text-wise-dark-gray text-2xl font-extrabold tracking-tight drop-shadow-sm">WISE</a>
 
                 <div class="hidden md:flex items-center gap-2 ml-4">
-                    <div class="relative">
+                    <!-- Configuration Link in Header (now removed to move to sidebar) -->
+                    <!-- <div class="relative">
                         <button
                             id="main-config-toggle"
                             class="flex items-center px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-lg hover:bg-gray-300 transition-all-smooth active-press whitespace-nowrap"
@@ -230,7 +231,7 @@
                             <span class="font-medium text-sm">Configuration</span>
                             <i class="fas fa-chevron-down ml-2 text-wise-gray text-xs"></i>
                         </button>
-                    </div>
+                    </div> -->
                     
                     <div class="relative">
                         <button 
@@ -333,6 +334,16 @@
                         <span class="text-wise-dark-gray font-semibold text-sm">Dashboard</span>
                     </div>
 
+                    <!-- Configuration Link in Sidebar -->
+                    <div class="sidebar-section">
+                        <a href="configuration.html" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" tabindex="0" role="button" aria-label="Go to Configuration page">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-cogs text-wise-gray"></i>
+                            </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Configuration</span>
+                        </a>
+                    </div>
+
                     <!-- Sidebar Items with improved structure -->
                     <!-- Yard Management -->
                     <div class="sidebar-section">
@@ -429,7 +440,7 @@
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-explorer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment explorer</span></div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-quick-find')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment quick find</span></div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-start-pick-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Start/Pick Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-stop-tuk-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Stop/Tuk Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-stop-tuk-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Stop/Tuk Viewer</span></span></div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-container-identification')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping container identification</span></div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-container-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping container workbench</span></div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-sit-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">SIT workbench</span></div>

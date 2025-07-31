@@ -4,7 +4,6 @@
         const mainContent = document.getElementById('default-content-area');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
         const searchOverlay = document.getElementById('search-overlay');
-        const closeOverlayButton = document.querySelector('#search-overlay button[onclick="closeSearchOverlay()"]');
         const overlaySearchInput = document.getElementById('overlay-search-input');
         const overlaySearchResultsListPanel = document.getElementById('overlay-search-results-list-panel');
         const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
@@ -12,20 +11,23 @@
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
 
+        // Elements for custom modal (alert/confirm)
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        // New elements for DCS dropdown
-        const configDropdownToggle = document.getElementById('config-dropdown-toggle');
-        const configDropdown = document.getElementById('config-dropdown');
-
+        /**
+         * Menampilkan modal alert kustom.
+         * @param {string} title - Judul modal.
+         * @param {string} message - Pesan modal.
+         * @returns {Promise<boolean>} - Mengembalikan Promise yang resolve dengan true ketika tombol OK diklik.
+         */
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden');
+            customModalCancelBtn.classList.add('hidden'); // Sembunyikan tombol batal untuk alert
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -41,10 +43,16 @@
             });
         };
 
+        /**
+         * Menampilkan modal konfirmasi kustom.
+         * @param {string} title - Judul modal.
+         * @param {string} message - Pesan modal.
+         * @returns {Promise<boolean>} - Mengembalikan Promise yang resolve dengan true jika OK diklik, false jika Cancel.
+         */
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden');
+            customModalCancelBtn.classList.remove('hidden'); // Tampilkan tombol batal untuk konfirmasi
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -69,612 +77,1156 @@
             });
         };
 
-        // Dummy data for dashboard content and sub-categories
-        window.contentData = {
+        // Data dummy untuk konten dashboard dan sub-kategori
+        const contentData = {
             dashboard: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Dashboard Overview</h2>
-                    <p class="text-wise-gray mb-4">Welcome to your dashboard. Here's a quick summary of your operations.</p>
+                    <p class="text-wise-gray mb-4">Selamat datang di dashboard WISE. Di sini Anda dapat melihat ringkasan aktivitas dan data penting.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Orders</h3>
-                            <p class="text-3xl font-bold text-wise-primary">1,250</p>
-                            <p class="text-wise-gray text-sm mt-1">last 30 days</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Pesanan Hari Ini</h3>
+                            <p class="text-wise-primary text-3xl font-bold">1,234</p>
+                            <p class="text-wise-gray text-sm mt-1">Pesanan yang diproses hari ini.</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews</h3>
-                            <p class="text-3xl font-bold text-wise-info">85</p>
-                            <p class="text-wise-gray text-sm mt-1">currently working</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Stok Tersedia</h3>
+                            <p class="text-wise-success text-3xl font-bold">98,765</p>
+                            <p class="text-wise-gray text-sm mt-1">Unit stok di semua gudang.</p>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-wise-success">$2.5M</p>
-                            <p class="text-wise-gray text-sm mt-1">Total assets</p>
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengiriman Tertunda</h3>
+                            <p class="text-wise-warning text-3xl font-bold">45</p>
+                            <p class="text-wise-gray text-sm mt-1">Pengiriman yang menunggu proses.</p>
                         </div>
-                    </div>
-                    <div class="mt-8">
-                        <h3 class="text-lg md:text-xl font-semibold text-wise-dark-gray mb-3">Recent Activity</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">New order for Project Alpha</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">5 minutes ago</span>
-                            </div>
-                            <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Crew #123 completed task</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">1 hour ago</span>
-                            </div>
-                            <div class="flex items-center justify-between py-3 px-4 bg-wise-light-gray rounded-lg shadow-sm">
-                                <h4 class="text-wise-dark-gray font-medium">Inventory update: 10 units added to Warehouse</h4>
-                                <span class="text-wise-gray text-xs md:text-sm">3 hours ago</span>
-                            </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penerimaan Baru</h3>
+                            <p class="text-wise-info text-3xl font-bold">12</p>
+                            <p class="text-wise-gray text-sm mt-1">Penerimaan barang yang masuk.</p>
                         </div>
                     </div>
                 `,
             },
-            'yard-management': {
+            // Added content for DCS based on the image (Dashboard Overview)
+            dcs: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management</h2>
-                    <p class="text-wise-gray mb-4">Manage your yard resources and equipment here. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Vehicles: 50, Available: 35</li>
-                            <li>Total Equipment: 120, Available: 80</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">DCS Overview</h2>
+                    <p class="text-wise-gray mb-4">Ini adalah tampilan ringkasan untuk DCS. Anda dapat melihat metrik utama dan status operasional.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Active Crews</h3>
+                            <p class="text-wise-primary text-3xl font-bold">85</p>
+                            <p class="text-wise-gray text-sm mt-1">currently working</p>
+                        </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Total Assets</h3>
+                            <p class="text-wise-success text-3xl font-bold">$2.5M</p>
+                            <p class="text-wise-gray text-sm mt-1">Total assets under management.</p>
+                        </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Crew #123 completed task</h3>
+                            <p class="text-wise-info text-sm mt-1">5 minutes ago</p>
+                        </div>
+                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Inventory update: 10 units added to Warehouse</h3>
+                            <p class="text-wise-info text-sm mt-1">3 hours ago</p>
+                        </div>
                     </div>
                 `,
             },
             'yard-vehicles': {
-                full: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles (Full Page)</h2><p class="text-wise-gray">This is the full page view for Vehicles in the Yard. It contains a complete list of vehicles, their status, and history.</p><p class="text-wise-gray text-sm mt-2">Full vehicle details.</p>`,
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Vehicles</h2><p class="text-wise-gray">List of vehicles available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 35 units</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management - Vehicles</h2>
+                    <p class="text-wise-gray mb-4">Kelola informasi kendaraan di area yard.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Daftar Kendaraan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Tabel daftar kendaraan akan ditampilkan di sini.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform">
+                            Lihat Detail Kendaraan
+                        </button>
+                    </div>
+                `,
             },
             'yard-equipment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Equipment</h2><p class="text-wise-gray">List of equipment available in the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 80 units</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management - Equipment</h2>
+                    <p class="text-wise-gray mb-4">Kelola informasi peralatan di area yard.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Daftar Peralatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Tabel daftar peralatan akan ditampilkan di sini.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform">
+                            Lihat Detail Peralatan
+                        </button>
+                    </div>
+                `,
             },
             'yard-personnel': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard - Personnel</h2><p class="text-wise-gray">List of personnel assigned to the yard.</p><p class="text-wise-gray text-sm mt-2">Count: 15 people</p>`,
-            },
-            receiving: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving Management</h2>
-                    <p class="text-wise-gray mb-4">Track and manage all incoming shipments and deliveries. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Pending Receiving</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Shipment #101 - Expected: Today</li>
-                            <li>Shipment #102 - Expected: Tomorrow</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Yard Management - Personnel</h2>
+                    <p class="text-wise-gray mb-4">Kelola informasi personel di area yard.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Daftar Personel</h3>
+                        <p class="text-wise-gray text-sm mt-1">Tabel daftar personel akan ditampilkan di sini.</p>
+                        <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform">
+                            Lihat Detail Personel
+                        </button>
                     </div>
                 `,
             },
             'receiving-open-box-balance-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Open/Box Balance Viewer</h2><p class="text-wise-gray">View open and box balances.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Open/Box Balance Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat saldo kotak terbuka dan detail penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Data Saldo</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Open/Box Balance Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-po-quick-find': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Purchase Order Quick Find</h2><p class="text-wise-gray">Quickly find purchase orders.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Purchase Order Quick Find</h2>
+                    <p class="text-wise-gray mb-4">Cari pesanan pembelian dengan cepat.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cari PO</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Purchase Order Quick Find.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-closet-supplier': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Closet By Supplier</h2><p class="text-wise-gray">Receipt details organized by supplier.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Closet By Supplier</h2>
+                    <p class="text-wise-gray mb-4">Lihat penerimaan berdasarkan pemasok.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penerimaan Pemasok</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Closet By Supplier.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-container-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Container Viewer</h2><p class="text-wise-gray">View receipt containers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Container Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat detail kontainer penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Kontainer</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Container Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2><p class="text-wise-gray">Explore all receipt details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi detail penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Penerimaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Explorer.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-monitoring-close': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Monitoring/Close Viewer</h2><p class="text-wise-gray">Monitor and close receipts.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Monitoring/Close Viewer</h2>
+                    <p class="text-wise-gray mb-4">Pantau dan tutup penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Monitoring Penerimaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Monitoring/Close Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-no-close': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt No/Close Viewer</h2><p class="text-wise-gray">View receipts that are not closed.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt No/Close Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat penerimaan yang tidak ditutup.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penerimaan Tidak Ditutup</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt No/Close Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-open-closed': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Open And Closed Viewer</h2><p class="text-wise-gray">View both open and closed receipts.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Open And Closed Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat penerimaan yang terbuka dan tertutup.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penerimaan Terbuka/Tertutup</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Open And Closed Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-receipt-shipment-closed': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Shipment Closed Viewer</h2><p class="text-wise-gray">View closed receipt shipments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Shipment Closed Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat pengiriman penerimaan yang sudah ditutup.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengiriman Ditutup</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receipt Shipment Closed Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-performance-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Performance Viewer</h2><p class="text-wise-gray">Analyze receiving performance.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Performance Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat kinerja proses penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kinerja Penerimaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receiving Performance Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-workbench': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Workbench</h2><p class="text-wise-gray">Workbench for receiving operations.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receiving Workbench</h2>
+                    <p class="text-wise-gray mb-4">Area kerja untuk proses penerimaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Workbench Penerimaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Receiving Workbench.</p>
+                    </div>
+                `,
             },
             'receiving-shipment-closed-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Shipment Closed Viewer</h2><p class="text-wise-gray">View closed shipments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Shipment Closed Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat pengiriman yang sudah ditutup.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengiriman Ditutup</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Closed Viewer.</p>
+                    </div>
+                `,
             },
             'receiving-virtual-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Virtual Receiving Viewer</h2><p class="text-wise-gray">View virtual receiving details.</p>`,
-            },
-            order: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning</h2>
-                    <p class="text-wise-gray mb-4">Plan and optimize your orders. Track order status, manage shipments, and forecast demand. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Pending Orders</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Shipment #X123 - Status: Awaiting Approval</li>
-                            <li>Shipment #Y456 - Status: In Transit</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Virtual Receiving Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat penerimaan virtual.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penerimaan Virtual</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Virtual Receiving Viewer.</p>
                     </div>
                 `,
             },
             'order-planning-consolidated-shipment-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Consolidated Shipment History</h2><p class="text-wise-gray">Review consolidated shipment history.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Consolidated Shipment History</h2>
+                    <p class="text-wise-gray mb-4">Lihat riwayat pengiriman terkonsolidasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Riwayat Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Consolidated Shipment History.</p>
+                    </div>
+                `,
             },
             'order-planning-order-entry': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order Entry</h2><p class="text-wise-gray">Enter new orders.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Order Entry</h2>
+                    <p class="text-wise-gray mb-4">Masukkan pesanan baru ke dalam sistem.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Entri Pesanan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Order Entry.</p>
+                    </div>
+                `,
             },
             'order-planning-wave-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Explorer</h2><p class="text-wise-gray">Explore order waves.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi detail gelombang pesanan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Gelombang</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Wave Explorer.</p>
+                    </div>
+                `,
             },
             'order-planning-wave-quick-find': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Quick Find</h2><p class="text-wise-gray">Quickly find order waves.</p>`,
-            },
-            shipping: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping Management</h2>
-                    <p class="text-wise-gray mb-4">Kelola semua aktivitas pengiriman, mulai dari inbound, outbound, sampai manajemen kurir. Pilih sub-kategori dari sidebar.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">In Transit</h3>
-                            <p class="text-2xl">42</p>
-                            <p class="text-wise-gray text-sm mt-1">pengiriman sedang berjalan</p>
-                        </div>
-                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pending Pickup</h3>
-                            <p class="text-2xl">15</p>
-                            <p class="text-wise-gray text-sm mt-1">menunggu dijemput kurir</p>
-                        </div>
-                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Delivered Today</h3>
-                            <p class="text-2xl">88</p>
-                            <p class="text-wise-gray text-sm mt-1">pengiriman sukses hari ini</p>
-                        </div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Order Planning - Wave Quick Find</h2>
+                    <p class="text-wise-gray mb-4">Cari gelombang pesanan dengan cepat.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cari Cepat Gelombang</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Wave Quick Find.</p>
                     </div>
                 `,
             },
             'shipping-close-container': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Close Container</h2><p class="text-wise-gray">Close shipping containers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Close Container</h2>
+                    <p class="text-wise-gray mb-4">Tutup kontainer pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Tutup Kontainer</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Close Container.</p>
+                    </div>
+                `,
             },
             'shipping-consolidated-container-location-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Consolidated Container Location Viewer</h2><p class="text-wise-gray">View consolidated container locations.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Consolidated Container Location Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat lokasi kontainer terkonsolidasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Lokasi Kontainer Terkonsolidasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Consolidated Container Location Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-containers-delivered': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Containers Delivered</h2><p class="text-wise-gray">Track delivered containers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Containers Delivered</h2>
+                    <p class="text-wise-gray mb-4">Lihat kontainer yang sudah dikirim.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Kontainer Terkirim</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Containers Delivered.</p>
+                    </div>
+                `,
             },
             'shipping-outbound-surplus-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Outbound Surplus Viewer</h2><p class="text-wise-gray">View outbound surplus.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Outbound Surplus Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat surplus pengiriman keluar.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Surplus Keluar</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Outbound Surplus Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-dock-scheduler': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Dock Scheduler</h2><p class="text-wise-gray">Schedule dock appointments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Dock Scheduler</h2>
+                    <p class="text-wise-gray mb-4">Jadwalkan aktivitas di dock.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penjadwal Dock</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Dock Scheduler.</p>
+                    </div>
+                `,
             },
             'shipping-load-close-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Close Viewer</h2><p class="text-wise-gray">View load close details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Close Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat detail penutupan muatan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Penutupan Muatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Load Close Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-load-count-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Count Viewer</h2><p class="text-wise-gray">View load counts.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Count Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat jumlah muatan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Jumlah Muatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Load Count Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-load-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Explorer</h2><p class="text-wise-gray">Explore shipping loads.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Load Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi detail muatan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Muatan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Load Explorer.</p>
+                    </div>
+                `,
             },
             'shipping-maxi-high-container-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Maxi High Container Viewer</h2><p class="text-wise-gray">View maxi high containers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Maxi High Container Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat kontainer dengan tinggi maksimal.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Kontainer Tinggi Maksimal</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Maxi High Container Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-multiple-order-pallet-close': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Multiple Order Pallet Close</h2><p class="text-wise-gray">Close multiple order pallets.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Multiple Order Pallet Close</h2>
+                    <p class="text-wise-gray mb-4">Tutup palet untuk beberapa pesanan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penutupan Palet Multi Pesanan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Multiple Order Pallet Close.</p>
+                    </div>
+                `,
             },
             'shipping-oos-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - OOS Viewer</h2><p class="text-wise-gray">View Out-of-Stock information.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - OOS Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat status Out-of-Stock (OOS).</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer OOS</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk OOS Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-operator-surplus-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Operator Surplus Viewer</h2><p class="text-wise-gray">View operator surplus.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Operator Surplus Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat surplus operator pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Surplus Operator</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Operator Surplus Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-pallet-close': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet Close</h2><p class="text-wise-gray">Close pallets.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet Close</h2>
+                    <p class="text-wise-gray mb-4">Tutup palet pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penutupan Palet</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Pallet Close.</p>
+                    </div>
+                `,
             },
             'shipping-pallet-in-staging-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet In Staging Viewer</h2><p class="text-wise-gray">View pallets in staging.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Pallet In Staging Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat palet di area staging.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Palet di Staging</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Pallet In Staging Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-put-to-store-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Put to Store Viewer</h2><p class="text-wise-gray">View put-to-store details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Put to Store Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat proses put-to-store.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Put to Store</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Put to Store Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-qc-workbench': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - QC Workbench</h2><p class="text-wise-gray">Quality Control workbench.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - QC Workbench</h2>
+                    <p class="text-wise-gray mb-4">Area kerja untuk kontrol kualitas pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Workbench QC</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk QC Workbench.</p>
+                    </div>
+                `,
             },
             'shipping-shipment-detail-allocation-rejection': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Detail Allocation Rejection Viewer</h2><p class="text-wise-gray">View shipment allocation rejections.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Detail Allocation Rejection Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat detail penolakan alokasi pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Penolakan Alokasi Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Detail Allocation Rejection Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-shipment-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Explorer</h2><p class="text-wise-gray">Explore shipments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi detail pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Explorer.</p>
+                    </div>
+                `,
             },
             'shipping-shipment-quick-find': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Quick Find</h2><p class="text-wise-gray">Quickly find shipments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Quick Find</h2>
+                    <p class="text-wise-gray mb-4">Cari pengiriman dengan cepat.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cari Cepat Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Quick Find.</p>
+                    </div>
+                `,
             },
             'shipping-shipment-start-pick-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Start/Pick Viewer</h2><p class="text-wise-gray">View shipment start and pick details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Start/Pick Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat detail mulai/pilih pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Mulai/Pilih Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Start/Pick Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-shipment-stop-tuk-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Stop/Tuk Viewer</h2><p class="text-wise-gray">View shipment stop/Tuk details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipment Stop/Tuk Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat detail berhenti/Tuk pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Berhenti/Tuk Pengiriman</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipment Stop/Tuk Viewer.</p>
+                    </div>
+                `,
             },
             'shipping-container-identification': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Identification</h2><p class="text-wise-gray">Identify shipping containers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Identification</h2>
+                    <p class="text-wise-gray mb-4">Identifikasi kontainer pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Identifikasi Kontainer</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipping Container Identification.</p>
+                    </div>
+                `,
             },
             'shipping-container-workbench': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Workbench</h2><p class="text-wise-gray">Shipping container workbench.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - Shipping Container Workbench</h2>
+                    <p class="text-wise-gray mb-4">Area kerja untuk kontainer pengiriman.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Workbench Kontainer</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Shipping Container Workbench.</p>
+                    </div>
+                `,
             },
             'shipping-sit-workbench': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - SIT Workbench</h2><p class="text-wise-gray">SIT workbench details.</p>`,
-            },
-            work: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work Management</h2>
-                    <p class="text-wise-gray mb-4">Assign tasks, track progress, and manage your workforce efficiently. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Overview</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Tasks Completed (Today): 5</li>
-                            <li>Pending Tasks: 12</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Shipping - SIT Workbench</h2>
+                    <p class="text-wise-gray mb-4">Area kerja untuk SIT (Shipment In Transit).</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Workbench SIT</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk SIT Workbench.</p>
                     </div>
                 `,
             },
             'work-label-reprint-utility': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Label Reprint Utility</h2><p class="text-wise-gray">Utility for reprinting labels.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Label Reprint Utility</h2>
+                    <p class="text-wise-gray mb-4">Utilitas untuk mencetak ulang label.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cetak Ulang Label</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Label Reprint Utility.</p>
+                    </div>
+                `,
             },
             'work-picking-management-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Management Explorer</h2><p class="text-wise-gray">Explore picking management.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Management Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi manajemen picking.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Manajemen Picking</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Picking Management Explorer.</p>
+                    </div>
+                `,
             },
             'work-picking-sigtion': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Sigtion</h2><p class="text-wise-gray">Picking sigtion details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Picking Sigtion</h2>
+                    <p class="text-wise-gray mb-4">Kelola sigtion picking.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Picking Sigtion</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Picking Sigtion.</p>
+                    </div>
+                `,
             },
             'work-execution': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Execution</h2><p class="text-wise-gray">Monitor work execution.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Execution</h2>
+                    <p class="text-wise-gray mb-4">Lakukan eksekusi pekerjaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Eksekusi Pekerjaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Execution.</p>
+                    </div>
+                `,
             },
             'work-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Explorer</h2><p class="text-wise-gray">Explore work tasks.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi detail pekerjaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Pekerjaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Explorer.</p>
+                    </div>
+                `,
             },
             'work-insight': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Insight</h2><p class="text-wise-gray">Gain insights into work processes.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Insight</h2>
+                    <p class="text-wise-gray mb-4">Lihat insight pekerjaan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Insight Pekerjaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Insight.</p>
+                    </div>
+                `,
             },
             'work-monitoring-customer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Customer</h2><p class="text-wise-gray">Monitor work related to customers.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Customer</h2>
+                    <p class="text-wise-gray mb-4">Pantau pekerjaan berdasarkan pelanggan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Monitoring Pekerjaan: Pelanggan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Monitoring: Customer.</p>
+                    </div>
+                `,
             },
             'work-monitoring-group': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Group</h2><p class="text-wise-gray">Monitor work by groups.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Monitoring: Group</h2>
+                    <p class="text-wise-gray mb-4">Pantau pekerjaan berdasarkan grup.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Monitoring Pekerjaan: Grup</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Monitoring: Group.</p>
+                    </div>
+                `,
             },
             'work-quick-find': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Quick Find</h2><p class="text-wise-gray">Quickly find work tasks.</p>`,
-            },
-            'cross-application': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application Management</h2>
-                    <p class="text-wise-gray mb-4">Manage integrations and data flow between different applications. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Connected Systems</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>CRM System (Active)</li>
-                            <li>ERP System (Active)</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Work - Work Quick Find</h2>
+                    <p class="text-wise-gray mb-4">Cari pekerjaan dengan cepat.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cari Cepat Pekerjaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Work Quick Find.</p>
                     </div>
                 `,
             },
             'cross-app-ar-upload-interface-data-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - AR Upload Interface Data Viewer</h2><p class="text-wise-gray">View AR upload interface data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - AR Upload Interface Data Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat data antarmuka upload AR.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Data Antarmuka Upload AR</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk AR Upload Interface Data Viewer.</p>
+                    </div>
+                `,
             },
             'cross-app-background-job-request-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Background Job Request Viewer</h2><p class="text-wise-gray">View background job requests.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Background Job Request Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat permintaan pekerjaan latar belakang.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Permintaan Pekerjaan Latar Belakang</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Background Job Request Viewer.</p>
+                    </div>
+                `,
             },
             'cross-app-configurations': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Configurations</h2><p class="text-wise-gray">Manage cross-application configurations.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Configurations</h2>
+                    <p class="text-wise-gray mb-4">Kelola konfigurasi lintas aplikasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Konfigurasi Lintas Aplikasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Configurations.</p>
+                    </div>
+                `,
             },
             'cross-app-interface-data': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Data</h2><p class="text-wise-gray">View interface data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Data</h2>
+                    <p class="text-wise-gray mb-4">Lihat data antarmuka.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Data Antarmuka</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Interface Data.</p>
+                    </div>
+                `,
             },
             'cross-app-interface-error-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Error Viewer</h2><p class="text-wise-gray">View interface errors.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Interface Error Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat error antarmuka.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Error Antarmuka</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Interface Error Viewer.</p>
+                    </div>
+                `,
             },
             'cross-app-progistics': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Progistics</h2><p class="text-wise-gray">Progistics details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Progistics</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengaturan Progistics.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengaturan Progistics</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Progistics.</p>
+                    </div>
+                `,
             },
             'cross-app-reupload-interface-data-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - ReUpload Interface Data Viewer</h2><p class="text-wise-gray">View re-uploaded interface data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - ReUpload Interface Data Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat data antarmuka re-upload.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Data Antarmuka Re-Upload</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk ReUpload Interface Data Viewer.</p>
+                    </div>
+                `,
             },
             'cross-app-rf': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - RF</h2><p class="text-wise-gray">RF functionality details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - RF</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengaturan RF.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengaturan RF</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk RF.</p>
+                    </div>
+                `,
             },
             'cross-app-trading-partner-management': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Trading Partner Management</h2><p class="text-wise-gray">Manage trading partners.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Trading Partner Management</h2>
+                    <p class="text-wise-gray mb-4">Kelola mitra dagang.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Mitra Dagang</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Trading Partner Management.</p>
+                    </div>
+                `,
             },
             'cross-app-transaction-and-process-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Transaction and Process History</h2><p class="text-wise-gray">View transaction and process history.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Transaction and Process History</h2>
+                    <p class="text-wise-gray mb-4">Lihat riwayat transaksi dan proses.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Riwayat Transaksi dan Proses</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Transaction and Process History.</p>
+                    </div>
+                `,
             },
             'cross-app-upload-interface-data-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Upload Interface Data Viewer</h2><p class="text-wise-gray">View uploaded interface data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Upload Interface Data Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat data antarmuka upload.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Data Antarmuka Upload</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Upload Interface Data Viewer.</p>
+                    </div>
+                `,
             },
             'cross-app-wave-repost-ptl-rabbitmq': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Wave repost only for PTL Messages to RabbitMQ</h2><p class="text-wise-gray">Wave repost details for PTL Messages to RabbitMQ.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Wave Repost Only For PTL Messages To RabbitMQ</h2>
+                    <p class="text-wise-gray mb-4">Repost gelombang hanya untuk pesan PTL ke RabbitMQ.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Repost Gelombang PTL</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Wave Repost Only For PTL Messages To RabbitMQ.</p>
+                    </div>
+                `,
             },
             'cross-app-web-statistics-generation': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Web Statistics Generation</h2><p class="text-wise-gray">Generate web statistics.</p>`,
-            },
-            inventory: {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Overview</h2>
-                    <p class="text-wise-gray mb-4">Select an inventory location from the sidebar to view details.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Summary</h3>
-                        <p class="text-wise-gray text-sm mt-2">Total Items Across All Locations: 1,500</p>
-                        <p class="text-wise-gray text-sm">Available for Use: 1,200</p>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Cross Application - Web Statistics Generation</h2>
+                    <p class="text-wise-gray mb-4">Hasilkan statistik web.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Generasi Statistik Web</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Web Statistics Generation.</p>
                     </div>
                 `,
             },
             'inventory-cycle-count-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Explorer</h2><p class="text-wise-gray">Explore cycle counts.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi hitungan siklus inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Hitungan Siklus</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Cycle Count Explorer.</p>
+                    </div>
+                `,
             },
             'inventory-cycle-count-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Viewer</h2><p class="text-wise-gray">View cycle counts.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Cycle Count Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat hitungan siklus inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Hitungan Siklus</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Cycle Count Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-edit-customer-shelflife': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Edit Customer Shelflife</h2><p class="text-wise-gray">Edit customer shelflife.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Edit Customer Shelflife</h2>
+                    <p class="text-wise-gray mb-4">Edit umur simpan pelanggan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Edit Umur Simpan Pelanggan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Edit Customer Shelflife.</p>
+                    </div>
+                `,
             },
             'inventory-finished-item-breakdown': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Finished Item Breakdown</h2><p class="text-wise-gray">View finished item breakdown.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Finished Item Breakdown</h2>
+                    <p class="text-wise-gray mb-4">Lihat rincian item jadi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Rincian Item Jadi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Finished Item Breakdown.</p>
+                    </div>
+                `,
             },
             'inventory-immediate-needs-insight': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Insight</h2><p class="text-wise-gray">Gain insight into immediate needs.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Insight</h2>
+                    <p class="text-wise-gray mb-4">Dapatkan insight kebutuhan mendesak.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Insight Kebutuhan Mendesak</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Immediate Needs Insight.</p>
+                    </div>
+                `,
             },
             'inventory-immediate-needs-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Viewer</h2><p class="text-wise-gray">View immediate needs.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Immediate Needs Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat kebutuhan mendesak.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Kebutuhan Mendesak</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Immediate Needs Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-interdept': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Interdept</h2><p class="text-wise-gray">Interdepartmental inventory details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Interdept</h2>
+                    <p class="text-wise-gray mb-4">Kelola transfer antar departemen.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Transfer Antar Departemen</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Interdept.</p>
+                    </div>
+                `,
             },
             'inventory-adjustment-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Adjustment Viewer</h2><p class="text-wise-gray">View inventory adjustments.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Adjustment Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat penyesuaian inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Penyesuaian Inventaris</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Inventory Adjustment Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-insight': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Insight</h2><p class="text-wise-gray">Gain inventory insights.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Insight</h2>
+                    <p class="text-wise-gray mb-4">Dapatkan insight inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Insight Inventaris</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Inventory Insight.</p>
+                    </div>
+                `,
             },
             'inventory-management': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Management</h2><p class="text-wise-gray">Manage inventory.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Inventory Management</h2>
+                    <p class="text-wise-gray mb-4">Kelola inventaris secara keseluruhan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Inventaris</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Inventory Management.</p>
+                    </div>
+                `,
             },
             'inventory-item-master-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Item Master Viewer</h2><p class="text-wise-gray">View item master data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Item Master Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat master item inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Master Item</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Item Master Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-location-explorer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Explorer</h2><p class="text-wise-gray">Explore locations.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Explorer</h2>
+                    <p class="text-wise-gray mb-4">Jelajahi lokasi inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Explorer Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Location Explorer.</p>
+                    </div>
+                `,
             },
             'inventory-location-inventory-attribute-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Attribute Viewer</h2><p class="text-wise-gray">View location inventory attributes.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Attribute Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat atribut inventaris lokasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Atribut Inventaris Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Location Inventory Attribute Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-location-inventory-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Viewer</h2><p class="text-wise-gray">View location inventory.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Inventory Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat inventaris lokasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Inventaris Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Location Inventory Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-location-master-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Master Viewer</h2><p class="text-wise-gray">View location master data.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Master Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat master lokasi inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Master Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Location Master Viewer.</p>
+                    </div>
+                `,
             },
             'inventory-location-quick-find': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Quick Find</h2><p class="text-wise-gray">Quickly find locations.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Location Quick Find</h2>
+                    <p class="text-wise-gray mb-4">Cari lokasi dengan cepat.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Cari Cepat Lokasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Location Quick Find.</p>
+                    </div>
+                `,
             },
             'inventory-lot-freight': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Freight</h2><p class="text-wise-gray">Lot freight details.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Freight</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengiriman lot.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengiriman Lot</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Lot Freight.</p>
+                    </div>
+                `,
             },
             'inventory-lot-workbench': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Workbench</h2><p class="text-wise-gray">Workbench for lot management.</p>`,
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Lot Workbench</h2>
+                    <p class="text-wise-gray mb-4">Area kerja untuk lot inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Workbench Lot</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Lot Workbench.</p>
+                    </div>
+                `,
             },
             'inventory-mismatch-company-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Mismatch Company Viewer</h2><p class="text-wise-gray">View mismatch company details.</p>`,
-            },
-            'performance': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management</h2>
-                    <p class="text-wise-gray mb-4">Monitor and analyze performance metrics for various operations and personnel. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Key Performance Indicators (KPIs)</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>On-Time Delivery Rate: 98%</li>
-                            <li>Task Completion Rate: 95%</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory - Mismatch Company Viewer</h2>
+                    <p class="text-wise-gray mb-4">Lihat ketidakcocokan perusahaan inventaris.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Viewer Ketidakcocokan Perusahaan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Mismatch Company Viewer.</p>
                     </div>
                 `,
             },
-            'performance-management-dashboard': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Dashboard</h2><p class="text-wise-gray">View performance metrics on the dashboard.</p>`,
-            },
-            'performance-quality-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Quality History</h2><p class="text-wise-gray">Review quality history data.</p>`,
-            },
-            'performance-rfid-history': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - RFID History</h2><p class="text-wise-gray">View RFID history.</p>`,
-            },
-            'performance-supply-chain-intelligence': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Supply Chain Intelligence</h2><p class="text-wise-gray">Access supply chain intelligence reports.</p>`,
-            },
-            'performance-warehouse-alerts': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Warehouse Alerts</h2><p class="text-wise-gray">View warehouse alerts.</p>`,
-            },
-            'performance-warehouse-utilization-report': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Warehouse Utilization Report</h2><p class="text-wise-gray">Generate warehouse utilization reports.</p>`,
-            },
-            'slotting-optimization': {
+            'performance-kpis': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization</h2>
-                    <p class="text-wise-gray mb-4">Optimize slotting strategies for efficient warehouse operations. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Optimization Status</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Last Run: Yesterday</li>
-                            <li>Next Scheduled Run: Tomorrow</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - KPIs</h2>
+                    <p class="text-wise-gray mb-4">Lihat Key Performance Indicators (KPIs).</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">KPI Dashboard</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk KPIs.</p>
                     </div>
                 `,
             },
-            'slotting-optimization-rules': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Rules</h2><p class="text-wise-gray">Manage slotting optimization rules.</p>`,
-            },
-            'slotting-optimization-reports': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Reports</h2><p class="text-wise-gray">View slotting optimization reports.</p>`,
-            },
-            'slotting-optimization-settings': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Slotting Optimization - Optimization Settings</h2><p class="text-wise-gray">Configure slotting optimization settings.</p>`,
-            },
-            'system-management': {
+            'performance-analytics': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management</h2>
-                    <p class="text-wise-gray mb-4">Manage system users, logs, and backups. Select a sub-category from the sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">System Health</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Server Status: Online</li>
-                            <li>Last Backup: 2 hours ago</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Analytics</h2>
+                    <p class="text-wise-gray mb-4">Lihat analitik kinerja.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Analitik Kinerja</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Analytics.</p>
                     </div>
                 `,
             },
-            'system-management-audit-log-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Audit Log Viewer</h2><p class="text-wise-gray">View system audit logs.</p>`,
-            },
-            'system-management-background-job-queue-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Background Job Queue Viewer</h2><p class="text-wise-gray">View background job queue.</p>`,
-            },
-            'system-management-dif-incoming-message-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - DIF Incoming Message Viewer</h2><p class="text-wise-gray">View DIF incoming messages.</p>`,
-            },
-            'system-management-dif-outgoing-message-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - DIF Outgoing Message Viewer</h2><p class="text-wise-gray">View DIF outgoing messages.</p>`,
-            },
-            'system-management-display-properties': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Display Properties</h2><p class="text-wise-gray">Configure display properties.</p>`,
-            },
-            'system-management-license-key-information': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - License Key Information</h2><p class="text-wise-gray">View license key information.</p>`,
-            },
-            'system-management-manual-inventory-adjustment': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Manual Inventory Adjustment</h2><p class="text-wise-gray">Perform manual inventory adjustments.</p>`,
-            },
-            'system-management-scale-configuration': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Scale Configuration</h2><p class="text-wise-gray">Configure scale settings.</p>`,
-            },
-            'system-management-system-text-editor': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - System Text Editor</h2><p class="text-wise-gray">Edit system texts.</p>`,
-            },
-            'system-management-user-activity-viewer': {
-                detail: `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - User Activity Viewer</h2><p class="text-wise-gray">View user activity logs.</p>`,
-            },
-            'archive': {
+            'performance-goals': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving</h2>
-                    <p class="text-wise-gray mb-4">Kelola data yang diarsipkan di sini. Pilih sub-kategori dari sidebar.</p>
-                    <div class="bg-wise-light-gray p-4 rounded-lg shadow-sm">
-                        <h3 class="font-medium text-wise-dark-gray">Ringkasan Arsip</h3>
-                        <ul class="list-disc list-inside text-wise-gray text-sm mt-2 space-y-1">
-                            <li>Total Dokumen Diarsipkan: 150</li>
-                            <li>Total Media Diarsipkan: 75</li>
-                            <li>Total Arsip Keuangan: 40</li>
-                        </ul>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Performance Management - Goals</h2>
+                    <p class="text-wise-gray mb-4">Kelola tujuan kinerja.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Manajemen Tujuan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Goals.</p>
+                    </div>
+                `,
+            },
+            'system-management-users': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Users</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengguna sistem.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Daftar Pengguna</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Users.</p>
+                    </div>
+                `,
+            },
+            'system-management-logs': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Logs</h2>
+                    <p class="text-wise-gray mb-4">Lihat log sistem.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Log Sistem</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Logs.</p>
+                    </div>
+                `,
+            },
+            'system-management-backup': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Management - Backup</h2>
+                    <p class="text-wise-gray mb-4">Kelola backup sistem.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Backup Sistem</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Backup.</p>
+                    </div>
+                `,
+            },
+            'setting-optimization-general': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization - General</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengaturan umum optimasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengaturan Umum</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk General Settings.</p>
+                    </div>
+                `,
+            },
+            'setting-optimization-performance': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization - Performance</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengaturan kinerja optimasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengaturan Kinerja</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Performance Settings.</p>
+                    </div>
+                `,
+            },
+            'setting-optimization-notifications': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Setting Optimization - Notifications</h2>
+                    <p class="text-wise-gray mb-4">Kelola pengaturan notifikasi optimasi.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Pengaturan Notifikasi</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Notifications Settings.</p>
                     </div>
                 `,
             },
             'archive-documents': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Documments</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua dokumen yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total dokumen: 150</p>
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving - Documents</h2>
+                    <p class="text-wise-gray mb-4">Kelola arsip dokumen.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Arsip Dokumen</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Documents Archive.</p>
+                    </div>
                 `,
             },
             'archive-media': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Media</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua file media yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total file media: 75</p>
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving - Media</h2>
+                    <p class="text-wise-gray mb-4">Kelola arsip media.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Arsip Media</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Media Archive.</p>
+                    </div>
                 `,
             },
             'archive-financial': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Archive Financial</h2>
-                    <p class="text-wise-gray">Lihat dan kelola semua laporan keuangan yang diarsipkan.</p>
-                    <p class="text-wise-gray text-sm mt-2">Total laporan keuangan: 40</p>
-                `,
-            },
-            'article a': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Article A Details</h2>
-                    <p class="text-wise-gray">This is the detailed content for Article A. It has just been updated and contains important information regarding system updates.</p>
-                    <p class="text-wise-gray text-sm mt-2">Last updated: 2 hours ago</p>
-                `,
-            },
-            'paragraph b': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Paragraph B Details</h2>
-                    <p class="text-wise-gray">Here you will find more information about Paragraph B. This section covers various aspects of data handling and processing.</p>
-                    <p class="text-wise-gray text-sm mt-2">Last updated: 1 hour ago</p>
-                `,
-            },
-            'method c': {
-                detail: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Method C Details</h2>
-                    <p class="text-wise-gray">Details about Method C, including its implementation steps and best practices. This method is crucial for optimizing performance.</p>
-                    <p class="text-wise-gray text-sm mt-2">Last updated: 30 minutes ago</p>
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Data Archiving - Financial</h2>
+                    <p class="text-wise-gray mb-4">Kelola arsip data keuangan.</p>
+                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                        <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Arsip Keuangan</h3>
+                        <p class="text-wise-gray text-sm mt-1">Konten untuk Financial Archive.</p>
+                    </div>
                 `,
             },
         };
 
-        // Dummy data for search results
+        // Data dummy untuk hasil pencarian
         const searchItems = [
-            { id: 'article a', title: 'Article A', category: 'General', lastUpdated: '2 hours ago' },
-            { id: 'paragraph b', title: 'Paragraph B', category: 'Documentation', lastUpdated: '1 hour ago' },
-            { id: 'method c', title: 'Method C', category: 'Technical', lastUpdated: '30 minutes ago' },
-            { id: 'recent-booking', title: 'New order for Project Alpha', category: 'Orders', lastUpdated: '5 minutes ago' },
-            { id: 'crew-task', title: 'Crew #123 completed task', category: 'Work', lastUpdated: '1 hour ago' },
-            { id: 'inventory-update', title: 'Inventory update: 10 units added to Warehouse', category: 'Inventory', lastUpdated: '3 hours ago' },
-            { id: 'vehicle-a', title: 'Heavy Loader A', category: 'Yard Management', lastUpdated: '1 day ago' },
-            { id: 'delivery-x', title: 'Delivery X from Supplier A', category: 'Receiving', lastUpdated: '4 hours ago' },
-            { id: 'order-123', title: 'Customer Order #123', category: 'Order Planning', lastUpdated: '1 day ago' },
-            { id: 'integration-crm', title: 'CRM Integration Status', category: 'Cross Application', lastUpdated: '1 hour ago' },
-            { id: 'report-q1', title: 'Q1 Performance Report', category: 'Performance', lastUpdated: '2 weeks ago' },
-            { id: 'setting-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
-            { id: 'log-errors', title: 'Error Logs', category: 'System Management', lastUpdated: '5 minutes ago' },
-            { id: 'archive-finance', title: 'Financial Report 2023', category: 'Data Archiving', lastUpdated: 'Jan 2024' },
-            { id: 'yard-vehicles', title: 'Yard Vehicles', category: 'Yard Management', lastUpdated: 'Just updated' },
-            { id: 'yard-equipment', title: 'Yard Equipment', category: 'Yard Management', lastUpdated: 'Just updated' },
-            { id: 'yard-personnel', title: 'Yard Personnel', category: 'Yard Management', lastUpdated: 'Just updated' },
-            { id: 'receiving-deliveries', title: 'Receiving Deliveries', category: 'Receiving', lastUpdated: 'Today' },
-            { id: 'receiving-returns', title: 'Receiving Returns', category: 'Receiving', lastUpdated: 'Last week' },
-            { id: 'receiving-vendors', title: 'Receiving Vendors', category: 'Receiving', lastUpdated: 'Monthly' },
-            { id: 'order-new', title: 'New Orders', category: 'Order Planning', lastUpdated: 'Today' },
-            { id: 'order-pending', title: 'Pending Orders', category: 'Order Planning', lastUpdated: 'Ongoing' },
-            { id: 'order-history', title: 'Order History', category: 'Order Planning', lastUpdated: 'All time' },
-            { id: 'work-tasks', title: 'Work Tasks', category: 'Work', lastUpdated: 'Active' },
-            { id: 'work-schedule', title: 'Work Schedule', category: 'Work', lastUpdated: 'Daily' },
-            { id: 'work-teams', title: 'Work Teams', category: 'Work', lastUpdated: 'Active' },
-            { id: 'cross-app-integrations', title: 'Cross Application Integrations', category: 'Cross Application', lastUpdated: 'Active' },
-            { id: 'cross-app-data-sync', title: 'Cross Application Data Sync', category: 'Cross Application', lastUpdated: 'Latest' },
-            { id: 'cross-app-api', title: 'Cross Application API Management', category: 'Cross Application', lastUpdated: 'Active' },
-            { id: 'performance-kpis', title: 'Performance KPIs', category: 'Performance', lastUpdated: 'Live' },
-            { id: 'performance-analytics', title: 'Performance Analytics', category: 'Performance', lastUpdated: 'Daily' },
-            { id: 'performance-goals', title: 'Performance Goals', category: 'Performance', lastUpdated: 'Quarterly' },
-            { id: 'system-users', title: 'System Users', category: 'System Management', lastUpdated: 'Active' },
-            { id: 'system-logs', title: 'System Logs', category: 'System Management', lastUpdated: 'Latest' },
-            { id: 'system-backup', title: 'System Backup', category: 'System Management', lastUpdated: 'Daily' },
-            { id: 'data-archiving', title: 'Data Archiving', category: 'System Management', lastUpdated: 'Weekly' },
-            { id: 'archive-documents', title: 'Archived Documents', category: 'Data Archiving', lastUpdated: 'Old' },
-            { id: 'archive-media', title: 'Archived Media', category: 'Data Archiving', lastUpdated: 'Old' },
-            { id: 'archive-financial', title: 'Archived Financial', category: 'Data Archiving', lastUpdated: 'Old' },
-            { id: 'setting-optimization-general', title: 'General Settings', category: 'Setting Optimization', lastUpdated: 'Just now' },
-            { id: 'setting-optimization-performance', title: 'Performance Adjustments', category: 'Setting Optimization', lastUpdated: 'Today' },
-            { id: 'setting-optimization-notifications', title: 'Notification Preferences', category: 'Setting Optimization', lastUpdated: 'Yesterday' },
-            { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'security-group', title: 'Security Group Management', category: 'System Management', lastUpdated: 'Just now' },
-            { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
+            { id: 'dashboard', title: 'Dashboard Overview', category: 'Dashboard', lastUpdated: 'Just now' },
+            { id: 'dcs', title: 'DCS Overview', category: 'Configuration', lastUpdated: 'Just now' }, // Added DCS to search items
+            { id: 'yard-vehicles', title: 'Yard Management - Vehicles', category: 'Yard Management', lastUpdated: '1 hour ago' },
+            { id: 'yard-equipment', title: 'Yard Management - Equipment', category: 'Yard Management', lastUpdated: '1 hour ago' },
+            { id: 'yard-personnel', title: 'Yard Management - Personnel', category: 'Yard Management', lastUpdated: '1 hour ago' },
+            { id: 'receiving-open-box-balance-viewer', title: 'Receiving - Open/Box Balance Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-po-quick-find', title: 'Receiving - Purchase Order Quick Find', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-closet-supplier', title: 'Receiving - Receipt Closet By Supplier', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-container-viewer', title: 'Receiving - Receipt Container Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-explorer', title: 'Receiving - Receipt Explorer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-monitoring-close', title: 'Receiving - Receipt Monitoring/Close Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-no-close', title: 'Receiving - Receipt No/Close Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-open-closed', title: 'Receiving - Receipt Open And Closed Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-receipt-shipment-closed', title: 'Receiving - Receipt Shipment Closed Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-performance-viewer', title: 'Receiving - Receiving Performance Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-workbench', title: 'Receiving - Receiving Workbench', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-shipment-closed-viewer', title: 'Receiving - Shipment Closed Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'receiving-virtual-viewer', title: 'Receiving - Virtual Receiving Viewer', category: 'Receiving', lastUpdated: '2 hours ago' },
+            { id: 'order-planning-consolidated-shipment-history', title: 'Order Planning - Consolidated Shipment History', category: 'Order Planning', lastUpdated: '3 hours ago' },
+            { id: 'order-planning-order-entry', title: 'Order Planning - Order Entry', category: 'Order Planning', lastUpdated: '3 hours ago' },
+            { id: 'order-planning-wave-explorer', title: 'Order Planning - Wave Explorer', category: 'Order Planning', lastUpdated: '3 hours ago' },
+            { id: 'order-planning-wave-quick-find', title: 'Order Planning - Wave Quick Find', category: 'Order Planning', lastUpdated: '3 hours ago' },
+            { id: 'shipping-close-container', title: 'Shipping - Close Container', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-consolidated-container-location-viewer', title: 'Shipping - Consolidated Container Location Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-containers-delivered', title: 'Shipping - Containers Delivered', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-outbound-surplus-viewer', title: 'Shipping - Outbound Surplus Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-dock-scheduler', title: 'Shipping - Dock Scheduler', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-load-close-viewer', title: 'Shipping - Load Close Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-load-count-viewer', title: 'Shipping - Load Count Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-load-explorer', title: 'Shipping - Load Explorer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-maxi-high-container-viewer', title: 'Shipping - Maxi High Container Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-multiple-order-pallet-close', title: 'Shipping - Multiple Order Pallet Close', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-oos-viewer', title: 'Shipping - OOS Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-operator-surplus-viewer', title: 'Shipping - Operator Surplus Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-pallet-close', title: 'Shipping - Pallet Close', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-pallet-in-staging-viewer', title: 'Shipping - Pallet In Staging Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-put-to-store-viewer', title: 'Shipping - Put to Store Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-qc-workbench', title: 'Shipping - QC Workbench', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-shipment-detail-allocation-rejection', title: 'Shipping - Shipment Detail Allocation Rejection Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-shipment-explorer', title: 'Shipping - Shipment Explorer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-shipment-quick-find', title: 'Shipping - Shipment Quick Find', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-shipment-start-pick-viewer', title: 'Shipping - Shipment Start/Pick Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-shipment-stop-tuk-viewer', title: 'Shipping - Shipment Stop/Tuk Viewer', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-container-identification', title: 'Shipping - Shipping Container Identification', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-container-workbench', title: 'Shipping - Shipping Container Workbench', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'shipping-sit-workbench', title: 'Shipping - SIT Workbench', category: 'Shipping', lastUpdated: '4 hours ago' },
+            { id: 'work-label-reprint-utility', title: 'Work - Label Reprint Utility', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-picking-management-explorer', title: 'Work - Picking Management Explorer', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-picking-sigtion', title: 'Work - Picking Sigtion', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-execution', title: 'Work - Work Execution', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-explorer', title: 'Work - Work Explorer', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-insight', title: 'Work - Work Insight', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-monitoring-customer', title: 'Work - Work Monitoring: Customer', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-monitoring-group', title: 'Work - Work Monitoring: Group', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'work-quick-find', title: 'Work - Work Quick Find', category: 'Work', lastUpdated: '5 hours ago' },
+            { id: 'cross-app-ar-upload-interface-data-viewer', title: 'Cross Application - AR Upload Interface Data Viewer', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-background-job-request-viewer', title: 'Cross Application - Background Job Request Viewer', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-configurations', title: 'Cross Application - Configurations', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-interface-data', title: 'Cross Application - Interface Data', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-interface-error-viewer', title: 'Cross Application - Interface Error Viewer', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-progistics', title: 'Cross Application - Progistics', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-reupload-interface-data-viewer', title: 'Cross Application - ReUpload Interface Data Viewer', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-rf', title: 'Cross Application - RF', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-trading-partner-management', title: 'Cross Application - Trading Partner Management', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-transaction-and-process-history', title: 'Cross Application - Transaction and Process History', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-upload-interface-data-viewer', title: 'Cross Application - Upload Interface Data Viewer', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-wave-repost-ptl-rabbitmq', title: 'Cross Application - Wave Repost Only For PTL Messages To RabbitMQ', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'cross-app-web-statistics-generation', title: 'Cross Application - Web Statistics Generation', category: 'Cross Application', lastUpdated: '6 hours ago' },
+            { id: 'inventory-cycle-count-explorer', title: 'Inventory - Cycle Count Explorer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-cycle-count-viewer', title: 'Inventory - Cycle Count Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-edit-customer-shelflife', title: 'Inventory - Edit Customer Shelflife', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-finished-item-breakdown', title: 'Inventory - Finished Item Breakdown', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-immediate-needs-insight', title: 'Inventory - Immediate Needs Insight', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-immediate-needs-viewer', title: 'Inventory - Immediate Needs Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-interdept', title: 'Inventory - Interdept', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-adjustment-viewer', title: 'Inventory - Inventory Adjustment Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-insight', title: 'Inventory - Inventory Insight', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-management', title: 'Inventory - Inventory Management', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-item-master-viewer', title: 'Inventory - Item Master Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-location-explorer', title: 'Inventory - Location Explorer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-location-inventory-attribute-viewer', title: 'Inventory - Location Inventory Attribute Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-location-inventory-viewer', title: 'Inventory - Location Inventory Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-location-master-viewer', title: 'Inventory - Location Master Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-location-quick-find', title: 'Inventory - Location Quick Find', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-lot-freight', title: 'Inventory - Lot Freight', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-lot-workbench', title: 'Inventory - Lot Workbench', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'inventory-mismatch-company-viewer', title: 'Inventory - Mismatch Company Viewer', category: 'Inventory', lastUpdated: '7 hours ago' },
+            { id: 'performance-kpis', title: 'Performance Management - KPIs', category: 'Performance Management', lastUpdated: '8 hours ago' },
+            { id: 'performance-analytics', title: 'Performance Management - Analytics', category: 'Performance Management', lastUpdated: '8 hours ago' },
+            { id: 'performance-goals', title: 'Performance Management - Goals', category: 'Performance Management', lastUpdated: '8 hours ago' },
+            { id: 'system-management-users', title: 'System Management - Users', category: 'System Management', lastUpdated: '9 hours ago' },
+            { id: 'system-management-logs', title: 'System Management - Logs', category: 'System Management', lastUpdated: '9 hours ago' },
+            { id: 'system-management-backup', title: 'System Management - Backup', category: 'System Management', lastUpdated: '9 hours ago' },
+            { id: 'setting-optimization-general', title: 'Setting Optimization - General', category: 'Setting Optimization', lastUpdated: '10 hours ago' },
+            { id: 'setting-optimization-performance', title: 'Setting Optimization - Performance', category: 'Setting Optimization', lastUpdated: '10 hours ago' },
+            { id: 'setting-optimization-notifications', title: 'Setting Optimization - Notifications', category: 'Setting Optimization', lastUpdated: '10 hours ago' },
+            { id: 'archive-documents', title: 'Data Archiving - Documents', category: 'Data Archiving', lastUpdated: '11 hours ago' },
+            { id: 'archive-media', title: 'Data Archiving - Media', category: 'Data Archiving', lastUpdated: '11 hours ago' },
+            { id: 'archive-financial', title: 'Data Archiving - Financial', category: 'Data Archiving', lastUpdated: '11 hours ago' },
         ];
 
         let currentCategory = 'dashboard';
         let activeFilters = [];
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
+        // Pemetaan kategori anak ke kategori induk untuk navigasi sidebar
         const parentMapping = {
-            'yard-vehicles': 'yard-management', 'yard-equipment': 'yard-management', 'yard-personnel': 'yard-management',
+            'yard-vehicles': 'yard-management',
+            'yard-equipment': 'yard-management',
+            'yard-personnel': 'yard-management',
             'receiving-open-box-balance-viewer': 'receiving',
             'receiving-po-quick-find': 'receiving',
             'receiving-receipt-closet-supplier': 'receiving',
@@ -757,73 +1309,58 @@
             'inventory-lot-freight': 'inventory',
             'inventory-lot-workbench': 'inventory',
             'inventory-mismatch-company-viewer': 'inventory',
-            'performance-management-dashboard': 'performance',
-            'performance-quality-history': 'performance',
-            'performance-rfid-history': 'performance',
-            'performance-supply-chain-intelligence': 'performance',
-            'performance-warehouse-alerts': 'performance',
-            'performance-warehouse-utilization-report': 'performance',
-            'slotting-optimization-rules': 'slotting-optimization',
-            'slotting-optimization-reports': 'slotting-optimization',
-            'slotting-optimization-settings': 'slotting-optimization',
-            'system-management-audit-log-viewer': 'system-management',
-            'system-management-background-job-queue-viewer': 'system-management',
-            'system-management-dif-incoming-message-viewer': 'system-management',
-            'system-management-dif-outgoing-message-viewer': 'system-management',
-            'system-management-display-properties': 'system-management',
-            'system-management-license-key-information': 'system-management',
-            'system-management-manual-inventory-adjustment': 'system-management',
-            'system-management-scale-configuration': 'system-management',
-            'system-management-system-text-editor': 'system-management',
-            'system-management-user-activity-viewer': 'system-management',
-            'archive-documents': 'archive',
-            'archive-media': 'archive',
-            'archive-financial': 'archive',
-            'receiving-deliveries': 'receiving', 'receiving-returns': 'receiving', 'receiving-vendors': 'receiving',
-            'order-new': 'order', 'order-pending': 'order', 'order-history': 'order',
-            'work-tasks': 'work', 'work-schedule': 'work', 'work-teams': 'work',
-            'cross-app-integrations': 'cross-application', 'cross-app-data-sync': 'cross-application', 'cross-app-api': 'cross-application',
-            'yard': 'inventory', 'warehouse': 'inventory', 'storage': 'inventory',
-            'performance-kpis': 'performance', 'performance-analytics': 'performance', 'performance-goals': 'performance',
-            'system-users': 'system-management', 'system-logs': 'system-management', 'system-backup': 'system-management',
+            'performance-kpis': 'performance',
+            'performance-analytics': 'performance',
+            'performance-goals': 'performance',
+            'system-management-users': 'system-management',
+            'system-management-logs': 'system-management',
+            'system-management-backup': 'system-management',
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            'locating-strategies': 'setting-optimization',
-            'locating-rule': 'setting-optimization',
-            'security-group': 'system-management',
-            'security-permission': 'system-management',
+            'archive-documents': 'archive',
+            'archive-media': 'archive',
+            'archive-financial': 'archive',
+            'dcc': 'configuration', // Assuming 'configuration' is the parent for DCC, DCE, etc.
+            'dce': 'configuration',
+            'dcf': 'configuration',
+            'dcj': 'configuration',
+            'dck': 'configuration',
+            'dcl': 'configuration',
+            'dcm': 'configuration',
+            'dcp': 'configuration',
+            'dcs': 'configuration', // Added DCS to parent mapping
+            'dct': 'configuration',
+            'dcy': 'configuration',
+            'gbg': 'configuration',
         };
 
+        /**
+         * Mengganti visibilitas sub-menu sidebar.
+         * @param {string} category - ID kategori induk.
+         */
         window.toggleChildren = function(category) {
             const childrenDiv = document.getElementById(`${category}-children`);
             const arrowIcon = document.getElementById(`${category}-arrow`);
 
             if (childrenDiv && arrowIcon) {
-                // Close all other open sections
-                document.querySelectorAll('.sidebar-section .space-y-1:not(.hidden)').forEach(openContainer => {
-                    if (openContainer.id !== `${category}-children`) {
-                        openContainer.classList.add('hidden');
-                        const openArrow = document.getElementById(openContainer.id.replace('-children', '-arrow'));
-                        if (openArrow) {
-                            openArrow.classList.remove('rotate-90');
-                            openArrow.classList.add('rotate-0');
-                        }
-                    }
-                });
-
                 childrenDiv.classList.toggle('hidden');
                 arrowIcon.classList.toggle('rotate-90');
                 arrowIcon.classList.toggle('rotate-0');
             }
 
-            if (!childrenDiv.classList.contains('hidden') && window.contentData[category] && window.contentData[category].full) {
+            // Jika sub-menu dibuka, pilih kategori utama jika ada konten yang sesuai
+            if (!childrenDiv.classList.contains('hidden') && contentData[category] && contentData[category].full) {
                 selectCategory(category);
             }
-        }
+        };
 
+        /**
+         * Memilih kategori sidebar dan menampilkan konten yang sesuai.
+         * @param {string} category - ID kategori yang dipilih.
+         */
         window.selectCategory = function(category) {
-
+            // Hapus kelas aktif dari semua item sidebar
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
             });
@@ -832,11 +1369,7 @@
                 item.classList.add('text-wise-gray');
             });
 
-            document.querySelectorAll('.sidebar-child').forEach(item => {
-                item.classList.remove('border-l-2', 'border-wise-primary');
-            });
-
-
+            // Tambahkan kelas aktif ke item yang dipilih
             const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
             const selectedCollapsibleGroup = document.getElementById(`sidebar-${category}`);
 
@@ -870,10 +1403,11 @@
             }
 
             currentCategory = category;
-            const content = window.contentData[category];
+            const content = contentData[category];
             const defaultContentArea = document.getElementById('default-content-area');
             const searchOverlay = document.getElementById('search-overlay');
 
+            // Sembunyikan overlay pencarian saat memilih kategori
             searchOverlay.classList.add('hidden');
 
             if (content && content.full) {
@@ -883,49 +1417,26 @@
                 defaultContentArea.innerHTML = content.detail;
                 defaultContentArea.classList.remove('hidden');
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Content for ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No specific content available for this category yet.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten untuk ${category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten spesifik yang tersedia untuk kategori ini.</p>`;
                 defaultContentArea.classList.remove('hidden');
             }
 
-            // Initialize form and table if category is related
-            if (category === 'configuration-warehouse' && typeof window.renderWarehouseList === 'function') {
-                window.renderWarehouseList();
-                window.initializeTabButtons('warehouse-form-modal');
-                window.activateTab('warehouse-address', 'warehouse-form-modal');
-            } else if (category === 'configuration-zone' && typeof window.renderZoneList === 'function') {
-                window.renderZoneList();
-                window.initializeTabButtons('zone-form-modal');
-            } else if (category === 'configuration-location-type' && typeof window.renderLocationTypeList === 'function') {
-                window.renderLocationTypeList();
-                window.initializeTabButtons('location-type-form-modal');
-                window.activateTab('general-location', 'location-type-form-modal');
-            } else if (category === 'locating-strategies' && typeof window.renderLocatingStrategyList === 'function') {
-                window.renderLocatingStrategyList();
-                window.initializeTabButtons('locating-strategy-form-modal');
-            } else if (category === 'locating-rule' && typeof window.renderLocatingRuleList === 'function') {
-                window.renderLocatingRuleList();
-                window.initializeTabButtons('locating-rule-form-modal');
-                window.checkLocatingRuleFormValidity();
-            } else if (category === 'security-group' && typeof window.renderSecurityGroupList === 'function') {
-                window.renderSecurityGroupList();
-            } else if (category === 'security-permission' && typeof window.renderSecurityPermissionList === 'function') {
-                window.renderSecurityPermissionList();
-            }
-
-
-            // Close sidebar in mobile view after selecting a category
+            // Inisialisasi formulir atau tabel jika kategori terkait
+            // (Tidak ada fungsionalitas formulir/tabel kompleks di dashboard.js ini,
+            // tetapi bisa ditambahkan di sini jika diperlukan di masa mendatang)
+            
+            // Tutup sidebar di tampilan mobile setelah memilih kategori
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
                 mainContent.classList.add('ml-0');
                 document.getElementById('sidebar-overlay').classList.add('hidden');
             }
-        }
+        };
 
         /**
-         * Handles search input from header or overlay.
-         * @param {string} query - The search keyword.
-         * @param {string} source - The search source ('overlay' or otherwise).
+         * Menangani input pencarian dari header atau overlay.
+         * @param {string} query - Kata kunci pencarian.
          */
         window.handleSearch = function(query) {
             const searchOverlay = document.getElementById('search-overlay');
@@ -933,31 +1444,36 @@
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
 
             if (query.length > 0) {
+                // Tampilkan overlay pencarian jika ada query
                 searchOverlay.classList.remove('hidden');
-                overlaySearchInput.value = query;
-                performSearch(query, 'overlay');
-                searchHistoryDropdown.classList.add('hidden');
+                overlaySearchInput.value = query; // Isi input overlay dengan query
+                performSearch(query, 'overlay'); // Lakukan pencarian di overlay
+                searchHistoryDropdown.classList.add('hidden'); // Sembunyikan riwayat pencarian
             } else {
+                // Sembunyikan overlay pencarian jika query kosong
                 searchOverlay.classList.add('hidden');
-                selectCategory(currentCategory);
-                showSearchHistory();
+                selectCategory(currentCategory); // Kembali ke kategori saat ini
+                showSearchHistory(); // Tampilkan riwayat pencarian
             }
-        }
+        };
 
         /**
-         * Performs a search and displays the results.
-         * @param {string} query - The search keyword.
-         * @param {string} source - The search source ('overlay' or otherwise).
+         * Melakukan pencarian dan menampilkan hasilnya.
+         * @param {string} query - Kata kunci pencarian.
+         * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
          */
         window.performSearch = function(query, source) {
             const resultsPanel = source === 'overlay' ? document.getElementById('overlay-search-results-list-panel') : document.getElementById('search-results-content');
             const detailPanel = source === 'overlay' ? document.getElementById('overlay-detail-content-panel') : null;
             const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
 
+            // Sembunyikan filter default
             document.getElementById('overlay-filter-articles').classList.add('hidden');
             document.getElementById('overlay-filter-photography').classList.add('hidden');
-            document.getElementById('filter-articles').classList.add('hidden');
-            document.getElementById('filter-photography').classList.add('hidden');
+            const filterArticles = document.getElementById('filter-articles');
+            if (filterArticles) filterArticles.classList.add('hidden');
+            const filterPhotography = document.getElementById('filter-photography');
+            if (filterPhotography) filterPhotography.classList.add('hidden');
 
 
             if (query.length > 0) {
@@ -990,65 +1506,65 @@
                         resultItem.classList.add('py-2', 'px-3', 'bg-wise-light-gray', 'rounded-lg', 'shadow-sm', 'cursor-pointer', 'hover:bg-gray-100', 'mb-2', 'transition-all-smooth');
                         resultItem.innerHTML = `
                             <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                            <p class="text-wise-gray text-xs">Category: ${item.category} | Last Updated: ${item.lastUpdated}</p>
+                            <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
                         `;
                         resultItem.onmouseenter = (event) => showPreview(item.id, event);
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
                         resultsPanel.appendChild(resultItem);
                     });
                 } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">No results found.</p>`;
+                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
                     filtersContainer.classList.add('hidden');
                 }
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
             } else {
                 resultsPanel.innerHTML = '';
                 if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Hover over an item on the left for a preview, or click to see details.</p>`;
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
                 filtersContainer.classList.add('hidden');
             }
-        }
+        };
 
         /**
-         * Displays content preview in the search overlay detail panel.
-         * @param {string} id - The ID of the content to preview.
+         * Menampilkan pratinjau konten di panel detail overlay pencarian.
+         * @param {string} id - ID konten yang akan dipratinjau.
          */
         window.showPreview = function(id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
-            const content = window.contentData[id];
+            const content = contentData[id];
 
             if (content && (content.detail || content.full)) {
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail || content.full}
                     <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                        Display Page
+                        Tampilkan Halaman
                     </button>
                 `;
             } else {
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">No preview available for this item.</p>`;
+                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
             }
-        }
+        };
 
         /**
-         * Selects a search result and displays its content in the main dashboard.
-         * @param {string} id - The ID of the selected content.
-         * @param {string} title - The title of the search result.
-         * @param {string} query - The search keyword that led to this result.
+         * Memilih hasil pencarian dan menampilkan kontennya di dashboard utama.
+         * @param {string} id - ID konten yang dipilih.
+         * @param {string} title - Judul hasil pencarian.
+         * @param {string} query - Kata kunci pencarian yang mengarah ke hasil ini.
          */
         window.selectSearchResult = function(id, title, query) {
-            addSearchHistory(query);
-            displayContentInMainDashboard(id);
-        }
+            addSearchHistory(query); // Tambahkan query ke riwayat pencarian
+            displayContentInMainDashboard(id); // Tampilkan konten di dashboard utama
+        };
 
         /**
-         * Displays content in the main dashboard area.
-         * @param {string} id - The ID of the content to display.
+         * Menampilkan konten di area dashboard utama.
+         * @param {string} id - ID konten yang akan ditampilkan.
          */
         window.displayContentInMainDashboard = function(id) {
-            const content = window.contentData[id];
+            const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
 
             if (content && content.full) {
@@ -1056,16 +1572,16 @@
             } else if (content && content.detail) {
                 defaultContentArea.innerHTML = content.detail;
             } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Full Content for ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">No full content available.</p>`;
+                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap yang tersedia.</p>`;
             }
 
-            closeSearchOverlay();
-            selectCategory(id);
-        }
+            closeSearchOverlay(); // Tutup overlay pencarian
+            selectCategory(id); // Pilih kategori yang sesuai di sidebar
+        };
 
         /**
-         * Adds a filter to the search overlay.
-         * @param {string} filterName - The name of the filter to add.
+         * Menambahkan filter ke overlay pencarian.
+         * @param {string} filterName - Nama filter yang akan ditambahkan.
          */
         window.addOverlayFilter = function(filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
@@ -1073,20 +1589,20 @@
                 document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.remove('hidden');
                 performSearch(document.getElementById('overlay-search-input').value, 'overlay');
             }
-        }
+        };
 
         /**
-         * Removes a filter from the search overlay.
-         * @param {string} filterName - The name of the filter to remove.
+         * Menghapus filter dari overlay pencarian.
+         * @param {string} filterName - Nama filter yang akan dihapus.
          */
         window.removeOverlayFilter = function(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
             document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
             performSearch(document.getElementById('overlay-search-input').value, 'overlay');
-        }
+        };
 
         /**
-         * Removes all filters from the search overlay.
+         * Menghapus semua filter dari overlay pencarian.
          */
         window.removeAllOverlayFilters = function() {
             activeFilters = [];
@@ -1094,40 +1610,39 @@
             document.getElementById('overlay-filter-photography').classList.add('hidden');
             document.getElementById('overlay-search-input').value = '';
             performSearch('', 'overlay');
-        }
+        };
 
         /**
-         * Closes the search overlay.
+         * Menutup overlay pencarian.
          */
         window.closeSearchOverlay = function() {
             document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = '';
-            document.getElementById('overlay-search-input').value = '';
-            activeFilters = [];
+            document.getElementById('search-input').value = ''; // Kosongkan input pencarian header
+            document.getElementById('overlay-search-input').value = ''; // Kosongkan input pencarian overlay
+            activeFilters = []; // Hapus semua filter aktif
             document.getElementById('overlay-search-filters').classList.add('hidden');
-            document.getElementById('filter-articles').classList.add('hidden');
-            document.getElementById('filter-photography').classList.add('hidden');
-            document.getElementById('search-history-dropdown').classList.add('hidden');
-            selectCategory(currentCategory);
-        }
+            const filterArticles = document.getElementById('filter-articles');
+            if (filterArticles) filterArticles.classList.add('hidden');
+            const filterPhotography = document.getElementById('filter-photography');
+            if (filterPhotography) filterPhotography.classList.add('hidden');
+            document.getElementById('search-history-dropdown').classList.add('hidden'); // Sembunyikan riwayat pencarian
+            selectCategory(currentCategory); // Kembali ke kategori saat ini
+        };
 
         /**
-         * Toggles the visibility of the user dropdown.
+         * Mengganti visibilitas dropdown pengguna.
          */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
             userDropdown.classList.toggle('hidden');
-        }
+        };
 
-        // Closes user dropdown and search history when clicking outside the area.
+        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
         document.addEventListener('click', function(event) {
-            const userIconContainer = document.querySelector('header .flex.justify-end.items-center.space-x-3');
+            const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
             const userDropdown = document.getElementById('user-dropdown');
             const searchInput = document.getElementById('search-input');
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-            const configDropdown = document.getElementById('config-dropdown');
-            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
-
 
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
@@ -1135,47 +1650,49 @@
             if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
                 searchHistoryDropdown.classList.add('hidden');
             }
-            // Close config dropdown if click outside
-            if (configDropdown && !configDropdown.contains(event.target) && !configDropdownToggle.contains(event.target)) {
-                configDropdown.classList.add('hidden');
-            }
         });
 
         /**
-         * Handles the logout process.
+         * Menangani proses logout.
          */
         window.handleLogout = async function() {
-            await showCustomAlert('Log Out', 'You have successfully logged out.');
-            window.location.href = 'login.html';
-        }
+            const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
+            if (confirmed) {
+                await showCustomAlert('Logout', 'Anda berhasil logout.');
+                window.location.href = 'login.html';
+            }
+        };
 
         /**
-         * Navigates to the profile page.
+         * Navigasi ke halaman profil.
          */
         window.navigateToProfile = function() {
-            window.location.href = 'profile.html';
-        }
+            // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
+            // Untuk saat ini, kita bisa menampilkan alert atau mengarahkan ke halaman dummy.
+            showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
+            // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
+        };
 
         /**
-         * Adds a search query to history.
-         * @param {string} query - The search keyword.
+         * Menambahkan query pencarian ke riwayat.
+         * @param {string} query - Kata kunci pencarian.
          */
         function addSearchHistory(query) {
             if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query);
-                searchHistory = searchHistory.slice(0, 5);
+                searchHistory.unshift(query); // Tambahkan ke awal array
+                searchHistory = searchHistory.slice(0, 5); // Batasi hingga 5 item terakhir
                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
             }
         }
 
         /**
-         * Displays search history in the dropdown.
+         * Menampilkan riwayat pencarian di dropdown.
          */
         window.showSearchHistory = function() {
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
 
-            historyContent.innerHTML = '';
+            historyContent.innerHTML = ''; // Bersihkan konten sebelumnya
 
             if (searchHistory.length > 0) {
                 searchHistory.forEach((item, index) => {
@@ -1189,46 +1706,46 @@
                 });
                 const clearAllButton = document.createElement('div');
                 clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Clear All History</button>`;
+                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Bersihkan Semua Riwayat</button>`;
                 historyContent.appendChild(clearAllButton);
 
                 historyDropdown.classList.remove('hidden');
             } else {
-                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">No search history.</p>`;
+                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
                 historyDropdown.classList.remove('hidden');
             }
-        }
+        };
 
         /**
-         * Applies a query from search history.
-         * @param {string} query - The keyword from history.
+         * Menerapkan query dari riwayat pencarian.
+         * @param {string} query - Kata kunci dari riwayat.
          */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
-            handleSearch(query);
+            handleSearch(query); // Panggil handleSearch untuk memicu pencarian dan menampilkan overlay
             document.getElementById('search-history-dropdown').classList.add('hidden');
-        }
+        };
 
         /**
-         * Removes an item from search history.
-         * @param {number} index - The index of the item to remove.
+         * Menghapus item dari riwayat pencarian.
+         * @param {number} index - Indeks item yang akan dihapus.
          */
         window.removeSearchHistory = function(index) {
             searchHistory.splice(index, 1);
             localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory();
-        }
+            showSearchHistory(); // Perbarui tampilan riwayat
+        };
 
         /**
-         * Clears all search history.
+         * Menghapus semua riwayat pencarian.
          */
         window.clearAllSearchHistory = function() {
             searchHistory = [];
             localStorage.removeItem('searchHistory');
-            showSearchHistory();
-        }
+            showSearchHistory(); // Perbarui tampilan riwayat
+        };
 
-
+        // Event listener untuk tombol toggle sidebar
         sidebarToggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
             const mainContentArea = document.querySelector('main');
@@ -1245,6 +1762,7 @@
             }
         });
 
+        // Event listener untuk menutup sidebar saat mengklik di luar (mobile)
         document.addEventListener('click', (event) => {
             if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.add('-translate-x-full');
@@ -1254,13 +1772,17 @@
             }
         });
 
+        /**
+         * Fungsi untuk menutup paksa sidebar.
+         */
         window.closeSidebar = function() {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
             mainContent.classList.add('ml-0');
             document.getElementById('sidebar-overlay').classList.add('hidden');
-        }
+        };
 
+        // Event listener untuk perubahan ukuran jendela
         window.addEventListener('resize', () => {
             const mainContentArea = document.querySelector('main');
             if (window.innerWidth >= 768) {
@@ -1271,52 +1793,15 @@
             } else {
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-
             }
         });
 
+        // Fungsi yang dieksekusi saat halaman dimuat
         window.onload = function() {
-            selectCategory('dashboard');
+            selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
 
-            const username = "SuperAdmin";
-            document.getElementById('username-display').textContent = username;
+            const username = "SuperAdmin"; // Atur nama pengguna
+            document.getElementById('username-display').textContent = username; // Tampilkan nama pengguna
         };
-
-        // --- New DCS Dropdown Functionality ---
-        /**
-         * Toggles the visibility of the DCS dropdown.
-         */
-        window.toggleConfigDropdown = function() {
-            const configDropdown = document.getElementById('config-dropdown');
-            configDropdown.classList.toggle('hidden');
-            if (!configDropdown.classList.contains('hidden')) {
-                configDropdown.classList.remove('animate-slide-up'); // Reset animation for re-trigger
-                void configDropdown.offsetWidth; // Trigger reflow
-                configDropdown.classList.add('animate-slide-up');
-            }
-        };
-
-        /**
-         * Handles selection of an option from the DCS dropdown.
-         * @param {string} option - The selected option (e.g., 'DCC', 'DCS').
-         */
-        window.selectConfigOption = function(option) {
-            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
-            configDropdownToggle.querySelector('span').textContent = option; // Update button text
-            document.getElementById('config-dropdown').classList.add('hidden'); // Hide dropdown
-            // Redirect to configuration.html with the selected option
-            window.location.href = `configuration.html?option=${option}`;
-        };
-
-        // Close DCS dropdown when clicking outside
-        document.addEventListener('click', (event) => {
-            const configDropdown = document.getElementById('config-dropdown');
-            const configDropdownToggle = document.getElementById('config-dropdown-toggle');
-            if (configDropdown && !configDropdown.contains(event.target) && !configDropdownToggle.contains(event.target)) {
-                configDropdown.classList.add('hidden');
-            }
-        });
-
     });
-
 })();
