@@ -1049,54 +1049,28 @@ window.performSearch = function(query, source) {
     }
 };
 
-/**
- * Menampilkan pratinjau konten di panel detail overlay pencarian.
- * @param {string} id - ID konten yang akan dipratinjau.
- */
 window.showPreview = function(id) {
     const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
     const content = contentData[id];
 
-    if (content && (content.full)) {
-        // Kita potong kontennya biar nggak terlalu panjang untuk preview
-        const previewContent = content.full.substring(0, 500) + (content.full.length > 500 ? '...' : '');
+    if (content && (content.detail || content.full)) {
         overlayDetailContentPanel.innerHTML = `
-            <div class="p-4 overflow-y-auto h-full">
-                ${previewContent}
-                <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                    Tampilkan Halaman
-                </button>
-            </div>
+            ${content.detail || content.full}
+            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
+                Tampilkan Halaman
+            </button>
         `;
     } else {
-        overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia.</p>`;
+        overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
     }
 };
 
-/**
- * Menampilkan konten di area dashboard utama.
- * @param {string} id - ID konten yang akan ditampilkan.
- */
-window.displayContentInMainDashboard = function(id) {
-    selectCategory(id);
-    closeSearchOverlay();
-};
 
-/**
- * Memilih hasil pencarian dan menampilkan kontennya.
- * @param {string} id - ID konten yang dipilih.
- * @param {string} title - Judul hasil pencarian.
- * @param {string} query - Kata kunci pencarian.
- */
 window.selectSearchResult = function(id, title, query) {
     addSearchHistory(query); // Fungsi ini harusnya udah ada buat nambahin riwayat
     displayContentInMainDashboard(id);
 };
 
-/**
- * Menampilkan konten di area dashboard utama.
- * @param {string} id - ID konten yang akan ditampilkan.
- */
 window.displayContentInMainDashboard = function(id) {
     selectCategory(id); // Memilih kategori yang sesuai di sidebar
     closeSearchOverlay(); // Menutup overlay pencarian
@@ -3190,4 +3164,46 @@ window.toggleChildren = function(parentId) {
         };
 
     });
+    /**
+ * Mengganti visibilitas dropdown pengguna.
+ */
+window.toggleUserDropdown = function() {
+    const userDropdown = document.getElementById('user-dropdown');
+    userDropdown.classList.toggle('hidden');
+};
+
+/**
+ * Navigasi ke halaman profil.
+ */
+window.navigateToProfile = function() {
+    // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
+    showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
+    // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
+};
+
+/**
+ * Menangani proses logout.
+ */
+window.handleLogout = async function() {
+    const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
+    if (confirmed) {
+        await showCustomAlert('Logout', 'Anda berhasil logout.');
+        window.location.href = 'login.html'; // Arahkan ke halaman login
+    }
+};
+
+// Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
+document.addEventListener('click', function(event) {
+    const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
+    const userDropdown = document.getElementById('user-dropdown');
+    const searchInput = document.getElementById('search-input');
+    const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
+    if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
+        userDropdown.classList.add('hidden');
+    }
+    if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+        searchHistoryDropdown.classList.add('hidden');
+    }
+});
 })();
