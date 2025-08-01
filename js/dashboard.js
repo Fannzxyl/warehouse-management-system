@@ -10,6 +10,7 @@
         const overlaySearchFilters = document.getElementById('overlay-search-filters');
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
+        const searchInput = document.getElementById('search-input'); // Tambahkan ini untuk mendapatkan elemen search-input
 
         // Elements for custom modal (alert/confirm)
         const customModalOverlay = document.getElementById('custom-modal-overlay');
@@ -75,6 +76,62 @@
                 customModalOkBtn.addEventListener('click', handleOk);
                 customModalCancelBtn.addEventListener('click', handleCancel);
             });
+        };
+
+        // Fungsi untuk menoggle tampilan elemen anak (sub-menu)
+        window.toggleChildren = function(parentId) {
+            const childrenContainer = document.getElementById(`${parentId}-children`); // Kontainer sub-menu
+            const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
+            const arrowIcon = document.getElementById(`${parentId}-arrow`);            // Icon panah
+
+            if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
+                const isHidden = childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
+                
+                // Update aria-expanded attribute
+                parentElement.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
+
+                // Rotasi panah
+                if (isHidden) {
+                    arrowIcon.classList.remove('rotate-180');
+                    arrowIcon.classList.add('rotate-0');
+                } else {
+                    arrowIcon.classList.remove('rotate-0');
+                    arrowIcon.classList.add('rotate-180');
+                }
+                
+                console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${!isHidden}`);
+            } else {
+                console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
+            }
+        };
+
+        /**
+         * Membuka atau menutup bagian filter di halaman Receipt Explorer.
+         */
+        window.toggleFilterSection = function() {
+            const filterContent = document.getElementById('collapsible-filter-area');
+            const filterArrow = document.getElementById('filter-arrow');
+
+            if (filterContent && filterArrow) {
+                console.log('toggleFilterSection called!');
+                console.log('Current maxHeight:', filterContent.style.maxHeight);
+                console.log('ScrollHeight:', filterContent.scrollHeight);
+
+                // Toggle max-height classes
+                if (filterContent.classList.contains('max-h-0')) {
+                    // Jika tersembunyi, buka
+                    filterContent.classList.remove('max-h-0');
+                    filterContent.classList.add('max-h-screen'); // Menggunakan max-h-screen untuk tinggi tak terbatas
+                    filterArrow.classList.add('rotate-180');
+                } else {
+                    // Jika terbuka, tutup
+                    filterContent.classList.remove('max-h-screen');
+                    filterContent.classList.add('max-h-0');
+                    filterArrow.classList.remove('rotate-180');
+                }
+            } else {
+                console.warn("Filter content or arrow not found for toggleFilterSection.");
+            }
         };
 
         // Data dummy untuk konten dashboard dan sub-kategori
@@ -323,47 +380,55 @@
                     </div>
                 `,
             },
-            // START: Konten Receipt Explorer yang Diperbarui
+            // START: Konten Receipt Explorer yang Diperbarui (Tampilan Lebih Rapi)
             'receiving-receipt-explorer': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
-                    <p class="text-wise-gray mb-4">Jelajahi detail penerimaan dengan filter dan tabel.</p>
+                    <p class="text-wise-gray mb-6">Jelajahi detail penerimaan dengan filter dan tabel yang intuitif.</p>
 
-                    <div class="bg-wise-light-gray p-5 rounded-lg shadow-md mb-6">
-                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleFilterSection()">
-                            <h3 class="text-lg font-medium text-wise-dark-gray">Filter Penerimaan</h3>
+                    <div class="bg-wise-light-gray p-5 rounded-xl shadow-md mb-6 border border-wise-border">
+                        <div class="flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" onclick="toggleFilterSection()">
+                            <h3 class="text-lg font-semibold text-wise-dark-gray flex items-center">
+                                <i class="fas fa-filter text-wise-primary mr-2"></i>Filter Penerimaan
+                            </h3>
                             <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
                         </div>
 
-                        <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden" style="max-height: 0;">
+                        <!-- Initial state: max-h-0 (collapsed) and overflow-hidden -->
+                        <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden max-h-0">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-wise-border mt-4">
                                 <div>
-                                    <label for="filter-receipt-id" class="block text-sm font-medium text-wise-dark-gray">Receipt ID:</label>
-                                    <input type="text" id="filter-receipt-id" placeholder="e.g., RCV00155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID:</label>
+                                    <input type="text" id="filter-receipt-id" placeholder="e.g., RCV00155737" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-receipt-id-type" class="block text-sm font-medium text-wise-dark-gray">Receipt ID Type:</label>
-                                    <select id="filter-receipt-id-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-id-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID Type:</label>
+                                    <select id="filter-receipt-id-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                         <option value="">All</option>
                                         <option value="ASN">ASN</option>
                                         <option value="PO">PO</option>
+                                        <option value="Return">Return</option>
+                                        <option value="Crossdock Open">Crossdock Open</option>
+                                        <option value="Normal Order">Normal Order</option>
+                                        <option value="Return Transit O">Return Transit O</option>
+                                        <option value="Transfer">Transfer</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="filter-trailer-id" class="block text-sm font-medium text-wise-dark-gray">Trailer ID:</label>
-                                    <input type="text" id="filter-trailer-id" placeholder="e.g., TRLR-A01" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-trailer-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer ID:</label>
+                                    <input type="text" id="filter-trailer-id" placeholder="e.g., TRLR-A01" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-receipt-date" class="block text-sm font-medium text-wise-dark-gray">Receipt Date:</label>
-                                    <input type="date" id="filter-receipt-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Date:</label>
+                                    <input type="date" id="filter-receipt-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-closed-date" class="block text-sm font-medium text-wise-dark-gray">Closed Date:</label>
-                                    <input type="date" id="filter-closed-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-closed-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Closed Date:</label>
+                                    <input type="date" id="filter-closed-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-loading-status" class="block text-sm font-medium text-wise-dark-gray">Loading Status:</label>
-                                    <select id="filter-loading-status" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-loading-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Loading Status:</label>
+                                    <select id="filter-loading-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                         <option value="">All</option>
                                         <option value="Loaded">Loaded</option>
                                         <option value="In Progress">In Progress</option>
@@ -371,8 +436,8 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="filter-trailer-status" class="block text-sm font-medium text-wise-dark-gray">Trailer Status:</label>
-                                    <select id="filter-trailer-status" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-trailer-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer Status:</label>
+                                    <select id="filter-trailer-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                         <option value="">All</option>
                                         <option value="Docked">Docked</option>
                                         <option value="In Yard">In Yard</option>
@@ -381,43 +446,43 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="filter-receipt-type" class="block text-sm font-medium text-wise-dark-gray">Receipt Type:</label>
-                                    <select id="filter-receipt-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Type:</label>
+                                    <select id="filter-receipt-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                         <option value="">All</option>
                                         <option value="Standard">Standard</option>
                                         <option value="Cross-Dock">Cross-Dock</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="filter-po-id" class="block text-sm font-medium text-wise-dark-gray">Purchase Order ID:</label>
-                                    <input type="text" id="filter-po-id" placeholder="e.g., PO12345" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-po-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Purchase Order ID:</label>
+                                    <input type="text" id="filter-po-id" placeholder="e.g., PO12345" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-source-id" class="block text-sm font-medium text-wise-dark-gray">Source ID:</label>
-                                    <input type="text" id="filter-source-id" placeholder="e.g., S001" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-source-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Source ID:</label>
+                                    <input type="text" id="filter-source-id" placeholder="e.g., S001" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-source" class="block text-sm font-medium text-wise-dark-gray">Source:</label>
-                                    <input type="text" id="filter-source" placeholder="e.g., Supplier A" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-source" class="block text-sm font-medium text-wise-dark-gray mb-1">Source:</label>
+                                    <input type="text" id="filter-source" placeholder="e.g., Supplier A" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                                 <div>
-                                    <label for="filter-ship" class="block text-sm font-medium text-wise-dark-gray">Ship:</label>
-                                    <input type="text" id="filter-ship" placeholder="e.g., SHP-991" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-ship" class="block text-sm font-medium text-wise-dark-gray mb-1">Ship:</label>
+                                    <input type="text" id="filter-ship" placeholder="e.g., SHP-991" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                                 </div>
                             </div>
-                            <div class="flex justify-end mt-4">
-                                <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="applyReceiptFilters()">
+                            <div class="flex justify-end mt-6">
+                                <button class="px-6 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform font-semibold" onclick="applyReceiptFilters()">
                                     GO
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-lg shadow-md">
-                        <div class="flex justify-between items-center mb-4">
+                    <div class="bg-white p-5 rounded-xl shadow-md border border-wise-border">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-3 sm:space-y-0">
                             <div class="flex items-center space-x-2">
                                 <label for="show-entries" class="text-sm text-wise-dark-gray">Show</label>
-                                <select id="show-entries" class="px-2 py-1 border rounded-md text-sm bg-white text-wise-dark-gray" onchange="renderReceiptTable()">
+                                <select id="show-entries" class="px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" onchange="renderReceiptTable()">
                                     <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
@@ -425,12 +490,12 @@
                                 </select>
                                 <span class="text-sm text-wise-dark-gray">entries</span>
                             </div>
-                            <input type="text" id="receipt-search-table" placeholder="Search..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="renderReceiptTable()">
+                            <input type="text" id="receipt-search-table" placeholder="Search table data..." class="px-3 py-2 border border-wise-border rounded-md bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" oninput="renderReceiptTable()">
                         </div>
-                        <div id="receipt-table-container" class="overflow-x-auto">
-                        </div>
-                        <div id="receipt-pagination" class="flex justify-between items-center mt-4">
-                        </div>
+                        <div id="receipt-table-container" class="overflow-x-auto relative shadow-inner rounded-lg">
+                            </div>
+                        <div id="receipt-pagination" class="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0">
+                            </div>
                     </div>
                 `,
             },
@@ -1329,6 +1394,14 @@
 
         // Data dummy untuk hasil pencarian
         const searchItems = [
+            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-user-profile', title: 'User Profile Management', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'security-group', title: 'Security Group Management', category: 'System Management', lastUpdated: 'Just now' },
+            { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
             { id: 'dashboard', title: 'Dashboard Overview', category: 'Dashboard', lastUpdated: 'Just now' },
             { id: 'DCC', title: 'DCS - DCC', category: 'DCS', lastUpdated: 'Just now' },
             { id: 'DCE', title: 'DCS - DCE', category: 'DCS', lastUpdated: 'Just now' },
@@ -1445,28 +1518,53 @@
         let activeFilters = [];
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
-        // Pemetaan kategori anak ke kategori induk untuk navigasi sidebar
         const parentMapping = {
+            'configuration-warehouse': 'configuration',
+            'configuration-zone': 'configuration',
+            'configuration-location-type': 'configuration',
+            'locating-strategies': 'configuration',
+            'locating-rule': 'configuration',
+            'configuration-user-profile': 'configuration',
+            'security-group': 'system',
+            'security-permission': 'system',
+            // Tambahkan pemetaan untuk menu Viewer
+            'receiving-open-box-balance-viewer': 'viewer',
+            'receiving-po-quick-find': 'viewer',
+            'receiving-receipt-closet-supplier': 'viewer',
+            'receiving-receipt-container-viewer': 'viewer',
+            'receiving-receipt-explorer': 'viewer',
+            'receiving-receipt-monitoring-close': 'viewer',
+            'receiving-receipt-no-close': 'viewer',
+            'receiving-receipt-open-closed': 'viewer',
+            'receiving-receipt-shipment-closed': 'viewer',
+            // Tambahkan pemetaan untuk menu DCS
+            'DCC': 'DCS',
+            'DCE': 'DCS',
+            'DCF': 'DCS',
+            'DCJ': 'DCS',
+            'DCK': 'DCS',
+            'DCL': 'DCS',
+            'DCM': 'DCS',
+            'DCP': 'DCS',
+            // 'DCS': 'DCS', // Ini adalah item utama, bisa juga tidak ada parent jika tidak perlu toggle
+            'DCT': 'DCS',
+            'DCY': 'DCS',
+            'GBG': 'DCS',
+            // Tambahkan pemetaan untuk menu Yard Management
             'yard-vehicles': 'yard-management',
             'yard-equipment': 'yard-management',
             'yard-personnel': 'yard-management',
-            'receiving-open-box-balance-viewer': 'receiving',
-            'receiving-po-quick-find': 'receiving',
-            'receiving-receipt-closet-supplier': 'receiving',
-            'receiving-receipt-container-viewer': 'receiving',
-            'receiving-receipt-explorer': 'receiving',
-            'receiving-receipt-monitoring-close': 'receiving',
-            'receiving-receipt-no-close': 'receiving',
-            'receiving-receipt-open-closed': 'receiving',
-            'receiving-receipt-shipment-closed': 'receiving',
+            // Tambahkan pemetaan untuk menu Receiving lainnya
             'receiving-performance-viewer': 'receiving',
             'receiving-workbench': 'receiving',
             'receiving-shipment-closed-viewer': 'receiving',
             'receiving-virtual-viewer': 'receiving',
-            'order-planning-consolidated-shipment-history': 'order',
-            'order-planning-order-entry': 'order',
-            'order-planning-wave-explorer': 'order',
-            'order-planning-wave-quick-find': 'order',
+            // Tambahkan pemetaan untuk menu Order Planning
+            'order-planning-consolidated-shipment-history': 'order-planning',
+            'order-planning-order-entry': 'order-planning',
+            'order-planning-wave-explorer': 'order-planning',
+            'order-planning-wave-quick-find': 'order-planning',
+            // Tambahkan pemetaan untuk menu Shipping
             'shipping-close-container': 'shipping',
             'shipping-consolidated-container-location-viewer': 'shipping',
             'shipping-containers-delivered': 'shipping',
@@ -1491,6 +1589,7 @@
             'shipping-container-identification': 'shipping',
             'shipping-container-workbench': 'shipping',
             'shipping-sit-workbench': 'shipping',
+            // Tambahkan pemetaan untuk menu Work
             'work-label-reprint-utility': 'work',
             'work-picking-management-explorer': 'work',
             'work-picking-sigtion': 'work',
@@ -1500,6 +1599,7 @@
             'work-monitoring-customer': 'work',
             'work-monitoring-group': 'work',
             'work-quick-find': 'work',
+            // Tambahkan pemetaan untuk menu Cross Application
             'cross-app-ar-upload-interface-data-viewer': 'cross-application',
             'cross-app-background-job-request-viewer': 'cross-application',
             'cross-app-configurations': 'cross-application',
@@ -1513,6 +1613,7 @@
             'cross-app-upload-interface-data-viewer': 'cross-application',
             'cross-app-wave-repost-ptl-rabbitmq': 'cross-application',
             'cross-app-web-statistics-generation': 'cross-application',
+            // Tambahkan pemetaan untuk menu Inventory
             'inventory-cycle-count-explorer': 'inventory',
             'inventory-cycle-count-viewer': 'inventory',
             'inventory-edit-customer-shelflife': 'inventory',
@@ -1532,85 +1633,39 @@
             'inventory-lot-freight': 'inventory',
             'inventory-lot-workbench': 'inventory',
             'inventory-mismatch-company-viewer': 'inventory',
-            'performance-kpis': 'performance',
-            'performance-analytics': 'performance',
-            'performance-goals': 'performance',
+            // Tambahkan pemetaan untuk menu Performance Management
+            'performance-kpis': 'performance-management',
+            'performance-analytics': 'performance-management',
+            'performance-goals': 'performance-management',
+            // Tambahkan pemetaan untuk menu System Management
             'system-management-users': 'system-management',
             'system-management-logs': 'system-management',
             'system-management-backup': 'system-management',
+            // Tambahkan pemetaan untuk menu Setting Optimization
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            'archive-documents': 'archive',
-            'archive-media': 'archive',
-            'archive-financial': 'archive',
-            // Menambahkan pemetaan untuk opsi dropdown DCS
-            'DCC': 'DCS',
-            'DCE': 'DCS',
-            'DCF': 'DCS',
-            'DCJ': 'DCS',
-            'DCK': 'DCS',
-            'DCL': 'DCS',
-            'DCM': 'DCS',
-            'DCP': 'DCS',
-            'DCS': 'DCS', // Ini adalah item utama, bisa juga tidak ada parent jika tidak perlu toggle
-            'DCT': 'DCS',
-            'DCY': 'DCS',
-            'GBG': 'DCS',
+            // Tambahkan pemetaan untuk menu Data Archiving
+            'archive-documents': 'data-archiving',
+            'archive-media': 'data-archiving',
+            'archive-financial': 'data-archiving',
         };
 
-        /**
-         * Mengganti visibilitas sub-menu sidebar.
-         * @param {string} category - ID kategori induk.
-         */
-        window.toggleChildren = function(category) {
-            const childrenContainer = document.getElementById(`${category}-children`);
-            const parentElement = document.getElementById(category);
-            const arrowIcon = document.getElementById(`${category}-arrow`);
-
-            if (childrenContainer && parentElement && arrowIcon) {
-                childrenContainer.classList.toggle('hidden');
-                arrowIcon.classList.toggle('rotate-180'); // Menggunakan rotate-180 untuk rotasi penuh
-                
-                // Update aria-expanded attribute
-                const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
-                parentElement.setAttribute('aria-expanded', isExpanded);
-
-                console.log(`Sub-menu untuk ID "${category}" berhasil di-toggle. Status expanded: ${isExpanded}`);
-            } else {
-                console.warn(`Elemen anak dengan ID "${category}-children", parent dengan ID "${category}", atau panah dengan ID "${category}-arrow" tidak ditemukan.`);
-            }
-        };
-
-        /**
-         * Membuka atau menutup bagian filter di halaman Receipt Explorer.
-         */
-        window.toggleFilterSection = function() {
-            const filterContent = document.getElementById('collapsible-filter-area');
-            const filterArrow = document.getElementById('filter-arrow');
-
-            if (filterContent && filterArrow) {
-                // Cek apakah filter sedang terbuka (style max-height-nya tidak '0px')
-                if (filterContent.style.maxHeight && filterContent.style.maxHeight !== '0px') {
-                    // Jika terbuka, tutup dengan mengubah max-height jadi 0px
-                    filterContent.style.maxHeight = '0px';
-                    filterArrow.classList.remove('rotate-180'); // Panah kembali ke bawah
-                } else {
-                    // Jika tertutup, buka dengan mengatur max-height sesuai tinggi konten di dalamnya
-                    filterContent.style.maxHeight = filterContent.scrollHeight + "px";
-                    filterArrow.classList.add('rotate-180'); // Panah putar ke atas
-                }
-            }
-        };
 
         /**
          * Memilih kategori sidebar dan menampilkan konten yang sesuai.
          * @param {string} category - ID kategori yang dipilih.
          */
         window.selectCategory = function(category) {
-            // Hapus kelas aktif dari semua item sidebar
+            // Hapus kelas aktif dari semua item sidebar dan reset teks warna
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
+                // Optional: reset panah jika item utama diklik untuk navigasi (bukan toggle)
+                const arrow = item.querySelector('.fas.fa-chevron-down');
+                if (arrow) {
+                    arrow.classList.remove('rotate-180');
+                    arrow.classList.add('rotate-0');
+                }
             });
             document.querySelectorAll('.sidebar-child').forEach(item => {
                 item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
@@ -1618,37 +1673,44 @@
             });
 
             // Tambahkan kelas aktif ke item yang dipilih
-            const selectedMainDashboardItem = document.getElementById('sidebar-dashboard-main');
-            const selectedCollapsibleGroup = document.getElementById(category); // Menggunakan ID langsung karena sudah diperbaiki
+            let selectedElement = document.getElementById(category);
+            let parentIdOfSelectedChild = parentMapping[category];
 
-            if (category === 'dashboard' && selectedMainDashboardItem) {
-                selectedMainDashboardItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-            } else if (selectedCollapsibleGroup) {
-                selectedCollapsibleGroup.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-            } else {
+            if (selectedElement) { // Jika elemen yang dipilih adalah item utama (misal: 'dashboard', 'configuration')
+                selectedElement.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+                // Jika itu adalah item utama yang memiliki anak (misal: 'configuration', 'viewer'), pastikan anak-anaknya TERBUKA
+                const childrenContainer = document.getElementById(`${category}-children`);
+                const arrowIcon = document.getElementById(`${category}-arrow`);
+                if (childrenContainer && childrenContainer.classList.contains('hidden')) {
+                    childrenContainer.classList.remove('hidden');
+                    if (arrowIcon) {
+                        arrowIcon.classList.remove('rotate-0');
+                        arrowIcon.classList.add('rotate-180');
+                    }
+                }
+            } else if (parentIdOfSelectedChild) { // Jika elemen yang dipilih adalah sub-item (misal: 'receiving-receipt-explorer')
                 const childElement = document.querySelector(`[onclick="selectCategory('${category}')"]`);
                 if (childElement) {
                     childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
                     childElement.classList.remove('text-wise-gray');
 
-                    const parentCategory = parentMapping[category];
-                    if (parentCategory) {
-                        const parentSidebarItem = document.getElementById(parentCategory); // Menggunakan ID langsung
-                        if (parentSidebarItem) {
-                            parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
-                        }
-                        const parentChildrenDiv = document.getElementById(`${parentCategory}-children`);
-                        const parentArrowIcon = document.getElementById(`${parentCategory}-arrow`);
+                    const parentSidebarItem = document.getElementById(parentIdOfSelectedChild);
+                    if (parentSidebarItem) {
+                        parentSidebarItem.classList.add('active-sidebar-item', 'bg-wise-light-gray');
+                        // Pastikan parent terbuka saat sub-item dipilih
+                        const parentChildrenDiv = document.getElementById(`${parentIdOfSelectedChild}-children`);
+                        const parentArrowIcon = document.getElementById(`${parentIdOfSelectedChild}-arrow`);
                         if (parentChildrenDiv && parentChildrenDiv.classList.contains('hidden')) {
                             parentChildrenDiv.classList.remove('hidden');
                             if (parentArrowIcon) {
                                 parentArrowIcon.classList.remove('rotate-0');
-                                parentArrowIcon.classList.add('rotate-180'); // Rotasi 180 untuk membuka
+                                parentArrowIcon.classList.add('rotate-180');
                             }
                         }
                     }
                 }
             }
+            // else: Jika category tidak ditemukan (misal: id typo atau belum ada di HTML), tidak ada yang di-highlight.
 
             currentCategory = category;
             const content = contentData[category];
@@ -1672,6 +1734,9 @@
             // Inisialisasi formulir atau tabel jika kategori terkait
             // Khusus untuk Receipt Explorer, panggil renderReceiptTable()
             if (category === 'receiving-receipt-explorer') {
+                // Initialize filtered data and render table on load
+                filteredReceiptData = [...receiptData]; // Start with unfiltered data for initial render
+                currentPage = 1;
                 renderReceiptTable();
             }
             
@@ -1745,8 +1810,10 @@
             const filtersContainer = source === 'overlay' ? document.getElementById('overlay-search-filters') : document.getElementById('search-filters');
 
             // Sembunyikan filter default
-            document.getElementById('overlay-filter-articles').classList.add('hidden');
-            document.getElementById('overlay-filter-photography').classList.add('hidden');
+            const overlayFilterArticles = document.getElementById('overlay-filter-articles');
+            if (overlayFilterArticles) overlayFilterArticles.classList.add('hidden');
+            const overlayFilterPhotography = document.getElementById('overlay-filter-photography');
+            if (overlayFilterPhotography) overlayFilterPhotography.classList.add('hidden');
             const filterArticles = document.getElementById('filter-articles');
             if (filterArticles) filterArticles.classList.add('hidden');
             const filterPhotography = document.getElementById('filter-photography');
@@ -1754,7 +1821,7 @@
 
 
             if (query.length > 0) {
-                filtersContainer.classList.remove('hidden');
+                if (filtersContainer) filtersContainer.classList.remove('hidden');
 
                 let filteredResults = searchItems.filter(item =>
                     item.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -1768,14 +1835,14 @@
                     );
                 }
 
-                resultsPanel.innerHTML = '';
+                if (resultsPanel) resultsPanel.innerHTML = '';
 
                 if (filteredResults.length > 0) {
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('article') || item.title.toLowerCase().includes('article'))) {
-                        document.getElementById(`${source}-filter-articles`).classList.remove('hidden');
+                    if (overlayFilterArticles && filteredResults.some(item => item.category.toLowerCase().includes('article') || item.title.toLowerCase().includes('article'))) {
+                        overlayFilterArticles.classList.remove('hidden');
                     }
-                    if (filteredResults.some(item => item.category.toLowerCase().includes('photography') || item.title.toLowerCase().includes('photo'))) {
-                        document.getElementById(`${source}-filter-photography`).classList.remove('hidden');
+                    if (overlayFilterPhotography && filteredResults.some(item => item.category.toLowerCase().includes('photography') || item.title.toLowerCase().includes('photo'))) {
+                        overlayFilterPhotography.classList.remove('hidden');
                     }
 
                     filteredResults.forEach(item => {
@@ -1787,21 +1854,21 @@
                         `;
                         resultItem.onmouseenter = (event) => showPreview(item.id, event);
                         resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
-                        resultsPanel.appendChild(resultItem);
+                        if (resultsPanel) resultsPanel.appendChild(resultItem);
                     });
                 } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
-                    filtersContainer.classList.add('hidden');
+                    if (resultsPanel) resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                    if (filtersContainer) filtersContainer.classList.add('hidden');
                 }
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
             } else {
-                resultsPanel.innerHTML = '';
+                if (resultsPanel) resultsPanel.innerHTML = '';
                 if (detailPanel) {
                     detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau, atau klik untuk melihat detail.</p>`;
                 }
-                filtersContainer.classList.add('hidden');
+                if (filtersContainer) filtersContainer.classList.add('hidden');
             }
         };
 
@@ -1813,14 +1880,14 @@
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const content = contentData[id];
 
-            if (content && (content.detail || content.full)) {
+            if (overlayDetailContentPanel && content && (content.detail || content.full)) {
                 overlayDetailContentPanel.innerHTML = `
                     ${content.detail || content.full}
                     <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
                         Tampilkan Halaman
                     </button>
                 `;
-            } else {
+            } else if (overlayDetailContentPanel) {
                 overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
             }
         };
@@ -1844,12 +1911,15 @@
             const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
 
-            if (content && content.full) {
-                defaultContentArea.innerHTML = content.full;
-            } else if (content && content.detail) {
-                defaultContentArea.innerHTML = content.detail;
-            } else {
-                defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap yang tersedia.</p>`;
+            if (defaultContentArea) {
+                if (content && content.full) {
+                    defaultContentArea.innerHTML = content.full;
+                } else if (content && content.detail) {
+                    defaultContentArea.innerHTML = content.detail;
+                } else {
+                    defaultContentArea.innerHTML = `<h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Konten Lengkap untuk ${id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ')}</h2><p class="text-wise-gray">Tidak ada konten lengkap yang tersedia.</p>`;
+                }
+                defaultContentArea.classList.remove('hidden'); // Pastikan area konten terlihat
             }
 
             closeSearchOverlay(); // Tutup overlay pencarian
@@ -1863,7 +1933,8 @@
         window.addOverlayFilter = function(filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
                 activeFilters.push(filterName.toLowerCase());
-                document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.remove('hidden');
+                const filterElement = document.getElementById(`overlay-filter-${filterName.toLowerCase()}`);
+                if (filterElement) filterElement.classList.remove('hidden');
                 performSearch(document.getElementById('overlay-search-input').value, 'overlay');
             }
         };
@@ -1874,7 +1945,8 @@
          */
         window.removeOverlayFilter = function(filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
-            document.getElementById(`overlay-filter-${filterName.toLowerCase()}`).classList.add('hidden');
+            const filterElement = document.getElementById(`overlay-filter-${filterName.toLowerCase()}`);
+            if (filterElement) filterElement.classList.add('hidden');
             performSearch(document.getElementById('overlay-search-input').value, 'overlay');
         };
 
@@ -1883,9 +1955,12 @@
          */
         window.removeAllOverlayFilters = function() {
             activeFilters = [];
-            document.getElementById('overlay-filter-articles').classList.add('hidden');
-            document.getElementById('overlay-filter-photography').classList.add('hidden');
-            document.getElementById('overlay-search-input').value = '';
+            const overlayFilterArticles = document.getElementById('overlay-filter-articles');
+            if (overlayFilterArticles) overlayFilterArticles.classList.add('hidden');
+            const overlayFilterPhotography = document.getElementById('overlay-filter-photography');
+            if (overlayFilterPhotography) overlayFilterPhotography.classList.add('hidden');
+            const overlaySearchInput = document.getElementById('overlay-search-input');
+            if (overlaySearchInput) overlaySearchInput.value = '';
             performSearch('', 'overlay');
         };
 
@@ -1893,17 +1968,19 @@
          * Menutup overlay pencarian.
          */
         window.closeSearchOverlay = function() {
-            document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = ''; // Kosongkan input pencarian header
-            document.getElementById('overlay-search-input').value = ''; // Kosongkan input pencarian overlay
-            activeFilters = []; // Hapus semua filter aktif
-            document.getElementById('overlay-search-filters').classList.add('hidden');
+            if (searchOverlay) searchOverlay.classList.add('hidden');
+            const searchInputHeader = document.getElementById('search-input'); // Header search input
+            if (searchInputHeader) searchInputHeader.value = ''; 
+            if (overlaySearchInput) overlaySearchInput.value = ''; 
+            activeFilters = []; 
+            if (overlaySearchFilters) overlaySearchFilters.classList.add('hidden');
             const filterArticles = document.getElementById('filter-articles');
             if (filterArticles) filterArticles.classList.add('hidden');
             const filterPhotography = document.getElementById('filter-photography');
             if (filterPhotography) filterPhotography.classList.add('hidden');
-            document.getElementById('search-history-dropdown').classList.add('hidden'); // Sembunyikan riwayat pencarian
-            selectCategory(currentCategory); // Kembali ke kategori saat ini
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+            if (searchHistoryDropdown) searchHistoryDropdown.classList.add('hidden'); 
+            selectCategory(currentCategory); 
         };
 
         /**
@@ -1911,7 +1988,7 @@
          */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
-            userDropdown.classList.toggle('hidden');
+            if (userDropdown) userDropdown.classList.toggle('hidden');
         };
 
         // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
@@ -1927,7 +2004,7 @@
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
-            if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+            if (searchInput && searchHistoryDropdown && !searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
                 searchHistoryDropdown.classList.add('hidden');
             }
             // Menutup dropdown konfigurasi jika klik di luar
@@ -1951,11 +2028,10 @@
          * Navigasi ke halaman profil.
          */
         window.navigateToProfile = function() {
-            // Hapus atau jadikan komentar baris di bawah ini
-            // showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
-
-            // Aktifkan baris di bawah ini (hapus tanda // di depannya)
-            window.location.href = 'profile.html'; 
+            // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
+            // Untuk saat ini, kita bisa menampilkan alert atau mengarahkan ke halaman dummy.
+            showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
+            // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
         };
 
         /**
@@ -1977,6 +2053,11 @@
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
 
+            if (!historyDropdown || !historyContent) {
+                console.warn("Search history elements not found.");
+                return;
+            }
+
             historyContent.innerHTML = ''; // Bersihkan konten sebelumnya
 
             if (searchHistory.length > 0) {
@@ -1991,7 +2072,7 @@
                 });
                 const clearAllButton = document.createElement('div');
                 clearAllButton.classList.add('text-right', 'pt-2', 'pb-1', 'px-3');
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">clear All Search History</button>`;
+                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Bersihkan Semua Riwayat</button>`;
                 historyContent.appendChild(clearAllButton);
 
                 historyDropdown.classList.remove('hidden');
@@ -2006,9 +2087,11 @@
          * @param {string} query - Kata kunci dari riwayat.
          */
         window.applySearchHistory = function(query) {
-            document.getElementById('search-input').value = query;
+            const searchInputElem = document.getElementById('search-input');
+            if (searchInputElem) searchInputElem.value = query;
             handleSearch(query); // Panggil handleSearch untuk memicu pencarian dan menampilkan overlay
-            document.getElementById('search-history-dropdown').classList.add('hidden');
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+            if (searchHistoryDropdown) searchHistoryDropdown.classList.add('hidden');
         };
 
         /**
@@ -2037,23 +2120,26 @@
             if (sidebar.classList.contains('-translate-x-full')) {
                 mainContentArea.classList.remove('md:ml-64');
                 mainContentArea.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
             } else {
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
                 if (window.innerWidth < 768) {
-                    document.getElementById('sidebar-overlay').classList.remove('hidden');
+                    const sidebarOverlay = document.getElementById('sidebar-overlay');
+                    if (sidebarOverlay) sidebarOverlay.classList.remove('hidden');
                 }
             }
         });
 
         // Event listener untuk menutup sidebar saat mengklik di luar (mobile)
         document.addEventListener('click', (event) => {
+            const sidebarOverlay = document.getElementById('sidebar-overlay'); // Tambahkan ini
             if (window.innerWidth < 768 && !sidebar.contains(event.target) && !sidebarToggleBtn.contains(event.target) && !sidebar.classList.contains('-translate-x-full')) {
                 sidebar.classList.add('-translate-x-full');
                 mainContent.classList.remove('ml-64');
                 mainContent.classList.add('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
+                if (sidebarOverlay) sidebarOverlay.classList.add('hidden'); // Gunakan sidebarOverlay
             }
         });
 
@@ -2064,17 +2150,19 @@
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
             mainContent.classList.add('ml-0');
-            document.getElementById('sidebar-overlay').classList.add('hidden');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
         };
 
         // Event listener untuk perubahan ukuran jendela
         window.addEventListener('resize', () => {
             const mainContentArea = document.querySelector('main');
+            const sidebarOverlay = document.getElementById('sidebar-overlay'); // Tambahkan ini
             if (window.innerWidth >= 768) {
                 sidebar.classList.remove('-translate-x-full');
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
-                document.getElementById('sidebar-overlay').classList.add('hidden');
+                if (sidebarOverlay) sidebarOverlay.classList.add('hidden'); // Gunakan sidebarOverlay
             } else {
                 mainContentArea.classList.add('md:ml-64');
                 mainContentArea.classList.remove('ml-0');
@@ -2086,18 +2174,20 @@
             selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
 
             const username = "SuperAdmin"; // Atur nama pengguna
-            document.getElementById('username-display').textContent = username; // Tampilkan nama pengguna
+            const usernameDisplay = document.getElementById('username-display');
+            if (usernameDisplay) usernameDisplay.textContent = username; // Tampilkan nama pengguna
         };
+
 
         // --- RECEIPT EXPLORER FUNCTIONS ---
 
-        /// Dummy data for Receipt Explorer table
+        // Dummy data for Receipt Explorer table
         let receiptData = [
-            { receiptId: '00000483834', receiptIdType: 'Return', trailerId: 'TRLR-A01', receiptDate: '2025-07-31', closedDate: '2025-08-01', loadingStatus: 'Loaded', trailerStatus: 'Docked', receiptType: 'Standard', purchaseOrderId: 'PO12345', sourceId: 'S001', source: 'Supplier A', ship: 'SHP-991' },
-            { receiptId: 'CD04048958', receiptIdType: 'Crossdock Open', trailerId: 'TRLR-B02', receiptDate: '2025-07-31', closedDate: '2025-08-01', loadingStatus: 'In Progress', trailerStatus: 'In Yard', receiptType: 'Cross-Dock', purchaseOrderId: 'PO12346', sourceId: 'S002', source: 'Warehouse B', ship: 'SHP-992' },
-            { receiptId: 'TEST', receiptIdType: 'Normal Order', trailerId: 'TRLR-C03', receiptDate: '2025-07-30', closedDate: '', loadingStatus: 'Pending', trailerStatus: 'Arrived', receiptType: 'Standard', purchaseOrderId: 'PO12347', sourceId: 'S001', source: 'Supplier A', ship: 'SHP-993' },
-            { receiptId: 'Z25099196067', receiptIdType: 'Return Transit O', trailerId: 'TRLR-A01', receiptDate: '2025-07-30', closedDate: '2025-07-31', loadingStatus: 'Loaded', trailerStatus: 'Departed', receiptType: 'Standard', purchaseOrderId: 'PO12348', sourceId: 'S003', source: 'Supplier C', ship: 'SHP-994' },
-            { receiptId: 'Z2509919738', receiptIdType: 'Transfer', trailerId: 'TRLR-D04', receiptDate: '2025-07-29', closedDate: '', loadingStatus: 'Pending', trailerStatus: 'Expected', receiptType: 'Cross-Dock', purchaseOrderId: 'PO12349', sourceId: 'S002', source: 'Warehouse B', ship: 'SHP-995' }
+            { receiptId: '00000483834', receiptIdType: 'Return', trailerId: '25-06-2025', receiptDate: '2025-06-25', closedDate: '2025-08-01', loadingStatus: 'Loaded', trailingStatus: 'Check in Pending', receiptType: 'Unassigned', purchaseOrderId: 'AA', sourceId: 'Unassigned', source: 'Unassigned', ship: 'Unassigned' },
+            { receiptId: 'CD04048958', receiptIdType: 'Crossdock Open', trailerId: '202504454858', receiptDate: '2025-04-21', closedDate: '2025-08-01', loadingStatus: 'In Progress', trailingStatus: 'Check in Pending', receiptType: 'Open', purchaseOrderId: 'PO12346', sourceId: 'S002', source: 'Warehouse B', ship: 'SHP-992' },
+            { receiptId: 'TEST', receiptIdType: 'Normal Order', trailerId: '21-07-2025', receiptDate: '2025-07-21', closedDate: '', loadingStatus: 'Pending', trailingStatus: 'Check in Pending', receiptType: 'Open', purchaseOrderId: 'PO12347', sourceId: 'S001', source: 'Supplier A', ship: 'SHP-993' },
+            { receiptId: 'Z25099196067', receiptIdType: 'Return Transit O', trailerId: '225099196067', receiptDate: '2025-04-22', closedDate: '2025-07-31', loadingStatus: 'Loaded', trailingStatus: 'Check in Pending', receiptType: 'Standard', purchaseOrderId: '70102', sourceId: 'S60', source: 'Supplier C', ship: 'SHP-994' },
+            { receiptId: 'Z2509919738', receiptIdType: 'Transfer', trailerId: '225099197387', receiptDate: '2025-05-22', closedDate: '', loadingStatus: 'Pending', trailingStatus: 'Check in Pending', receiptType: 'Others', purchaseOrderId: '70199', sourceId: 'DCB', source: 'Warehouse B', ship: 'SHP-995' }
         ];
 
         let currentPage = 1;
@@ -2108,29 +2198,42 @@
          * Menerapkan filter dan merender tabel penerimaan.
          */
         window.applyReceiptFilters = function() {
-            const deliveryDate = document.getElementById('filter-delivery-date').value;
-            const trReqNo = document.getElementById('filter-tr-req-no').value.toLowerCase();
-            const toSite = document.getElementById('filter-to-site').value.toLowerCase();
-            const orderGroup = document.getElementById('filter-order-group').value.toLowerCase();
-            const fromSite = document.getElementById('filter-from-site').value.toLowerCase();
-            const collectDate = document.getElementById('filter-collect-date').value;
-            const status = document.getElementById('filter-status').value.toLowerCase();
-            const collected = document.getElementById('filter-collected').value;
+            console.log('applyReceiptFilters called'); // Debugging
+            const receiptId = document.getElementById('filter-receipt-id').value.toLowerCase();
+            const receiptIdType = document.getElementById('filter-receipt-id-type').value.toLowerCase();
+            const trailerId = document.getElementById('filter-trailer-id').value.toLowerCase();
+            const receiptDate = document.getElementById('filter-receipt-date').value;
+            const closedDate = document.getElementById('filter-closed-date').value;
+            const loadingStatus = document.getElementById('filter-loading-status').value.toLowerCase();
+            const trailerStatus = document.getElementById('filter-trailer-status').value.toLowerCase();
+            const receiptType = document.getElementById('filter-receipt-type').value.toLowerCase();
+            const purchaseOrderId = document.getElementById('filter-po-id').value.toLowerCase();
+            const sourceId = document.getElementById('filter-source-id').value.toLowerCase();
+            const source = document.getElementById('filter-source').value.toLowerCase();
+            const ship = document.getElementById('filter-ship').value.toLowerCase();
+
+            console.log('Filter values:', { receiptId, receiptIdType, trailerId, receiptDate, closedDate, loadingStatus, trailerStatus, receiptType, purchaseOrderId, sourceId, source, ship }); // Debugging
 
             filteredReceiptData = receiptData.filter(receipt => {
-                const matchesDeliveryDate = !deliveryDate || receipt.deliveryDate === deliveryDate;
-                const matchesTrReqNo = !trReqNo || receipt.trReqNo.toLowerCase().includes(trReqNo);
-                const matchesToSite = !toSite || receipt.toSite.toLowerCase().includes(toSite);
-                const matchesOrderGroup = !orderGroup || receipt.orderGroup.toLowerCase().includes(orderGroup);
-                const matchesFromSite = !fromSite || receipt.fromSite.toLowerCase().includes(fromSite);
-                const matchesCollectDate = !collectDate || receipt.collectDate.startsWith(collectDate); // Match date part only
-                const matchesStatus = !status || receipt.status.toLowerCase().includes(status);
-                const matchesCollected = !collected || (collected === 'Yes' && receipt.collected) || (collected === 'No' && !receipt.collected);
+                const matchesReceiptId = !receiptId || (receipt.receiptId && receipt.receiptId.toLowerCase().includes(receiptId));
+                const matchesReceiptIdType = !receiptIdType || (receipt.receiptIdType && receipt.receiptIdType.toLowerCase() === receiptIdType);
+                const matchesTrailerId = !trailerId || (receipt.trailerId && receipt.trailerId.toLowerCase().includes(trailerId));
+                const matchesReceiptDate = !receiptDate || (receipt.receiptDate && receipt.receiptDate === receiptDate);
+                const matchesClosedDate = !closedDate || (receipt.closedDate && receipt.closedDate === closedDate);
+                const matchesLoadingStatus = !loadingStatus || (receipt.loadingStatus && receipt.loadingStatus.toLowerCase() === loadingStatus);
+                const matchesTrailerStatus = !trailerStatus || (receipt.trailerStatus && receipt.trailerStatus.toLowerCase() === trailerStatus);
+                const matchesReceiptType = !receiptType || (receipt.receiptType && receipt.receiptType.toLowerCase() === receiptType);
+                const matchesPurchaseOrderId = !purchaseOrderId || (receipt.purchaseOrderId && receipt.purchaseOrderId.toLowerCase().includes(purchaseOrderId));
+                const matchesSourceId = !sourceId || (receipt.sourceId && receipt.sourceId.toLowerCase().includes(sourceId));
+                const matchesSource = !source || (receipt.source && receipt.source.toLowerCase().includes(source));
+                const matchesShip = !ship || (receipt.ship && receipt.ship.toLowerCase().includes(ship));
 
-                return matchesDeliveryDate && matchesTrReqNo && matchesToSite && matchesOrderGroup &&
-                       matchesFromSite && matchesCollectDate && matchesStatus && matchesCollected;
+                return matchesReceiptId && matchesReceiptIdType && matchesTrailerId && matchesReceiptDate &&
+                       matchesClosedDate && matchesLoadingStatus && matchesTrailerStatus && matchesReceiptType &&
+                       matchesPurchaseOrderId && matchesSourceId && matchesSource && matchesShip;
             });
 
+            console.log('Filtered data length:', filteredReceiptData.length); // Debugging
             currentPage = 1; // Reset to first page after applying filters
             renderReceiptTable();
         };
@@ -2139,73 +2242,78 @@
          * Merender tabel penerimaan berdasarkan data yang difilter dan paginasi.
          */
         window.renderReceiptTable = function() {
+            console.log('renderReceiptTable called'); // Debugging
             const tableContainer = document.getElementById('receipt-table-container');
             const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
             rowsPerPage = parseInt(document.getElementById('show-entries').value);
 
-            let dataToRender = filteredReceiptData.length > 0 ? filteredReceiptData : receiptData;
+            // Data yang akan dirender (sudah difilter oleh applyReceiptFilters atau semua data)
+            let dataToRender = [...filteredReceiptData]; // Buat salinan agar tidak memodifikasi array asli
+            console.log('Data to render (before table search):', dataToRender.length); // Debugging
 
-            // Apply table search filter
+            // Apply table search filter (search within current filtered data)
             if (searchTableInput) {
                 dataToRender = dataToRender.filter(item => 
                     Object.values(item).some(value => 
-                        String(value).toLowerCase().includes(searchTableInput)
+                        (value !== null && value !== undefined) && String(value).toLowerCase().includes(searchTableInput)
                     )
                 );
+                console.log('Data to render (after table search):', dataToRender.length); // Debugging
             }
 
-            const totalPages = Math.ceil(dataToRender.length / rowsPerPage);
+            const totalEntries = dataToRender.length;
+            const totalPages = Math.ceil(totalEntries / rowsPerPage);
             const start = (currentPage - 1) * rowsPerPage;
             const end = start + rowsPerPage;
             const paginatedData = dataToRender.slice(start, end);
 
             let tableHtml = `
-                <table class="min-w-full bg-white rounded-lg shadow-md">
+                <table class="min-w-full bg-white border-collapse">
                     <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-4 text-left">#</th>
-                            <th class="py-3 px-6 text-left">Receipt ID</th>
-                            <th class="py-3 px-6 text-left">Receipt ID Type</th>
-                            <th class="py-3 px-6 text-left">Trailer ID</th>
-                            <th class="py-3 px-6 text-left">Receipt Date</th>
-                            <th class="py-3 px-6 text-left">Closed Date</th>
-                            <th class="py-3 px-6 text-left">Loading Status</th>
-                            <th class="py-3 px-6 text-left">Trailer Status</th>
-                            <th class="py-3 px-6 text-left">Receipt Type</th>
-                            <th class="py-3 px-6 text-left">Purchase Order ID</th>
-                            <th class="py-3 px-6 text-left">Source ID</th>
-                            <th class="py-3 px-6 text-left">Source</th>
-                            <th class="py-3 px-6 text-left">Ship</th>
-                            <th class="py-3 px-6 text-center">Actions</th>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-xs font-semibold tracking-wider">
+                            <th class="py-3 px-4 text-left border-b border-wise-border rounded-tl-lg">#</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt ID</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt ID Type</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Trailer ID</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt Date</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Closed Date/Time</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Loading Status</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Trailing Status</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt Type</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Purchase Order ID</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Source ID</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Source</th>
+                            <th class="py-3 px-4 text-left border-b border-wise-border">Ship</th>
+                            <th class="py-3 px-4 text-center border-b border-wise-border rounded-tr-lg">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="text-wise-gray text-sm font-light">
+                    <tbody class="text-wise-gray text-sm font-light divide-y divide-wise-border">
             `;
 
             if (paginatedData.length === 0) {
                 tableHtml += `
                     <tr>
-                        <td colspan="14" class="py-3 px-6 text-center">Tidak ada data penerimaan ditemukan.</td>
+                        <td colspan="14" class="py-4 px-6 text-center text-wise-gray">Tidak ada data penerimaan ditemukan.</td>
                     </tr>
                 `;
             } else {
                 paginatedData.forEach((item, index) => {
                     tableHtml += `
-                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                        <tr class="hover:bg-wise-blue-hover">
                             <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${item.receiptId}</td>
-                            <td class="py-3 px-6 text-left">${item.receiptIdType}</td>
-                            <td class="py-3 px-6 text-left">${item.trailerId}</td>
-                            <td class="py-3 px-6 text-left">${item.receiptDate}</td>
-                            <td class="py-3 px-6 text-left">${item.closedDate}</td>
-                            <td class="py-3 px-6 text-left">${item.loadingStatus}</td>
-                            <td class="py-3 px-6 text-left">${item.trailerStatus}</td>
-                            <td class="py-3 px-6 text-left">${item.receiptType}</td>
-                            <td class="py-3 px-6 text-left">${item.purchaseOrderId}</td>
-                            <td class="py-3 px-6 text-left">${item.sourceId}</td>
-                            <td class="py-3 px-6 text-left">${item.source}</td>
-                            <td class="py-3 px-6 text-left">${item.ship}</td>
-                            <td class="py-3 px-6 text-center">
+                            <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptId}</td>
+                            <td class="py-3 px-4 text-left">${item.receiptIdType}</td>
+                            <td class="py-3 px-4 text-left">${item.trailerId}</td>
+                            <td class="py-3 px-4 text-left">${item.receiptDate}</td>
+                            <td class="py-3 px-4 text-left">${item.closedDate}</td>
+                            <td class="py-3 px-4 text-left">${item.loadingStatus}</td>
+                            <td class="py-3 px-4 text-left">${item.trailingStatus || ''}</td> <!-- Tambahkan Trailing Status -->
+                            <td class="py-3 px-4 text-left">${item.receiptType}</td>
+                            <td class="py-3 px-4 text-left">${item.purchaseOrderId}</td>
+                            <td class="py-3 px-4 text-left">${item.sourceId}</td>
+                            <td class="py-3 px-4 text-left">${item.source}</td>
+                            <td class="py-3 px-4 text-left">${item.ship}</td>
+                            <td class="py-3 px-4 text-center">
                                 <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.receiptId}')">Details</button>
                             </td>
                         </tr>
@@ -2219,7 +2327,7 @@
             `;
             tableContainer.innerHTML = tableHtml;
 
-            renderReceiptPagination(dataToRender.length, totalPages);
+            renderReceiptPagination(totalEntries, totalPages);
         };
 
         /**
@@ -2230,13 +2338,16 @@
         function renderReceiptPagination(totalEntries, totalPages) {
             const paginationContainer = document.getElementById('receipt-pagination');
             paginationContainer.innerHTML = '';
-            const maxVisibleButtons = 5; 
+            const maxVisibleButtons = 5; // Jumlah tombol halaman yang terlihat
+
+            const startEntry = ((currentPage - 1) * rowsPerPage) + 1;
+            const endEntry = Math.min(currentPage * rowsPerPage, totalEntries);
 
             let pageButtons = '';
 
             if (totalPages <= maxVisibleButtons) {
                 for (let i = 1; i <= totalPages; i++) {
-                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
+                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary font-semibold' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
                 }
             } else {
                 let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
@@ -2254,7 +2365,7 @@
                 }
 
                 for (let i = startPage; i <= endPage; i++) {
-                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
+                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary font-semibold' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
                 }
 
                 if (endPage < totalPages) {
@@ -2266,7 +2377,7 @@
             }
 
             const paginationHtml = `
-                <span class="text-sm text-wise-gray">Showing ${Math.min(((currentPage - 1) * rowsPerPage) + 1, totalEntries)} to ${Math.min(currentPage * rowsPerPage, totalEntries)} of ${totalEntries} entries</span>
+                <span class="text-sm text-wise-gray">Showing ${startEntry} to ${endEntry} of ${totalEntries} entries</span>
                 <nav class="flex items-center space-x-1" aria-label="Pagination">
                     <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
                     ${pageButtons}
@@ -2292,23 +2403,27 @@
 
         /**
          * Menampilkan detail penerimaan dalam modal kustom.
-         * @param {string} trReqNo - Nomor permintaan transaksi dari penerimaan.
+         * @param {string} receiptId - ID penerimaan.
          */
-        window.showReceiptDetails = async function(trReqNo) {
-            const receipt = receiptData.find(item => item.trReqNo === trReqNo);
+        window.showReceiptDetails = async function(receiptId) {
+            const receipt = receiptData.find(item => item.receiptId === receiptId);
             if (receipt) {
                 let detailsHtml = `
-                    <p><strong>Tr Req No:</strong> ${receipt.trReqNo}</p>
-                    <p><strong>From Site:</strong> ${receipt.fromSite}</p>
-                    <p><strong>To Site:</strong> ${receipt.toSite}</p>
-                    <p><strong>Order Group:</strong> ${receipt.orderGroup}</p>
-                    <p><strong>Delivery Date:</strong> ${receipt.deliveryDate}</p>
-                    <p><strong>Collect Date:</strong> ${receipt.collectDate}</p>
-                    <p><strong>Ship Date:</strong> ${receipt.shipDate}</p>
-                    <p><strong>Status:</strong> ${receipt.status}</p>
-                    <p class="mt-4 text-wise-gray text-sm">Ini adalah detail dummy untuk penerimaan.</p>
+                    <p class="mb-1"><strong>Receipt ID:</strong> ${receipt.receiptId}</p>
+                    <p class="mb-1"><strong>Receipt ID Type:</strong> ${receipt.receiptIdType}</p>
+                    <p class="mb-1"><strong>Trailer ID:</strong> ${receipt.trailerId}</p>
+                    <p class="mb-1"><strong>Receipt Date:</strong> ${receipt.receiptDate}</p>
+                    <p class="mb-1"><strong>Closed Date/Time:</strong> ${receipt.closedDate}</p>
+                    <p class="mb-1"><strong>Loading Status:</strong> ${receipt.loadingStatus}</p>
+                    <p class="mb-1"><strong>Trailing Status:</strong> ${receipt.trailingStatus || 'N/A'}</p>
+                    <p class="mb-1"><strong>Receipt Type:</strong> ${receipt.receiptType}</p>
+                    <p class="mb-1"><strong>Purchase Order ID:</strong> ${receipt.purchaseOrderId}</p>
+                    <p class="mb-1"><strong>Source ID:</strong> ${receipt.sourceId}</p>
+                    <p class="mb-1"><strong>Source:</strong> ${receipt.source}</p>
+                    <p class="mb-1"><strong>Ship:</strong> ${receipt.ship}</p>
+                    <p class="mt-4 text-wise-gray text-sm italic">Ini adalah detail dummy untuk penerimaan.</p>
                 `;
-                await showCustomAlert(`Detail Penerimaan: ${trReqNo}`, detailsHtml);
+                await showCustomAlert(`Detail Penerimaan: ${receiptId}`, detailsHtml);
             } else {
                 await showCustomAlert('Error', 'Detail penerimaan tidak ditemukan.');
             }
@@ -2319,7 +2434,15 @@
             selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
 
             const username = "SuperAdmin"; // Atur nama pengguna
-            document.getElementById('username-display').textContent = username; // Tampilkan nama pengguna
+            const usernameDisplay = document.getElementById('username-display');
+            if (usernameDisplay) usernameDisplay.textContent = username; // Tampilkan nama pengguna
         };
+
+        // Event Listener baru untuk input pencarian utama di header
+        // Ini menggantikan onfocus="showSearchHistory()" di HTML
+        if (searchInput) { // Pastikan elemen searchInput ditemukan
+            searchInput.addEventListener('focus', window.showSearchHistory);
+        }
+
     });
 })();
