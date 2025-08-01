@@ -1053,14 +1053,17 @@ window.showPreview = function(id) {
     const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
     const content = contentData[id];
 
+    // Cek apakah ada konten full atau detail di contentData
     if (content && (content.detail || content.full)) {
+        // Tampilkan konten ASLI dari fiturnya, LALU tambahkan tombol "Tampilkan Halaman"
         overlayDetailContentPanel.innerHTML = `
-            ${content.detail || content.full}
+            ${content.detail || content.full} 
             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
                 Tampilkan Halaman
             </button>
         `;
     } else {
+        // Kalau konten nggak ketemu, baru munculin pesan ini
         overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
     }
 };
@@ -1352,120 +1355,6 @@ window.toggleChildren = function(parentId) {
 
         // Initial content load
         selectCategory('configuration');
-
-        // Search Overlay Functions
-        window.openSearchOverlay = function() {
-            searchOverlay.classList.remove('hidden');
-            searchOverlay.classList.add('flex');
-            overlaySearchInput.focus();
-            renderSearchHistory();
-        };
-
-        window.closeSearchOverlay = function() {
-            searchOverlay.classList.add('hidden');
-            searchOverlay.classList.remove('flex');
-            overlaySearchResultsListPanel.innerHTML = '';
-            overlayDetailContentPanel.innerHTML = '';
-            overlaySearchInput.value = '';
-            overlaySearchFilters.innerHTML = '';
-            activeFilters = [];
-        };
-
-        window.performSearch = function(query) {
-            const searchTerm = query.toLowerCase();
-            const filteredItems = searchItems.filter(item =>
-                item.title.toLowerCase().includes(searchTerm) ||
-                item.category.toLowerCase().includes(searchTerm)
-            );
-            renderSearchResults(filteredItems);
-            saveSearchQuery(query);
-        };
-
-        window.renderSearchResults = function(results) {
-            overlaySearchResultsListPanel.innerHTML = '';
-            if (results.length === 0) {
-                overlaySearchResultsListPanel.innerHTML = '<p class="text-wise-gray p-4">No results found.</p>';
-                return;
-            }
-
-            const ul = document.createElement('ul');
-            ul.className = 'divide-y divide-wise-border';
-            results.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'p-4 hover:bg-wise-light-gray cursor-pointer transition-colors duration-200';
-                li.innerHTML = `
-                    <h3 class="text-wise-dark-gray font-semibold">${item.title}</h3>
-                    <p class="text-wise-gray text-sm">${item.category} - ${item.lastUpdated}</p>
-                `;
-                li.onclick = () => showDetailContent(item.id);
-                ul.appendChild(li);
-            });
-            overlaySearchResultsListPanel.appendChild(ul);
-        };
-
-        window.showDetailContent = function(id) {
-            const content = contentData[id];
-            if (content && content.detail) {
-                overlayDetailContentPanel.innerHTML = content.detail;
-            } else if (content && content.full) {
-                // If no specific detail content, show the full content
-                overlayDetailContentPanel.innerHTML = `<div class="p-4">${content.full}</div>`;
-            } else {
-                overlayDetailContentPanel.innerHTML = '<p class="text-wise-gray p-4">No detailed content available for this item.</p>';
-            }
-        };
-
-        window.saveSearchQuery = function(query) {
-            if (query.trim() === '') return;
-            // Add to the beginning if not already present
-            if (!searchHistory.includes(query)) {
-                searchHistory.unshift(query);
-                // Keep only the last 5 searches
-                searchHistory = searchHistory.slice(0, 5);
-                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            }
-        };
-
-        window.renderSearchHistory = function() {
-            const historyContainer = document.getElementById('search-history');
-            if (!historyContainer) return;
-
-            historyContainer.innerHTML = '';
-            if (searchHistory.length === 0) {
-                historyContainer.innerHTML = '<p class="text-wise-gray text-sm">No recent searches.</p>';
-                return;
-            }
-
-            const ul = document.createElement('ul');
-            ul.className = 'space-y-2';
-            searchHistory.forEach(query => {
-                const li = document.createElement('li');
-                li.className = 'flex items-center justify-between text-wise-dark-gray text-sm hover:text-wise-primary cursor-pointer transition-colors duration-200';
-                li.innerHTML = `
-                    <span onclick="overlaySearchInput.value='${query}'; performSearch('${query}')">${query}</span>
-                    <button class="text-wise-gray hover:text-red-500 ml-2" onclick="removeSearchHistoryItem('${query}', event)">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                `;
-                ul.appendChild(li);
-            });
-            historyContainer.appendChild(ul);
-        };
-
-        window.removeSearchHistoryItem = function(queryToRemove, event) {
-            event.stopPropagation(); // Prevent triggering search
-            searchHistory = searchHistory.filter(query => query !== queryToRemove);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            renderSearchHistory();
-        };
-
-        // Event listener for search input in overlay
-        overlaySearchInput.addEventListener('input', (e) => {
-            performSearch(e.target.value);
-        });
-
 
         // Universal Tab Switching Logic
         window.setupTabSwitching = function(modalId) {
@@ -3176,9 +3065,11 @@ window.toggleUserDropdown = function() {
  * Navigasi ke halaman profil.
  */
 window.navigateToProfile = function() {
-    // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
-    showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
-    // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
+    // Hapus atau jadikan komentar baris di bawah ini
+    // showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
+
+    // Aktifkan baris di bawah ini (hapus tanda // di depannya)
+    window.location.href = 'profile.html'; 
 };
 
 /**

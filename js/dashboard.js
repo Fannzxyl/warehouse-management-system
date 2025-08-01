@@ -1921,10 +1921,11 @@
          * Navigasi ke halaman profil.
          */
         window.navigateToProfile = function() {
-            // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
-            // Untuk saat ini, kita bisa menampilkan alert atau mengarahkan ke halaman dummy.
-            showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
-            // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
+            // Hapus atau jadikan komentar baris di bawah ini
+            // showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
+
+            // Aktifkan baris di bawah ini (hapus tanda // di depannya)
+            window.location.href = 'profile.html'; 
         };
 
         /**
