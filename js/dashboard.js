@@ -335,50 +335,74 @@
                             <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                            <div>
-                                <label for="filter-delivery-date" class="block text-sm font-medium text-wise-dark-gray">Delivery Date:</label>
-                                <input type="date" id="filter-delivery-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-tr-req-no" class="block text-sm font-medium text-wise-dark-gray">Tr Req No:</label>
-                                <input type="text" id="filter-tr-req-no" placeholder="e.g., TR0000155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                            </div>
-                        </div>
-
                         <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden" style="max-height: 0;">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-wise-border mt-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-wise-border mt-4">
                                 <div>
-                                    <label for="filter-to-site" class="block text-sm font-medium text-wise-dark-gray">To Site:</label>
-                                    <input type="text" id="filter-to-site" placeholder="e.g., 70307 - DFB" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-id" class="block text-sm font-medium text-wise-dark-gray">Receipt ID:</label>
+                                    <input type="text" id="filter-receipt-id" placeholder="e.g., RCV00155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
-                                    <label for="filter-order-group" class="block text-sm font-medium text-wise-dark-gray">Order Group:</label>
-                                    <input type="text" id="filter-order-group" placeholder="e.g., Finish Product" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                                </div>
-                                <div>
-                                    <label for="filter-from-site" class="block text-sm font-medium text-wise-dark-gray">From Site:</label>
-                                    <select id="filter-from-site" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                                        <option value="">-SELECT-</option>
-                                        <option value="70307 - DFB">70307 - DFB</option>
-                                        <option value="70306 - CFB">70306 - CFB</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="filter-collect-date" class="block text-sm font-medium text-wise-dark-gray">Collect Date:</label>
-                                    <input type="date" id="filter-collect-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                                </div>
-                                <div>
-                                    <label for="filter-status" class="block text-sm font-medium text-wise-dark-gray">Status:</label>
-                                    <input type="text" id="filter-status" placeholder="e.g., Confirm Ship" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
-                                </div>
-                                <div>
-                                    <label for="filter-collected" class="block text-sm font-medium text-wise-dark-gray">Collected:</label>
-                                    <select id="filter-collected" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                    <label for="filter-receipt-id-type" class="block text-sm font-medium text-wise-dark-gray">Receipt ID Type:</label>
+                                    <select id="filter-receipt-id-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
                                         <option value="">All</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="ASN">ASN</option>
+                                        <option value="PO">PO</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <label for="filter-trailer-id" class="block text-sm font-medium text-wise-dark-gray">Trailer ID:</label>
+                                    <input type="text" id="filter-trailer-id" placeholder="e.g., TRLR-A01" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-receipt-date" class="block text-sm font-medium text-wise-dark-gray">Receipt Date:</label>
+                                    <input type="date" id="filter-receipt-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-closed-date" class="block text-sm font-medium text-wise-dark-gray">Closed Date:</label>
+                                    <input type="date" id="filter-closed-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-loading-status" class="block text-sm font-medium text-wise-dark-gray">Loading Status:</label>
+                                    <select id="filter-loading-status" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                        <option value="">All</option>
+                                        <option value="Loaded">Loaded</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Pending">Pending</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="filter-trailer-status" class="block text-sm font-medium text-wise-dark-gray">Trailer Status:</label>
+                                    <select id="filter-trailer-status" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                        <option value="">All</option>
+                                        <option value="Docked">Docked</option>
+                                        <option value="In Yard">In Yard</option>
+                                        <option value="Arrived">Arrived</option>
+                                        <option value="Departed">Departed</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="filter-receipt-type" class="block text-sm font-medium text-wise-dark-gray">Receipt Type:</label>
+                                    <select id="filter-receipt-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                        <option value="">All</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Cross-Dock">Cross-Dock</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="filter-po-id" class="block text-sm font-medium text-wise-dark-gray">Purchase Order ID:</label>
+                                    <input type="text" id="filter-po-id" placeholder="e.g., PO12345" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-source-id" class="block text-sm font-medium text-wise-dark-gray">Source ID:</label>
+                                    <input type="text" id="filter-source-id" placeholder="e.g., S001" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-source" class="block text-sm font-medium text-wise-dark-gray">Source:</label>
+                                    <input type="text" id="filter-source" placeholder="e.g., Supplier A" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-ship" class="block text-sm font-medium text-wise-dark-gray">Ship:</label>
+                                    <input type="text" id="filter-ship" placeholder="e.g., SHP-991" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
                                 </div>
                             </div>
                             <div class="flex justify-end mt-4">
@@ -2067,24 +2091,13 @@
 
         // --- RECEIPT EXPLORER FUNCTIONS ---
 
-        // Dummy data for Receipt Explorer table
+        /// Dummy data for Receipt Explorer table
         let receiptData = [
-            { trReqNo: 'TR0000155737', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-28 09:04:50', shipDate: '2025-07-30 08:36:21', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000155746', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 11:13:19', shipDate: '2025-07-30 11:11:19', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156066', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 11:52:44', shipDate: '2025-07-30 11:20:20', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156089', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 12:40:11', shipDate: '2025-07-30 11:20:20', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156146', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-29 15:52:44', shipDate: '2025-07-30 11:32:59', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156192', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 09:34:21', shipDate: '2025-07-30 09:38:13', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156239', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 10:42:01', shipDate: '2025-07-30 10:42:01', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156260', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 11:15:50', shipDate: '2025-07-30 11:10:44', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156269', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:40:09', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156293', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 12:54:48', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156300', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156312', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156320', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156331', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156345', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
-            { trReqNo: 'TR0000156350', fromSite: '70307 - DFB', toSite: '70306 - CFB', orderGroup: 'Finish Product', deliveryDate: '2025-07-31', collectDate: '2025-07-30 13:00:02', shipDate: '2025-07-30 12:54:48', status: 'Confirm Ship / Trf G.L.D' },
+            { receiptId: '00000483834', receiptIdType: 'Return', trailerId: 'TRLR-A01', receiptDate: '2025-07-31', closedDate: '2025-08-01', loadingStatus: 'Loaded', trailerStatus: 'Docked', receiptType: 'Standard', purchaseOrderId: 'PO12345', sourceId: 'S001', source: 'Supplier A', ship: 'SHP-991' },
+            { receiptId: 'CD04048958', receiptIdType: 'Crossdock Open', trailerId: 'TRLR-B02', receiptDate: '2025-07-31', closedDate: '2025-08-01', loadingStatus: 'In Progress', trailerStatus: 'In Yard', receiptType: 'Cross-Dock', purchaseOrderId: 'PO12346', sourceId: 'S002', source: 'Warehouse B', ship: 'SHP-992' },
+            { receiptId: 'TEST', receiptIdType: 'Normal Order', trailerId: 'TRLR-C03', receiptDate: '2025-07-30', closedDate: '', loadingStatus: 'Pending', trailerStatus: 'Arrived', receiptType: 'Standard', purchaseOrderId: 'PO12347', sourceId: 'S001', source: 'Supplier A', ship: 'SHP-993' },
+            { receiptId: 'Z25099196067', receiptIdType: 'Return Transit O', trailerId: 'TRLR-A01', receiptDate: '2025-07-30', closedDate: '2025-07-31', loadingStatus: 'Loaded', trailerStatus: 'Departed', receiptType: 'Standard', purchaseOrderId: 'PO12348', sourceId: 'S003', source: 'Supplier C', ship: 'SHP-994' },
+            { receiptId: 'Z2509919738', receiptIdType: 'Transfer', trailerId: 'TRLR-D04', receiptDate: '2025-07-29', closedDate: '', loadingStatus: 'Pending', trailerStatus: 'Expected', receiptType: 'Cross-Dock', purchaseOrderId: 'PO12349', sourceId: 'S002', source: 'Warehouse B', ship: 'SHP-995' }
         ];
 
         let currentPage = 1;
@@ -2150,14 +2163,19 @@
                 <table class="min-w-full bg-white rounded-lg shadow-md">
                     <thead>
                         <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Tr Req No</th>
-                            <th class="py-3 px-6 text-left">From Site</th>
-                            <th class="py-3 px-6 text-left">To Site</th>
-                            <th class="py-3 px-6 text-left">Order Group</th>
-                            <th class="py-3 px-6 text-left">Delivery Date</th>
-                            <th class="py-3 px-6 text-left">Collect Date</th>
-                            <th class="py-3 px-6 text-left">Ship Date</th>
-                            <th class="py-3 px-6 text-left">Status</th>
+                            <th class="py-3 px-4 text-left">#</th>
+                            <th class="py-3 px-6 text-left">Receipt ID</th>
+                            <th class="py-3 px-6 text-left">Receipt ID Type</th>
+                            <th class="py-3 px-6 text-left">Trailer ID</th>
+                            <th class="py-3 px-6 text-left">Receipt Date</th>
+                            <th class="py-3 px-6 text-left">Closed Date</th>
+                            <th class="py-3 px-6 text-left">Loading Status</th>
+                            <th class="py-3 px-6 text-left">Trailer Status</th>
+                            <th class="py-3 px-6 text-left">Receipt Type</th>
+                            <th class="py-3 px-6 text-left">Purchase Order ID</th>
+                            <th class="py-3 px-6 text-left">Source ID</th>
+                            <th class="py-3 px-6 text-left">Source</th>
+                            <th class="py-3 px-6 text-left">Ship</th>
                             <th class="py-3 px-6 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -2167,23 +2185,28 @@
             if (paginatedData.length === 0) {
                 tableHtml += `
                     <tr>
-                        <td colspan="9" class="py-3 px-6 text-center">Tidak ada data penerimaan ditemukan.</td>
+                        <td colspan="14" class="py-3 px-6 text-center">Tidak ada data penerimaan ditemukan.</td>
                     </tr>
                 `;
             } else {
-                paginatedData.forEach(item => {
+                paginatedData.forEach((item, index) => {
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${item.trReqNo}</td>
-                            <td class="py-3 px-6 text-left">${item.fromSite}</td>
-                            <td class="py-3 px-6 text-left">${item.toSite}</td>
-                            <td class="py-3 px-6 text-left">${item.orderGroup}</td>
-                            <td class="py-3 px-6 text-left">${item.deliveryDate}</td>
-                            <td class="py-3 px-6 text-left">${item.collectDate}</td>
-                            <td class="py-3 px-6 text-left">${item.shipDate}</td>
-                            <td class="py-3 px-6 text-left">${item.status}</td>
+                            <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${item.receiptId}</td>
+                            <td class="py-3 px-6 text-left">${item.receiptIdType}</td>
+                            <td class="py-3 px-6 text-left">${item.trailerId}</td>
+                            <td class="py-3 px-6 text-left">${item.receiptDate}</td>
+                            <td class="py-3 px-6 text-left">${item.closedDate}</td>
+                            <td class="py-3 px-6 text-left">${item.loadingStatus}</td>
+                            <td class="py-3 px-6 text-left">${item.trailerStatus}</td>
+                            <td class="py-3 px-6 text-left">${item.receiptType}</td>
+                            <td class="py-3 px-6 text-left">${item.purchaseOrderId}</td>
+                            <td class="py-3 px-6 text-left">${item.sourceId}</td>
+                            <td class="py-3 px-6 text-left">${item.source}</td>
+                            <td class="py-3 px-6 text-left">${item.ship}</td>
                             <td class="py-3 px-6 text-center">
-                                <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.trReqNo}')">Details</button>
+                                <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.receiptId}')">Details</button>
                             </td>
                         </tr>
                     `;
@@ -2196,31 +2219,58 @@
             `;
             tableContainer.innerHTML = tableHtml;
 
-            renderReceiptPagination(totalPages);
+            renderReceiptPagination(dataToRender.length, totalPages);
         };
 
         /**
-         * Merender kontrol paginasi untuk tabel penerimaan.
+         * Merender kontrol paginasi yang lebih dinamis (sliding window).
+         * @param {number} totalEntries - Jumlah total data.
          * @param {number} totalPages - Jumlah total halaman.
          */
-        function renderReceiptPagination(totalPages) {
+        function renderReceiptPagination(totalEntries, totalPages) {
             const paginationContainer = document.getElementById('receipt-pagination');
             paginationContainer.innerHTML = '';
+            const maxVisibleButtons = 5; 
 
-            let paginationHtml = `
-                <span class="text-sm text-wise-gray">Showing ${((currentPage - 1) * rowsPerPage) + 1} to ${Math.min(currentPage * rowsPerPage, filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length)} of ${filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length} entries</span>
-                <nav class="flex space-x-1" aria-label="Pagination">
-                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
-            `;
+            let pageButtons = '';
 
-            for (let i = 1; i <= totalPages; i++) {
-                paginationHtml += `
-                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : ''}" onclick="goToReceiptPage(${i})">${i}</button>
-                `;
+            if (totalPages <= maxVisibleButtons) {
+                for (let i = 1; i <= totalPages; i++) {
+                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
+                }
+            } else {
+                let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+                let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+                if (endPage - startPage + 1 < maxVisibleButtons) {
+                    startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+                }
+
+                if (startPage > 1) {
+                    pageButtons += `<button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray" onclick="goToReceiptPage(1)">1</button>`;
+                    if (startPage > 2) {
+                        pageButtons += `<span class="px-3 py-1 text-wise-gray">...</span>`;
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    pageButtons += `<button class="px-3 py-1 rounded-md border ${i === currentPage ? 'bg-wise-primary text-white border-wise-primary' : 'border-wise-border text-wise-gray hover:bg-wise-light-gray'}" onclick="goToReceiptPage(${i})">${i}</button>`;
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        pageButtons += `<span class="px-3 py-1 text-wise-gray">...</span>`;
+                    }
+                    pageButtons += `<button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray" onclick="goToReceiptPage(${totalPages})">${totalPages}</button>`;
+                }
             }
 
-            paginationHtml += `
-                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray transition-colors duration-200 ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+            const paginationHtml = `
+                <span class="text-sm text-wise-gray">Showing ${Math.min(((currentPage - 1) * rowsPerPage) + 1, totalEntries)} to ${Math.min(currentPage * rowsPerPage, totalEntries)} of ${totalEntries} entries</span>
+                <nav class="flex items-center space-x-1" aria-label="Pagination">
+                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                    ${pageButtons}
+                    <button class="px-3 py-1 rounded-md border border-wise-border text-wise-gray hover:bg-wise-light-gray ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''}" onclick="goToReceiptPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
                 </nav>
             `;
             paginationContainer.innerHTML = paginationHtml;
