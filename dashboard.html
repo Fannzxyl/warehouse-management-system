@@ -159,6 +159,18 @@
             .fas, .fa-solid {
                 font-weight: 900;
             }
+            .submenu-collapsed {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-out;
+                margin-top: 0 !important; /* Memastikan tidak ada margin atas saat tertutup */
+                padding-top: 0 !important; /* Memastikan tidak ada padding atas saat tertutup */
+                padding-bottom: 0 !important; /* Memastikan tidak ada padding bawah saat tertutup */
+            }
+            .submenu-expanded {
+                max-height: 500px; /* Kasih tinggi maksimal yang cukup besar */
+                transition: max-height 0.5s ease-in;
+            }
         }
     </style>
     <script>

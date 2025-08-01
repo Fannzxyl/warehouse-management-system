@@ -949,10 +949,10 @@
                                         <!-- Filter Radio Buttons -->
                                         <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
                                             <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)" checked><span class="ml-2">All</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Configurations</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Gadgets</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(null, this.value)"><span class="ml-2">Processing</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)" checked><span class="ml-2">All</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Configurations</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Gadgets</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Processing</span></label>
                                         </div>
                                         <!-- Checkbox List Container -->
                                         <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
@@ -1192,6 +1192,13 @@ window.showSearchHistory = function() {
             'security-permission': 'configuration', // Ganti 'system' jika ID parent-nya beda
         };
 
+        window.getCurrentSelectedMenus = function() {
+            const container = document.getElementById('sp-menu-checkbox-list');
+            if (!container) return [];
+            const checkedInputs = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkedInputs).map(input => input.value);
+        }
+
         // --- FUNGSI UNTUK MENYIMPAN DATA KE LOCALSTORAGE ---
         function saveWarehouses() { localStorage.setItem('warehouses', JSON.stringify(warehouses)); }
         function saveZones() { localStorage.setItem('zones', JSON.stringify(zones)); }
@@ -1254,37 +1261,33 @@ window.showSearchHistory = function() {
 
         // Dummy data for all available menus (for security-permission)
         const allMenus = [
-            { name: 'Configuration', category: 'Configurations' },
+            // Configurations Data
             { name: 'Warehouse', category: 'Configurations' },
             { name: 'Zone', category: 'Configurations' },
-            { name: 'Location Type', category: 'Configurations' },
-            { name: 'Locating Strategies', category: 'Configurations' },
-            { name: 'Locating Rule', category: 'Configurations' },
             { name: 'User Profile', category: 'Configurations' },
-            { name: 'System Management', category: 'System Management' },
-            { name: 'Security Group', category: 'System Management' },
-            { name: 'Security Permission', category: 'System Management' },
-            { name: 'Gadgets', category: 'Gadgets' },
+
+            // Gadgets Data
             { name: 'Dashboard', category: 'Gadgets' },
-            { name: 'Processing', category: 'Processing' },
+            { name: 'Work Insight', category: 'Gadgets' },
+
+            // Processing Data
             { name: 'Receiving', category: 'Processing' },
-            { name: 'Picking', category: 'Processing' },
             { name: 'Shipping', category: 'Processing' },
         ];
 
         // Fungsi untuk expand/collapse sub-menu sidebar
-window.toggleChildren = function(parentId) {
-    const childrenContainer = document.getElementById(parentId + '-children');
-    const parentElement = document.getElementById(parentId);
-    const arrowIcon = document.getElementById(parentId + '-arrow');
+        window.toggleChildren = function(parentId) {
+            const childrenContainer = document.getElementById(parentId + '-children');
+            const parentElement = document.getElementById(parentId);
+            const arrowIcon = document.getElementById(parentId + '-arrow');
 
-    if (childrenContainer && parentElement && arrowIcon) {
-        childrenContainer.classList.toggle('hidden');
-        const isExpanded = !childrenContainer.classList.contains('hidden');
-        parentElement.setAttribute('aria-expanded', isExpanded);
-        arrowIcon.classList.toggle('rotate-180', isExpanded);
-    }
-};
+            if (childrenContainer && parentElement && arrowIcon) {
+                childrenContainer.classList.toggle('hidden');
+                const isExpanded = !childrenContainer.classList.contains('hidden');
+                parentElement.setAttribute('aria-expanded', isExpanded);
+                arrowIcon.classList.toggle('rotate-180', isExpanded);
+            }
+        };
 
         // Function to render content based on category
         window.selectCategory = function(category) {

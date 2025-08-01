@@ -77,28 +77,6 @@
             });
         };
 
-        // Fungsi untuk menoggle tampilan elemen anak (sub-menu)
-        window.toggleChildren = function(parentId) {
-            const childrenContainer = document.getElementById(parentId + '-children'); // Kontainer sub-menu
-            const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
-            const arrowIcon = document.getElementById(parentId + '-arrow');            // Icon panah
-
-            if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
-                childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
-
-                // Mengupdate atribut aria-expanded untuk aksesibilitas
-                const isExpanded = childrenContainer.classList.contains('hidden') ? 'false' : 'true';
-                parentElement.setAttribute('aria-expanded', isExpanded);
-
-                // Rotasi panah: Tambah/hapus kelas 'rotate-180'
-                arrowIcon.classList.toggle('rotate-180');
-
-                console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${isExpanded}`);
-            } else {
-                console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
-            }
-        };
-
         // Data dummy untuk konten dashboard dan sub-kategori
         const contentData = {
             dashboard: {
@@ -352,53 +330,62 @@
                     <p class="text-wise-gray mb-4">Jelajahi detail penerimaan dengan filter dan tabel.</p>
 
                     <div class="bg-wise-light-gray p-5 rounded-lg shadow-md mb-6">
-                        <h3 class="text-lg font-medium text-wise-dark-gray mb-4">Filter Penerimaan</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="flex justify-between items-center cursor-pointer" onclick="toggleFilterSection()">
+                            <h3 class="text-lg font-medium text-wise-dark-gray">Filter Penerimaan</h3>
+                            <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                             <div>
                                 <label for="filter-delivery-date" class="block text-sm font-medium text-wise-dark-gray">Delivery Date:</label>
-                                <input type="date" id="filter-delivery-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                <input type="date" id="filter-delivery-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
                             </div>
                             <div>
                                 <label for="filter-tr-req-no" class="block text-sm font-medium text-wise-dark-gray">Tr Req No:</label>
-                                <input type="text" id="filter-tr-req-no" placeholder="e.g., TR0000155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-to-site" class="block text-sm font-medium text-wise-dark-gray">To Site:</label>
-                                <input type="text" id="filter-to-site" placeholder="e.g., 70307 - DFB" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-order-group" class="block text-sm font-medium text-wise-dark-gray">Order Group:</label>
-                                <input type="text" id="filter-order-group" placeholder="e.g., Finish Product" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-from-site" class="block text-sm font-medium text-wise-dark-gray">From Site:</label>
-                                <select id="filter-from-site" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    <option value="">-SELECT-</option>
-                                    <option value="70307 - DFB">70307 - DFB</option>
-                                    <option value="70306 - CFB">70306 - CFB</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="filter-collect-date" class="block text-sm font-medium text-wise-dark-gray">Collect Date:</label>
-                                <input type="date" id="filter-collect-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-status" class="block text-sm font-medium text-wise-dark-gray">Status:</label>
-                                <input type="text" id="filter-status" placeholder="e.g., Confirm Ship" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                            </div>
-                            <div>
-                                <label for="filter-collected" class="block text-sm font-medium text-wise-dark-gray">Collected:</label>
-                                <select id="filter-collected" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    <option value="">All</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                                <input type="text" id="filter-tr-req-no" placeholder="e.g., TR0000155737" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
                             </div>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="applyReceiptFilters()">
-                                GO
-                            </button>
+
+                        <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden" style="max-height: 0;">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 border-t border-wise-border mt-4">
+                                <div>
+                                    <label for="filter-to-site" class="block text-sm font-medium text-wise-dark-gray">To Site:</label>
+                                    <input type="text" id="filter-to-site" placeholder="e.g., 70307 - DFB" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-order-group" class="block text-sm font-medium text-wise-dark-gray">Order Group:</label>
+                                    <input type="text" id="filter-order-group" placeholder="e.g., Finish Product" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-from-site" class="block text-sm font-medium text-wise-dark-gray">From Site:</label>
+                                    <select id="filter-from-site" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                        <option value="">-SELECT-</option>
+                                        <option value="70307 - DFB">70307 - DFB</option>
+                                        <option value="70306 - CFB">70306 - CFB</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="filter-collect-date" class="block text-sm font-medium text-wise-dark-gray">Collect Date:</label>
+                                    <input type="date" id="filter-collect-date" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-status" class="block text-sm font-medium text-wise-dark-gray">Status:</label>
+                                    <input type="text" id="filter-status" placeholder="e.g., Confirm Ship" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="filter-collected" class="block text-sm font-medium text-wise-dark-gray">Collected:</label>
+                                    <select id="filter-collected" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm bg-white text-wise-dark-gray">
+                                        <option value="">All</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex justify-end mt-4">
+                                <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="applyReceiptFilters()">
+                                    GO
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -417,10 +404,8 @@
                             <input type="text" id="receipt-search-table" placeholder="Search..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="renderReceiptTable()">
                         </div>
                         <div id="receipt-table-container" class="overflow-x-auto">
-                            <!-- Tabel data akan dirender di sini oleh JavaScript -->
                         </div>
                         <div id="receipt-pagination" class="flex justify-between items-center mt-4">
-                            <!-- Pagination akan dirender di sini -->
                         </div>
                     </div>
                 `,
@@ -1574,6 +1559,27 @@
         };
 
         /**
+         * Membuka atau menutup bagian filter di halaman Receipt Explorer.
+         */
+        window.toggleFilterSection = function() {
+            const filterContent = document.getElementById('collapsible-filter-area');
+            const filterArrow = document.getElementById('filter-arrow');
+
+            if (filterContent && filterArrow) {
+                // Cek apakah filter sedang terbuka (style max-height-nya tidak '0px')
+                if (filterContent.style.maxHeight && filterContent.style.maxHeight !== '0px') {
+                    // Jika terbuka, tutup dengan mengubah max-height jadi 0px
+                    filterContent.style.maxHeight = '0px';
+                    filterArrow.classList.remove('rotate-180'); // Panah kembali ke bawah
+                } else {
+                    // Jika tertutup, buka dengan mengatur max-height sesuai tinggi konten di dalamnya
+                    filterContent.style.maxHeight = filterContent.scrollHeight + "px";
+                    filterArrow.classList.add('rotate-180'); // Panah putar ke atas
+                }
+            }
+        };
+
+        /**
          * Memilih kategori sidebar dan menampilkan konten yang sesuai.
          * @param {string} category - ID kategori yang dipilih.
          */
@@ -2058,7 +2064,6 @@
             const username = "SuperAdmin"; // Atur nama pengguna
             document.getElementById('username-display').textContent = username; // Tampilkan nama pengguna
         };
-
 
         // --- RECEIPT EXPLORER FUNCTIONS ---
 
