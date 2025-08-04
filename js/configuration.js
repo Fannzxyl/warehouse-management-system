@@ -3068,10 +3068,6 @@ window.toggleUserDropdown = function() {
  * Navigasi ke halaman profil.
  */
 window.navigateToProfile = function() {
-    // Hapus atau jadikan komentar baris di bawah ini
-    // showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
-
-    // Aktifkan baris di bawah ini (hapus tanda // di depannya)
     window.location.href = 'profile.html'; 
 };
 

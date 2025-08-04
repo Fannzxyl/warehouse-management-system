@@ -333,8 +333,8 @@
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-20 md:top-24 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
-            <div class="p-4 pt-24 md:pt-6">
+        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+            <div class="p-6">
                 <div class="space-y-2">
                     <!-- Dashboard Button (Always visible) -->
                     <div id="sidebar-dashboard-main" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press hover-scale" onclick="selectCategory('dashboard')" tabindex="0" role="button" aria-label="Select Dashboard category">
@@ -757,7 +757,7 @@
             </aside>
 
             <!-- Main Content Area -->
-            <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth" role="main">
+            <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth min-w-0" role="main">
                 <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
                     <!-- Content will be loaded here by JavaScript -->
                 </div>

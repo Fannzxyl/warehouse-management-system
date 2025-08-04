@@ -105,6 +105,35 @@
             }
         };
 
+        // /**
+        //  * Membuka atau menutup bagian filter di halaman Receipt Explorer.
+        //  */
+        // window.toggleFilterSection = function() {
+        //     const filterContent = document.getElementById('collapsible-filter-area');
+        //     const filterArrow = document.getElementById('filter-arrow');
+
+        //     if (filterContent && filterArrow) {
+        //         console.log('toggleFilterSection called!');
+        //         console.log('Current maxHeight:', filterContent.style.maxHeight);
+        //         console.log('ScrollHeight:', filterContent.scrollHeight);
+
+        //         // Toggle max-height classes
+        //         if (filterContent.classList.contains('max-h-0')) {
+        //             // Jika tersembunyi, buka
+        //             filterContent.classList.remove('max-h-0');
+        //             filterContent.classList.add('max-h-screen'); // Menggunakan max-h-screen untuk tinggi tak terbatas
+        //             filterArrow.classList.add('rotate-180');
+        //         } else {
+        //             // Jika terbuka, tutup
+        //             filterContent.classList.remove('max-h-screen');
+        //             filterContent.classList.add('max-h-0');
+        //             filterArrow.classList.remove('rotate-180');
+        //         }
+        //     } else {
+        //         console.warn("Filter content or arrow not found for toggleFilterSection.");
+        //     }
+        // };
+
         /**
          * Membuka atau menutup bagian filter di halaman Receipt Explorer.
          */
@@ -113,24 +142,16 @@
             const filterArrow = document.getElementById('filter-arrow');
 
             if (filterContent && filterArrow) {
-                console.log('toggleFilterSection called!');
-                console.log('Current maxHeight:', filterContent.style.maxHeight);
-                console.log('ScrollHeight:', filterContent.scrollHeight);
-
-                // Toggle max-height classes
-                if (filterContent.classList.contains('max-h-0')) {
-                    // Jika tersembunyi, buka
-                    filterContent.classList.remove('max-h-0');
-                    filterContent.classList.add('max-h-screen'); // Menggunakan max-h-screen untuk tinggi tak terbatas
-                    filterArrow.classList.add('rotate-180');
+                // Cek apakah filter sedang terbuka (style max-height-nya tidak '0px')
+                if (filterContent.style.maxHeight && filterContent.style.maxHeight !== '0px') {
+                    // Jika terbuka, tutup dengan mengubah max-height jadi 0px
+                    filterContent.style.maxHeight = '0px';
+                    filterArrow.classList.remove('rotate-180'); // Panah kembali ke bawah
                 } else {
-                    // Jika terbuka, tutup
-                    filterContent.classList.remove('max-h-screen');
-                    filterContent.classList.add('max-h-0');
-                    filterArrow.classList.remove('rotate-180');
+                    // Jika tertutup, buka dengan mengatur max-height sesuai tinggi konten di dalamnya
+                    filterContent.style.maxHeight = filterContent.scrollHeight + "px";
+                    filterArrow.classList.add('rotate-180'); // Panah putar ke atas
                 }
-            } else {
-                console.warn("Filter content or arrow not found for toggleFilterSection.");
             }
         };
 
@@ -382,123 +403,122 @@
             },
             // START: Konten Receipt Explorer yang Diperbarui (Tampilan Lebih Rapi)
             'receiving-receipt-explorer': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
-                    <p class="text-wise-gray mb-6">Jelajahi detail penerimaan dengan filter dan tabel yang intuitif.</p>
+    full: `
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
+        <p class="text-wise-gray mb-6">Jelajahi detail penerimaan dengan filter dan tabel yang intuitif.</p>
 
-                    <div class="bg-wise-light-gray p-5 rounded-xl shadow-md mb-6 border border-wise-border">
-                        <div class="flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" onclick="toggleFilterSection()">
-                            <h3 class="text-lg font-semibold text-wise-dark-gray flex items-center">
-                                <i class="fas fa-filter text-wise-primary mr-2"></i>Filter Penerimaan
-                            </h3>
-                            <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
-                        </div>
+        <div class="bg-wise-light-gray p-5 rounded-xl shadow-md mb-6 border border-wise-border">
+            <div class="flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" onclick="toggleFilterSection()">
+                <h3 class="text-lg font-semibold text-wise-dark-gray flex items-center">
+                    <i class="fas fa-filter text-wise-primary mr-2"></i>Filter Penerimaan
+                </h3>
+                <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
+            </div>
 
-                        <!-- Initial state: max-h-0 (collapsed) and overflow-hidden -->
-                        <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden max-h-0">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-wise-border mt-4">
-                                <div>
-                                    <label for="filter-receipt-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID:</label>
-                                    <input type="text" id="filter-receipt-id" placeholder="e.g., RCV00155737" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-receipt-id-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID Type:</label>
-                                    <select id="filter-receipt-id-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                        <option value="">All</option>
-                                        <option value="ASN">ASN</option>
-                                        <option value="PO">PO</option>
-                                        <option value="Return">Return</option>
-                                        <option value="Crossdock Open">Crossdock Open</option>
-                                        <option value="Normal Order">Normal Order</option>
-                                        <option value="Return Transit O">Return Transit O</option>
-                                        <option value="Transfer">Transfer</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="filter-trailer-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer ID:</label>
-                                    <input type="text" id="filter-trailer-id" placeholder="e.g., TRLR-A01" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-receipt-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Date:</label>
-                                    <input type="date" id="filter-receipt-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-closed-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Closed Date:</label>
-                                    <input type="date" id="filter-closed-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-loading-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Loading Status:</label>
-                                    <select id="filter-loading-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                        <option value="">All</option>
-                                        <option value="Loaded">Loaded</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Pending">Pending</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="filter-trailer-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer Status:</label>
-                                    <select id="filter-trailer-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                        <option value="">All</option>
-                                        <option value="Docked">Docked</option>
-                                        <option value="In Yard">In Yard</option>
-                                        <option value="Arrived">Arrived</option>
-                                        <option value="Departed">Departed</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="filter-receipt-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Type:</label>
-                                    <select id="filter-receipt-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                        <option value="">All</option>
-                                        <option value="Standard">Standard</option>
-                                        <option value="Cross-Dock">Cross-Dock</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="filter-po-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Purchase Order ID:</label>
-                                    <input type="text" id="filter-po-id" placeholder="e.g., PO12345" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-source-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Source ID:</label>
-                                    <input type="text" id="filter-source-id" placeholder="e.g., S001" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-source" class="block text-sm font-medium text-wise-dark-gray mb-1">Source:</label>
-                                    <input type="text" id="filter-source" placeholder="e.g., Supplier A" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                                <div>
-                                    <label for="filter-ship" class="block text-sm font-medium text-wise-dark-gray mb-1">Ship:</label>
-                                    <input type="text" id="filter-ship" placeholder="e.g., SHP-991" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
-                                </div>
-                            </div>
-                            <div class="flex justify-end mt-6">
-                                <button class="px-6 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform font-semibold" onclick="applyReceiptFilters()">
-                                    GO
-                                </button>
-                            </div>
-                        </div>
+            <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden max-h-0">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-wise-border mt-4">
+                    <div>
+                        <label for="filter-receipt-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID:</label>
+                        <input type="text" id="filter-receipt-id" placeholder="e.g., RCV00155737" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
                     </div>
-
-                    <div class="bg-white p-5 rounded-xl shadow-md border border-wise-border">
-                        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-3 sm:space-y-0">
-                            <div class="flex items-center space-x-2">
-                                <label for="show-entries" class="text-sm text-wise-dark-gray">Show</label>
-                                <select id="show-entries" class="px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" onchange="renderReceiptTable()">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span class="text-sm text-wise-dark-gray">entries</span>
-                            </div>
-                            <input type="text" id="receipt-search-table" placeholder="Search table data..." class="px-3 py-2 border border-wise-border rounded-md bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" oninput="renderReceiptTable()">
-                        </div>
-                        <div id="receipt-table-container" class="overflow-x-auto relative shadow-inner rounded-lg">
-                            </div>
-                        <div id="receipt-pagination" class="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0">
-                            </div>
+                    <div>
+                        <label for="filter-receipt-id-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt ID Type:</label>
+                        <select id="filter-receipt-id-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                            <option value="">All</option>
+                            <option value="ASN">ASN</option>
+                            <option value="PO">PO</option>
+                            <option value="Return">Return</option>
+                            <option value="Crossdock Open">Crossdock Open</option>
+                            <option value="Normal Order">Normal Order</option>
+                            <option value="Return Transit O">Return Transit O</option>
+                            <option value="Transfer">Transfer</option>
+                        </select>
                     </div>
-                `,
-            },
+                    <div>
+                        <label for="filter-trailer-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer ID:</label>
+                        <input type="text" id="filter-trailer-id" placeholder="e.g., TRLR-A01" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-receipt-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Date:</label>
+                        <input type="date" id="filter-receipt-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-closed-date" class="block text-sm font-medium text-wise-dark-gray mb-1">Closed Date:</label>
+                        <input type="date" id="filter-closed-date" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-loading-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Loading Status:</label>
+                        <select id="filter-loading-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                            <option value="">All</option>
+                            <option value="Loaded">Loaded</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-trailer-status" class="block text-sm font-medium text-wise-dark-gray mb-1">Trailer Status:</label>
+                        <select id="filter-trailer-status" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                            <option value="">All</option>
+                            <option value="Docked">Docked</option>
+                            <option value="In Yard">In Yard</option>
+                            <option value="Arrived">Arrived</option>
+                            <option value="Departed">Departed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-receipt-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Receipt Type:</label>
+                        <select id="filter-receipt-type" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                            <option value="">All</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Cross-Dock">Cross-Dock</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filter-po-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Purchase Order ID:</label>
+                        <input type="text" id="filter-po-id" placeholder="e.g., PO12345" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-source-id" class="block text-sm font-medium text-wise-dark-gray mb-1">Source ID:</label>
+                        <input type="text" id="filter-source-id" placeholder="e.g., S001" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-source" class="block text-sm font-medium text-wise-dark-gray mb-1">Source:</label>
+                        <input type="text" id="filter-source" placeholder="e.g., Supplier A" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                    <div>
+                        <label for="filter-ship" class="block text-sm font-medium text-wise-dark-gray mb-1">Ship:</label>
+                        <input type="text" id="filter-ship" placeholder="e.g., SHP-991" class="block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary">
+                    </div>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button class="px-6 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform font-semibold" onclick="applyReceiptFilters()">
+                        GO
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-md border border-wise-border">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-3 sm:space-y-0">
+                <div class="flex items-center space-x-2">
+                    <label for="show-entries" class="text-sm text-wise-dark-gray">Show</label>
+                    <select id="show-entries" class="px-2 py-1 border border-wise-border rounded-md text-sm bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" onchange="renderReceiptTable()">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span class="text-sm text-wise-dark-gray">entries</span>
+                </div>
+                <input type="text" id="receipt-search-table" placeholder="Search table data..." class="px-3 py-2 border border-wise-border rounded-md bg-white text-wise-dark-gray focus:outline-none focus:ring-wise-primary focus:border-wise-primary" oninput="renderReceiptTable()">
+            </div>
+            <div id="receipt-table-container" class="overflow-x-auto w-full scrollbar-thin relative shadow-inner rounded-lg">
+                </div>
+            <div id="receipt-pagination" class="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-3 sm:space-y-0">
+                </div>
+        </div>
+    `,
+},
             // END: Konten Receipt Explorer yang Diperbarui
             'receiving-receipt-monitoring-close': {
                 full: `
@@ -2028,10 +2048,7 @@
          * Navigasi ke halaman profil.
          */
         window.navigateToProfile = function() {
-            // Ini akan menjadi tautan ke halaman profil yang sebenarnya.
-            // Untuk saat ini, kita bisa menampilkan alert atau mengarahkan ke halaman dummy.
-            showCustomAlert('Profil Pengguna', 'Halaman profil akan segera hadir!');
-            // window.location.href = 'profile.html'; // Jika ada halaman profil terpisah
+            window.location.href = 'profile.html'; 
         };
 
         /**
@@ -2239,96 +2256,92 @@
         };
 
         /**
-         * Merender tabel penerimaan berdasarkan data yang difilter dan paginasi.
-         */
-        window.renderReceiptTable = function() {
-            console.log('renderReceiptTable called'); // Debugging
-            const tableContainer = document.getElementById('receipt-table-container');
-            const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
-            rowsPerPage = parseInt(document.getElementById('show-entries').value);
+ * Merender tabel penerimaan berdasarkan data yang difilter dan paginasi.
+ */
+window.renderReceiptTable = function() {
+    const tableContainer = document.getElementById('receipt-table-container');
+    const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
+    rowsPerPage = parseInt(document.getElementById('show-entries').value);
 
-            // Data yang akan dirender (sudah difilter oleh applyReceiptFilters atau semua data)
-            let dataToRender = [...filteredReceiptData]; // Buat salinan agar tidak memodifikasi array asli
-            console.log('Data to render (before table search):', dataToRender.length); // Debugging
+    let dataToRender = filteredReceiptData.length > 0 ? [...filteredReceiptData] : [...receiptData];
 
-            // Apply table search filter (search within current filtered data)
-            if (searchTableInput) {
-                dataToRender = dataToRender.filter(item => 
-                    Object.values(item).some(value => 
-                        (value !== null && value !== undefined) && String(value).toLowerCase().includes(searchTableInput)
-                    )
-                );
-                console.log('Data to render (after table search):', dataToRender.length); // Debugging
-            }
+    // Terapkan filter pencarian tabel
+    if (searchTableInput) {
+        dataToRender = dataToRender.filter(item => 
+            Object.values(item).some(value => 
+                String(value).toLowerCase().includes(searchTableInput)
+            )
+        );
+    }
 
-            const totalEntries = dataToRender.length;
-            const totalPages = Math.ceil(totalEntries / rowsPerPage);
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const paginatedData = dataToRender.slice(start, end);
+    const totalEntries = dataToRender.length;
+    const totalPages = Math.ceil(totalEntries / rowsPerPage);
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = dataToRender.slice(start, end);
 
-            let tableHtml = `
-                <table class="min-w-full bg-white border-collapse">
-                    <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-xs font-semibold tracking-wider">
-                            <th class="py-3 px-4 text-left border-b border-wise-border rounded-tl-lg">#</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt ID</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt ID Type</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Trailer ID</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt Date</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Closed Date/Time</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Loading Status</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Trailing Status</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Receipt Type</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Purchase Order ID</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Source ID</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Source</th>
-                            <th class="py-3 px-4 text-left border-b border-wise-border">Ship</th>
-                            <th class="py-3 px-4 text-center border-b border-wise-border rounded-tr-lg">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-wise-gray text-sm font-light divide-y divide-wise-border">
-            `;
+    let tableHtml = `
+        <table class="min-w-full bg-white">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-xs">
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">#</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Receipt ID</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Receipt ID Type</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Trailer ID</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Receipt Date</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Closed Date/Time</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Loading Status</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Trailing Status</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Receipt Type</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Purchase Order ID</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Source ID</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Source</th>
+                    <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Ship</th>
+                    <th class="py-3 px-4 text-center font-semibold whitespace-nowrap">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
 
-            if (paginatedData.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="14" class="py-4 px-6 text-center text-wise-gray">Tidak ada data penerimaan ditemukan.</td>
-                    </tr>
-                `;
-            } else {
-                paginatedData.forEach((item, index) => {
-                    tableHtml += `
-                        <tr class="hover:bg-wise-blue-hover">
-                            <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
-                            <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptId}</td>
-                            <td class="py-3 px-4 text-left">${item.receiptIdType}</td>
-                            <td class="py-3 px-4 text-left">${item.trailerId}</td>
-                            <td class="py-3 px-4 text-left">${item.receiptDate}</td>
-                            <td class="py-3 px-4 text-left">${item.closedDate}</td>
-                            <td class="py-3 px-4 text-left">${item.loadingStatus}</td>
-                            <td class="py-3 px-4 text-left">${item.trailingStatus || ''}</td> <!-- Tambahkan Trailing Status -->
-                            <td class="py-3 px-4 text-left">${item.receiptType}</td>
-                            <td class="py-3 px-4 text-left">${item.purchaseOrderId}</td>
-                            <td class="py-3 px-4 text-left">${item.sourceId}</td>
-                            <td class="py-3 px-4 text-left">${item.source}</td>
-                            <td class="py-3 px-4 text-left">${item.ship}</td>
-                            <td class="py-3 px-4 text-center">
-                                <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.receiptId}')">Details</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
+    if (paginatedData.length === 0) {
+        tableHtml += `
+            <tr class="border-t border-wise-border">
+                <td colspan="14" class="py-4 px-6 text-center text-wise-gray">Tidak ada data penerimaan ditemukan.</td>
+            </tr>
+        `;
+    } else {
+        paginatedData.forEach((item, index) => {
             tableHtml += `
-                    </tbody>
-                </table>
+                <tr class="border-t border-wise-border hover:bg-gray-50">
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap font-medium text-wise-dark-gray">${item.receiptId}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptIdType}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.trailerId}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptDate}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.closedDate || '-'}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.loadingStatus}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.trailingStatus || ''}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptType}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.purchaseOrderId}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.sourceId}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.source}</td>
+                    <td class="py-3 px-4 text-left whitespace-nowrap">${item.ship}</td>
+                    <td class="py-3 px-4 text-center whitespace-nowrap">
+                        <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.receiptId}')">Details</button>
+                    </td>
+                </tr>
             `;
-            tableContainer.innerHTML = tableHtml;
+        });
+    }
 
-            renderReceiptPagination(totalEntries, totalPages);
-        };
+    tableHtml += `
+            </tbody>
+        </table>
+    `;
+    tableContainer.innerHTML = tableHtml;
+
+    renderReceiptPagination(totalEntries, totalPages);
+};
 
         /**
          * Merender kontrol paginasi yang lebih dinamis (sliding window).
