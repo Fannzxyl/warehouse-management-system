@@ -810,7 +810,7 @@
             },
             'security-group': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group Management</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
                     <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
@@ -908,7 +908,7 @@
             },
             'security-permission': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Permission</h2>
                     <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
                     
                     <!-- Action and Search Buttons -->
@@ -1088,6 +1088,44 @@ window.closeSearchOverlay = function() {
     document.getElementById('overlay-search-input').value = '';
     activeFilters = [];
     document.getElementById('search-history-dropdown').classList.add('hidden');
+};
+
+/**
+ * Menghapus filter dari overlay pencarian.
+ * @param {string} filterName - Nama filter yang akan dihapus (cth: 'articles').
+ */
+window.removeOverlayFilter = function(filterName) {
+    // Hapus filter dari array activeFilters
+    activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
+
+    // Sembunyikan tombol filter yang dihapus
+    const filterButton = document.getElementById(`overlay-filter-${filterName}`);
+    if (filterButton) {
+        filterButton.classList.add('hidden');
+    }
+
+    // Jalankan ulang pencarian dengan filter yang sudah diperbarui
+    const query = document.getElementById('overlay-search-input').value;
+    performSearch(query, 'overlay');
+};
+
+/**
+ * Menghapus semua filter aktif dari overlay pencarian.
+ */
+window.removeAllOverlayFilters = function() {
+    // Kosongkan array filter
+    activeFilters = [];
+
+    // Sembunyikan semua tombol filter
+    const filterContainer = document.getElementById('overlay-search-filters');
+    if (filterContainer) {
+        const filterButtons = filterContainer.querySelectorAll('span[id^="overlay-filter-"]');
+        filterButtons.forEach(button => button.classList.add('hidden'));
+    }
+
+    // Jalankan ulang pencarian tanpa filter
+    const query = document.getElementById('overlay-search-input').value;
+    performSearch(query, 'overlay');
 };
 
 /**
@@ -2636,6 +2674,14 @@ window.showSearchHistory = function() {
                 renderUserProfileList();
                 await showCustomAlert('Deleted', 'User Profile deleted successfully!');
             }
+        };
+
+        /**
+         * Menerima input dari search bar dan memfilter daftar Security Group.
+         * @param {string} value - Kata kunci pencarian.
+         */
+        window.filterSecurityGroupList = function(value) {
+            renderSecurityGroupList(value);
         };
 
         // --- Security Group Management Functions ---

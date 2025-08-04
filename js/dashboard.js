@@ -1532,6 +1532,8 @@
             { id: 'archive-documents', title: 'Data Archiving - Documents', category: 'Data Archiving', lastUpdated: '11 hours ago' },
             { id: 'archive-media', title: 'Data Archiving - Media', category: 'Data Archiving', lastUpdated: '11 hours ago' },
             { id: 'archive-financial', title: 'Data Archiving - Financial', category: 'Data Archiving', lastUpdated: '11 hours ago' },
+            { id: 'article-a', title: 'How to Optimize Warehouse Space', category: 'Articles', lastUpdated: '1 day ago' },
+            { id: 'photo-1', title: 'Warehouse Photo Gallery', category: 'Photography', lastUpdated: '2 days ago' }
         ];
 
         let currentCategory = 'dashboard';
@@ -1547,7 +1549,6 @@
             'configuration-user-profile': 'configuration',
             'security-group': 'system',
             'security-permission': 'system',
-            // Tambahkan pemetaan untuk menu Viewer
             'receiving-open-box-balance-viewer': 'viewer',
             'receiving-po-quick-find': 'viewer',
             'receiving-receipt-closet-supplier': 'viewer',
@@ -1557,7 +1558,6 @@
             'receiving-receipt-no-close': 'viewer',
             'receiving-receipt-open-closed': 'viewer',
             'receiving-receipt-shipment-closed': 'viewer',
-            // Tambahkan pemetaan untuk menu DCS
             'DCC': 'DCS',
             'DCE': 'DCS',
             'DCF': 'DCS',
@@ -1566,25 +1566,20 @@
             'DCL': 'DCS',
             'DCM': 'DCS',
             'DCP': 'DCS',
-            // 'DCS': 'DCS', // Ini adalah item utama, bisa juga tidak ada parent jika tidak perlu toggle
             'DCT': 'DCS',
             'DCY': 'DCS',
             'GBG': 'DCS',
-            // Tambahkan pemetaan untuk menu Yard Management
             'yard-vehicles': 'yard-management',
             'yard-equipment': 'yard-management',
             'yard-personnel': 'yard-management',
-            // Tambahkan pemetaan untuk menu Receiving lainnya
             'receiving-performance-viewer': 'receiving',
             'receiving-workbench': 'receiving',
             'receiving-shipment-closed-viewer': 'receiving',
             'receiving-virtual-viewer': 'receiving',
-            // Tambahkan pemetaan untuk menu Order Planning
             'order-planning-consolidated-shipment-history': 'order-planning',
             'order-planning-order-entry': 'order-planning',
             'order-planning-wave-explorer': 'order-planning',
             'order-planning-wave-quick-find': 'order-planning',
-            // Tambahkan pemetaan untuk menu Shipping
             'shipping-close-container': 'shipping',
             'shipping-consolidated-container-location-viewer': 'shipping',
             'shipping-containers-delivered': 'shipping',
@@ -1609,7 +1604,6 @@
             'shipping-container-identification': 'shipping',
             'shipping-container-workbench': 'shipping',
             'shipping-sit-workbench': 'shipping',
-            // Tambahkan pemetaan untuk menu Work
             'work-label-reprint-utility': 'work',
             'work-picking-management-explorer': 'work',
             'work-picking-sigtion': 'work',
@@ -1619,7 +1613,6 @@
             'work-monitoring-customer': 'work',
             'work-monitoring-group': 'work',
             'work-quick-find': 'work',
-            // Tambahkan pemetaan untuk menu Cross Application
             'cross-app-ar-upload-interface-data-viewer': 'cross-application',
             'cross-app-background-job-request-viewer': 'cross-application',
             'cross-app-configurations': 'cross-application',
@@ -1633,7 +1626,6 @@
             'cross-app-upload-interface-data-viewer': 'cross-application',
             'cross-app-wave-repost-ptl-rabbitmq': 'cross-application',
             'cross-app-web-statistics-generation': 'cross-application',
-            // Tambahkan pemetaan untuk menu Inventory
             'inventory-cycle-count-explorer': 'inventory',
             'inventory-cycle-count-viewer': 'inventory',
             'inventory-edit-customer-shelflife': 'inventory',
@@ -1653,19 +1645,15 @@
             'inventory-lot-freight': 'inventory',
             'inventory-lot-workbench': 'inventory',
             'inventory-mismatch-company-viewer': 'inventory',
-            // Tambahkan pemetaan untuk menu Performance Management
             'performance-kpis': 'performance-management',
             'performance-analytics': 'performance-management',
             'performance-goals': 'performance-management',
-            // Tambahkan pemetaan untuk menu System Management
             'system-management-users': 'system-management',
             'system-management-logs': 'system-management',
             'system-management-backup': 'system-management',
-            // Tambahkan pemetaan untuk menu Setting Optimization
             'setting-optimization-general': 'setting-optimization',
             'setting-optimization-performance': 'setting-optimization',
             'setting-optimization-notifications': 'setting-optimization',
-            // Tambahkan pemetaan untuk menu Data Archiving
             'archive-documents': 'data-archiving',
             'archive-media': 'data-archiving',
             'archive-financial': 'data-archiving',
