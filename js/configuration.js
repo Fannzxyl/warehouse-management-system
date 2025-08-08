@@ -23,7 +23,7 @@
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden'); // Hide cancel button for alerts
+            customModalCancelBtn.classList.add('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -686,7 +686,7 @@
                     </div>
                 `,
             },
-            // ### KONTEN USER PROFILE BARU DITAMBAHKAN DI SINI ###
+            // ### KONTEN USER PROFILE DI SINI
             'configuration-user-profile': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
@@ -981,7 +981,6 @@
             },
         };
 
-        // --- FUNGSI-FUNGSI BARU UNTUK SEARCH BAR & OVERLAY (VERSI LENGKAP) ---
 
 /**
  * Menangani input pencarian dari header atau overlay.
@@ -995,14 +994,14 @@ window.handleSearch = function(query) {
     if (query.length > 0) {
         // Tampilkan overlay pencarian jika ada query
         searchOverlay.classList.remove('hidden');
-        overlaySearchInput.value = query; // Isi input overlay dengan query
-        performSearch(query, 'overlay'); // Lakukan pencarian di overlay
-        searchHistoryDropdown.classList.add('hidden'); // Sembunyikan riwayat pencarian
+        overlaySearchInput.value = query; 
+        performSearch(query, 'overlay'); 
+        searchHistoryDropdown.classList.add('hidden');
     } else {
         // Sembunyikan overlay pencarian jika query kosong
         searchOverlay.classList.add('hidden');
-        selectCategory(currentCategory); // Kembali ke kategori saat ini
-        showSearchHistory(); // Tampilkan riwayat pencarian
+        selectCategory(currentCategory); 
+        showSearchHistory(); 
     }
 };
 
