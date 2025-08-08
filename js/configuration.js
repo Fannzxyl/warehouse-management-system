@@ -69,7 +69,8 @@
         };
 
         // Dummy data for dashboard content and sub-categories
-        const contentData = {
+        // EXPOSED GLOBALLY
+        window.contentData = {
             configuration: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Configuration</h2>
@@ -84,7 +85,7 @@
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Define and manage various zones within the warehouse.</p>
+                            <p class="text-wise-gray mb-4">Define and manage various zones within the warehouse.</p>
                             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
                                 Manage Zones
                             </button>
@@ -124,7 +125,7 @@
                                 Manage Security Permission
                             </button>
                         </div>
-                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                            <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                                <h3 class="text-lg font-medium text-wise-dark-gray mb-2">User Profile Management</h3>
                                <p class="text-wise-gray text-sm mt-1">Manage user profiles, permissions, and other user-specific settings.</p>
                                <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-user-profile')">
@@ -473,7 +474,7 @@
                                     </div>
                                     <div class="flex space-x-2 mb-2">
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="general-location">General</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User defined data</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User Defined Data</button>
                                     </div>
                                     <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
                                         <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
@@ -510,31 +511,31 @@
                                             <div>
                                                 <label for="lt-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
                                                 <input type="text" id="lt-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
                                                 <input type="text" id="lt-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
                                                 <input type="text" id="lt-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
                                                 <input type="text" id="lt-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
                                                 <input type="text" id="lt-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
                                                 <input type="text" id="lt-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                             <div>
                                                 <label for="lt-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
                                                 <input type="text" id="lt-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="mb-4 mt-4">
@@ -651,7 +652,7 @@
                                         </div>
                                         <div>
                                             <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
+                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -712,7 +713,7 @@
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-printers">Printers</button>
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-locating">Locating</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User defined data</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User Defined Data</button>
                                     </div>
 
                                     <!-- General Tab -->
@@ -840,16 +841,16 @@
                                     <div class="mb-4">
                                         <div class="flex space-x-2 mb-2 border-b border-wise-border">
                                             <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
-                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User defined data</button>
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User Defined Data</button>
                                         </div>
 
                                         <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
                                             <div class="flex justify-between items-center mb-2">
-                                                   <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
-                                                   <label class="inline-flex items-center">
-                                                        <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
-                                                        <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
-                                                   </label>
+                                                     <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                     <label class="inline-flex items-center">
+                                                         <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                         <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                     </label>
                                             </div>
                                             <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
                                                 <!-- User checkboxes will be rendered here -->
@@ -994,14 +995,14 @@ window.handleSearch = function(query) {
     if (query.length > 0) {
         // Tampilkan overlay pencarian jika ada query
         searchOverlay.classList.remove('hidden');
-        overlaySearchInput.value = query; 
-        performSearch(query, 'overlay'); 
+        overlaySearchInput.value = query;    
+        performSearch(query, 'overlay');    
         searchHistoryDropdown.classList.add('hidden');
     } else {
         // Sembunyikan overlay pencarian jika query kosong
         searchOverlay.classList.add('hidden');
-        selectCategory(currentCategory); 
-        showSearchHistory(); 
+        selectCategory(currentCategory);    
+        showSearchHistory();    
     }
 };
 
@@ -1056,7 +1057,7 @@ window.showPreview = function(id) {
     if (content && (content.detail || content.full)) {
         // Tampilkan konten ASLI dari fiturnya, LALU tambahkan tombol "Tampilkan Halaman"
         overlayDetailContentPanel.innerHTML = `
-            ${content.detail || content.full} 
+            ${content.detail || content.full}    
             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
                 Tampilkan Halaman
             </button>
@@ -1206,7 +1207,8 @@ window.showSearchHistory = function() {
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
         // Data dummy untuk hasil pencarian
-        const searchItems = [
+        // EXPOSED GLOBALLY
+        window.searchItems = [
             { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
@@ -1218,7 +1220,8 @@ window.showSearchHistory = function() {
         ];
 
         // Pemetaan untuk navigasi sidebar saat hasil pencarian diklik
-        const parentMapping = {
+        // EXPOSED GLOBALLY
+        window.parentMapping = {
             'configuration-warehouse': 'configuration',
             'configuration-zone': 'configuration',
             'configuration-location-type': 'configuration',
@@ -1229,6 +1232,7 @@ window.showSearchHistory = function() {
             'security-permission': 'configuration', // Ganti 'system' jika ID parent-nya beda
         };
 
+        // EXPOSED GLOBALLY
         window.getCurrentSelectedMenus = function() {
             const container = document.getElementById('sp-menu-checkbox-list');
             if (!container) return [];
@@ -1253,20 +1257,21 @@ window.showSearchHistory = function() {
         ];
 
         // Dummy data for zones (for configuration-zone)
-        let zones = [
+        // EXPOSED GLOBALLY
+        window.zones = [
             { id: 'ZONE001', identifier: 'ZONE_A', recordType: 'ZONETYPE', description: 'Picking Zone A', inactive: false, systemCreated: true },
             { id: 'ZONE002', identifier: 'ZONE_B', recordType: 'ZONETYPE', description: 'Storage Zone B', inactive: false, systemCreated: false },
             { id: 'ZONE003', identifier: 'ZONE_C', recordType: 'ZONETYPE', description: 'Receiving Zone C', inactive: true, systemCreated: false },
         ];
 
         // Dummy data for location types (for configuration-location-type)
-        let locationTypes = [
+        window.locationTypes = [
             { id: 'LT001', locationType: 'PALLET', length: 120, lengthUM: 'Centimeters', width: 100, height: 150, maximumWeight: 1000, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'PALLET_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
             { id: 'LT002', locationType: 'SHELF', length: 60, lengthUM: 'Centimeters', width: 40, height: 30, maximumWeight: 50, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'SHELF_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
         ];
 
         // Dummy data for locating strategies (for locating-strategies)
-        let locatingStrategies = [
+        window.locatingStrategies = [
             { id: 'LS001', identifier: 'FIFO', recordType: 'LOCSTRAT', description: 'First-In, First-Out', inactive: false, systemCreated: true },
             { id: 'LS002', identifier: 'LIFO', recordType: 'LOCSTRAT', description: 'Last-In, First-Out', inactive: false, systemCreated: false },
             { id: 'LS003', identifier: 'CLOSEST', recordType: 'LOCSTRAT', description: 'Closest Location', inactive: true, systemCreated: false },
@@ -1297,7 +1302,8 @@ window.showSearchHistory = function() {
         ];
 
         // Dummy data for all available menus (for security-permission)
-        const allMenus = [
+        // EXPOSED GLOBALLY
+        window.allMenus = [
             // Configurations Data
             { name: 'Warehouse', category: 'Configurations' },
             { name: 'Zone', category: 'Configurations' },
@@ -1394,7 +1400,7 @@ window.showSearchHistory = function() {
         };
 
         // Initial content load
-        selectCategory('configuration');
+        // selectCategory('configuration'); // Pindahkan panggilan ini ke configurationV2.js
 
         // Universal Tab Switching Logic
         window.setupTabSwitching = function(modalId) {
@@ -1572,13 +1578,13 @@ window.showSearchHistory = function() {
                     document.getElementById('return-address3').value = warehouse.returnAddress3;
                     document.getElementById('return-city').value = warehouse.returnCity;
                     document.getElementById('return-state').value = warehouse.returnState;
-                    document.getElementById('return-postal-code').value = warehouse.returnPostalCode;
-                    document.getElementById('return-country').value = warehouse.returnCountry;
-                    document.getElementById('return-fax-number').value = warehouse.returnFaxNumber;
-                    document.getElementById('return-attention-to').value = warehouse.returnAttentionTo;
-                    document.getElementById('return-phone-number').value = warehouse.returnPhoneNumber;
-                    document.getElementById('return-email-address').value = warehouse.returnEmailAddress;
-                    document.getElementById('return-ucc-ean-number').value = warehouse.returnUccEanNumber;
+                    document.getElementById('return-postal-code').value = warehouse.postalCode;
+                    document.getElementById('return-country').value = warehouse.country;
+                    document.getElementById('return-fax-number').value = warehouse.faxNumber;
+                    document.getElementById('return-attention-to').value = warehouse.attentionTo;
+                    document.getElementById('return-phone-number').value = warehouse.phoneNumber;
+                    document.getElementById('return-email-address').value = warehouse.emailAddress;
+                    document.getElementById('return-ucc-ean-number').value = warehouse.uccEanNumber;
 
                     // Populate authorized users
                     renderUserCheckboxes(warehouse.users);
@@ -1641,7 +1647,6 @@ window.showSearchHistory = function() {
                 userDefinedField7: form['userDefinedField7'].value,
                 userDefinedField8: form['userDefinedField8'].value,
 
-
                 
                 // Get selected authorized users
                 users: Array.from(form.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value)
@@ -1658,7 +1663,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Warehouse updated successfully!');
                 }
             }
-            saveWarehouses(); 
+            saveWarehouses();    
             closeWarehouseForm();
             renderWarehouseList();
         };
@@ -2491,7 +2496,7 @@ window.showSearchHistory = function() {
         window.renderDetailRecords = function(records) {
             const detailRecordsList = document.getElementById('detail-records-list');
             detailRecordsList.innerHTML = '';
-            records.sort((a, b) => a.sequence - b.sequence); // Sort by sequence
+            records.sort((a, b) => a.sequence - b.sequence); // Urutkan berdasarkan sequence
             records.forEach(record => addDetailRecord(record));
         };
 
@@ -2746,62 +2751,66 @@ window.showSearchHistory = function() {
         };
 
         // --- Security Permission Management Functions ---
-        window.renderSecurityPermissionList = function(filter = '') {
-            const container = document.getElementById('security-permission-list-container');
-            if (!container) return;
+        // window.renderSecurityPermissionList = function(filter = '') {
+        //     const container = document.getElementById('security-permission-list-container');
+        //     if (!container) return;
 
-            const filteredPermissions = securityPermissions.filter(sp =>
-                sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
-                sp.spDescription.toLowerCase().includes(filter.toLowerCase())
-            );
+        //     const filteredPermissions = securityPermissions.filter(sp =>
+        //         sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
+        //         sp.spDescription.toLowerCase().includes(filter.toLowerCase())
+        //     );
 
-            let tableHtml = `
-                <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Security Permission</th>
-                            <th class="py-3 px-6 text-left">Description</th>
-                            <th class="py-3 px-6 text-left">Inactive</th>
-                            <th class="py-3 px-6 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-wise-gray text-sm font-light">
-            `;
+        //     let tableHtml = `
+        //         <table class="min-w-full bg-white rounded-lg shadow-md">
+        //             <thead>
+        //                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+        //                     <th class="py-3 px-6 text-left">Security Permission</th>
+        //                     <th class="py-3 px-6 text-left">Description</th>
+        //                     <th class="py-3 px-6 text-left">Inactive</th>
+        //                     <th class="py-3 px-6 text-center">Actions</th>
+        //                 </tr>
+        //             </thead>
+        //             <tbody class="text-wise-gray text-sm font-light">
+        //     `;
 
-            if (filteredPermissions.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
-                    </tr>
-                `;
-            } else {
-                filteredPermissions.forEach(sp => {
-                    tableHtml += `
-                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
-                            <td class="py-3 px-6 text-left">${sp.spDescription}</td>
-                            <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
+        //     if (filteredPermissions.length === 0) {
+        //         tableHtml += `
+        //             <tr>
+        //                 <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
+        //             </tr>
+        //         `;
+        //     } else {
+        //         filteredPermissions.forEach(sp => {
+        //             tableHtml += `
+        //                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+        //                     <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
+        //                     <td class="py-3 px-6 text-left">${sp.spDescription}</td>
+        //                     <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
+        //                     <td class="py-3 px-6 text-center">
+        //                         <div class="flex item-center justify-center">
+        //                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
+        //                                 <i class="fas fa-pencil-alt"></i>
+        //                             </button>
+        //                             <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
+        //                                 <i class="fas fa-trash-alt"></i>
+        //                             </button>
+        //                         </div>
+        //                     </td>
+        //                 </tr>
+        //             `;
+        //         });
+        //     }
 
-            tableHtml += `
-                    </tbody>
-                </table>
-            `;
-            container.innerHTML = tableHtml;
-        };
+        //     tableHtml += `
+        //             </tbody>
+        //         </table>
+        //     `;
+        //     container.innerHTML = tableHtml;
+        // };
+
+        // window.renderSecurityPermissionList = function(value) {
+        //     renderSecurityPermissionList(value);
+        // };
 
         window.showSecurityGroupForm = function(mode, id = null) {
             const modal = document.getElementById('security-group-form-modal');
@@ -2964,14 +2973,10 @@ window.showSearchHistory = function() {
         //                     <td class="py-3 px-6 text-center">
         //                         <div class="flex item-center justify-center">
         //                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
-        //                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        //                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-        //                                 </svg>
+        //                                 <i class="fas fa-pencil-alt"></i>
         //                             </button>
         //                             <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
-        //                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        //                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        //                                 </svg>
+        //                                 <i class="fas fa-trash-alt"></i>
         //                             </button>
         //                         </div>
         //                     </td>
@@ -3113,7 +3118,7 @@ window.toggleUserDropdown = function() {
  * Navigasi ke halaman profil.
  */
 window.navigateToProfile = function() {
-    window.location.href = 'profile.html'; 
+    window.location.href = 'profile.html';    
 };
 
 /**
