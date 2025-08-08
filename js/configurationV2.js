@@ -143,8 +143,7 @@
                         <input type="text" id="allocation-strategy-search" placeholder="Search allocation strategy..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationStrategyList(this.value)">
                     </div>
                     <div id="allocation-strategy-list-container" class="overflow-x-auto">
-                        <!-- Tabel daftar Allocation Strategy akan dirender di sini -->
-                    </div>
+                        </div>
 
                     <div id="allocation-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
@@ -170,11 +169,11 @@
                                         </label>
                                     </div>
                                     <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
-                                        </label>
-                                    </div>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                        <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                    </label>
+                                </div>
                                 </form>
                             </div>
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
@@ -502,69 +501,69 @@
 
         // --- Fungsi Manajemen Allocation Strategy ---
         window.renderAllocationStrategyList = function(filter = '') {
-            const container = document.getElementById('allocation-strategy-list-container');
-            if (!container) return;
+    const container = document.getElementById('allocation-strategy-list-container');
+    if (!container) return;
 
-            const filteredStrategies = allocationStrategies.filter(as =>
-                as.identifier.toLowerCase().includes(filter.toLowerCase()) ||
-                as.description.toLowerCase().includes(filter.toLowerCase())
-            );
+    const filteredStrategies = allocationStrategies.filter(as =>
+        as.identifier.toLowerCase().includes(filter.toLowerCase()) ||
+        as.description.toLowerCase().includes(filter.toLowerCase())
+    );
 
-            let tableHtml = `
-                <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Description</th>
-                            <th class="py-3 px-6 text-left">System Value I</th>
-                            <th class="py-3 px-6 text-left">System Created</th>
-                            <th class="py-3 px-6 text-left">Active</th>
-                            <th class="py-3 px-6 text-left">Identifier</th>
-                            <th class="py-3 px-6 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-wise-gray text-sm font-light">
-            `;
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">System Value I</th>
+                    <th class="py-3 px-6 text-left">System Created</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-left">Identifier</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
 
-            if (filteredStrategies.length === 0) {
-                tableHtml += `
-                    <tr>
-                        <td colspan="6" class="py-3 px-6 text-center">No allocation strategies found.</td>
-                    </tr>
-                `;
-            } else {
-                filteredStrategies.forEach(as => {
-                    tableHtml += `
-                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left">${as.description}</td>
-                            <td class="py-3 px-6 text-left">${as.systemValueI || ''}</td>
-                            <td class="py-3 px-6 text-left">${as.systemCreated ? 'Yes' : 'No'}</td>
-                            <td class="py-3 px-6 text-left">${as.inactive ? 'No' : 'Yes'}</td>
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${as.identifier}</td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationStrategyForm('edit', '${as.id}')" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                        </svg>
-                                    </button>
-                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteAllocationStrategy('${as.id}')" title="Delete">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-
+    if (filteredStrategies.length === 0) {
+        tableHtml += `
+            <tr>
+                <td colspan="6" class="py-3 px-6 text-center">No allocation strategies found.</td>
+            </tr>
+        `;
+    } else {
+        filteredStrategies.forEach(as => {
             tableHtml += `
-                    </tbody>
-                </table>
+                <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                    <td class="py-3 px-6 text-left">${as.description}</td>
+                    <td class="py-3 px-6 text-left">${as.systemValueI || ''}</td>
+                    <td class="py-3 px-6 text-left">${as.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-left">${as.inactive ? 'No' : 'Yes'}</td>
+                    <td class="py-3 px-6 text-left whitespace-nowrap">${as.identifier}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationStrategyForm('edit', '${as.id}')" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
+                            <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteAllocationStrategy('${as.id}')" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             `;
-            container.innerHTML = tableHtml;
-        };
+        });
+    }
+
+    tableHtml += `
+            </tbody>
+        </table>
+    `;
+    container.innerHTML = tableHtml;
+};
 
         window.filterAllocationStrategyList = function(value) {
             renderAllocationStrategyList(value);
@@ -587,31 +586,31 @@
             });
 
             if (mode === 'create') {
-                title.textContent = 'Create New Allocation Strategy';
-                submitButton.textContent = 'Save';
-                document.getElementById('allocation-strategy-record-type').value = 'ALLOCSTRAT'; // Nilai default untuk strategi baru
-                document.getElementById('allocation-strategy-record-type').setAttribute('readonly', true);
-                document.getElementById('allocation-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                document.getElementById('allocation-strategy-system-created').checked = false; // Default tidak dicentang
-                document.getElementById('allocation-strategy-system-created').setAttribute('disabled', true); // Nonaktifkan untuk pembuatan baru
-            } else { // mode edit
-                title.textContent = 'Edit Allocation Strategy';
-                submitButton.textContent = 'Update';
-                const strategy = allocationStrategies.find(as => as.id === id);
-                if (strategy) {
+        title.textContent = 'Create New Allocation Strategy';
+        submitButton.textContent = 'Save';
+        document.getElementById('allocation-strategy-record-type').value = 'ALLOCSTRAT';
+        document.getElementById('allocation-strategy-record-type').setAttribute('readonly', true);
+        document.getElementById('allocation-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+        document.getElementById('allocation-strategy-system-created').checked = false; 
+
+    } else { // mode edit
+        title.textContent = 'Edit Allocation Strategy';
+        submitButton.textContent = 'Update';
+        const strategy = allocationStrategies.find(as => as.id === id);
+        if (strategy) {
                     document.getElementById('allocation-strategy-identifier').value = strategy.identifier;
                     document.getElementById('allocation-strategy-record-type').value = strategy.recordType;
                     document.getElementById('allocation-strategy-description').value = strategy.description;
                     document.getElementById('allocation-strategy-inactive').checked = strategy.inactive;
                     document.getElementById('allocation-strategy-system-created').checked = strategy.systemCreated;
-
+                    document.getElementById('allocation-strategy-system-created').checked = strategy.systemCreated;
+                    
                     // Buat identifier dan recordType readonly untuk strategi yang dibuat sistem
                     if (strategy.systemCreated) {
                         document.getElementById('allocation-strategy-identifier').setAttribute('readonly', true);
                         document.getElementById('allocation-strategy-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                         document.getElementById('allocation-strategy-record-type').setAttribute('readonly', true);
                         document.getElementById('allocation-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                        document.getElementById('allocation-strategy-system-created').setAttribute('disabled', true); // Tetap dinonaktifkan
                     } else {
                         document.getElementById('allocation-strategy-system-created').removeAttribute('disabled'); // Aktifkan jika tidak dibuat sistem
                     }
@@ -667,7 +666,6 @@
         };
 
         //ini adalah tempat dimana untuk myembungkan antar configurasiV2.js degngan configurasi.js
-        window.selectCategory('configuration'); 
-        console.log('Configuration V2 loaded successfully');
+       window.selectCategory('configuration');
     });
 })();

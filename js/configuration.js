@@ -1385,6 +1385,8 @@ window.showSearchHistory = function() {
     else if (category === 'configuration-user-profile') renderUserProfileList();
     else if (category === 'security-group') renderSecurityGroupList();
     else if (category === 'security-permission') renderSecurityPermissionList();
+    else if (category === 'allocation-rule') renderAllocationRuleList(); 
+    else if (category === 'allocation-strategies') renderAllocationStrategyList();
 
     // Tutup sidebar di mobile setelah memilih
     if (window.innerWidth < 768) {
@@ -2751,66 +2753,184 @@ window.showSearchHistory = function() {
         };
 
         // --- Security Permission Management Functions ---
-        // window.renderSecurityPermissionList = function(filter = '') {
-        //     const container = document.getElementById('security-permission-list-container');
-        //     if (!container) return;
+        window.renderSecurityPermissionList = function(filter = '') {
+            const container = document.getElementById('security-permission-list-container');
+            if (!container) return;
 
-        //     const filteredPermissions = securityPermissions.filter(sp =>
-        //         sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
-        //         sp.spDescription.toLowerCase().includes(filter.toLowerCase())
-        //     );
+            const filteredPermissions = securityPermissions.filter(sp =>
+                sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
+                sp.spDescription.toLowerCase().includes(filter.toLowerCase())
+            );
 
-        //     let tableHtml = `
-        //         <table class="min-w-full bg-white rounded-lg shadow-md">
-        //             <thead>
-        //                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-        //                     <th class="py-3 px-6 text-left">Security Permission</th>
-        //                     <th class="py-3 px-6 text-left">Description</th>
-        //                     <th class="py-3 px-6 text-left">Inactive</th>
-        //                     <th class="py-3 px-6 text-center">Actions</th>
-        //                 </tr>
-        //             </thead>
-        //             <tbody class="text-wise-gray text-sm font-light">
-        //     `;
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Security Permission</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
 
-        //     if (filteredPermissions.length === 0) {
-        //         tableHtml += `
-        //             <tr>
-        //                 <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
-        //             </tr>
-        //         `;
-        //     } else {
-        //         filteredPermissions.forEach(sp => {
-        //             tableHtml += `
-        //                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-        //                     <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
-        //                     <td class="py-3 px-6 text-left">${sp.spDescription}</td>
-        //                     <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
-        //                     <td class="py-3 px-6 text-center">
-        //                         <div class="flex item-center justify-center">
-        //                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
-        //                                 <i class="fas fa-pencil-alt"></i>
-        //                             </button>
-        //                             <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
-        //                                 <i class="fas fa-trash-alt"></i>
-        //                             </button>
-        //                         </div>
-        //                     </td>
-        //                 </tr>
-        //             `;
-        //         });
-        //     }
+            if (filteredPermissions.length === 0) {
+                tableHtml += `
+                    <tr>
+                        <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
+                    </tr>
+                `;
+            } else {
+                filteredPermissions.forEach(sp => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
+                            <td class="py-3 px-6 text-left">${sp.spDescription}</td>
+                            <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
-        //     tableHtml += `
-        //             </tbody>
-        //         </table>
-        //     `;
-        //     container.innerHTML = tableHtml;
-        // };
+            tableHtml += `
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHtml;
+        };
 
-        // window.renderSecurityPermissionList = function(value) {
-        //     renderSecurityPermissionList(value);
-        // };
+        window.showSecurityGroupForm = function(mode, id = null) {
+            const modal = document.getElementById('security-group-form-modal');
+            const form = document.getElementById('security-group-form');
+            const title = document.getElementById('security-group-form-title');
+            const submitButton = document.getElementById('security-group-submit-button');
+
+            form.reset(); // Clear form fields
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset tab to default (Group users)
+            setupTabSwitching('security-group-form-modal');
+
+            // Reset all input fields to default styling
+            form.querySelectorAll('input, select').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+            });
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Security Group';
+                submitButton.textContent = 'Save';
+                renderSecurityGroupUserCheckboxes([]); // Render all users unchecked for new group
+            } else { // edit mode
+                title.textContent = 'Edit Security Group';
+                submitButton.textContent = 'Update';
+                const securityGroup = securityGroups.find(sg => sg.id === id);
+                if (securityGroup) {
+                    document.getElementById('security-group-name').value = securityGroup.groupName;
+                    document.getElementById('security-group-description').value = securityGroup.description;
+                    document.getElementById('security-group-inactive').checked = securityGroup.inactive;
+                    renderSecurityGroupUserCheckboxes(securityGroup.users); // Render users with selected ones checked
+                    for (let i = 1; i <= 7; i++) { // UDFs 1-7
+                        document.getElementById(`sg-user-defined-field${i}`).value = securityGroup[`userDefinedField${i}`] || '';
+                    }
+                }
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeSecurityGroupForm = function() {
+            document.getElementById('security-group-form-modal').classList.add('hidden');
+            document.getElementById('security-group-form-modal').classList.remove('flex');
+        };
+
+        window.handleSecurityGroupSubmit = async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+
+            const newSecurityGroup = {
+                groupName: form['groupName'].value,
+                description: form['description'].value,
+                inactive: form['security-group-inactive'].checked,
+                users: Array.from(form.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value),
+            };
+            for (let i = 1; i <= 7; i++) { // UDFs 1-7
+                newSecurityGroup[`userDefinedField${i}`] = form[`sg-user-defined-field${i}`].value;
+            }
+
+            if (mode === 'create') {
+                newSecurityGroup.id = 'SG' + String(securityGroups.length + 1).padStart(3, '0');
+                securityGroups.push(newSecurityGroup);
+                await showCustomAlert('Success', 'Security Group created successfully!');
+            } else {
+                const index = securityGroups.findIndex(sg => sg.id === id);
+                if (index !== -1) {
+                    securityGroups[index] = { ...securityGroups[index], ...newSecurityGroup };
+                    await showCustomAlert('Success', 'Security Group updated successfully!');
+                }
+            }
+            saveSecurityGroups
+            closeSecurityGroupForm();
+            renderSecurityGroupList();
+        };
+
+        window.deleteSecurityGroup = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security group?');
+            if (confirmed) {
+                securityGroups = securityGroups.filter(sg => sg.id !== id);
+                saveSecurityGroups
+                renderSecurityGroupList();
+                await showCustomAlert('Deleted', 'Security Group deleted successfully!');
+            }
+        };
+
+        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = [], filter = '') {
+            const container = document.getElementById('security-group-user-checkbox-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const lowerCaseFilter = filter.toLowerCase();
+
+            const filteredUsers = allUsers.filter(user => user.name.toLowerCase().includes(lowerCaseFilter));
+
+            if (filteredUsers.length === 0) {
+                container.innerHTML = '<p class="text-wise-gray text-sm p-2">No users found matching your filter.</p>';
+                return;
+            }
+
+            filteredUsers.forEach(user => {
+                const isChecked = selectedUsers.includes(user.id);
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="sg-user-${user.id}" name="securityGroupUsers" value="${user.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
+                    <label for="sg-user-${user.id}" class="ml-2 text-sm text-wise-dark-gray">${user.name}</label>
+                `;
+                container.appendChild(div);
+            });
+        };
+
+        window.toggleAllSecurityGroupUsers = function() {
+            const checkAllCheckbox = document.getElementById('check-all-security-group-users');
+            const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = checkAllCheckbox.checked;
+            });
+        };
 
         window.showSecurityGroupForm = function(mode, id = null) {
             const modal = document.getElementById('security-group-form-modal');
