@@ -17,7 +17,7 @@
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
-        const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
+        const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn'); // Perbaikan di sini
 
         // Function to display custom alert
         window.showCustomAlert = function(title, message) {
@@ -1385,11 +1385,7 @@ window.showSearchHistory = function() {
     else if (category === 'configuration-user-profile') renderUserProfileList();
     else if (category === 'security-group') renderSecurityGroupList();
     else if (category === 'security-permission') renderSecurityPermissionList();
-<<<<<<< HEAD
-    else if (category === 'allocation-rule') renderAllocationRuleList(); 
-=======
     else if (category === 'allocation-rule') renderAllocationRuleList();
->>>>>>> c2b3914 (menambahkan Allocation Strategies)
     else if (category === 'allocation-strategies') renderAllocationStrategyList();
 
     // Tutup sidebar di mobile setelah memilih
@@ -2254,7 +2250,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Locating Strategy updated successfully!');
                 }
             }
-            saveLocatingStrategies(); // Perbaikan: Tambahkan ()
+            saveLocatingStrategies();
             closeLocatingStrategyForm();
             renderLocatingStrategyList();
         };
@@ -2263,7 +2259,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating strategy?');
             if (confirmed) {
                 locatingStrategies = locatingStrategies.filter(ls => ls.id !== id);
-                saveLocatingStrategies(); // Perbaikan: Tambahkan ()
+                saveLocatingStrategies();
                 renderLocatingStrategyList();
                 await showCustomAlert('Deleted', 'Locating Strategy deleted successfully!');
             }
@@ -2416,7 +2412,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Locating Rule updated successfully!');
                 }
             }
-            saveLocatingRules(); // Perbaikan: Tambahkan ()
+            saveLocatingRules();
             closeLocatingRuleForm();
             renderLocatingRuleList();
         };
@@ -2425,7 +2421,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating rule?');
             if (confirmed) {
                 locatingRules = locatingRules.filter(lr => lr.id !== id);
-                saveLocatingRules(); // Perbaikan: Tambahkan ()
+                saveLocatingRules();
                 renderLocatingRuleList();
                 await showCustomAlert('Deleted', 'Locating Rule deleted successfully!');
             }
@@ -2814,131 +2810,8 @@ window.showSearchHistory = function() {
             container.innerHTML = tableHtml;
         };
 
-<<<<<<< HEAD
-        window.showSecurityGroupForm = function(mode, id = null) {
-            const modal = document.getElementById('security-group-form-modal');
-            const form = document.getElementById('security-group-form');
-            const title = document.getElementById('security-group-form-title');
-            const submitButton = document.getElementById('security-group-submit-button');
-
-            form.reset(); // Clear form fields
-            form.dataset.mode = mode;
-            form.dataset.id = id;
-
-            // Reset tab to default (Group users)
-            setupTabSwitching('security-group-form-modal');
-
-            // Reset all input fields to default styling
-            form.querySelectorAll('input, select').forEach(input => {
-                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                input.removeAttribute('readonly');
-            });
-
-            if (mode === 'create') {
-                title.textContent = 'Create New Security Group';
-                submitButton.textContent = 'Save';
-                renderSecurityGroupUserCheckboxes([]); // Render all users unchecked for new group
-            } else { // edit mode
-                title.textContent = 'Edit Security Group';
-                submitButton.textContent = 'Update';
-                const securityGroup = securityGroups.find(sg => sg.id === id);
-                if (securityGroup) {
-                    document.getElementById('security-group-name').value = securityGroup.groupName;
-                    document.getElementById('security-group-description').value = securityGroup.description;
-                    document.getElementById('security-group-inactive').checked = securityGroup.inactive;
-                    renderSecurityGroupUserCheckboxes(securityGroup.users); // Render users with selected ones checked
-                    for (let i = 1; i <= 7; i++) { // UDFs 1-7
-                        document.getElementById(`sg-user-defined-field${i}`).value = securityGroup[`userDefinedField${i}`] || '';
-                    }
-                }
-            }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        };
-
-        window.closeSecurityGroupForm = function() {
-            document.getElementById('security-group-form-modal').classList.add('hidden');
-            document.getElementById('security-group-form-modal').classList.remove('flex');
-        };
-
-        window.handleSecurityGroupSubmit = async function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const mode = form.dataset.mode;
-            const id = form.dataset.id;
-
-            const newSecurityGroup = {
-                groupName: form['groupName'].value,
-                description: form['description'].value,
-                inactive: form['security-group-inactive'].checked,
-                users: Array.from(form.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value),
-            };
-            for (let i = 1; i <= 7; i++) { // UDFs 1-7
-                newSecurityGroup[`userDefinedField${i}`] = form[`sg-user-defined-field${i}`].value;
-            }
-
-            if (mode === 'create') {
-                newSecurityGroup.id = 'SG' + String(securityGroups.length + 1).padStart(3, '0');
-                securityGroups.push(newSecurityGroup);
-                await showCustomAlert('Success', 'Security Group created successfully!');
-            } else {
-                const index = securityGroups.findIndex(sg => sg.id === id);
-                if (index !== -1) {
-                    securityGroups[index] = { ...securityGroups[index], ...newSecurityGroup };
-                    await showCustomAlert('Success', 'Security Group updated successfully!');
-                }
-            }
-            saveSecurityGroups
-            closeSecurityGroupForm();
-            renderSecurityGroupList();
-        };
-
-        window.deleteSecurityGroup = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security group?');
-            if (confirmed) {
-                securityGroups = securityGroups.filter(sg => sg.id !== id);
-                saveSecurityGroups
-                renderSecurityGroupList();
-                await showCustomAlert('Deleted', 'Security Group deleted successfully!');
-            }
-        };
-
-        window.renderSecurityGroupUserCheckboxes = function(selectedUsers = [], filter = '') {
-            const container = document.getElementById('security-group-user-checkbox-list');
-            if (!container) return;
-
-            container.innerHTML = '';
-            const lowerCaseFilter = filter.toLowerCase();
-
-            const filteredUsers = allUsers.filter(user => user.name.toLowerCase().includes(lowerCaseFilter));
-
-            if (filteredUsers.length === 0) {
-                container.innerHTML = '<p class="text-wise-gray text-sm p-2">No users found matching your filter.</p>';
-                return;
-            }
-
-            filteredUsers.forEach(user => {
-                const isChecked = selectedUsers.includes(user.id);
-                const div = document.createElement('div');
-                div.className = 'flex items-center';
-                div.innerHTML = `
-                    <input type="checkbox" id="sg-user-${user.id}" name="securityGroupUsers" value="${user.id}" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" ${isChecked ? 'checked' : ''}>
-                    <label for="sg-user-${user.id}" class="ml-2 text-sm text-wise-dark-gray">${user.name}</label>
-                `;
-                container.appendChild(div);
-            });
-        };
-
-        window.toggleAllSecurityGroupUsers = function() {
-            const checkAllCheckbox = document.getElementById('check-all-security-group-users');
-            const userCheckboxes = document.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]');
-            userCheckboxes.forEach(checkbox => {
-                checkbox.checked = checkAllCheckbox.checked;
-            });
-=======
         window.filterSecurityPermissionList = function(value) {
             renderSecurityPermissionList(value);
->>>>>>> c2b3914 (menambahkan Allocation Strategies)
         };
 
         window.showSecurityGroupForm = function(mode, id = null) {
