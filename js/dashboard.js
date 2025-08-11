@@ -2444,6 +2444,17 @@ window.renderReceiptTable = function() {
         if (searchInput) { // Pastikan elemen searchInput ditemukan
             searchInput.addEventListener('focus', window.showSearchHistory);
         }
+// tambahkan cabang ini:
+else if (id === 'allocation-strategies') {
+  if (typeof window.renderAllocationStrategyList === 'function') {
+    renderAllocationStrategyList('');
+  }
+  // aktifkan pencarian
+  const inp = document.getElementById('allocation-strategy-search');
+  if (inp && typeof window.filterAllocationStrategyList === 'function') {
+    inp.addEventListener('input', (e) => filterAllocationStrategyList(e.target.value));
+  }
+}
 
     });
 })();

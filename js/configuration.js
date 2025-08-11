@@ -1385,7 +1385,11 @@ window.showSearchHistory = function() {
     else if (category === 'configuration-user-profile') renderUserProfileList();
     else if (category === 'security-group') renderSecurityGroupList();
     else if (category === 'security-permission') renderSecurityPermissionList();
+<<<<<<< HEAD
     else if (category === 'allocation-rule') renderAllocationRuleList(); 
+=======
+    else if (category === 'allocation-rule') renderAllocationRuleList();
+>>>>>>> c2b3914 (menambahkan Allocation Strategies)
     else if (category === 'allocation-strategies') renderAllocationStrategyList();
 
     // Tutup sidebar di mobile setelah memilih
@@ -2250,7 +2254,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Locating Strategy updated successfully!');
                 }
             }
-            saveLocatingStrategies
+            saveLocatingStrategies(); // Perbaikan: Tambahkan ()
             closeLocatingStrategyForm();
             renderLocatingStrategyList();
         };
@@ -2259,7 +2263,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating strategy?');
             if (confirmed) {
                 locatingStrategies = locatingStrategies.filter(ls => ls.id !== id);
-                saveLocatingStrategies
+                saveLocatingStrategies(); // Perbaikan: Tambahkan ()
                 renderLocatingStrategyList();
                 await showCustomAlert('Deleted', 'Locating Strategy deleted successfully!');
             }
@@ -2412,7 +2416,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Locating Rule updated successfully!');
                 }
             }
-            saveLocatingRules
+            saveLocatingRules(); // Perbaikan: Tambahkan ()
             closeLocatingRuleForm();
             renderLocatingRuleList();
         };
@@ -2421,7 +2425,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this locating rule?');
             if (confirmed) {
                 locatingRules = locatingRules.filter(lr => lr.id !== id);
-                saveLocatingRules
+                saveLocatingRules(); // Perbaikan: Tambahkan ()
                 renderLocatingRuleList();
                 await showCustomAlert('Deleted', 'Locating Rule deleted successfully!');
             }
@@ -2667,7 +2671,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'User Profile updated successfully!');
                 }
             }
-            saveUserProfiles
+            saveUserProfiles();
             closeUserProfileForm();
             renderUserProfileList();
         };
@@ -2676,7 +2680,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this user profile?');
             if (confirmed) {
                 userProfiles = userProfiles.filter(up => up.id !== id);
-                saveUserProfiles
+                saveUserProfiles();
                 renderUserProfileList();
                 await showCustomAlert('Deleted', 'User Profile deleted successfully!');
             }
@@ -2810,6 +2814,7 @@ window.showSearchHistory = function() {
             container.innerHTML = tableHtml;
         };
 
+<<<<<<< HEAD
         window.showSecurityGroupForm = function(mode, id = null) {
             const modal = document.getElementById('security-group-form-modal');
             const form = document.getElementById('security-group-form');
@@ -2930,6 +2935,10 @@ window.showSearchHistory = function() {
             userCheckboxes.forEach(checkbox => {
                 checkbox.checked = checkAllCheckbox.checked;
             });
+=======
+        window.filterSecurityPermissionList = function(value) {
+            renderSecurityPermissionList(value);
+>>>>>>> c2b3914 (menambahkan Allocation Strategies)
         };
 
         window.showSecurityGroupForm = function(mode, id = null) {
@@ -3005,7 +3014,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Security Group updated successfully!');
                 }
             }
-            saveSecurityGroups
+            saveSecurityGroups();
             closeSecurityGroupForm();
             renderSecurityGroupList();
         };
@@ -3014,7 +3023,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security group?');
             if (confirmed) {
                 securityGroups = securityGroups.filter(sg => sg.id !== id);
-                saveSecurityGroups
+                saveSecurityGroups();
                 renderSecurityGroupList();
                 await showCustomAlert('Deleted', 'Security Group deleted successfully!');
             }
@@ -3055,67 +3064,6 @@ window.showSearchHistory = function() {
         };
 
         // --- Security Permission Management Functions ---
-        // window.renderSecurityPermissionList = function(filter = '') {
-        //     const container = document.getElementById('security-permission-list-container');
-        //     if (!container) return;
-
-        //     const filteredPermissions = securityPermissions.filter(sp =>
-        //         sp.spName.toLowerCase().includes(filter.toLowerCase()) ||
-        //         sp.spDescription.toLowerCase().includes(filter.toLowerCase())
-        //     );
-
-        //     let tableHtml = `
-        //         <table class="min-w-full bg-white rounded-lg shadow-md">
-        //             <thead>
-        //                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-        //                     <th class="py-3 px-6 text-left">Security Permission</th>
-        //                     <th class="py-3 px-6 text-left">Description</th>
-        //                     <th class="py-3 px-6 text-left">Inactive</th>
-        //                     <th class="py-3 px-6 text-center">Actions</th>
-        //                 </tr>
-        //             </thead>
-        //             <tbody class="text-wise-gray text-sm font-light">
-        //     `;
-
-        //     if (filteredPermissions.length === 0) {
-        //         tableHtml += `
-        //             <tr>
-        //                 <td colspan="4" class="py-3 px-6 text-center">No security permissions found.</td>
-        //             </tr>
-        //         `;
-        //     } else {
-        //         filteredPermissions.forEach(sp => {
-        //             tableHtml += `
-        //                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-        //                     <td class="py-3 px-6 text-left whitespace-nowrap">${sp.spName}</td>
-        //                     <td class="py-3 px-6 text-left">${sp.spDescription}</td>
-        //                     <td class="py-3 px-6 text-left">${sp.inactive ? 'Yes' : 'No'}</td>
-        //                     <td class="py-3 px-6 text-center">
-        //                         <div class="flex item-center justify-center">
-        //                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showSecurityPermissionForm('edit', '${sp.id}')" title="Edit">
-        //                                 <i class="fas fa-pencil-alt"></i>
-        //                             </button>
-        //                             <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteSecurityPermission('${sp.id}')" title="Delete">
-        //                                 <i class="fas fa-trash-alt"></i>
-        //                             </button>
-        //                         </div>
-        //                     </td>
-        //                 </tr>
-        //             `;
-        //         });
-        //     }
-
-        //     tableHtml += `
-        //             </tbody>
-        //         </table>
-        //     `;
-        //     container.innerHTML = tableHtml;
-        // };
-
-        // window.renderSecurityPermissionList = function(value) {
-        //     renderSecurityPermissionList(value);
-        // };
-
         window.showSecurityPermissionForm = function(mode, id = null) {
             const modal = document.getElementById('security-permission-form-modal');
             const form = document.getElementById('security-permission-form');
@@ -3180,7 +3128,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Security Permission updated successfully!');
                 }
             }
-            saveSecurityPermissions
+            saveSecurityPermissions();
             closeSecurityPermissionForm();
             renderSecurityPermissionList();
         };
@@ -3189,7 +3137,7 @@ window.showSearchHistory = function() {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this security permission?');
             if (confirmed) {
                 securityPermissions = securityPermissions.filter(sp => sp.id !== id);
-                saveSecurityPermissions
+                saveSecurityPermissions();
                 renderSecurityPermissionList();
                 await showCustomAlert('Deleted', 'Security Permission deleted successfully!');
             }
