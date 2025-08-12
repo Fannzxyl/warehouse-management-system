@@ -613,7 +613,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="locating-strategy-system-created" name="systemCreated" disabled class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                            <input type="checkbox" id="locating-strategy-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                             <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                         </label>
                                     </div>
@@ -652,7 +652,7 @@
                                         </div>
                                         <div>
                                             <label for="locating-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            <input type="text" id="locating-rule-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" oninput="checkLocatingRuleFormValidity()">
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -1285,8 +1285,41 @@ window.showSearchHistory = function() {
 
         // Dummy data for user profiles (for configuration-user-profile)
         let userProfiles = [
-            { id: 'UP001', user: 'admin', description: 'System Administrator', defaultWarehouse: 'WH001', shift: 'Day', menu: 'Full Access', language: 'English', inactive: false, defaultLabelPrinter: 'PRINTER_A', defaultReportPrinter: 'PRINTER_B', locateEmptyLpn: true, locateEmptyItem: true, locateLpnStaging: false, locateItemStaging: false, udf1: 'Admin_UDF1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' },
-            { id: 'UP002', user: 'picker1', description: 'Warehouse Picker', defaultWarehouse: 'WH002', shift: 'Night', menu: 'Picking Menu', language: 'English', inactive: false, defaultLabelPrinter: 'PRINTER_C', defaultReportPrinter: 'PRINTER_D', locateEmptyLpn: false, locateEmptyItem: true, locateLpnStaging: true, locateItemStaging: false, udf1: 'Picker_UDF1', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' },
+            { 
+                id: 'UP001', 
+                user: 'admin', 
+                description: 'System Administrator', 
+                defaultWarehouse: 'WH001', 
+                shift: 'Day', 
+                menu: 'Full Access', 
+                language: 'English', 
+                inactive: false, 
+                defaultLabelPrinter: 'PRINTER_A', 
+                defaultReportPrinter: 'PRINTER_B', 
+                locateEmptyLpn: true, 
+                locateEmptyItem: true, 
+                locateLpnStaging: false, 
+                locateItemStaging: false, 
+                udf1: 'Admin_UDF1', 
+                udf2: '', 
+                udf3: '', 
+                udf4: '', 
+                udf5: '', 
+                udf6: '', 
+                udf7: '', 
+                udf8: '',
+                cycleCounting: 'Default',
+                shipping: 'Default',
+                packing: 'Default',
+                workOrder: 'Default',
+                receiving: 'Standard',
+                reportDirectory: '/reports/admin',
+                myLinkDirectory: '/links/admin',
+                defaultChart: '',
+                desktopTemplate: 'Adminisitrasi',
+                rfStyleSheet: '',
+                excelExportDirectory: '/export/excel'
+            },
         ];
 
         // Dummy data for security groups (for security-group)
@@ -1317,6 +1350,21 @@ window.showSearchHistory = function() {
             { name: 'Receiving', category: 'Processing' },
             { name: 'Shipping', category: 'Processing' },
         ];
+
+        window.allWarehouses = [
+            { id: 'WH001', name: 'DCI' },
+            { id: 'WH002', name: 'DCI' },
+            { id: 'WH003', name: 'DCI' },
+            { id: 'WH004', name: 'DCI' },
+            { id: 'WH005', name: 'DCI' },
+            { id: 'WH006', name: 'DCI' },
+            { id: 'WH007', name: 'DCI' },
+            { id: 'WH008', name: 'DCI' },
+            { id: 'WH009', name: 'DCI' },
+            { id: 'WH010', name: 'DCI' },
+        ];
+
+        window.defaultStandardOptions = ['Default', 'Standard'];
 
         // Fungsi untuk expand/collapse sub-menu sidebar
         window.toggleChildren = function(parentId) {
@@ -2188,11 +2236,11 @@ window.showSearchHistory = function() {
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Strategy';
                 submitButton.textContent = 'Save';
-                document.getElementById('locating-strategy-record-type').value = 'LOCSTRAT'; // Default value for new strategy
+                document.getElementById('locating-strategy-record-type').value = 'LOCSTRAT';
                 document.getElementById('locating-strategy-record-type').setAttribute('readonly', true);
                 document.getElementById('locating-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                document.getElementById('locating-strategy-system-created').checked = false; // Default to unchecked
-                document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); // Disable for new creation
+                document.getElementById('locating-strategy-system-created').checked = false;
+                // document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); 
             } else { // edit mode
                 title.textContent = 'Edit Locating Strategy';
                 submitButton.textContent = 'Update';
@@ -2210,10 +2258,8 @@ window.showSearchHistory = function() {
                         document.getElementById('locating-strategy-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                         document.getElementById('locating-strategy-record-type').setAttribute('readonly', true);
                         document.getElementById('locating-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                        document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); // Keep disabled
-                    } else {
-                        document.getElementById('locating-strategy-system-created').removeAttribute('disabled'); // Enable if not system created
                     }
+                    document.getElementById('locating-strategy-system-created').removeAttribute('disabled');
                 }
             }
             modal.classList.remove('hidden');
@@ -2509,6 +2555,49 @@ window.showSearchHistory = function() {
             }
         };
 
+        /**
+         * Mengganti input teks 'up-default-warehouse' menjadi dropdown (<select>)
+         * dan mengisinya dengan data dari window.allWarehouses.
+         * @param {string} selectedValue - ID warehouse yang harus dipilih secara default.
+         */
+        function replaceWarehouseInputWithDropdown(selectedValue = '') {
+            const originalInput = document.getElementById('up-default-warehouse');
+            if (!originalInput) {
+                console.warn('Element with id "up-default-warehouse" not found for replacement.');
+                return;
+            }
+
+            // Kalo udah jadi dropdown, cukup update value-nya, jangan bikin ulang.
+            if (originalInput.tagName === 'SELECT') {
+                originalInput.value = selectedValue;
+                return;
+            }
+
+            const selectDropdown = document.createElement('select');
+            selectDropdown.id = originalInput.id;
+            selectDropdown.name = originalInput.name;
+            selectDropdown.className = originalInput.className;
+
+            // Opsi default
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Pilih Warehouse';
+            selectDropdown.appendChild(defaultOption);
+
+            window.allWarehouses.forEach(warehouse => {
+                const option = document.createElement('option');
+                option.value = warehouse.id;
+                option.textContent = warehouse.name;
+                selectDropdown.appendChild(option);
+            });
+
+            // Set value yang terpilih (buat mode edit)
+            selectDropdown.value = selectedValue;
+
+            // Ganti input teks yang lama dengan dropdown yang baru
+            originalInput.parentNode.replaceChild(selectDropdown, originalInput);
+        }
+
         // --- User Profile Management Functions ---
         window.renderUserProfileList = function(filter = '') {
             const container = document.getElementById('user-profile-list-container');
@@ -2578,53 +2667,76 @@ window.showSearchHistory = function() {
         };
 
         window.showUserProfileForm = function(mode, id = null) {
-            const modal = document.getElementById('user-profile-form-modal');
-            const form = document.getElementById('user-profile-form');
-            const title = document.getElementById('user-profile-form-title');
-            const submitButton = document.getElementById('user-profile-submit-button');
+    const modal = document.getElementById('user-profile-form-modal');
+    const form = document.getElementById('user-profile-form');
+    const title = document.getElementById('user-profile-form-title');
+    const submitButton = document.getElementById('user-profile-submit-button');
 
-            form.reset(); // Clear form fields
-            form.dataset.mode = mode;
-            form.dataset.id = id;
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
 
-            // Reset tab to default (General)
-            setupTabSwitching('user-profile-form-modal');
+    setupTabSwitching('user-profile-form-modal');
 
-            // Reset all input fields to default styling
-            form.querySelectorAll('input, select').forEach(input => {
-                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                input.removeAttribute('readonly');
-            });
+    // Mengembalikan inputan ke style default
+    form.querySelectorAll('input, select').forEach(input => {
+        input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+        input.removeAttribute('readonly');
+        input.removeAttribute('disabled');
+    });
 
-            if (mode === 'create') {
-                title.textContent = 'Create New User Profile';
-                submitButton.textContent = 'Save';
-            } else { // edit mode
-                title.textContent = 'Edit User Profile';
-                submitButton.textContent = 'Update';
-                const userProfile = userProfiles.find(up => up.id === id);
-                if (userProfile) {
-                    document.getElementById('up-user').value = userProfile.user;
-                    document.getElementById('up-description').value = userProfile.description;
-                    document.getElementById('up-default-warehouse').value = userProfile.defaultWarehouse;
-                    document.getElementById('up-shift').value = userProfile.shift;
-                    document.getElementById('up-menu').value = userProfile.menu;
-                    document.getElementById('up-language').value = userProfile.language;
-                    document.getElementById('up-inactive').checked = userProfile.inactive;
-                    document.getElementById('up-default-label-printer').value = userProfile.defaultLabelPrinter;
-                    document.getElementById('up-default-report-printer').value = userProfile.defaultReportPrinter;
-                    document.getElementById('up-locate-empty-lpn').checked = userProfile.locateEmptyLpn;
-                    document.getElementById('up-locate-empty-item').checked = userProfile.locateEmptyItem;
-                    document.getElementById('up-locate-lpn-staging').checked = userProfile.locateLpnStaging;
-                    document.getElementById('up-locate-item-staging').checked = userProfile.locateItemStaging;
-                    for (let i = 1; i <= 8; i++) {
-                        document.getElementById(`up-udf${i}`).value = userProfile[`udf${i}`] || '';
-                    }
+    if (mode === 'create') {
+        title.textContent = 'Create New User Profile';
+        submitButton.textContent = 'Save';
+        // Kosongkan semua field untuk mode create
+        // (sudah di-handle oleh form.reset())
+
+    } else { 
+        title.textContent = 'Edit User Profile';
+        submitButton.textContent = 'Update';
+        const userProfile = userProfiles.find(up => up.id === id);
+        if (userProfile) {
+            // -- TAB: General --
+            document.getElementById('up-user').value = userProfile.user || '';
+            document.getElementById('up-description').value = userProfile.description || '';
+            document.getElementById('up-default-warehouse').value = userProfile.defaultWarehouse || '';
+            document.getElementById('up-email-address').value = userProfile.emailAddress || ''; // DITAMBAH
+            document.getElementById('up-department').value = userProfile.department || ''; // DITAMBAH
+            document.getElementById('up-shift').value = userProfile.shift || '';
+            document.getElementById('up-rf-password').value = userProfile.rfPassword || ''; // DITAMBAH
+            document.getElementById('up-uncollected-password').value = userProfile.uncollectedPassword || ''; // DITAMBAH
+            document.getElementById('up-security-group').value = userProfile.securityGroup || ''; // DITAMBAH
+            document.getElementById('up-payroll-id').value = userProfile.payrollId || ''; // DITAMBAH
+            document.getElementById('up-wage-rate').value = userProfile.wageRate || ''; // DITAMBAH
+            document.getElementById('up-hire-date').value = userProfile.hireDate || ''; // DITAMBAH
+
+            // -- TAB: Preferences --
+            document.getElementById('up-pref-cycle-counting').value = userProfile.cycleCounting || 'Default'; // DITAMBAH
+            document.getElementById('up-pref-shipping').value = userProfile.shipping || 'Default'; // DITAMBAH
+            document.getElementById('up-pref-packing').value = userProfile.packing || 'Default'; // DITAMBAH
+            document.getElementById('up-pref-work-order').value = userProfile.workOrder || 'Default'; // DITAMBAH
+            document.getElementById('up-pref-receiving').value = userProfile.receiving || 'Standard'; // DITAMBAH
+            document.getElementById('up-pref-report-dir').value = userProfile.reportDirectory || ''; // DITAMBAH
+            document.getElementById('up-pref-my-link-dir').value = userProfile.myLinkDirectory || ''; // DITAMBAH
+            document.getElementById('up-pref-desktop-template').value = userProfile.desktopTemplate || 'Adminisitrasi'; // DITAMBAH
+            document.getElementById('up-pref-excel-dir').value = userProfile.excelExportDirectory || ''; // DITAMBAH
+
+            // -- FIELD LAMA YANG DIHAPUS DARI FUNGSI INI --
+            // 'up-menu', 'up-language', 'up-default-label-printer', 'up-default-report-printer',
+            // 'up-locate-empty-lpn', 'up-locate-empty-item', 'up-locate-lpn-staging', 'up-locate-item-staging'
+            
+            // Mengisi UDF (User Defined Fields)
+            for (let i = 1; i <= 8; i++) {
+                const udfInput = document.getElementById(`up-udf${i}`);
+                if (udfInput) {
+                    udfInput.value = userProfile[`udf${i}`] || '';
                 }
             }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        };
+        }
+    }
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+};
 
         window.closeUserProfileForm = function() {
             document.getElementById('user-profile-form-modal').classList.add('hidden');
@@ -2632,45 +2744,69 @@ window.showSearchHistory = function() {
         };
 
         window.handleUserProfileSubmit = async function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const mode = form.dataset.mode;
-            const id = form.dataset.id;
+    event.preventDefault();
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
 
-            const newUserProfile = {
-                user: form['user'].value,
-                description: form['description'].value,
-                defaultWarehouse: form['defaultWarehouse'].value,
-                shift: form['shift'].value,
-                menu: form['menu'].value,
-                language: form['language'].value,
-                inactive: form['up-inactive'].checked,
-                defaultLabelPrinter: form['defaultLabelPrinter'].value,
-                defaultReportPrinter: form['defaultReportPrinter'].value,
-                locateEmptyLpn: form['locateEmptyLpn'].checked,
-                locateEmptyItem: form['locateEmptyItem'].checked,
-                locateLpnStaging: form['locateLpnStaging'].checked,
-                locateItemStaging: form['locateItemStaging'].checked,
-            };
-            for (let i = 1; i <= 8; i++) {
-                newUserProfile[`udf${i}`] = form[`udf${i}`].value;
-            }
+    // Ambil semua nilai dari form BARU
+    const newUserProfile = {
+        // TAB: General
+        user: form['user'].value,
+        description: form['description'].value,
+        defaultWarehouse: form['defaultWarehouse'].value,
+        emailAddress: form['emailAddress'].value, // DITAMBAH
+        department: form['department'].value, // DITAMBAH
+        shift: form['shift'].value,
+        rfPassword: form['rfPassword'].value, // DITAMBAH
+        uncollectedPassword: form['uncollectedPassword'].value, // DITAMBAH
+        securityGroup: form['securityGroup'].value, // DITAMBAH
+        payrollId: form['payrollId'].value, // DITAMBAH
+        wageRate: form['wageRate'].value, // DITAMBAH
+        hireDate: form['hireDate'].value, // DITAMBAH
 
-            if (mode === 'create') {
-                newUserProfile.id = 'UP' + String(userProfiles.length + 1).padStart(3, '0');
-                userProfiles.push(newUserProfile);
-                await showCustomAlert('Success', 'User Profile created successfully!');
-            } else {
-                const index = userProfiles.findIndex(up => up.id === id);
-                if (index !== -1) {
-                    userProfiles[index] = { ...userProfiles[index], ...newUserProfile };
-                    await showCustomAlert('Success', 'User Profile updated successfully!');
-                }
-            }
-            saveUserProfiles();
-            closeUserProfileForm();
-            renderUserProfileList();
-        };
+        // TAB: Preferences
+        cycleCounting: form['cycleCounting'].value, // DITAMBAH
+        shipping: form['shipping'].value, // DITAMBAH
+        packing: form['packing'].value, // DITAMBAH
+        workOrder: form['workOrder'].value, // DITAMBAH
+        receiving: form['receiving'].value, // DITAMBAH
+        reportDirectory: form['reportDirectory'].value, // DITAMBAH
+        myLinkDirectory: form['myLinkDirectory'].value, // DITAMBAH
+        desktopTemplate: form['desktopTemplate'].value, // DITAMBAH
+        excelExportDirectory: form['excelExportDirectory'].value, // DITAMBAH
+
+        // FIELD LAMA YANG DIHAPUS DARI OBJEK INI:
+        // menu, language, defaultLabelPrinter, defaultReportPrinter,
+        // locateEmptyLpn, locateEmptyItem, locateLpnStaging, locateItemStaging
+    };
+    
+    // Ambil nilai UDFs (User Defined Fields)
+    for (let i = 1; i <= 8; i++) {
+        newUserProfile[`udf${i}`] = form[`udf${i}`]?.value || '';
+    }
+
+    if (mode === 'create') {
+        newUserProfile.id = 'UP' + String(userProfiles.length + 1).padStart(3, '0');
+        userProfiles.push(newUserProfile);
+        await showCustomAlert('Success', 'User Profile created successfully!');
+    } else {
+        const index = userProfiles.findIndex(up => up.id === id);
+        if (index !== -1) {
+            // Gabungkan data lama dengan data baru
+            userProfiles[index] = { ...userProfiles[index], ...newUserProfile };
+            await showCustomAlert('Success', 'User Profile updated successfully!');
+        }
+    }
+    
+    // Pastikan fungsi saveUserProfiles ada di scope global
+    if(window.saveUserProfiles) {
+       window.saveUserProfiles();
+    }
+
+    closeUserProfileForm();
+    renderUserProfileList();
+};
 
         window.deleteUserProfile = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this user profile?');
@@ -3047,44 +3183,57 @@ window.showSearchHistory = function() {
         };
 
     });
-    /**
- * Mengganti visibilitas dropdown pengguna.
- */
-window.toggleUserDropdown = function() {
-    const userDropdown = document.getElementById('user-dropdown');
-    userDropdown.classList.toggle('hidden');
-};
 
-/**
- * Navigasi ke halaman profil.
- */
-window.navigateToProfile = function() {
-    window.location.href = 'profile.html';    
-};
+        /**
+         * Mengubah visibilitas input password (text/password).
+         * @param {string} inputId - ID dari elemen input password.
+         * @param {boolean} isChecked - Status checkbox (true jika dicentang).
+         */
+        window.togglePasswordVisibility = function(inputId, isChecked) {
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput) {
+                passwordInput.type = isChecked ? 'password' : 'text';
+            }
+        };
 
-/**
- * Menangani proses logout.
- */
-window.handleLogout = async function() {
-    const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
-    if (confirmed) {
-        await showCustomAlert('Logout', 'Anda berhasil logout.');
-        window.location.href = 'login.html'; // Arahkan ke halaman login
-    }
-};
+        /**
+         * Mengganti visibilitas dropdown pengguna.
+         */
+        window.toggleUserDropdown = function() {
+            const userDropdown = document.getElementById('user-dropdown');
+            userDropdown.classList.toggle('hidden');
+        };
 
-// Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
-document.addEventListener('click', function(event) {
-    const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
-    const userDropdown = document.getElementById('user-dropdown');
-    const searchInput = document.getElementById('search-input');
-    const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+        /**
+         * Navigasi ke halaman profil.
+         */
+        window.navigateToProfile = function() {
+            window.location.href = 'profile.html';    
+        };
 
-    if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
-        userDropdown.classList.add('hidden');
-    }
-    if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
-        searchHistoryDropdown.classList.add('hidden');
-    }
-});
+        /**
+         * Menangani proses logout.
+         */
+        window.handleLogout = async function() {
+            const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
+            if (confirmed) {
+                await showCustomAlert('Logout', 'Anda berhasil logout.');
+                window.location.href = 'login.html'; // Arahkan ke halaman login
+            }
+        };
+
+        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
+        document.addEventListener('click', function(event) {
+            const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
+            const userDropdown = document.getElementById('user-dropdown');
+            const searchInput = document.getElementById('search-input');
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+
+            if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.add('hidden');
+            }
+            if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+                searchHistoryDropdown.classList.add('hidden');
+            }
+        });
 })();

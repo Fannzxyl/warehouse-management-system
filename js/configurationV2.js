@@ -174,8 +174,8 @@
 
                                     <div class="mb-4">
                                         <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated" disabled
-                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary cursor-not-allowed">
+                                            <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated"
+                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
                                             <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
                                         </label>
                                     </div>
@@ -253,18 +253,18 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="up-rf-password" class="block text-sm font-medium text-wise-dark-gray">RF password:</label>
-                                                <input type="password" id="up-rf-password" name="rfPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                <input type="text" id="up-rf-password" name="rfPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div class="flex items-center mt-6">
-                                                <input type="checkbox" id="up-hide-rf-password" name="hideRfPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <input type="checkbox" id="up-hide-rf-password" name="hideRfPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="togglePasswordVisibility('up-rf-password', this.checked)">
                                                 <span class="ml-2 text-sm text-wise-dark-gray">Hide RF password</span>
                                             </div>
                                             <div>
                                                 <label for="up-uncollected-password" class="block text-sm font-medium text-wise-dark-gray">Uncollected password:</label>
-                                                <input type="password" id="up-uncollected-password" name="uncollectedPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                <input type="text" id="up-uncollected-password" name="uncollectedPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div class="flex items-center mt-6">
-                                                <input type="checkbox" id="up-hide-uncollected-password" name="hideUncollectedPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <input type="checkbox" id="up-hide-uncollected-password" name="hideUncollectedPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="togglePasswordVisibility('up-uncollected-password', this.checked)">
                                                 <span class="ml-2 text-sm text-wise-dark-gray">Hide uncollected password</span>
                                             </div>
                                             <div>
@@ -292,127 +292,85 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    
                                     <!-- Preferences Tab -->
-                                    <div id="up-preferences" class="tab-content hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Preferences</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-default-processing-profile" class="block text-sm font-medium text-wise-dark-gray">Default processing profile:</label>
-                                                <input type="text" id="up-default-processing-profile" name="defaultProcessingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-packing-profile" class="block text-sm font-medium text-wise-dark-gray">Default packing profile:</label>
-                                                <input type="text" id="up-default-packing-profile" name="defaultPackingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-shipping-profile" class="block text-sm font-medium text-wise-dark-gray">Default shipping profile:</label>
-                                                <input type="text" id="up-default-shipping-profile" name="defaultShippingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-receiving-profile" class="block text-sm font-medium text-wise-dark-gray">Default receiving profile:</label>
-                                                <input type="text" id="up-default-receiving-profile" name="defaultReceivingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-putaway-profile" class="block text-sm font-medium text-wise-dark-gray">Default putaway profile:</label>
-                                                <input type="text" id="up-default-putaway-profile" name="defaultPutawayProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-picking-profile" class="block text-sm font-medium text-wise-dark-gray">Default picking profile:</label>
-                                                <input type="text" id="up-default-picking-profile" name="defaultPickingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-cycle-count-profile" class="block text-sm font-medium text-wise-dark-gray">Default cycle count profile:</label>
-                                                <input type="text" id="up-default-cycle-count-profile" name="defaultCycleCountProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-label-profile" class="block text-sm font-medium text-wise-dark-gray">Default label profile:</label>
-                                                <input type="text" id="up-default-label-profile" name="defaultLabelProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-report-profile" class="block text-sm font-medium text-wise-dark-gray">Default report profile:</label>
-                                                <input type="text" id="up-default-report-profile" name="defaultReportProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-inventory-adjustment-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory adjustment profile:</label>
-                                                <input type="text" id="up-default-inventory-adjustment-profile" name="defaultInventoryAdjustmentProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-inventory-transfer-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory transfer profile:</label>
-                                                <input type="text" id="up-default-inventory-transfer-profile" name="defaultInventoryTransferProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-inventory-move-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory move profile:</label>
-                                                <input type="text" id="up-default-inventory-move-profile" name="defaultInventoryMoveProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-kit-production-profile" class="block text-sm font-medium text-wise-dark-gray">Default kit production profile:</label>
-                                                <input type="text" id="up-default-kit-production-profile" name="defaultKitProductionProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-kitting-profile" class="block text-sm font-medium text-wise-dark-gray">Default kitting profile:</label>
-                                                <input type="text" id="up-default-kitting-profile" name="defaultKittingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-value-added-service-profile" class="block text-sm font-medium text-wise-dark-gray">Default value added service profile:</label>
-                                                <input type="text" id="up-default-value-added-service-profile" name="defaultValueAddedServiceProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-shipping-manifest-profile" class="block text-sm font-medium text-wise-dark-gray">Default shipping manifest profile:</label>
-                                                <input type="text" id="up-default-shipping-manifest-profile" name="defaultShippingManifestProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <div id="up-preferences" class="tab-content hidden space-y-6">
+                                        <div>
+                                            <h4 class="text-sm font-semibold text-wise-dark-gray pb-2 mb-3 border-b border-wise-border">-Processing</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="up-pref-cycle-counting" class="block text-sm font-medium text-wise-dark-gray">Cycle counting:</label>
+                                                    <select id="up-pref-cycle-counting" name="cycleCounting" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        ${window.defaultStandardOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label for="up-pref-shipping" class="block text-sm font-medium text-wise-dark-gray">Shipping:</label>
+                                                    <select id="up-pref-shipping" name="shipping" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        ${window.defaultStandardOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label for="up-pref-packing" class="block text-sm font-medium text-wise-dark-gray">Packing:</label>
+                                                    <select id="up-pref-packing" name="packing" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        ${window.defaultStandardOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label for="up-pref-work-order" class="block text-sm font-medium text-wise-dark-gray">Work order:</label>
+                                                    <select id="up-pref-work-order" name="workOrder" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        ${window.defaultStandardOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                    </select>
+                                                </div>
+                                                <div class="md:col-span-2">
+                                                    <label for="up-pref-receiving" class="block text-sm font-medium text-wise-dark-gray">Receiving:</label>
+                                                    <select id="up-pref-receiving" name="receiving" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        ${window.defaultStandardOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Processing</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-cycle-counting" class="block text-sm font-medium text-wise-dark-gray">Cycle counting:</label>
-                                                <input type="text" id="up-cycle-counting" name="cycleCounting" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-packing" class="block text-sm font-medium text-wise-dark-gray">Packing:</label>
-                                                <input type="text" id="up-packing" name="packing" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-shipping" class="block text-sm font-medium text-wise-dark-gray">Shipping:</label>
-                                                <input type="text" id="up-shipping" name="shipping" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-receiving" class="block text-sm font-medium text-wise-dark-gray">Receiving:</label>
-                                                <input type="text" id="up-receiving" name="receiving" value="Standard" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-inbound-order" class="block text-sm font-medium text-wise-dark-gray">Inbound order:</label>
-                                                <input type="text" id="up-inbound-order" name="inboundOrder" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+
+                                        <div>
+                                            <h4 class="text-sm font-semibold text-wise-dark-gray pb-2 mb-3 border-b border-wise-border">-Supply chain intelligence</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="up-pref-report-dir" class="block text-sm font-medium text-wise-dark-gray">Report directory:</label>
+                                                    <input type="text" id="up-pref-report-dir" name="reportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="up-pref-my-link-dir" class="block text-sm font-medium text-wise-dark-gray">My link directory:</label>
+                                                    <input type="text" id="up-pref-my-link-dir" name="myLinkDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div class="md:col-span-2">
+                                                    <label for="up-pref-default-chart" class="block text-sm font-medium text-wise-dark-gray">Default chart:</label>
+                                                    <select id="up-pref-default-chart" name="defaultChart" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">-- Select Chart --</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Supply Chain Intelligence</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-report-directory" class="block text-sm font-medium text-wise-dark-gray">Report directory:</label>
-                                                <input type="text" id="up-report-directory" name="reportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-my-jobs-directory" class="block text-sm font-medium text-wise-dark-gray">My jobs directory:</label>
-                                                <input type="text" id="up-my-jobs-directory" name="myJobsDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-client" class="block text-sm font-medium text-wise-dark-gray">Default client:</label>
-                                                <input type="text" id="up-default-client" name="defaultClient" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">System</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-desktop-template" class="block text-sm font-medium text-wise-dark-gray">Desktop template:</label>
-                                                <input type="text" id="up-desktop-template" name="desktopTemplate" value="Administrator" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-rf-style-sheet" class="block text-sm font-medium text-wise-dark-gray">RF style sheet:</label>
-                                                <input type="text" id="up-rf-style-sheet" name="rfStyleSheet" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-excel-export-directory" class="block text-sm font-medium text-wise-dark-gray">Excel export directory:</label>
-                                                <input type="text" id="up-excel-export-directory" name="excelExportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        
+                                        <div>
+                                            <h4 class="text-sm font-semibold text-wise-dark-gray pb-2 mb-3 border-b border-wise-border">-System</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="up-pref-desktop-template" class="block text-sm font-medium text-wise-dark-gray">Desktop template:</label>
+                                                    <select id="up-pref-desktop-template" name="desktopTemplate" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">Select Template --</option>
+                                                        <option value="Adminisitrasi">Adminisitrasi</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label for="up-pref-rf-style-sheet" class="block text-sm font-medium text-wise-dark-gray">RF style sheet:</label>
+                                                    <select id="up-pref-rf-style-sheet" name="rfStyleSheet" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">-- Select Style Sheet --</option>
+                                                    </select>
+                                                </div>
+                                                <div class="md:col-span-2">
+                                                    <label for="up-pref-excel-dir" class="block text-sm font-medium text-wise-dark-gray">Excel export directory:</label>
+                                                    <input type="text" id="up-pref-excel-dir" name="excelExportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -432,7 +390,8 @@
                                         </div>
                                         <div id="company-access-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-40 overflow-y-auto">
                                             <!-- Company checkboxes will be rendered here -->
-                                            <div class="flex items-center"><input type="checkbox" id="company-do" name="companyAccess" value="DO" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-do" class="ml-2 text-sm text-wise-dark-gray">DO</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="company-dcb" name="companyAccess" value="DCB" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-dcb" class="ml-2 text-sm text-wise-dark-gray">DCB</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="company-dci" name="companyAccess" value="DCI" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-dci" class="ml-2 text-sm text-wise-dark-gray">DCI</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="company-dmr" name="companyAccess" value="DMR" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-dmr" class="ml-2 text-sm text-wise-dark-gray">DMR</label></div>
                                         </div>
                                     </div>
@@ -452,7 +411,7 @@
                                         </div>
                                         <div id="warehouse-access-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-40 overflow-y-auto">
                                             <!-- Warehouse checkboxes will be rendered here -->
-                                            <div class="flex items-center"><input type="checkbox" id="warehouse-do" name="warehouseAccess" value="DO" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="warehouse-do" class="ml-2 text-sm text-wise-dark-gray">DO</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="warehouse-dci" name="warehouseAccess" value="DCI" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="warehouse-dci" class="ml-2 text-sm text-wise-dark-gray">DCI</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="warehouse-dmr" name="warehouseAccess" value="DMR" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="warehouse-dmr" class="ml-2 text-sm text-wise-dark-gray">DMR</label></div>
                                         </div>
                                     </div>
@@ -1139,7 +1098,7 @@
                 rt.classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 const sc = document.getElementById('allocation-strategy-system-created');
                 sc.checked = false;
-                sc.setAttribute('disabled', true);
+                // sc.setAttribute('disabled', true);
             } else {
                 title.textContent = 'Edit Allocation Strategy';
                 submitButton.textContent = 'Update';
@@ -1160,11 +1119,8 @@
                         const rt = document.getElementById('allocation-strategy-record-type');
                         rt.setAttribute('readonly', true);
                         rt.classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-
-                        document.getElementById('allocation-strategy-system-created').setAttribute('disabled', true);
-                    } else {
-                        document.getElementById('allocation-strategy-system-created').removeAttribute('disabled');
                     }
+                    document.getElementById('allocation-strategy-system-created').removeAttribute('disabled');
                 }
             }
 
