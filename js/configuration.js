@@ -2667,76 +2667,70 @@ window.showSearchHistory = function() {
         };
 
         window.showUserProfileForm = function(mode, id = null) {
-    const modal = document.getElementById('user-profile-form-modal');
-    const form = document.getElementById('user-profile-form');
-    const title = document.getElementById('user-profile-form-title');
-    const submitButton = document.getElementById('user-profile-submit-button');
+            const modal = document.getElementById('user-profile-form-modal');
+            const form = document.getElementById('user-profile-form');
+            const title = document.getElementById('user-profile-form-title');
+            const submitButton = document.getElementById('user-profile-submit-button');
 
-    form.reset();
-    form.dataset.mode = mode;
-    form.dataset.id = id;
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
-    setupTabSwitching('user-profile-form-modal');
+            setupTabSwitching('user-profile-form-modal');
 
-    // Mengembalikan inputan ke style default
-    form.querySelectorAll('input, select').forEach(input => {
-        input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-        input.removeAttribute('readonly');
-        input.removeAttribute('disabled');
-    });
+            form.querySelectorAll('input, select').forEach(input => {
+                input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                input.removeAttribute('readonly');
+                input.removeAttribute('disabled');
+            });
 
-    if (mode === 'create') {
-        title.textContent = 'Create New User Profile';
-        submitButton.textContent = 'Save';
-        // Kosongkan semua field untuk mode create
-        // (sudah di-handle oleh form.reset())
+            const userProfile = mode === 'edit' ? userProfiles.find(up => up.id === id) : null;
+            replaceWarehouseInputWithDropdown(userProfile ? userProfile.defaultWarehouse : '');
+            if (mode === 'create') {
+                title.textContent = 'Create New User Profile';
+                submitButton.textContent = 'Save';
+            } else { 
+                title.textContent = 'Edit User Profile';
+                submitButton.textContent = 'Update';
+                
+                if (userProfile) {
+                    // -- TAB: General --
+                    document.getElementById('up-user').value = userProfile.user || '';
+                    document.getElementById('up-description').value = userProfile.description || '';
+                    // (Nilai dropdown warehouse sudah di-set oleh fungsi replaceWarehouseInputWithDropdown di atas)
+                    document.getElementById('up-email-address').value = userProfile.emailAddress || '';
+                    document.getElementById('up-department').value = userProfile.department || '';
+                    document.getElementById('up-shift').value = userProfile.shift || '';
+                    document.getElementById('up-rf-password').value = userProfile.rfPassword || '';
+                    document.getElementById('up-uncollected-password').value = userProfile.uncollectedPassword || '';
+                    document.getElementById('up-security-group').value = userProfile.securityGroup || '';
+                    document.getElementById('up-payroll-id').value = userProfile.payrollId || '';
+                    document.getElementById('up-wage-rate').value = userProfile.wageRate || '';
+                    document.getElementById('up-hire-date').value = userProfile.hireDate || '';
 
-    } else { 
-        title.textContent = 'Edit User Profile';
-        submitButton.textContent = 'Update';
-        const userProfile = userProfiles.find(up => up.id === id);
-        if (userProfile) {
-            // -- TAB: General --
-            document.getElementById('up-user').value = userProfile.user || '';
-            document.getElementById('up-description').value = userProfile.description || '';
-            document.getElementById('up-default-warehouse').value = userProfile.defaultWarehouse || '';
-            document.getElementById('up-email-address').value = userProfile.emailAddress || ''; // DITAMBAH
-            document.getElementById('up-department').value = userProfile.department || ''; // DITAMBAH
-            document.getElementById('up-shift').value = userProfile.shift || '';
-            document.getElementById('up-rf-password').value = userProfile.rfPassword || ''; // DITAMBAH
-            document.getElementById('up-uncollected-password').value = userProfile.uncollectedPassword || ''; // DITAMBAH
-            document.getElementById('up-security-group').value = userProfile.securityGroup || ''; // DITAMBAH
-            document.getElementById('up-payroll-id').value = userProfile.payrollId || ''; // DITAMBAH
-            document.getElementById('up-wage-rate').value = userProfile.wageRate || ''; // DITAMBAH
-            document.getElementById('up-hire-date').value = userProfile.hireDate || ''; // DITAMBAH
-
-            // -- TAB: Preferences --
-            document.getElementById('up-pref-cycle-counting').value = userProfile.cycleCounting || 'Default'; // DITAMBAH
-            document.getElementById('up-pref-shipping').value = userProfile.shipping || 'Default'; // DITAMBAH
-            document.getElementById('up-pref-packing').value = userProfile.packing || 'Default'; // DITAMBAH
-            document.getElementById('up-pref-work-order').value = userProfile.workOrder || 'Default'; // DITAMBAH
-            document.getElementById('up-pref-receiving').value = userProfile.receiving || 'Standard'; // DITAMBAH
-            document.getElementById('up-pref-report-dir').value = userProfile.reportDirectory || ''; // DITAMBAH
-            document.getElementById('up-pref-my-link-dir').value = userProfile.myLinkDirectory || ''; // DITAMBAH
-            document.getElementById('up-pref-desktop-template').value = userProfile.desktopTemplate || 'Adminisitrasi'; // DITAMBAH
-            document.getElementById('up-pref-excel-dir').value = userProfile.excelExportDirectory || ''; // DITAMBAH
-
-            // -- FIELD LAMA YANG DIHAPUS DARI FUNGSI INI --
-            // 'up-menu', 'up-language', 'up-default-label-printer', 'up-default-report-printer',
-            // 'up-locate-empty-lpn', 'up-locate-empty-item', 'up-locate-lpn-staging', 'up-locate-item-staging'
-            
-            // Mengisi UDF (User Defined Fields)
-            for (let i = 1; i <= 8; i++) {
-                const udfInput = document.getElementById(`up-udf${i}`);
-                if (udfInput) {
-                    udfInput.value = userProfile[`udf${i}`] || '';
+                    // -- TAB: Preferences --
+                    document.getElementById('up-pref-cycle-counting').value = userProfile.cycleCounting || 'Default';
+                    document.getElementById('up-pref-shipping').value = userProfile.shipping || 'Default';
+                    document.getElementById('up-pref-packing').value = userProfile.packing || 'Default';
+                    document.getElementById('up-pref-work-order').value = userProfile.workOrder || 'Default';
+                    document.getElementById('up-pref-receiving').value = userProfile.receiving || 'Standard';
+                    document.getElementById('up-pref-report-dir').value = userProfile.reportDirectory || '';
+                    document.getElementById('up-pref-my-link-dir').value = userProfile.myLinkDirectory || '';
+                    document.getElementById('up-pref-desktop-template').value = userProfile.desktopTemplate || 'Adminisitrasi';
+                    document.getElementById('up-pref-excel-dir').value = userProfile.excelExportDirectory || '';
+                    
+                    // Mengisi UDF (User Defined Fields)
+                    for (let i = 1; i <= 8; i++) {
+                        const udfInput = document.getElementById(`up-udf${i}`);
+                        if (udfInput) {
+                            udfInput.value = userProfile[`udf${i}`] || '';
+                        }
+                    }
                 }
             }
-        }
-    }
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-};
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
 
         window.closeUserProfileForm = function() {
             document.getElementById('user-profile-form-modal').classList.add('hidden');
