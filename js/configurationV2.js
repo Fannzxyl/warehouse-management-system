@@ -191,6 +191,565 @@
                     </div>
                 `,
             },
+            'configuration-user-profile': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
+                    <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">
+                            Create New User Profile
+                        </button>
+                        <input type="text" id="user-profile-search" placeholder="Search user profile..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterUserProfileList(this.value)">
+                    </div>
+                    <div id="user-profile-list-container" class="overflow-x-auto">
+                        <!-- User profile list table will be rendered here -->
+                    </div>
+                    
+                    <!-- User Profile Form Modal -->
+                    <div id="user-profile-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
+                            <h3 id="user-profile-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="user-profile-form" onsubmit="handleUserProfileSubmit(event)">
+                                    <!-- Tab Buttons -->
+                                    <div class="flex space-x-2 mb-2 border-b">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-preferences">Preferences</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-company-access">Company access</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-warehouse-access">Warehouse access</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-work-profile">Work profile</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-authorized-adjustment-types">Authorized adjustment types</button>
+                                    </div>
+
+                                    <!-- General Tab -->
+                                    <div id="up-general" class="tab-content">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
+                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-warehouse" class="block text-sm font-medium text-wise-dark-gray">Default warehouse:</label>
+                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-email-address" class="block text-sm font-medium text-wise-dark-gray">Email address:</label>
+                                                <input type="email" id="up-email-address" name="emailAddress" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-department" class="block text-sm font-medium text-wise-dark-gray">Department:</label>
+                                                <input type="text" id="up-department" name="department" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-shift" class="block text-sm font-medium text-wise-dark-gray">Shift:</label>
+                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Security Information</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-rf-password" class="block text-sm font-medium text-wise-dark-gray">RF password:</label>
+                                                <input type="password" id="up-rf-password" name="rfPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="flex items-center mt-6">
+                                                <input type="checkbox" id="up-hide-rf-password" name="hideRfPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Hide RF password</span>
+                                            </div>
+                                            <div>
+                                                <label for="up-uncollected-password" class="block text-sm font-medium text-wise-dark-gray">Uncollected password:</label>
+                                                <input type="password" id="up-uncollected-password" name="uncollectedPassword" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div class="flex items-center mt-6">
+                                                <input type="checkbox" id="up-hide-uncollected-password" name="hideUncollectedPassword" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Hide uncollected password</span>
+                                            </div>
+                                            <div>
+                                                <label for="up-security-group" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
+                                                <select id="up-security-group" name="securityGroup" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">--Select--</option>
+                                                    <option value="Admin">Admin</option>
+                                                    <option value="Cycle Counting">Cycle Counting</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Payroll Information</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-payroll-id" class="block text-sm font-medium text-wise-dark-gray">Payroll id:</label>
+                                                <input type="text" id="up-payroll-id" name="payrollId" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-wage-rate" class="block text-sm font-medium text-wise-dark-gray">Wage rate:</label>
+                                                <input type="number" step="0.01" id="up-wage-rate" name="wageRate" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-hire-date" class="block text-sm font-medium text-wise-dark-gray">Hire date:</label>
+                                                <input type="date" id="up-hire-date" name="hireDate" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preferences Tab -->
+                                    <div id="up-preferences" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Preferences</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-default-processing-profile" class="block text-sm font-medium text-wise-dark-gray">Default processing profile:</label>
+                                                <input type="text" id="up-default-processing-profile" name="defaultProcessingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-packing-profile" class="block text-sm font-medium text-wise-dark-gray">Default packing profile:</label>
+                                                <input type="text" id="up-default-packing-profile" name="defaultPackingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-shipping-profile" class="block text-sm font-medium text-wise-dark-gray">Default shipping profile:</label>
+                                                <input type="text" id="up-default-shipping-profile" name="defaultShippingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-receiving-profile" class="block text-sm font-medium text-wise-dark-gray">Default receiving profile:</label>
+                                                <input type="text" id="up-default-receiving-profile" name="defaultReceivingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-putaway-profile" class="block text-sm font-medium text-wise-dark-gray">Default putaway profile:</label>
+                                                <input type="text" id="up-default-putaway-profile" name="defaultPutawayProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-picking-profile" class="block text-sm font-medium text-wise-dark-gray">Default picking profile:</label>
+                                                <input type="text" id="up-default-picking-profile" name="defaultPickingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-cycle-count-profile" class="block text-sm font-medium text-wise-dark-gray">Default cycle count profile:</label>
+                                                <input type="text" id="up-default-cycle-count-profile" name="defaultCycleCountProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-label-profile" class="block text-sm font-medium text-wise-dark-gray">Default label profile:</label>
+                                                <input type="text" id="up-default-label-profile" name="defaultLabelProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-report-profile" class="block text-sm font-medium text-wise-dark-gray">Default report profile:</label>
+                                                <input type="text" id="up-default-report-profile" name="defaultReportProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-inventory-adjustment-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory adjustment profile:</label>
+                                                <input type="text" id="up-default-inventory-adjustment-profile" name="defaultInventoryAdjustmentProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-inventory-transfer-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory transfer profile:</label>
+                                                <input type="text" id="up-default-inventory-transfer-profile" name="defaultInventoryTransferProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-inventory-move-profile" class="block text-sm font-medium text-wise-dark-gray">Default inventory move profile:</label>
+                                                <input type="text" id="up-default-inventory-move-profile" name="defaultInventoryMoveProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-kit-production-profile" class="block text-sm font-medium text-wise-dark-gray">Default kit production profile:</label>
+                                                <input type="text" id="up-default-kit-production-profile" name="defaultKitProductionProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-kitting-profile" class="block text-sm font-medium text-wise-dark-gray">Default kitting profile:</label>
+                                                <input type="text" id="up-default-kitting-profile" name="defaultKittingProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-value-added-service-profile" class="block text-sm font-medium text-wise-dark-gray">Default value added service profile:</label>
+                                                <input type="text" id="up-default-value-added-service-profile" name="defaultValueAddedServiceProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-shipping-manifest-profile" class="block text-sm font-medium text-wise-dark-gray">Default shipping manifest profile:</label>
+                                                <input type="text" id="up-default-shipping-manifest-profile" name="defaultShippingManifestProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Processing</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-cycle-counting" class="block text-sm font-medium text-wise-dark-gray">Cycle counting:</label>
+                                                <input type="text" id="up-cycle-counting" name="cycleCounting" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-packing" class="block text-sm font-medium text-wise-dark-gray">Packing:</label>
+                                                <input type="text" id="up-packing" name="packing" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-shipping" class="block text-sm font-medium text-wise-dark-gray">Shipping:</label>
+                                                <input type="text" id="up-shipping" name="shipping" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-receiving" class="block text-sm font-medium text-wise-dark-gray">Receiving:</label>
+                                                <input type="text" id="up-receiving" name="receiving" value="Standard" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-inbound-order" class="block text-sm font-medium text-wise-dark-gray">Inbound order:</label>
+                                                <input type="text" id="up-inbound-order" name="inboundOrder" value="Default" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">Supply Chain Intelligence</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-report-directory" class="block text-sm font-medium text-wise-dark-gray">Report directory:</label>
+                                                <input type="text" id="up-report-directory" name="reportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-my-jobs-directory" class="block text-sm font-medium text-wise-dark-gray">My jobs directory:</label>
+                                                <input type="text" id="up-my-jobs-directory" name="myJobsDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-client" class="block text-sm font-medium text-wise-dark-gray">Default client:</label>
+                                                <input type="text" id="up-default-client" name="defaultClient" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mt-4 mb-2">System</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-desktop-template" class="block text-sm font-medium text-wise-dark-gray">Desktop template:</label>
+                                                <input type="text" id="up-desktop-template" name="desktopTemplate" value="Administrator" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-rf-style-sheet" class="block text-sm font-medium text-wise-dark-gray">RF style sheet:</label>
+                                                <input type="text" id="up-rf-style-sheet" name="rfStyleSheet" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-excel-export-directory" class="block text-sm font-medium text-wise-dark-gray">Excel export directory:</label>
+                                                <input type="text" id="up-excel-export-directory" name="excelExportDirectory" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Company Access Tab -->
+                                    <div id="up-company-access" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Company Authorization</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="companyAccessType" value="All" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                                <span class="ml-2 text-sm text-wise-dark-gray">All</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-4">
+                                                <input type="radio" name="companyAccessType" value="List" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">List</span>
+                                            </label>
+                                        </div>
+                                        <div id="company-access-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-40 overflow-y-auto">
+                                            <!-- Company checkboxes will be rendered here -->
+                                            <div class="flex items-center"><input type="checkbox" id="company-do" name="companyAccess" value="DO" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-do" class="ml-2 text-sm text-wise-dark-gray">DO</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="company-dmr" name="companyAccess" value="DMR" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="company-dmr" class="ml-2 text-sm text-wise-dark-gray">DMR</label></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Warehouse Access Tab -->
+                                    <div id="up-warehouse-access" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Warehouse Authorization</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="warehouseAccessType" value="All" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                                <span class="ml-2 text-sm text-wise-dark-gray">All</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-4">
+                                                <input type="radio" name="warehouseAccessType" value="List" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">List</span>
+                                            </label>
+                                        </div>
+                                        <div id="warehouse-access-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-40 overflow-y-auto">
+                                            <!-- Warehouse checkboxes will be rendered here -->
+                                            <div class="flex items-center"><input type="checkbox" id="warehouse-do" name="warehouseAccess" value="DO" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="warehouse-do" class="ml-2 text-sm text-wise-dark-gray">DO</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="warehouse-dmr" name="warehouseAccess" value="DMR" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="warehouse-dmr" class="ml-2 text-sm text-wise-dark-gray">DMR</label></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Work Profile Tab -->
+                                    <div id="up-work-profile" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Work Profile Authorization</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="workProfileAccessType" value="All" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                                <span class="ml-2 text-sm text-wise-dark-gray">All</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-4">
+                                                <input type="radio" name="workProfileAccessType" value="List" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">List</span>
+                                            </label>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="up-default-work-profile" class="block text-sm font-medium text-wise-dark-gray">Default work profile:</label>
+                                            <input type="text" id="up-default-work-profile" name="defaultWorkProfile" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div id="work-profile-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-60 overflow-y-auto grid grid-cols-2 gap-2">
+                                            <!-- Work profile checkboxes will be rendered here -->
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-cycle-count-system-direct" name="workProfileAccess" value="Cycle Count System Direct" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-cycle-count-system-direct" class="ml-2 text-sm text-wise-dark-gray">Cycle Count System Direct</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-area-2" name="workProfileAccess" value="Pick - SMS Area 2" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-area-2" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS Area 2</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-cycle-count-load-direct" name="workProfileAccess" value="Cycle Count Load Direct" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-cycle-count-load-direct" class="ml-2 text-sm text-wise-dark-gray">Cycle Count Load Direct</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-replenishment-user-directed" name="workProfileAccess" value="Replenishment - User Directed" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-replenishment-user-directed" class="ml-2 text-sm text-wise-dark-gray">Replenishment - User Directed</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-loading-user-direct" name="workProfileAccess" value="Loading User Direct" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-loading-user-direct" class="ml-2 text-sm text-wise-dark-gray">Loading User Direct</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-full-pallet" name="workProfileAccess" value="Pick - SMS Full Pallet" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-full-pallet" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS Full Pallet</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-location-transfer" name="workProfileAccess" value="Location Transfer" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-location-transfer" class="ml-2 text-sm text-wise-dark-gray">Location Transfer</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-dlclw" name="workProfileAccess" value="Pick - SMS DLCLW" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-dlclw" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS DLCLW</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-cby-good" name="workProfileAccess" value="Pick - CBY Good" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-cby-good" class="ml-2 text-sm text-wise-dark-gray">Pick - CBY Good</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-quick-do" name="workProfileAccess" value="Pick - Quick DO" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-quick-do" class="ml-2 text-sm text-wise-dark-gray">Pick - Quick DO</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-cby-bad" name="workProfileAccess" value="Pick - CBY Bad" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-cby-bad" class="ml-2 text-sm text-wise-dark-gray">Pick - CBY Bad</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-return-supplier" name="workProfileAccess" value="Pick - Return Supplier" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-return-supplier" class="ml-2 text-sm text-wise-dark-gray">Pick - Return Supplier</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-area-1-f1-f4" name="workProfileAccess" value="Pick - SMS Area 1 F1 F4" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-area-1-f1-f4" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS Area 1 F1 F4</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-user-loaded" name="workProfileAccess" value="Pick - User Loaded" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-user-loaded" class="ml-2 text-sm text-wise-dark-gray">Pick - User Loaded</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-area-1-f5-f7" name="workProfileAccess" value="Pick - SMS Area 1 F5 F7" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-area-1-f5-f7" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS Area 1 F5 F7</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-condensed-open" name="workProfileAccess" value="Pick - Condensed Open" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-condensed-open" class="ml-2 text-sm text-wise-dark-gray">Pick - Condensed Open</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-pick-sms-area-1-usat" name="workProfileAccess" value="Pick - SMS Area 1 USAT" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-pick-sms-area-1-usat" class="ml-2 text-sm text-wise-dark-gray">Pick - SMS Area 1 USAT</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="work-profile-putaway" name="workProfileAccess" value="Putaway" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="work-profile-putaway" class="ml-2 text-sm text-wise-dark-gray">Putaway</label></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Authorized Adjustment Types Tab -->
+                                    <div id="up-authorized-adjustment-types" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Adjustment type authorization</h4>
+                                        <div class="mb-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="radio" name="adjustmentTypeAccessType" value="All" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" checked>
+                                                <span class="ml-2 text-sm text-wise-dark-gray">All</span>
+                                            </label>
+                                            <label class="inline-flex items-center ml-4">
+                                                <input type="radio" name="adjustmentTypeAccessType" value="List" class="form-radio h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">List</span>
+                                            </label>
+                                        </div>
+                                        <div id="authorized-adjustment-types-list" class="border border-wise-border p-4 rounded-md bg-wise-light-gray max-h-60 overflow-y-auto grid grid-cols-2 gap-2">
+                                            <!-- Adjustment type checkboxes will be rendered here -->
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-100-do-supply" name="adjustmentTypeAccess" value="100-DO Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-100-do-supply" class="ml-2 text-sm text-wise-dark-gray">100-DO Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-101-do-consumption" name="adjustmentTypeAccess" value="101-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-101-do-consumption" class="ml-2 text-sm text-wise-dark-gray">101-DO Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-102-inventory-correction-plus" name="adjustmentTypeAccess" value="102-Inventory Correction (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-102-inventory-correction-plus" class="ml-2 text-sm text-wise-dark-gray">102-Inventory Correction (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-103-inventory-correction-minus" name="adjustmentTypeAccess" value="103-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-103-inventory-correction-minus" class="ml-2 text-sm text-wise-dark-gray">103-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-104-production-supply" name="adjustmentTypeAccess" value="104-Production Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-104-production-supply" class="ml-2 text-sm text-wise-dark-gray">104-Production Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-105-production-consumption" name="adjustmentTypeAccess" value="105-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-105-production-consumption" class="ml-2 text-sm text-wise-dark-gray">105-Production Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-106-damage" name="adjustmentTypeAccess" value="106-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-106-damage" class="ml-2 text-sm text-wise-dark-gray">106-Damage (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-107-return-to-vendor" name="adjustmentTypeAccess" value="107-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-107-return-to-vendor" class="ml-2 text-sm text-wise-dark-gray">107-Return to Vendor (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-108-customer-return" name="adjustmentTypeAccess" value="108-Customer Return (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-108-customer-return" class="ml-2 text-sm text-wise-dark-gray">108-Customer Return (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-109-sample" name="adjustmentTypeAccess" value="109-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-109-sample" class="ml-2 text-sm text-wise-dark-gray">109-Sample (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-110-kitting-supply" name="adjustmentTypeAccess" value="110-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-110-kitting-supply" class="ml-2 text-sm text-wise-dark-gray">110-Kitting Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-111-kitting-output" name="adjustmentTypeAccess" value="111-Kitting Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-111-kitting-output" class="ml-2 text-sm text-wise-dark-gray">111-Kitting Output (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-112-value-added-service-supply" name="adjustmentTypeAccess" value="112-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-112-value-added-service-supply" class="ml-2 text-sm text-wise-dark-gray">112-Value Added Service Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-113-value-added-service-output" name="adjustmentTypeAccess" value="113-Value Added Service Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-113-value-added-service-output" class="ml-2 text-sm text-wise-dark-gray">113-Value Added Service Output (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-114-do-supply-plus" name="adjustmentTypeAccess" value="114-DO Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-114-do-supply-plus" class="ml-2 text-sm text-wise-dark-gray">114-DO Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-115-do-consumption-plus" name="adjustmentTypeAccess" value="115-DO Consumption (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-115-do-consumption-plus" class="ml-2 text-sm text-wise-dark-gray">115-DO Consumption (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-116-inventory-correction-plus-two" name="adjustmentTypeAccess" value="116-Inventory Correction (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-116-inventory-correction-plus-two" class="ml-2 text-sm text-wise-dark-gray">116-Inventory Correction (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-117-inventory-correction-minus-two" name="adjustmentTypeAccess" value="117-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-117-inventory-correction-minus-two" class="ml-2 text-sm text-wise-dark-gray">117-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-118-production-supply-plus" name="adjustmentTypeAccess" value="118-Production Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-118-production-supply-plus" class="ml-2 text-sm text-wise-dark-gray">118-Production Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-119-production-consumption-plus" name="adjustmentTypeAccess" value="119-Production Consumption (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-119-production-consumption-plus" class="ml-2 text-sm text-wise-dark-gray">119-Production Consumption (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-120-damage-plus" name="adjustmentTypeAccess" value="120-Damage (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-120-damage-plus" class="ml-2 text-sm text-wise-dark-gray">120-Damage (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-121-return-to-vendor-plus" name="adjustmentTypeAccess" value="121-Return to Vendor (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-121-return-to-vendor-plus" class="ml-2 text-sm text-wise-dark-gray">121-Return to Vendor (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-122-customer-return-plus" name="adjustmentTypeAccess" value="122-Customer Return (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-122-customer-return-plus" class="ml-2 text-sm text-wise-dark-gray">122-Customer Return (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-123-sample-plus" name="adjustmentTypeAccess" value="123-Sample (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-123-sample-plus" class="ml-2 text-sm text-wise-dark-gray">123-Sample (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-124-kitting-supply-plus" name="adjustmentTypeAccess" value="124-Kitting Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-124-kitting-supply-plus" class="ml-2 text-sm text-wise-dark-gray">124-Kitting Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-125-kitting-output-plus" name="adjustmentTypeAccess" value="125-Kitting Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-125-kitting-output-plus" class="ml-2 text-sm text-wise-dark-gray">125-Kitting Output (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-126-value-added-service-supply-plus" name="adjustmentTypeAccess" value="126-Value Added Service Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-126-value-added-service-supply-plus" class="ml-2 text-sm text-wise-dark-gray">126-Value Added Service Supply (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-127-value-added-service-output-plus" name="adjustmentTypeAccess" value="127-Value Added Service Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-127-value-added-service-output-plus" class="ml-2 text-sm text-wise-dark-gray">127-Value Added Service Output (+)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-128-do-supply-minus" name="adjustmentTypeAccess" value="128-DO Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-128-do-supply-minus" class="ml-2 text-sm text-wise-dark-gray">128-DO Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-129-do-consumption-minus" name="adjustmentTypeAccess" value="129-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-129-do-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">129-DO Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-130-inventory-correction-minus-three" name="adjustmentTypeAccess" value="130-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-130-inventory-correction-minus-three" class="ml-2 text-sm text-wise-dark-gray">130-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-131-inventory-correction-minus-four" name="adjustmentTypeAccess" value="131-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-131-inventory-correction-minus-four" class="ml-2 text-sm text-wise-dark-gray">131-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-132-production-supply-minus" name="adjustmentTypeAccess" value="132-Production Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-132-production-supply-minus" class="ml-2 text-sm text-wise-dark-gray">132-Production Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-133-production-consumption-minus" name="adjustmentTypeAccess" value="133-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-133-production-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">133-Production Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-134-damage-minus" name="adjustmentTypeAccess" value="134-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-134-damage-minus" class="ml-2 text-sm text-wise-dark-gray">134-Damage (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-135-return-to-vendor-minus" name="adjustmentTypeAccess" value="135-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-135-return-to-vendor-minus" class="ml-2 text-sm text-wise-dark-gray">135-Return to Vendor (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-136-customer-return-minus" name="adjustmentTypeAccess" value="136-Customer Return (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-136-customer-return-minus" class="ml-2 text-sm text-wise-dark-gray">136-Customer Return (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-137-sample-minus" name="adjustmentTypeAccess" value="137-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-137-sample-minus" class="ml-2 text-sm text-wise-dark-gray">137-Sample (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-138-kitting-supply-minus" name="adjustmentTypeAccess" value="138-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-138-kitting-supply-minus" class="ml-2 text-sm text-wise-dark-gray">138-Kitting Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-139-kitting-output-minus" name="adjustmentTypeAccess" value="139-Kitting Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-139-kitting-output-minus" class="ml-2 text-sm text-wise-dark-gray">139-Kitting Output (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-140-value-added-service-supply-minus" name="adjustmentTypeAccess" value="140-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-140-value-added-service-supply-minus" class="ml-2 text-sm text-wise-dark-gray">140-Value Added Service Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-141-value-added-service-output-minus" name="adjustmentTypeAccess" value="141-Value Added Service Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-141-value-added-service-output-minus" class="ml-2 text-sm text-wise-dark-gray">141-Value Added Service Output (-)</label></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- User Defined Data Tab -->
+                                    <div id="up-user-defined" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
+                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'security-group': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
+                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
+                            Create New Security Group
+                        </button>
+                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
+                    </div>
+                    <div id="security-group-list-container" class="overflow-x-auto">
+                    </div>
+
+                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
+                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User Defined Data</button>
+                                        </div>
+
+                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                            <div class="flex justify-between items-center mb-2">
+                                                     <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                     <label class="inline-flex items-center">
+                                                         <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                         <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                     </label>
+                                            </div>
+                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
+                                                <!-- User checkboxes will be rendered here -->
+                                            </div>
+                                        </div>
+
+                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
+                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'security-permission': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Permission</h2>
+                    <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
+                    
+                    <!-- Action and Search Buttons -->
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
+                            Create New Permission
+                        </button>
+                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
+                    </div>
+
+                    <!-- Container for Table -->
+                    <div id="security-permission-list-container" class="overflow-x-auto">
+                        <!-- Table will be rendered by JavaScript here -->
+                    </div>
+
+                    <!-- Form Modal for Create/Edit -->
+                    <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
+                            <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
+                                    <!-- Name & Description Inputs -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
+                                            <input type="text" id="sp-name" name="spName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="sp-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="sp-description" name="spDescription" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
+
+                                    <!-- KEYWORD: MENU CHECKBOX SECTION -->
+                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
+                                    <div class="border border-wise-border rounded-md p-4">
+                                        <!-- Filter Radio Buttons -->
+                                        <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
+                                            <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)" checked><span class="ml-2">All</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Configurations</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Gadgets</span></label>
+                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Processing</span></label>
+                                        </div>
+                                        <!-- Checkbox List Container -->
+                                        <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
+                                            <!-- Menu checkboxes will be rendered by JavaScript -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Inactive Checkbox -->
+                                    <div class="mt-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- OK and Cancel Buttons -->
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
+                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
         });
 
         // =========================
