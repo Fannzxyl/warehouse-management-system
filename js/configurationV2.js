@@ -34,163 +34,6 @@
         // CONTENT (HTML Skeletons)
         // =========================
         Object.assign(window.contentData, {
-            'allocation-rule': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule</h2>
-                    <p class="text-wise-gray mb-4">Manage rules that determine how items are allocated from warehouse locations.</p>
-
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
-                            onclick="showAllocationRuleForm('create')">Create New Allocation Rule</button>
-                        <input type="text" id="allocation-rule-search" placeholder="Search allocation rule..."
-                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationRuleList(this.value)">
-                    </div>
-
-                    <div id="allocation-rule-list-container" class="overflow-x-auto"></div>
-
-                    <!-- MODAL -->
-                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
-                            <h3 id="allocation-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="allocation-rule-form" onsubmit="handleAllocationRuleSubmit(event)">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label for="allocation-rule-name" class="block text-sm font-medium text-wise-dark-gray">Allocation Rule Name:</label>
-                                            <input type="text" id="allocation-rule-name" name="ruleName" required
-                                                class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray"
-                                                oninput="checkAllocationRuleFormValidity()">
-                                        </div>
-                                        <div>
-                                            <label for="allocation-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="allocation-rule-description" name="description"
-                                                class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray"
-                                                oninput="checkAllocationRuleFormValidity()">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-rule-inactive" name="inactive"
-                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-
-                                    <!-- Tabs -->
-                                    <div class="flex space-x-2 mb-2 border-b">
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-detail-records">Detail Records</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-user-defined">User Defined Data</button>
-                                    </div>
-
-                                    <div id="ar-detail-records" class="tab-content">
-                                        <div class="mb-4">
-                                            <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
-                                            <div id="allocation-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray">
-                                                <p id="allocation-detail-records-placeholder" class="text-wise-gray text-sm">Input Allocation Rule Name and Description first to enable detail records.</p>
-                                                <div id="allocation-detail-records-list" class="space-y-2"></div>
-                                                <button type="button" id="add-allocation-detail-record-btn"
-                                                    class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform"
-                                                    onclick="addAllocationDetailRecord()" disabled>Add Detail Record</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="ar-user-defined" class="tab-content hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            ${Array.from({ length: 8 }, (_, i) => `
-                                            <div>
-                                                <label for="ar-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="ar-udf${i + 1}" name="udf${i + 1}"
-                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationRuleForm()">Cancel</button>
-                                <button type="submit" form="allocation-rule-form" id="allocation-rule-submit-button"
-                                    class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
-            'allocation-strategies': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Strategies</h2>
-                    <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
-
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
-                            onclick="showAllocationStrategyForm('create')">Create New Allocation Strategy</button>
-                        <input type="text" id="allocation-strategy-search" placeholder="Search allocation strategy..."
-                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationStrategyList(this.value)">
-                    </div>
-
-                    <div id="allocation-strategy-list-container" class="overflow-x-auto"></div>
-
-                    <!-- MODAL -->
-                    <div id="allocation-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
-                            <h3 id="allocation-strategy-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="allocation-strategy-form" onsubmit="handleAllocationStrategySubmit(event)">
-                                    <div class="mb-4">
-                                        <label for="allocation-strategy-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
-                                        <input type="text" id="allocation-strategy-identifier" name="identifier" required
-                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label for="allocation-strategy-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                        <input type="text" id="allocation-strategy-record-type" name="recordType" value="ALLOCSTRAT" readonly
-                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label for="allocation-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                        <input type="text" id="allocation-strategy-description" name="description"
-                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label for="allocation-strategy-system-value" class="block text-sm font-medium text-wise-dark-gray">System Value I:</label>
-                                        <input type="text" id="allocation-strategy-system-value" name="systemValueI" placeholder="e.g., 30"
-                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-strategy-inactive" name="inactive"
-                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated"
-                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationStrategyForm()">Cancel</button>
-                                <button type="submit" form="allocation-strategy-form" id="allocation-strategy-submit-button"
-                                    class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
             'configuration-user-profile': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
@@ -704,6 +547,163 @@
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
                                 <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'allocation-rule': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule</h2>
+                    <p class="text-wise-gray mb-4">Manage rules that determine how items are allocated from warehouse locations.</p>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
+                            onclick="showAllocationRuleForm('create')">Create New Allocation Rule</button>
+                        <input type="text" id="allocation-rule-search" placeholder="Search allocation rule..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationRuleList(this.value)">
+                    </div>
+
+                    <div id="allocation-rule-list-container" class="overflow-x-auto"></div>
+
+                    <!-- MODAL -->
+                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+                            <h3 id="allocation-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="allocation-rule-form" onsubmit="handleAllocationRuleSubmit(event)">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="allocation-rule-name" class="block text-sm font-medium text-wise-dark-gray">Allocation Rule Name:</label>
+                                            <input type="text" id="allocation-rule-name" name="ruleName" required
+                                                class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray"
+                                                oninput="checkAllocationRuleFormValidity()">
+                                        </div>
+                                        <div>
+                                            <label for="allocation-rule-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="allocation-rule-description" name="description"
+                                                class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray"
+                                                oninput="checkAllocationRuleFormValidity()">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="allocation-rule-inactive" name="inactive"
+                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Tabs -->
+                                    <div class="flex space-x-2 mb-2 border-b">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-detail-records">Detail Records</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-user-defined">User Defined Data</button>
+                                    </div>
+
+                                    <div id="ar-detail-records" class="tab-content">
+                                        <div class="mb-4">
+                                            <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
+                                            <div id="allocation-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray">
+                                                <p id="allocation-detail-records-placeholder" class="text-wise-gray text-sm">Input Allocation Rule Name and Description first to enable detail records.</p>
+                                                <div id="allocation-detail-records-list" class="space-y-2"></div>
+                                                <button type="button" id="add-allocation-detail-record-btn"
+                                                    class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform"
+                                                    onclick="addAllocationDetailRecord()" disabled>Add Detail Record</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="ar-user-defined" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="ar-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="ar-udf${i + 1}" name="udf${i + 1}"
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationRuleForm()">Cancel</button>
+                                <button type="submit" form="allocation-rule-form" id="allocation-rule-submit-button"
+                                    class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'allocation-strategies': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Strategies</h2>
+                    <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
+                            onclick="showAllocationStrategyForm('create')">Create New Allocation Strategy</button>
+                        <input type="text" id="allocation-strategy-search" placeholder="Search allocation strategy..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationStrategyList(this.value)">
+                    </div>
+
+                    <div id="allocation-strategy-list-container" class="overflow-x-auto"></div>
+
+                    <!-- MODAL -->
+                    <div id="allocation-strategy-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                            <h3 id="allocation-strategy-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="allocation-strategy-form" onsubmit="handleAllocationStrategySubmit(event)">
+                                    <div class="mb-4">
+                                        <label for="allocation-strategy-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                                        <input type="text" id="allocation-strategy-identifier" name="identifier" required
+                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="allocation-strategy-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                                        <input type="text" id="allocation-strategy-record-type" name="recordType" value="ALLOCSTRAT" readonly
+                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="allocation-strategy-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                        <input type="text" id="allocation-strategy-description" name="description"
+                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="allocation-strategy-system-value" class="block text-sm font-medium text-wise-dark-gray">System Value I:</label>
+                                        <input type="text" id="allocation-strategy-system-value" name="systemValueI" placeholder="e.g., 30"
+                                            class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="allocation-strategy-inactive" name="inactive"
+                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="allocation-strategy-system-created" name="systemCreated"
+                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationStrategyForm()">Cancel</button>
+                                <button type="submit" form="allocation-strategy-form" id="allocation-strategy-submit-button"
+                                    class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>

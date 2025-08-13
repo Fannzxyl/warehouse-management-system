@@ -132,6 +132,20 @@
                                    Manage User Profiles
                                </button>
                            </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                               <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Allocation Rule</h3>
+                               <p class="text-wise-gray text-sm mt-1">Manage rules that determine how items are allocated from warehouse locations.</p>
+                               <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('allocation-rule')">
+                                   Manage Allocation Rule
+                               </button>
+                           </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                               <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Allocation Strategies</h3>
+                               <p class="text-wise-gray text-sm mt-1">Manage strategies used to allocate items from warehouse locations.</p>
+                               <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('allocation-strategies')">
+                                   Manage Allocation Strategies
+                               </button>
+                           </div>
                     </div>
                 `,
             },
@@ -687,128 +701,6 @@
                     </div>
                 `,
             },
-            // ### KONTEN USER PROFILE DI SINI
-            'configuration-user-profile': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
-                    <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">
-                            Create New User Profile
-                        </button>
-                        <input type="text" id="user-profile-search" placeholder="Search user profile..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterUserProfileList(this.value)">
-                    </div>
-                    <div id="user-profile-list-container" class="overflow-x-auto">
-                        <!-- User profile list table will be rendered here -->
-                    </div>
-                    
-                    <!-- User Profile Form Modal -->
-                    <div id="user-profile-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl flex flex-col max-h-[90vh]">
-                            <h3 id="user-profile-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="user-profile-form" onsubmit="handleUserProfileSubmit(event)">
-                                    <!-- Tab Buttons -->
-                                    <div class="flex space-x-2 mb-2 border-b">
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-printers">Printers</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-locating">Locating</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User Defined Data</button>
-                                    </div>
-
-                                    <!-- General Tab -->
-                                    <div id="up-general" class="tab-content">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
-                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-warehouse" class="block text-sm font-medium text-wise-dark-gray">Default warehouse:</label>
-                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-shift" class="block text-sm font-medium text-wise-dark-gray">Shift:</label>
-                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-menu" class="block text-sm font-medium text-wise-dark-gray">Menu:</label>
-                                                <input type="text" id="up-menu" name="menu" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-language" class="block text-sm font-medium text-wise-dark-gray">Language:</label>
-                                                <input type="text" id="up-language" name="language" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                        <div class="mt-4">
-                                            <label class="inline-flex items-center">
-                                                <input type="checkbox" id="up-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                                <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <!-- Printers Tab -->
-                                    <div id="up-printers" class="tab-content hidden">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="up-default-label-printer" class="block text-sm font-medium text-wise-dark-gray">Default label printer:</label>
-                                                <input type="text" id="up-default-label-printer" name="defaultLabelPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="up-default-report-printer" class="block text-sm font-medium text-wise-dark-gray">Default report printer:</label>
-                                                <input type="text" id="up-default-report-printer" name="defaultReportPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Locating Tab -->
-                                    <div id="up-locating" class="tab-content hidden">
-                                        <div class="space-y-3">
-                                            <label class="flex items-center">
-                                                <input type="checkbox" id="up-locate-empty-lpn" name="locateEmptyLpn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for LPN</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" id="up-locate-empty-item" name="locateEmptyItem" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for item</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" id="up-locate-lpn-staging" name="locateLpnStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate LPN to staging</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" id="up-locate-item-staging" name="locateItemStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate item to staging</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <!-- User Defined Data Tab -->
-                                    <div id="up-user-defined" class="tab-content hidden">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            ${Array.from({ length: 8 }, (_, i) => `
-                                            <div>
-                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
-                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
             'security-group': {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
@@ -975,6 +867,127 @@
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
                                 <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'configuration-user-profile': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
+                    <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">
+                            Create New User Profile
+                        </button>
+                        <input type="text" id="user-profile-search" placeholder="Search user profile..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterUserProfileList(this.value)">
+                    </div>
+                    <div id="user-profile-list-container" class="overflow-x-auto">
+                        <!-- User profile list table will be rendered here -->
+                    </div>
+                    
+                    <!-- User Profile Form Modal -->
+                    <div id="user-profile-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl flex flex-col max-h-[90vh]">
+                            <h3 id="user-profile-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="user-profile-form" onsubmit="handleUserProfileSubmit(event)">
+                                    <!-- Tab Buttons -->
+                                    <div class="flex space-x-2 mb-2 border-b">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-printers">Printers</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-locating">Locating</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User Defined Data</button>
+                                    </div>
+
+                                    <!-- General Tab -->
+                                    <div id="up-general" class="tab-content">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
+                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                                <input type="text" id="up-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-warehouse" class="block text-sm font-medium text-wise-dark-gray">Default warehouse:</label>
+                                                <input type="text" id="up-default-warehouse" name="defaultWarehouse" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-shift" class="block text-sm font-medium text-wise-dark-gray">Shift:</label>
+                                                <input type="text" id="up-shift" name="shift" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-menu" class="block text-sm font-medium text-wise-dark-gray">Menu:</label>
+                                                <input type="text" id="up-menu" name="menu" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-language" class="block text-sm font-medium text-wise-dark-gray">Language:</label>
+                                                <input type="text" id="up-language" name="language" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="inline-flex items-center">
+                                                <input type="checkbox" id="up-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Printers Tab -->
+                                    <div id="up-printers" class="tab-content hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="up-default-label-printer" class="block text-sm font-medium text-wise-dark-gray">Default label printer:</label>
+                                                <input type="text" id="up-default-label-printer" name="defaultLabelPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="up-default-report-printer" class="block text-sm font-medium text-wise-dark-gray">Default report printer:</label>
+                                                <input type="text" id="up-default-report-printer" name="defaultReportPrinter" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Locating Tab -->
+                                    <div id="up-locating" class="tab-content hidden">
+                                        <div class="space-y-3">
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-empty-lpn" name="locateEmptyLpn" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for LPN</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-empty-item" name="locateEmptyItem" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate empty container for item</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-lpn-staging" name="locateLpnStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate LPN to staging</span>
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="up-locate-item-staging" name="locateItemStaging" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                                <span class="ml-2 text-sm text-wise-dark-gray">Locate item to staging</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- User Defined Data Tab -->
+                                    <div id="up-user-defined" class="tab-content hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
+                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -3035,6 +3048,12 @@ window.showSearchHistory = function() {
         window.renderSecurityGroupUserCheckboxes = function(selectedUsers = [], filter = '') {
             const container = document.getElementById('security-group-user-checkbox-list');
             if (!container) return;
+            let currentlyCheckedIds;
+            if (Array.isArray(selectedUsers)) {
+                currentlyCheckedIds = selectedUsers;
+            } else {
+                currentlyCheckedIds = Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
 
             container.innerHTML = '';
             const lowerCaseFilter = filter.toLowerCase();
@@ -3047,7 +3066,7 @@ window.showSearchHistory = function() {
             }
 
             filteredUsers.forEach(user => {
-                const isChecked = selectedUsers.includes(user.id);
+                const isChecked = currentlyCheckedIds.includes(user.id);
                 const div = document.createElement('div');
                 div.className = 'flex items-center';
                 div.innerHTML = `
