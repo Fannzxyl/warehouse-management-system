@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Allocation location selection — Edit existing</title>
+
+    <!-- Inter (opsional) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind (dev/demo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Arial'] },
+                    colors: {
+                        brand: {
+                            50:'#eef2ff', 100:'#e0e7ff', 200:'#c7d2fe', 300:'#a5b4fc',
+                            400:'#818cf8', 500:'#6366f1', 600:'#4f46e5', 700:'#4338ca',
+                            800:'#3730a3', 900:'#312e81'
+                        }
+                    },
+                    boxShadow: {
+                        soft: '0 10px 30px -15px rgb(2 6 23 / .25)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Sedikit util CSS non-@apply -->
+    <style>
+        :root{
+            --ring: rgba(99,102,241,.35);
+            --b:#e5e7eb;
+        }
+        .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:16px; box-shadow:var(--shadow,0 6px 24px rgba(15,23,42,.06));}
+        .input,.select{ height:40px; border:1px solid var(--b); border-radius:10px; padding:0 .75rem; width:100%; background:#fff; font-size: 0.875rem; /* text-sm */ }
+        .input:focus,.select:focus{ outline:none; box-shadow:0 0 0 4px var(--ring); border-color:#a5b4fc;}
+        .btn{ height:40px; border-radius:10px; padding:0 .9rem; border:1px solid var(--b); background:#fff; color:#111827; font-size: 0.875rem; /* text-sm */ }
+        .btn:hover{ background:#f9fafb }
+        .btn-primary{ background:#6366f1; color:#fff; border-color:#6366f1 }
+        .btn-primary:hover{ background:#4f46e5; border-color:#4f46e5 }
+        .btn-ghost{ background:transparent; border-color:transparent; color:#374151 }
+        .btn-ghost:hover{ background:#f3f4f6 }
+        .segmented{ display:inline-flex; border:1px solid var(--b); border-radius:10px; padding:2px; background:#fff }
+        .segmented input{ position:absolute; opacity:0; pointer-events:none }
+        .segmented label{ padding:.45rem .9rem; border-radius:8px; color:#374151; cursor:pointer; user-select:none; font-size: 0.875rem; /* text-sm */ }
+        .segmented input:checked + label{ background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe }
+        .tab{ color:#6b7280; font-size: 0.875rem; /* text-sm */ }
+        .tab-active{ color:#111827; border-bottom:2px solid #6366f1 }
+        .list-row{ cursor:pointer; border-radius:8px; padding:0.75rem; /* p-3 */ transition: background-color 0.15s ease-in-out; }
+        .list-row.selected{ background:#e0e7ff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); } /* Subtle shadow on selected */
+        .list-row:hover{ background:#f3f4f6; } /* Hover for non-selected */
+        .mono{ font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace }
+        .scroll-slim::-webkit-scrollbar{ height:8px; width:8px }
+        .scroll-slim::-webkit-scrollbar-thumb{ background:#d4d4d8; border-radius:8px }
+        .scroll-slim::-webkit-scrollbar-track{ background:#f4f4f5 }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 text-slate-800">
+
+    <header class="px-6 md:px-10 pt-8 pb-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Allocation location selection</h1>
+                    <p class="text-sm text-slate-500 mt-1">Edit existing</p>
+                </div>
+                <!-- Last updated info moved to footer for consistency with Figma image -->
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 md:px-10 pb-14">
+        <div class="card shadow-soft">
+            <!-- Top Meta -->
+            <div class="p-5 md:p-6 border-b border-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="text-sm text-slate-600">Record type</label>
+                        <input id="recType" class="input mt-1" value="ALLOC SEL" readonly>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label class="text-sm text-slate-600">Filter name</label>
+                        <input id="filterName" class="input mt-1" value="A - DCB-OPENBOX">
+                    </div>
+                    <div>
+                        <label class="text-sm text-slate-600">Table name</label>
+                        <select id="tableName" class="select mt-1">
+                            <option>Location</option>
+                            <option>Location inventory</option>
+                            <option>Location inventory attributes</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <label class="text-sm text-slate-600">Description</label>
+                        <input id="desc" class="input mt-1" value="A - DCB-OPENBOX">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="px-5 md:px-6">
+                <div class="flex gap-6 text-sm border-b border-gray-100">
+                    <button class="tab tab-active -mb-px py-3" data-tab="tab-filter">Filter data</button>
+                    <button class="tab py-3" data-tab="tab-order">Order by</button>
+                </div>
+            </div>
+
+            <!-- Filter Tab Content -->
+            <section id="tab-filter" class="p-5 md:p-6 space-y-5">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <h3 class="text-sm font-semibold text-slate-700">Filter criteria</h3>
+                    <div class="segmented">
+                        <input type="radio" id="logic-and" name="logic" value="AND" checked>
+                        <label for="logic-and">And</label>
+                        <input type="radio" id="logic-or" name="logic" value="OR">
+                        <label for="logic-or">Or</label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-6">
+                        <label class="block text-sm text-slate-600 mb-1">Attribute</label>
+                        <select id="attr" class="select">
+                            <option>Active</option>
+                            <option>Allocate in transit</option>
+                            <option>Allocation zone</option>
+                            <option>Allow work unit selection on system-directed work</option>
+                            <option>Check digit</option>
+                            <option>Date/time stamp</option>
+                            <option>Dock area anchor criteria</option>
+                            <option>Dock area selection priority</option>
+                            <option>Warehouse</option>
+                            <option>Inventory status</option>
+                            <option>LOC_INV_ATTRIBUTE4</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm text-slate-600 mb-1">Operand</label>
+                        <select id="op" class="select">
+                            <option>=</option>
+                            <option>!=</option>
+                            <option>&lt;</option>
+                            <option>&gt;</option>
+                            <option>&lt;=</option>
+                            <option>&gt;=</option>
+                            <option>is null</option>
+                            <option>is not null</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-sm text-slate-600 mb-1">Value</label>
+                        <div class="flex gap-2">
+                            <input id="val" class="input" placeholder="N'DCB' / &lt;User_def4&gt;">
+                            <select id="valPreset" class="select w-28 flex-shrink-0">
+                                <option value="">▼</option>
+                                <option value="N'DCB'">N'DCB'</option>
+                                <option value="N'Available'">N'Available'</option>
+                                <option value="&lt;User_def4&gt;">&lt;User_def4&gt;</option>
+                                <option value="N'Y'">N'Y'</option>
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4">
+                    <!-- Controls kiri -->
+                    <div class="col-span-12 lg:col-span-2 xl:col-span-1 flex lg:flex-col gap-2">
+                        <button id="btnAdd" type="button" class="btn h-auto py-2">Add<br>rule</button>
+                        <button id="btnUpdate" type="button" class="btn h-auto py-2">Update<br>selected</button>
+                        <button id="btnClear" type="button" class="btn h-auto py-2">Clear<br>inputs</button>
+                    </div>
+
+                    <!-- List rules -->
+                    <div class="col-span-12 lg:col-span-7 xl:col-span-8">
+                        <div class="rounded-2xl border border-gray-200 bg-white">
+                            <div class="flex items-center justify-between px-3 py-2 border-b border-gray-100">
+                                <span class="text-xs uppercase tracking-wider text-slate-500">Current expression</span>
+                                <div class="flex gap-2">
+                                    <button id="btnUp" type="button" class="btn-ghost h-8 px-3 rounded-md">↑ Up</button>
+                                    <button id="btnDown" type="button" class="btn-ghost h-8 px-3 rounded-md">↓ Down</button>
+                                </div>
+                            </div>
+                            <div id="ruleList" class="mono scroll-slim max-h-64 overflow-auto p-3 text-[13px] leading-6"></div>
+                        </div>
+                    </div>
+
+                    <!-- Aksi kanan -->
+                    <div class="col-span-12 lg:col-span-3 xl:col-span-3 flex flex-col gap-2">
+                        <button id="btnDeleteSel" type="button" class="btn">Delete selected rule</button>
+                        <button id="btnDeleteLast" type="button" class="btn">Delete last rule</button>
+                        <div class="h-2"></div>
+                        <button id="btnLParen" type="button" class="btn">Insert left parenthesis</button>
+                        <button id="btnRParen" type="button" class="btn">Insert right parenthesis</button>
+                        <button id="btnDelParen" type="button" class="btn">Delete parenthesis</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pt-1">
+                    <label class="inline-flex items-center gap-2 text-sm text-slate-700">
+                        <input type="checkbox" id="inactive" class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"> Inactive
+                    </label>
+                    <label class="inline-flex items-center gap-2 text-sm text-slate-700">
+                        <input type="checkbox" id="sysCreated" class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"> System created
+                    </label>
+                </div>
+            </section>
+
+            <!-- Order by Tab Content -->
+            <section id="tab-order" class="p-5 md:p-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <!-- Left Column: Add Sort Criteria -->
+                    <div class="md:col-span-5 flex flex-col gap-4">
+                        <div class="space-y-3">
+                            <h3 class="text-sm font-semibold text-slate-700">Order by criteria</h3>
+                            <div class="segmented">
+                                <input type="radio" id="order-asc" name="order-direction" value="Ascending" checked>
+                                <label for="order-asc">Ascending</label>
+                                <input type="radio" id="order-desc" name="order-direction" value="Descending">
+                                <label for="order-desc">Descending</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-slate-600 mb-1">Attribute</label>
+                            <select id="obAttribute" class="select">
+                                <option>LOCATION.LOCATION</option>
+                                <option>Warehouse</option>
+                                <option>Location</option>
+                                <option>Allocation zone</option>
+                                <option>Inventory status</option>
+                                <!-- Add more attributes as needed based on common fields -->
+                            </select>
+                        </div>
+                        <div>
+                            <button id="btnAddSortCriteria" type="button" class="btn w-full">Add sort criteria</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: List of Sort Items and Controls -->
+                    <div class="md:col-span-7 flex flex-col gap-2">
+                        <div class="rounded-2xl border border-gray-200 bg-white flex-1 min-h-[150px]">
+                            <div class="flex items-center justify-between px-3 py-2 border-b border-gray-100">
+                                <span class="text-xs uppercase tracking-wider text-slate-500">Sorted items</span>
+                                <div class="flex gap-2">
+                                    <button id="btnUpOrder" type="button" class="btn-ghost h-8 px-3 rounded-md">↑ Up</button>
+                                    <button id="btnDownOrder" type="button" class="btn-ghost h-8 px-3 rounded-md">↓ Down</button>
+                                </div>
+                            </div>
+                            <div id="orderList" class="mono scroll-slim max-h-48 overflow-auto p-3 text-[13px] leading-6">
+                                <!-- Sort items will be rendered here -->
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2"> <!-- Adjusted to 2 columns for better button sizing -->
+                            <button id="btnDeleteSelectedSortItem" type="button" class="btn">Delete selected sort item</button>
+                            <button id="btnDeleteLastSortItem" type="button" class="btn">Delete last sort item</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <div class="flex flex-wrap items-center justify-between gap-3 p-5 md:p-6 border-t border-gray-100">
+                <p class="text-xs text-slate-500">Last updated: 02-08-2017 2:09:32 PM — User: chandra</p>
+                <div class="flex gap-2">
+                    <button type="button" class="btn">Cancel</button>
+                    <button type="button" class="btn-primary" onclick="saveDialog()">OK</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /* ---------------- Tabs ---------------- */
+        const tabs = document.querySelectorAll('.tab');
+        const panels = { 'tab-filter': document.getElementById('tab-filter'), 'tab-order': document.getElementById('tab-order') };
+        tabs.forEach(btn=>{
+            btn.addEventListener('click',()=>{
+                tabs.forEach(x=>x.classList.remove('tab-active'));
+                btn.classList.add('tab-active');
+                const id = btn.dataset.tab;
+                Object.keys(panels).forEach(k=>panels[k].classList.toggle('hidden', k!==id));
+            })
+        });
+
+        /* ---------------- Data ---------------- */
+        let rows = [ // Filter rules data
+            { type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"},
+            { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"},
+            { type:'rule', logic:'AND', attribute:'LOC_INV_ATTRIBUTE4', op:'=', value:"<User_def4>"},
+            { type:'rule', logic:'AND', attribute:'Inventory status', op:'=', value:"N'Available'"},
+        ];
+        let selectedIndex = -1; // Selected index for filter rules
+
+        let orders = [ // Order by rules data
+            { attribute: 'LOCATION.LOCATION', direction: 'Ascending' }
+        ];
+        let selectedOrderIndex = -1; // Selected index for order by rules
+
+        /* ---------------- Helpers ---------------- */
+        const ruleList = document.getElementById('ruleList');
+        const orderList = document.getElementById('orderList');
+
+        const needsValue = (op)=>!(op==='is null'||op==='is not null');
+
+        function tablePrefix(){
+            const t = document.getElementById('tableName').value;
+            if(t==='Location inventory') return 'LOCATION_INVENTORY';
+            if(t==='Location inventory attributes') return 'LOCATION_INVENTORY_ATTRIBUTES';
+            return 'LOCATION';
+        }
+        function normalizeField(attr){
+            const p = tablePrefix();
+            if(attr==='LOC_INV_ATTRIBUTE4') return `${p}.LOC_INV_ATTRIBUTE4`;
+            if(attr==='Inventory status')   return `${p}.INVENTORY_STS`;
+            if(attr==='Warehouse')          return `${p}.warehouse`;
+            if(attr==='Active')              return `LOCATION.ACTIVE`;
+            // Handle other specific attributes if they need different prefixes or exact names
+            return `${p}.${attr.replaceAll(' ','_').toUpperCase()}`;
+        }
+
+        function renderRules(){
+            ruleList.innerHTML = '';
+            rows.forEach((r,i)=>{
+                const el = document.createElement('div');
+                el.className = 'list-row';
+                let text = '';
+                if(r.type==='lparen'||r.type==='rparen'){ text = (r.type==='lparen'?'(' : ')'); }
+                else{
+                    const lg = (i===0?'':r.logic+' ');
+                    const v  = needsValue(r.op)?(' '+(r.value||'')):'';
+                    text = `${lg}${normalizeField(r.attribute)} ${r.op}${v}`;
+                }
+                el.textContent = text;
+                if(i===selectedIndex) el.classList.add('selected');
+                el.addEventListener('click', ()=>{
+                    selectedIndex = i;
+                    const row = rows[i];
+                    if(row.type==='rule'){
+                        document.getElementById('attr').value = row.attribute;
+                        document.getElementById('op').value   = row.op;
+                        document.getElementById('val').value  = row.value || '';
+                        (row.logic==='AND' ? document.getElementById('logic-and') : document.getElementById('logic-or')).checked = true;
+                    } else {
+                        // If a parenthesis is selected, clear the input fields
+                        document.getElementById('attr').selectedIndex = 0;
+                        document.getElementById('op').selectedIndex = 0;
+                        document.getElementById('val').value = '';
+                        document.getElementById('logic-and').checked = true; // Default to AND
+                    }
+                    renderRules();
+                });
+                ruleList.appendChild(el);
+            });
+        }
+
+        // preset button → value
+        document.getElementById('valPreset').addEventListener('change', e=>{
+            if(e.target.value){ document.getElementById('val').value = e.target.value; e.target.value=''; }
+        });
+        document.getElementById('btnClear').addEventListener('click', ()=>{
+            document.getElementById('attr').selectedIndex = 0;
+            document.getElementById('op').selectedIndex   = 0;
+            document.getElementById('val').value = '';
+            document.getElementById('logic-and').checked = true;
+            selectedIndex = -1; // Clear selection on clear inputs
+            renderRules();
+        });
+
+        /* ---------------- Filter Rule actions ---------------- */
+        document.getElementById('btnAdd').addEventListener('click', ()=>{
+            const logic = document.querySelector('input[name="logic"]:checked').value;
+            const attribute = document.getElementById('attr').value;
+            const op = document.getElementById('op').value;
+            const val = document.getElementById('val').value.trim();
+            if(needsValue(op) && !val){ alert('Please input value'); return; }
+
+            const newRule = { type:'rule', logic, attribute, op, value: needsValue(op)?val:'' };
+
+            if (selectedIndex !== -1 && selectedIndex < rows.length) {
+                // Insert new rule after the selected one
+                rows.splice(selectedIndex + 1, 0, newRule);
+                selectedIndex++;
+            } else {
+                // Add to the end if no selection or selection is out of bounds
+                rows.push(newRule);
+                selectedIndex = rows.length - 1;
+            }
+            renderRules();
+        });
+
+        document.getElementById('btnUpdate').addEventListener('click', ()=>{
+            if(selectedIndex<0 || rows[selectedIndex]?.type!=='rule'){ alert('Select a rule row first'); return; }
+            const logic = document.querySelector('input[name="logic"]:checked').value;
+            const attribute = document.getElementById('attr').value;
+            const op = document.getElementById('op').value;
+            const val = document.getElementById('val').value.trim();
+            if(needsValue(op) && !val){ alert('Please input value'); return; }
+            rows[selectedIndex] = { type:'rule', logic, attribute, op, value: needsValue(op)?val:'' };
+            renderRules();
+        });
+
+        document.getElementById('btnDeleteSel').addEventListener('click', ()=>{
+            if(selectedIndex<0){ alert('Select a row first'); return; }
+            rows.splice(selectedIndex,1);
+            if(selectedIndex>=rows.length) selectedIndex=rows.length-1;
+            renderRules();
+        });
+
+        document.getElementById('btnDeleteLast').addEventListener('click', ()=>{
+            if (rows.length === 0) { alert('No rules to delete!'); return; }
+            rows.pop();
+            selectedIndex=rows.length-1;
+            renderRules();
+        });
+
+        document.getElementById('btnLParen').addEventListener('click', ()=>{
+            const newParen = {type:'lparen'};
+            if (selectedIndex !== -1 && selectedIndex < rows.length) {
+                rows.splice(selectedIndex + 1, 0, newParen);
+                selectedIndex++;
+            } else {
+                rows.push(newParen);
+                selectedIndex = rows.length - 1;
+            }
+            renderRules();
+        });
+        document.getElementById('btnRParen').addEventListener('click', ()=>{
+            const newParen = {type:'rparen'};
+            if (selectedIndex !== -1 && selectedIndex < rows.length) {
+                rows.splice(selectedIndex + 1, 0, newParen);
+                selectedIndex++;
+            } else {
+                rows.push(newParen);
+                selectedIndex = rows.length - 1;
+            }
+            renderRules();
+        });
+        document.getElementById('btnDelParen').addEventListener('click', ()=>{
+            let deleted = false;
+            for(let i=rows.length-1;i>=0;i--){
+                if(rows[i].type==='lparen'||rows[i].type==='rparen'){
+                    rows.splice(i,1);
+                    deleted = true;
+                    break;
+                }
+            }
+            if (!deleted) { alert('No parenthesis to delete!'); }
+            selectedIndex=rows.length-1; renderRules();
+        });
+
+        document.getElementById('btnUp').addEventListener('click', ()=>{
+            if(selectedIndex<=0) return;
+            [rows[selectedIndex-1], rows[selectedIndex]] = [rows[selectedIndex], rows[selectedIndex-1]];
+            selectedIndex--; renderRules();
+        });
+        document.getElementById('btnDown').addEventListener('click', ()=>{
+            if(selectedIndex<0 || selectedIndex>=rows.length-1) return;
+            [rows[selectedIndex+1], rows[selectedIndex]] = [rows[selectedIndex], rows[selectedIndex+1]];
+            selectedIndex++; renderRules();
+        });
+
+        /* ---------------- Order by actions ---------------- */
+        document.getElementById('btnAddSortCriteria').addEventListener('click', ()=>{
+            const attribute = document.getElementById('obAttribute').value;
+            const direction = document.querySelector('input[name="order-direction"]:checked').value;
+            if (!attribute) { alert('Please select an attribute!'); return; }
+
+            const newSortItem = { attribute, direction };
+
+            if (selectedOrderIndex !== -1 && selectedOrderIndex < orders.length) {
+                orders.splice(selectedOrderIndex + 1, 0, newSortItem);
+                selectedOrderIndex++;
+            } else {
+                orders.push(newSortItem);
+                selectedOrderIndex = orders.length - 1;
+            }
+            renderOrders();
+        });
+
+        document.getElementById('btnDeleteSelectedSortItem').addEventListener('click', ()=>{
+            if(selectedOrderIndex < 0 || selectedOrderIndex >= orders.length){ alert('Select a sort item first!'); return; }
+            orders.splice(selectedOrderIndex, 1);
+            if(selectedOrderIndex >= orders.length) selectedOrderIndex = orders.length - 1; // Adjust index if last item deleted
+            renderOrders();
+        });
+
+        document.getElementById('btnDeleteLastSortItem').addEventListener('click', ()=>{
+            if(orders.length === 0){ alert('No sort items to delete!'); return; }
+            orders.pop();
+            selectedOrderIndex = orders.length - 1; // Adjust index
+            renderOrders();
+        });
+
+        document.getElementById('btnUpOrder').addEventListener('click', ()=>{
+            if(selectedOrderIndex <= 0) return; // Cannot move up if first or no selection
+            [orders[selectedOrderIndex-1], orders[selectedOrderIndex]] = [orders[selectedOrderIndex], orders[selectedOrderIndex-1]];
+            selectedOrderIndex--;
+            renderOrders();
+        });
+
+        document.getElementById('btnDownOrder').addEventListener('click', ()=>{
+            if(selectedOrderIndex < 0 || selectedOrderIndex >= orders.length - 1) return; // Cannot move down if last or no selection
+            [orders[selectedOrderIndex+1], orders[selectedOrderIndex]] = [orders[selectedOrderIndex], orders[selectedOrderIndex+1]];
+            selectedOrderIndex++;
+            renderOrders();
+        });
+
+        function renderOrders(){
+            orderList.innerHTML='';
+            if(!orders.length){
+                const div=document.createElement('div');
+                div.className='p-3 text-sm text-slate-500';
+                div.textContent='No sort added.';
+                orderList.appendChild(div);
+                return;
+            }
+            orders.forEach((o,idx)=>{
+                const div=document.createElement('div');
+                div.className='list-row flex items-center justify-between p-2';
+                div.innerHTML = `<span>${o.attribute} <span class="text-slate-400">(${o.direction})</span></span>`;
+
+                if(idx===selectedOrderIndex) div.classList.add('selected');
+
+                div.addEventListener('click', ()=>{
+                    selectedOrderIndex = idx;
+                    // Populate the input fields for editing (optional, but good UX)
+                    document.getElementById('obAttribute').value = o.attribute;
+                    document.getElementById('order-asc').checked = (o.direction === 'Ascending');
+                    document.getElementById('order-desc').checked = (o.direction === 'Descending');
+                    renderOrders(); // Re-render to show selection
+                });
+                orderList.appendChild(div);
+            });
+        }
+
+        /* ---------------- Save (demo) ---------------- */
+        function saveDialog(){
+            const where = rows.map((r,i)=>{
+                if(r.type==='lparen'||r.type==='rparen') return (r.type==='lparen'?'(' : ')');
+                const lg = (i===0?'':r.logic+' ');
+                const val = needsValue(r.op)?(' '+r.value):'';
+                return `${lg}${normalizeField(r.attribute)} ${r.op}${val}`;
+            }).join('\n');
+            const payload = {
+                recordType: document.getElementById('recType').value,
+                filterName: document.getElementById('filterName').value,
+                description: document.getElementById('desc').value,
+                tableName: document.getElementById('tableName').value,
+                inactive: document.getElementById('inactive').checked,
+                systemCreated: document.getElementById('sysCreated').checked,
+                where,
+                orderBy: orders.map(o=>`${o.attribute} ${o.direction}`).join(', ')
+            };
+            console.log('SAVE', payload);
+            alert('Saved! (cek console untuk payload)');
+        }
+        window.saveDialog = saveDialog;
+
+        // Init render
+        renderRules();
+        renderOrders();
+    </script>
+</body>
+</html>

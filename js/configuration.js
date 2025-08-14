@@ -1448,6 +1448,7 @@ window.showSearchHistory = function() {
     else if (category === 'security-permission') renderSecurityPermissionList();
     else if (category === 'allocation-rule') renderAllocationRuleList();
     else if (category === 'allocation-strategies') renderAllocationStrategyList();
+    else if (category === 'allocation-rule') renderAllocationRuleList();
 
     // Tutup sidebar di mobile setelah memilih
     if (window.innerWidth < 768) {

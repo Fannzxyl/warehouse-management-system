@@ -342,142 +342,142 @@
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-125-kitting-output-plus" name="adjustmentTypeAccess" value="125-Kitting Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-125-kitting-output-plus" class="ml-2 text-sm text-wise-dark-gray">125-Kitting Output (+)</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-126-value-added-service-supply-plus" name="adjustmentTypeAccess" value="126-Value Added Service Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-126-value-added-service-supply-plus" class="ml-2 text-sm text-wise-dark-gray">126-Value Added Service Supply (+)</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-127-value-added-service-output-plus" name="adjustmentTypeAccess" value="127-Value Added Service Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-127-value-added-service-output-plus" class="ml-2 text-sm text-wise-dark-gray">127-Value Added Service Output (+)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-128-do-supply-minus" name="adjustmentTypeAccess" value="128-DO Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-128-do-supply-minus" class="ml-2 text-sm text-wise-dark-gray">128-DO Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-129-do-consumption-minus" name="adjustmentTypeAccess" value="129-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-129-do-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">129-DO Consumption (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-130-inventory-correction-minus-three" name="adjustmentTypeAccess" value="130-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-130-inventory-correction-minus-three" class="ml-2 text-sm text-wise-dark-gray">130-Inventory Correction (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-131-inventory-correction-minus-four" name="adjustmentTypeAccess" value="131-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-131-inventory-correction-minus-four" class="ml-2 text-sm text-wise-dark-gray">131-Inventory Correction (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-132-production-supply-minus" name="adjustmentTypeAccess" value="132-Production Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-132-production-supply-minus" class="ml-2 text-sm text-wise-dark-gray">132-Production Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-133-production-consumption-minus" name="adjustmentTypeAccess" value="133-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-133-production-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">133-Production Consumption (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-134-damage-minus" name="adjustmentTypeAccess" value="134-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-134-damage-minus" class="ml-2 text-sm text-wise-dark-gray">134-Damage (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-135-return-to-vendor-minus" name="adjustmentTypeAccess" value="135-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-135-return-to-vendor-minus" class="ml-2 text-sm text-wise-dark-gray">135-Return to Vendor (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-136-customer-return-minus" name="adjustmentTypeAccess" value="136-Customer Return (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-136-customer-return-minus" class="ml-2 text-sm text-wise-dark-gray">136-Customer Return (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-137-sample-minus" name="adjustmentTypeAccess" value="137-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-137-sample-minus" class="ml-2 text-sm text-wise-dark-gray">137-Sample (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-138-kitting-supply-minus" name="adjustmentTypeAccess" value="138-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-138-kitting-supply-minus" class="ml-2 text-sm text-wise-dark-gray">138-Kitting Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-139-kitting-output-minus" name="adjustmentTypeAccess" value="139-Kitting Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-139-kitting-output-minus" class="ml-2 text-sm text-wise-dark-gray">139-Kitting Output (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-140-value-added-service-supply-minus" name="adjustmentTypeAccess" value="140-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-140-value-added-service-supply-minus" class="ml-2 text-sm text-wise-dark-gray">140-Value Added Service Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-141-value-added-service-output-minus" name="adjustmentTypeAccess" value="141-Value Added Service Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-141-value-added-service-output-minus" class="ml-2 text-sm text-wise-dark-gray">141-Value Added Service Output (-)</label></div>
-                                        </div>
-                                    </div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-128-do-supply-minus" name="adjustmentTypeAccess" value="128-DO Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-128-do-supply-minus" class="ml-2 text-sm text-wise-dark-gray">128-DO Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-129-do-consumption-minus" name="adjustmentTypeAccess" value="129-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-129-do-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">129-DO Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-130-inventory-correction-minus-three" name="adjustmentTypeAccess" value="130-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-130-inventory-correction-minus-three" class="ml-2 text-sm text-wise-dark-gray">130-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-131-inventory-correction-minus-four" name="adjustmentTypeAccess" value="131-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-131-inventory-correction-minus-four" class="ml-2 text-sm text-wise-dark-gray">131-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-132-production-supply-minus" name="adjustmentTypeAccess" value="132-Production Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-132-production-supply-minus" class="ml-2 text-sm text-wise-dark-gray">132-Production Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-133-production-consumption-minus" name="adjustmentTypeAccess" value="133-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-133-production-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">133-Production Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-134-damage-minus" name="adjustmentTypeAccess" value="134-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-134-damage-minus" class="ml-2 text-sm text-wise-dark-gray">134-Damage (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-135-return-to-vendor-minus" name="adjustmentTypeAccess" value="135-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-135-return-to-vendor-minus" class="ml-2 text-sm text-wise-dark-gray">135-Return to Vendor (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-136-customer-return-minus" name="adjustmentTypeAccess" value="136-Customer Return (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-136-customer-return-minus" class="ml-2 text-sm text-wise-dark-gray">136-Customer Return (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-137-sample-minus" name="adjustmentTypeAccess" value="137-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-137-sample-minus" class="ml-2 text-sm text-wise-dark-gray">137-Sample (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-138-kitting-supply-minus" name="adjustmentTypeAccess" value="138-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-138-kitting-supply-minus" class="ml-2 text-sm text-wise-dark-gray">138-Kitting Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-139-kitting-output-minus" name="adjustmentTypeAccess" value="139-Kitting Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-139-kitting-output-minus" class="ml-2 text-sm text-wise-dark-gray">139-Kitting Output (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-140-value-added-service-supply-minus" name="adjustmentTypeAccess" value="140-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-140-value-added-service-supply-minus" class="ml-2 text-sm text-wise-dark-gray">140-Value Added Service Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-141-value-added-service-output-minus" name="adjustmentTypeAccess" value="141-Value Added Service Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-141-value-added-service-output-minus" class="ml-2 text-sm text-wise-dark-gray">141-Value Added Service Output (-)</label></div>
+                                        </div>
+                                    </div>
 
-                                    <!-- User Defined Data Tab -->
-                                    <div id="up-user-defined" class="tab-content hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            ${Array.from({ length: 8 }, (_, i) => `
-                                            <div>
-                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
-                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
-            'security-group': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
-                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
-                            Create New Security Group
-                        </button>
-                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
-                    </div>
-                    <div id="security-group-list-container" class="overflow-x-auto">
-                    </div>
+                                    <!-- User Defined Data Tab -->
+                                    <div id="up-user-defined" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
+                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
+            'security-group': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
+                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
+                            Create New Security Group
+                        </button>
+                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
+                    </div>
+                    <div id="security-group-list-container" class="overflow-x-auto">
+                    </div>
 
-                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
-                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
-                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                    </div>
+                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
+                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                        <div>
+                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                        </div>
+                                    </div>
 
-                                    <div class="mb-4">
-                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
-                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
-                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User Defined Data</button>
-                                        </div>
+                                    <div class="mb-4">
+                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
+                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User Defined Data</button>
+                                        </div>
 
-                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
-                                            <div class="flex justify-between items-center mb-2">
-                                                     <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
-                                                     <label class="inline-flex items-center">
-                                                         <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
-                                                         <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
-                                                     </label>
-                                            </div>
-                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
-                                                <!-- User checkboxes will be rendered here -->
-                                            </div>
-                                        </div>
+                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
+                                            <div class="flex justify-between items-center mb-2">
+                                                    <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
+                                                    <label class="inline-flex items-center">
+                                                        <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
+                                                        <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
+                                                    </label>
+                                            </div>
+                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
+                                                <!-- User checkboxes will be rendered here -->
+                                            </div>
+                                        </div>
 
-                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
-                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
-                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
-                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
-                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
-                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
-                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
-                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
-                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
+                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
+                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                                <div>
+                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
+                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
             },
             'security-permission': {
                 full: `
@@ -709,6 +709,115 @@
                     </div>
                 `,
             },
+            'allocation-rule-assignment': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment</h2>
+                    <p class="text-wise-gray mb-4">Set criteria, rule, and priority.</p>
+                    
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
+                            onclick="showAllocationRuleAssignmentForm('create')">Create New Assignment</button>
+                        <input type="text" id="allocation-rule-assignment-search" placeholder="Search assignment..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationRuleAssignmentList(this.value)">
+                    </div>
+
+                    <div id="allocation-rule-assignment-list-container" class="overflow-x-auto">
+                        <!-- Table will be rendered by JavaScript here -->
+                    </div>
+
+                    <!-- MODAL -->
+                    <div id="allocation-rule-assignment-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
+                            <h3 id="allocation-rule-assignment-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="allocation-rule-assignment-form" onsubmit="handleAllocationRuleAssignmentSubmit(event)">
+                                    <!-- Tabs -->
+                                    <div class="flex space-x-2 mb-2 border-b">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ara-general">General</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ara-user-defined">User Defined Data</button>
+                                    </div>
+
+                                    <div id="ara-general" class="tab-content">
+                                        <div class="grid grid-cols-1 gap-4 mb-4">
+                                            <div>
+                                                <label for="ara-priority" class="block text-sm font-medium text-wise-dark-gray">Priority:</label>
+                                                <input type="number" id="ara-priority" name="priority" required
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label for="ara-criteria" class="block text-sm font-medium text-wise-dark-gray">Criteria:</label>
+                                                <select id="ara-criteria" name="criteria" required
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">Select Criteria...</option>
+                                                    <!-- Criteria options will be populated by JS -->
+                                                </select>
+                                                <p class="text-xs text-wise-gray mt-1">Choose which filter/criteria this assignment applies to.</p>
+                                            </div>
+                                            <div>
+                                                <label for="ara-allocation-rule" class="block text-sm font-medium text-wise-dark-gray">Allocation Rule:</label>
+                                                <select id="ara-allocation-rule" name="allocationRule" required
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option value="">Select Allocation Rule...</option>
+                                                    <!-- Allocation Rule options will be populated by JS -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-4">
+                                            <!-- Always override toggle -->
+                                            <div class="flex items-center">
+                                                <label for="ara-always-override" class="flex items-center cursor-pointer">
+                                                    <div class="relative">
+                                                        <input type="checkbox" id="ara-always-override" name="alwaysOverride" class="sr-only" onchange="toggleSwitch(this)" />
+                                                        <div class="block bg-gray-300 w-10 h-6 rounded-full transition-colors duration-200 ease-in-out"></div>
+                                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+                                                    </div>
+                                                    <div class="ml-2 text-sm font-medium text-wise-dark-gray">Always override</div>
+                                                </label>
+                                            </div>
+                                            <!-- Active toggle -->
+                                            <div class="flex items-center">
+                                                <label for="ara-active" class="flex items-center cursor-pointer">
+                                                    <div class="relative">
+                                                        <input type="checkbox" id="ara-active" name="active" class="sr-only" checked onchange="toggleSwitch(this)" />
+                                                        <div class="block bg-wise-primary w-10 h-6 rounded-full transition-colors duration-200 ease-in-out"></div>
+                                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out translate-x-full"></div>
+                                                    </div>
+                                                    <div class="ml-2 text-sm font-medium text-wise-dark-gray">Active</div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-xs text-wise-gray flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span id="ara-last-updated-info">Last updated 21/22 10:21 AM — Candra</span>
+                                        </div>
+                                    </div>
+
+                                    <div id="ara-user-defined" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="ara-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="ara-udf${i + 1}" name="udf${i + 1}"
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationRuleAssignmentForm()">Cancel</button>
+                                <button type="submit" form="allocation-rule-assignment-form" id="allocation-rule-assignment-submit-button"
+                                    class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
         });
 
         // =========================
@@ -716,14 +825,17 @@
         // =========================
         window.searchItems.push(
             { id: 'allocation-rule', title: 'Allocation Rule', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'allocation-strategies', title: 'Allocation Strategies', category: 'Configuration', lastUpdated: 'Latest' }
+            { id: 'allocation-strategies', title: 'Allocation Strategies', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'allocation-rule-assignment', title: 'Allocation Rule Assignment', category: 'Configuration', lastUpdated: 'Latest' } // New item
         );
         window.allMenus.push(
             { name: 'Allocation Rule', category: 'Configurations' },
-            { name: 'Allocation Strategies', category: 'Configurations' }
+            { name: 'Allocation Strategies', category: 'Configurations' },
+            { name: 'Allocation Rule Assignment', category: 'Configurations' } // New menu item
         );
         window.parentMapping['allocation-rule'] = 'configuration';
         window.parentMapping['allocation-strategies'] = 'configuration';
+        window.parentMapping['allocation-rule-assignment'] = 'configuration'; // New parent mapping
 
         // =========================
         // Data seeds
@@ -755,9 +867,28 @@
             { id: 'AT003', name: 'Each Pick' },
         ];
 
+        // Allocation Rule Assignments (new dummy data)
+        let allocationRuleAssignments = JSON.parse(localStorage.getItem('allocationRuleAssignments')) || [
+            { id: 'ARA001', priority: 1, criteria: 'DCB-COOKFOOD', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
+            { id: 'ARA002', priority: 2, criteria: 'DCB-EXT-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
+            { id: 'ARA003', priority: 3, criteria: 'DCB-FASHION', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
+            { id: 'ARA004', priority: 4, criteria: 'DCB-RETURN-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
+        ];
+
+        // Dummy criteria for Allocation Rule Assignment
+        const allocationAssignmentCriteria = [
+            { id: 'CRT001', identifier: 'DCB-COOKFOOD' },
+            { id: 'CRT002', identifier: 'DCB-EXT-DRY' },
+            { id: 'CRT003', identifier: 'DCB-FASHION' },
+            { id: 'CRT004', identifier: 'DCB-RETURN-DRY' },
+            { id: 'CRT005', identifier: 'DCB-FROZEN' },
+        ];
+
+
         // Persist helpers
         function saveAllocationRules() { localStorage.setItem('allocationRules', JSON.stringify(allocationRules)); }
         function saveAllocationStrategies() { localStorage.setItem('allocationStrategies', JSON.stringify(allocationStrategies)); }
+        function saveAllocationRuleAssignments() { localStorage.setItem('allocationRuleAssignments', JSON.stringify(allocationRuleAssignments)); } // New save function
 
         // =========================
         // Allocation Rule Functions
@@ -1175,6 +1306,196 @@
             }
         };
 
+        // ==================================
+        // Allocation Rule Assignment Functions (NEW)
+        // ==================================
+        window.renderAllocationRuleAssignmentList = function (filter = '') {
+            const container = document.getElementById('allocation-rule-assignment-list-container');
+            if (!container) return;
+
+            const filteredAssignments = allocationRuleAssignments.filter(ara =>
+                ara.criteria.toLowerCase().includes(filter.toLowerCase()) ||
+                ara.allocationRule.toLowerCase().includes(filter.toLowerCase()) ||
+                ara.priority.toString().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Priority</th>
+                            <th class="py-3 px-6 text-left">Criteria</th>
+                            <th class="py-3 px-6 text-left">Allocation Rule</th>
+                            <th class="py-3 px-6 text-left">Active</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredAssignments.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No allocation rule assignments found.</td></tr>`;
+            } else {
+                filteredAssignments.forEach(ara => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left">${ara.priority}</td>
+                            <td class="py-3 px-6 text-left">${ara.criteria}</td>
+                            <td class="py-3 px-6 text-left">${ara.allocationRule}</td>
+                            <td class="py-3 px-6 text-left">${ara.active ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationRuleAssignmentForm('edit', '${ara.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteAllocationRuleAssignment('${ara.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        window.filterAllocationRuleAssignmentList = function (value) {
+            renderAllocationRuleAssignmentList(value);
+        };
+
+        window.showAllocationRuleAssignmentForm = function (mode, id = null) {
+            const modal = document.getElementById('allocation-rule-assignment-form-modal');
+            const form = document.getElementById('allocation-rule-assignment-form');
+            const title = document.getElementById('allocation-rule-assignment-form-title');
+            const submitButton = document.getElementById('allocation-rule-assignment-submit-button');
+            const lastUpdatedInfo = document.getElementById('ara-last-updated-info');
+
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            window.setupTabSwitching('allocation-rule-assignment-form-modal');
+
+            // Populate criteria dropdown
+            const criteriaSelect = document.getElementById('ara-criteria');
+            criteriaSelect.innerHTML = '<option value="">Select Criteria...</option>' +
+                allocationAssignmentCriteria.map(c => `<option value="${c.identifier}">${c.identifier}</option>`).join('');
+
+            // Populate allocation rule dropdown
+            const allocationRuleSelect = document.getElementById('ara-allocation-rule');
+            allocationRuleSelect.innerHTML = '<option value="">Select Allocation Rule...</option>' +
+                allocationRules.map(ar => `<option value="${ar.ruleName}">${ar.ruleName}</option>`).join('');
+
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Allocation Rule Assignment';
+                submitButton.textContent = 'Save';
+                document.getElementById('ara-active').checked = true; // Default active on create
+                for (let i = 1; i <= 8; i++) { const el = document.getElementById(`ara-udf${i}`); if (el) el.value = ''; }
+                lastUpdatedInfo.textContent = ''; // Clear last updated info for new entry
+            } else {
+                title.textContent = 'Edit Allocation Rule Assignment';
+                submitButton.textContent = 'Update';
+                const assignment = allocationRuleAssignments.find(ara => ara.id === id);
+                if (assignment) {
+                    document.getElementById('ara-priority').value = assignment.priority;
+                    document.getElementById('ara-criteria').value = assignment.criteria;
+                    document.getElementById('ara-allocation-rule').value = assignment.allocationRule;
+                    document.getElementById('ara-always-override').checked = assignment.alwaysOverride;
+                    document.getElementById('ara-active').checked = assignment.active;
+
+                    for (let i = 1; i <= 8; i++) {
+                        const el = document.getElementById(`ara-udf${i}`);
+                        if (el) el.value = assignment[`udf${i}`] || '';
+                    }
+                    // Set last updated info
+                    lastUpdatedInfo.textContent = `Last updated ${assignment.lastUpdated} — ${assignment.updatedBy}`;
+                }
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeAllocationRuleAssignmentForm = function () {
+            const modal = document.getElementById('allocation-rule-assignment-form-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleAllocationRuleAssignmentSubmit = async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+
+            // Get current date and time for lastUpdated
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const lastUpdatedString = `${day}/${month} ${hours}:${minutes} AM`; // Assuming AM for simplicity, adjust if needed
+
+            const newAssignment = {
+                priority: parseInt(form['priority'].value, 10),
+                criteria: form['criteria'].value,
+                allocationRule: form['allocationRule'].value,
+                alwaysOverride: form['alwaysOverride'].checked,
+                active: form['active'].checked,
+                lastUpdated: lastUpdatedString, // Add last updated timestamp
+                updatedBy: 'Candra', // Hardcoded for now, can be dynamic later
+            };
+            for (let i = 1; i <= 8; i++) { newAssignment[`udf${i}`] = form[`udf${i}`]?.value || ''; }
+
+
+            if (mode === 'create') {
+                newAssignment.id = 'ARA' + String(allocationRuleAssignments.length + 1).padStart(3, '0');
+                allocationRuleAssignments.push(newAssignment);
+                await window.showCustomAlert('Success', 'Allocation Rule Assignment created successfully!');
+            } else {
+                const index = allocationRuleAssignments.findIndex(ara => ara.id === id);
+                if (index !== -1) {
+                    allocationRuleAssignments[index] = { ...allocationRuleAssignments[index], ...newAssignment };
+                    await window.showCustomAlert('Success', 'Allocation Rule Assignment updated successfully!');
+                }
+            }
+            saveAllocationRuleAssignments();
+            closeAllocationRuleAssignmentForm();
+            renderAllocationRuleAssignmentList();
+        };
+
+        window.deleteAllocationRuleAssignment = async function (id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this allocation rule assignment?');
+            if (confirmed) {
+                allocationRuleAssignments = allocationRuleAssignments.filter(ara => ara.id !== id);
+                saveAllocationRuleAssignments();
+                renderAllocationRuleAssignmentList();
+                await window.showCustomAlert('Deleted', 'Allocation Rule Assignment deleted successfully!');
+            }
+        };
+
+        // Custom toggle switch styling and behavior
+        window.toggleSwitch = function(checkbox) {
+            const toggleContainer = checkbox.closest('.flex.items-center');
+            const block = toggleContainer.querySelector('.block');
+            const dot = toggleContainer.querySelector('.dot');
+
+            if (checkbox.checked) {
+                block.classList.remove('bg-gray-300');
+                block.classList.add('bg-wise-primary');
+                dot.classList.add('translate-x-full');
+            } else {
+                block.classList.remove('bg-wise-primary');
+                block.classList.add('bg-gray-300');
+                dot.classList.remove('translate-x-full');
+            }
+        };
+
         // =========================
         // Auto-render on mount
         // =========================
@@ -1184,7 +1505,9 @@
                 if (c1) renderAllocationRuleList();
                 const c2 = document.getElementById('allocation-strategy-list-container');
                 if (c2) renderAllocationStrategyList();
-                if (c1 || c2) obs.disconnect();
+                const c3 = document.getElementById('allocation-rule-assignment-list-container'); // New auto-render
+                if (c3) renderAllocationRuleAssignmentList();
+                if (c1 || c2 || c3) obs.disconnect();
             });
             obs.observe(document.body, { childList: true, subtree: true });
         })();
