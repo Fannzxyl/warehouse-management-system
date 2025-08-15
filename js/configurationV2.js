@@ -342,211 +342,40 @@
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-125-kitting-output-plus" name="adjustmentTypeAccess" value="125-Kitting Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-125-kitting-output-plus" class="ml-2 text-sm text-wise-dark-gray">125-Kitting Output (+)</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-126-value-added-service-supply-plus" name="adjustmentTypeAccess" value="126-Value Added Service Supply (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-126-value-added-service-supply-plus" class="ml-2 text-sm text-wise-dark-gray">126-Value Added Service Supply (+)</label></div>
                                             <div class="flex items-center"><input type="checkbox" id="adj-type-127-value-added-service-output-plus" name="adjustmentTypeAccess" value="127-Value Added Service Output (+)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-127-value-added-service-output-plus" class="ml-2 text-sm text-wise-dark-gray">127-Value Added Service Output (+)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-128-do-supply-minus" name="adjustmentTypeAccess" value="128-DO Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-128-do-supply-minus" class="ml-2 text-sm text-wise-dark-gray">128-DO Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-129-do-consumption-minus" name="adjustmentTypeAccess" value="129-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-129-do-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">129-DO Consumption (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-130-inventory-correction-minus-three" name="adjustmentTypeAccess" value="130-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-130-inventory-correction-minus-three" class="ml-2 text-sm text-wise-dark-gray">130-Inventory Correction (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-131-inventory-correction-minus-four" name="adjustmentTypeAccess" value="131-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-131-inventory-correction-minus-four" class="ml-2 text-sm text-wise-dark-gray">131-Inventory Correction (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-132-production-supply-minus" name="adjustmentTypeAccess" value="132-Production Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-132-production-supply-minus" class="ml-2 text-sm text-wise-dark-gray">132-Production Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-133-production-consumption-minus" name="adjustmentTypeAccess" value="133-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-133-production-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">133-Production Consumption (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-134-damage-minus" name="adjustmentTypeAccess" value="134-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-134-damage-minus" class="ml-2 text-sm text-wise-dark-gray">134-Damage (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-135-return-to-vendor-minus" name="adjustmentTypeAccess" value="135-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-135-return-to-vendor-minus" class="ml-2 text-sm text-wise-dark-gray">135-Return to Vendor (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-136-customer-return-minus" name="adjustmentTypeAccess" value="136-Customer Return (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-136-customer-return-minus" class="ml-2 text-sm text-wise-dark-gray">136-Customer Return (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-137-sample-minus" name="adjustmentTypeAccess" value="137-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-137-sample-minus" class="ml-2 text-sm text-wise-dark-gray">137-Sample (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-138-kitting-supply-minus" name="adjustmentTypeAccess" value="138-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-138-kitting-supply-minus" class="ml-2 text-sm text-wise-dark-gray">138-Kitting Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-139-kitting-output-minus" name="adjustmentTypeAccess" value="139-Kitting Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-139-kitting-output-minus" class="ml-2 text-sm text-wise-dark-gray">139-Kitting Output (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-140-value-added-service-supply-minus" name="adjustmentTypeAccess" value="140-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-140-value-added-service-supply-minus" class="ml-2 text-sm text-wise-dark-gray">140-Value Added Service Supply (-)</label></div>
-                                            <div class="flex items-center"><input type="checkbox" id="adj-type-141-value-added-service-output-minus" name="adjustmentTypeAccess" value="141-Value Added Service Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-141-value-added-service-output-minus" class="ml-2 text-sm text-wise-dark-gray">141-Value Added Service Output (-)</label></div>
-                                        </div>
-                                    </div>
-
-                                    <!-- User Defined Data Tab -->
-                                    <div id="up-user-defined" class="tab-content hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            ${Array.from({ length: 8 }, (_, i) => `
-                                            <div>
-                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
-                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
-            'security-group': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
-                    <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
-                            Create New Security Group
-                        </button>
-                        <input type="text" id="security-group-search" placeholder="Search security group..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterSecurityGroupList(this.value)">
-                    </div>
-                    <div id="security-group-list-container" class="overflow-x-auto">
-                    </div>
-
-                    <div id="security-group-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
-                            <h3 id="security-group-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="security-group-form" onsubmit="handleSecurityGroupSubmit(event)">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label for="security-group-name" class="block text-sm font-medium text-wise-dark-gray">Security group:</label>
-                                            <input type="text" id="security-group-name" name="groupName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="security-group-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="security-group-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <div class="flex space-x-2 mb-2 border-b border-wise-border">
-                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="group-users-tab">Group users</button>
-                                            <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-tab">User Defined Data</button>
-                                        </div>
-
-                                        <div id="group-users-tab" class="tab-content border border-wise-border p-4 rounded-b-md">
-                                            <div class="flex justify-between items-center mb-2">
-                                                    <input type="text" id="security-group-user-filter" placeholder="Filter users..." class="px-3 py-1 border rounded-md bg-white text-wise-dark-gray text-sm w-1/3" oninput="renderSecurityGroupUserCheckboxes(null, this.value)">
-                                                    <label class="inline-flex items-center">
-                                                        <input type="checkbox" id="check-all-security-group-users" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary" onclick="toggleAllSecurityGroupUsers()">
-                                                        <span class="ml-2 text-sm text-wise-dark-gray">Check all</span>
-                                                    </label>
-                                            </div>
-                                            <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
-                                                <!-- User checkboxes will be rendered here -->
-                                            </div>
-                                        </div>
-
-                                        <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                            <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label for="sg-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
-                                                    <input type="text" id="sg-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
-                                                    <input type="text" id="sg-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
-                                                    <input type="text" id="sg-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
-                                                    <input type="text" id="sg-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
-                                                    <input type="text" id="sg-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
-                                                    <input type="text" id="sg-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                                <div>
-                                                    <label for="sg-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
-                                                    <input type="text" id="sg-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="security-group-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityGroupForm()">Cancel</button>
-                                <button type="submit" form="security-group-form" id="security-group-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
-            'security-permission': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Permission</h2>
-                    <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
-                    
-                    <!-- Action and Search Buttons -->
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
-                            Create New Permission
-                        </button>
-                        <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
-                    </div>
-
-                    <!-- Container for Table -->
-                    <div id="security-permission-list-container" class="overflow-x-auto">
-                        <!-- Table will be rendered by JavaScript here -->
-                    </div>
-
-                    <!-- Form Modal for Create/Edit -->
-                    <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
-                            <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
-                                    <!-- Name & Description Inputs -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
-                                            <input type="text" id="sp-name" name="spName" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                        </div>
-                                        <div>
-                                            <label for="sp-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                            <input type="text" id="sp-description" name="spDescription" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-128-do-supply-minus" name="adjustmentTypeAccess" value="128-DO Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-128-do-supply-minus" class="ml-2 text-sm text-wise-dark-gray">128-DO Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-129-do-consumption-minus" name="adjustmentTypeAccess" value="129-DO Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-129-do-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">129-DO Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-130-inventory-correction-minus-three" name="adjustmentTypeAccess" value="130-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-130-inventory-correction-minus-three" class="ml-2 text-sm text-wise-dark-gray">130-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-131-inventory-correction-minus-four" name="adjustmentTypeAccess" value="131-Inventory Correction (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-131-inventory-correction-minus-four" class="ml-2 text-sm text-wise-dark-gray">131-Inventory Correction (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-132-production-supply-minus" name="adjustmentTypeAccess" value="132-Production Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-132-production-supply-minus" class="ml-2 text-sm text-wise-dark-gray">132-Production Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-133-production-consumption-minus" name="adjustmentTypeAccess" value="133-Production Consumption (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-133-production-consumption-minus" class="ml-2 text-sm text-wise-dark-gray">133-Production Consumption (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-134-damage-minus" name="adjustmentTypeAccess" value="134-Damage (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-134-damage-minus" class="ml-2 text-sm text-wise-dark-gray">134-Damage (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-135-return-to-vendor-minus" name="adjustmentTypeAccess" value="135-Return to Vendor (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-135-return-to-vendor-minus" class="ml-2 text-sm text-wise-dark-gray">135-Return to Vendor (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-136-customer-return-minus" name="adjustmentTypeAccess" value="136-Customer Return (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-136-customer-return-minus" class="ml-2 text-sm text-wise-dark-gray">136-Customer Return (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-137-sample-minus" name="adjustmentTypeAccess" value="137-Sample (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-137-sample-minus" class="ml-2 text-sm text-wise-dark-gray">137-Sample (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-138-kitting-supply-minus" name="adjustmentTypeAccess" value="138-Kitting Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-138-kitting-supply-minus" class="ml-2 text-sm text-wise-dark-gray">138-Kitting Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-139-kitting-output-minus" name="adjustmentTypeAccess" value="139-Kitting Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-139-kitting-output-minus" class="ml-2 text-sm text-wise-dark-gray">139-Kitting Output (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-140-value-added-service-supply-minus" name="adjustmentTypeAccess" value="140-Value Added Service Supply (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-140-value-added-service-supply-minus" class="ml-2 text-sm text-wise-dark-gray">140-Value Added Service Supply (-)</label></div>
+                                            <div class="flex items-center"><input type="checkbox" id="adj-type-141-value-added-service-output-minus" name="adjustmentTypeAccess" value="141-Value Added Service Output (-)" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"><label for="adj-type-141-value-added-service-output-minus" class="ml-2 text-sm text-wise-dark-gray">141-Value Added Service Output (-)</label></div>
                                         </div>
                                     </div>
 
-                                    <!-- KEYWORD: MENU CHECKBOX SECTION -->
-                                    <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
-                                    <div class="border border-wise-border rounded-md p-4">
-                                        <!-- Filter Radio Buttons -->
-                                        <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
-                                            <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)" checked><span class="ml-2">All</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Configurations" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Configurations</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Gadgets</span></label>
-                                            <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Processing</span></label>
+                                    <!-- User Defined Data Tab -->
+                                    <div id="up-user-defined" class="tab-content hidden">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            `).join('')}
                                         </div>
-                                        <!-- Checkbox List Container -->
-                                        <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
-                                            <!-- Menu checkboxes will be rendered by JavaScript -->
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Inactive Checkbox -->
-                                    <div class="mt-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
                                     </div>
                                 </form>
                             </div>
-
-                            <!-- OK and Cancel Buttons -->
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
-                                <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
+                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeUserProfileForm()">Cancel</button>
+                                <button type="submit" form="user-profile-form" id="user-profile-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
                             </div>
                         </div>
                     </div>
@@ -818,7 +647,234 @@
                     </div>
                 `,
             },
+            'allocation-location-selection': {
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Location Selection</h2>
+                    <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
+                            onclick="showAllocationLocationSelectionForm('create')">Create New</button>
+                        <input type="text" id="allocation-location-selection-search" placeholder="Search allocation location selection..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterAllocationLocationSelectionList(this.value)">
+                    </div>
+
+                    <div id="allocation-location-selection-list-container" class="overflow-x-auto"></div>
+
+                    <!-- MODAL -->
+                    <div id="allocation-location-selection-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
+                            <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                                <form id="allocation-location-selection-form" onsubmit="handleAllocationLocationSelectionSubmit(event)">
+                                    <!-- Top Meta -->
+                                    <div class="p-5 md:p-6 border-b border-gray-100 -mx-6 -mt-6 mb-4">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-wise-dark-gray">Record type</label>
+                                                <input id="als-recType" name="recordType" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-gray-100 text-wise-gray cursor-not-allowed" value="ALLOC SEL" readonly>
+                                            </div>
+                                            <div class="lg:col-span-2">
+                                                <label class="block text-sm font-medium text-wise-dark-gray">Filter name</label>
+                                                <input id="als-filterName" name="filterName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-wise-dark-gray">Table name</label>
+                                                <select id="als-tableName" name="tableName" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option>Location</option>
+                                                    <option>Location inventory</option>
+                                                    <option>Location inventory attributes</option>
+                                                </select>
+                                            </div>
+                                            <div class="md:col-span-2 lg:col-span-4">
+                                                <label class="block text-sm font-medium text-wise-dark-gray">Description</label>
+                                                <input id="als-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tabs -->
+                                    <div class="flex space-x-6 mb-4 border-b border-wise-border">
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium tab-active" data-tab="als-filter-data">Filter data</button>
+                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="als-order-by">Order by</button>
+                                    </div>
+
+                                    <!-- Filter Tab Content -->
+                                    <div id="als-filter-data" class="tab-content space-y-5">
+                                        <div class="flex items-center justify-between flex-wrap gap-3">
+                                            <h3 class="text-sm font-semibold text-wise-dark-gray">Filter criteria</h3>
+                                            <div class="segmented">
+                                                <input type="radio" id="als-logic-and" name="logic" value="AND" checked>
+                                                <label for="als-logic-and">And</label>
+                                                <input type="radio" id="als-logic-or" name="logic" value="OR">
+                                                <label for="als-logic-or">Or</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                            <div class="md:col-span-6">
+                                                <label class="block text-sm font-medium text-wise-dark-gray mb-1">Attribute</label>
+                                                <select id="als-attr" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option>Active</option>
+                                                    <option>Allocate in transit</option>
+                                                    <option>Allocation zone</option>
+                                                    <option>Allow work unit selection on system-directed work</option>
+                                                    <option>Check digit</option>
+                                                    <option>Date/time stamp</option>
+                                                    <option>Dock area anchor criteria</option>
+                                                    <option>Dock area selection priority</option>
+                                                    <option>Warehouse</option>
+                                                    <option>Inventory status</option>
+                                                    <option>LOC_INV_ATTRIBUTE4</option>
+                                                </select>
+                                            </div>
+                                            <div class="md:col-span-3">
+                                                <label class="block text-sm font-medium text-wise-dark-gray mb-1">Operand</label>
+                                                <select id="als-op" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                    <option>=</option>
+                                                    <option>!=</option>
+                                                    <option>&lt;</option>
+                                                    <option>&gt;</option>
+                                                    <option>&lt;=</option>
+                                                    <option>&gt;=</option>
+                                                    <option>is null</option>
+                                                    <option>is not null</option>
+                                                </select>
+                                            </div>
+                                            <div class="md:col-span-3">
+                                                <label class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
+                                                <div class="flex gap-2">
+                                                    <input id="als-val" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" placeholder="N'DCB' / <User_def4>">
+                                                    <select id="als-valPreset" class="mt-1 block w-28 flex-shrink-0 px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option value="">▼</option>
+                                                        <option value="N'DCB'">N'DCB'</option>
+                                                        <option value="N'Available'">N'Available'</option>
+                                                        <option value="&lt;User_def4&gt;">&lt;User_def4&gt;</option>
+                                                        <option value="N'Y'">N'Y'</option>
+                                                        <option value="0">0</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid grid-cols-12 gap-4">
+                                            <!-- Controls kiri -->
+                                            <div class="col-span-12 lg:col-span-2 xl:col-span-1 flex lg:flex-col gap-2">
+                                                <button id="als-btnAddRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Add<br>rule</button>
+                                                <button id="als-btnUpdateSelectedRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Update<br>selected</button>
+                                                <button id="als-btnClearInputs" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Clear<br>inputs</button>
+                                            </div>
+
+                                            <!-- List rules -->
+                                            <div class="col-span-12 lg:col-span-7 xl:col-span-8">
+                                                <div class="rounded-2xl border border-wise-border bg-white">
+                                                    <div class="flex items-center justify-between px-3 py-2 border-b border-wise-border">
+                                                        <span class="text-xs uppercase tracking-wider text-wise-gray">Current expression</span>
+                                                        <div class="flex gap-2">
+                                                            <button id="als-btnUpRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
+                                                            <button id="als-btnDownRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
+                                                        </div>
+                                                    </div>
+                                                    <div id="als-ruleList" class="mono scroll-slim max-h-64 overflow-auto p-3 text-[13px] leading-6 text-wise-dark-gray"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Aksi kanan -->
+                                            <div class="col-span-12 lg:col-span-3 xl:col-span-3 flex flex-col gap-2">
+                                                <button id="als-btnDeleteSelectedRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete selected rule</button>
+                                                <button id="als-btnDeleteLastRule" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete last rule</button>
+                                                <div class="h-2"></div>
+                                                <button id="als-btnLParen" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Insert left parenthesis</button>
+                                                <button id="als-btnRParen" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Insert right parenthesis</button>
+                                                <button id="als-btnDelParen" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete parenthesis</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex items-center gap-6 pt-1">
+                                            <label class="inline-flex items-center gap-2 text-sm text-wise-dark-gray">
+                                                <input type="checkbox" id="als-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"> Inactive
+                                            </label>
+                                            <label class="inline-flex items-center gap-2 text-sm text-wise-dark-gray">
+                                                <input type="checkbox" id="als-systemCreated" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary"> System created
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Order by Tab Content -->
+                                    <div id="als-order-by" class="tab-content hidden space-y-5">
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                            <!-- Left Column: Add Sort Criteria -->
+                                            <div class="md:col-span-5 flex flex-col gap-4">
+                                                <div class="space-y-3">
+                                                    <h3 class="text-sm font-semibold text-wise-dark-gray">Order by criteria</h3>
+                                                    <div class="segmented">
+                                                        <input type="radio" id="als-order-asc" name="order-direction" value="Ascending" checked>
+                                                        <label for="als-order-asc">Ascending</label>
+                                                        <input type="radio" id="als-order-desc" name="order-direction" value="Descending">
+                                                        <label for="als-order-desc">Descending</label>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-wise-dark-gray mb-1">Attribute</label>
+                                                    <select id="als-obAttribute" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                        <option>LOCATION.LOCATION</option>
+                                                        <option>Warehouse</option>
+                                                        <option>Location</option>
+                                                        <option>Allocation zone</option>
+                                                        <option>Inventory status</option>
+                                                        <!-- Add more attributes as needed based on common fields -->
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <button id="als-btnAddSortCriteria" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform w-full">Add sort criteria</button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Right Column: List of Sort Items and Controls -->
+                                            <div class="md:col-span-7 flex flex-col gap-2">
+                                                <div class="rounded-2xl border border-wise-border bg-white flex-1 min-h-[150px]">
+                                                    <div class="flex items-center justify-between px-3 py-2 border-b border-wise-border">
+                                                        <span class="text-xs uppercase tracking-wider text-wise-gray">Sorted items</span>
+                                                        <div class="flex gap-2">
+                                                            <button id="als-btnUpOrder" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
+                                                            <button id="als-btnDownOrder" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
+                                                        </div>
+                                                    </div>
+                                                    <div id="als-orderList" class="mono scroll-slim max-h-48 overflow-auto p-3 text-[13px] leading-6 text-wise-dark-gray">
+                                                        <!-- Sort items will be rendered here -->
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                                                    <button id="als-btnDeleteSelectedSortItem" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete selected sort item</button>
+                                                    <button id="als-btnDeleteLastSortItem" type="button" class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete last sort item</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-between items-center">
+                                <div class="text-xs text-wise-gray flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-1">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span id="als-last-updated-info">Last updated 02-08-2017 2:09:32 PM — User: chandra</span>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeAllocationLocationSelectionForm()">Cancel</button>
+                                    <button type="submit" form="allocation-location-selection-form" id="allocation-location-selection-submit-button"
+                                        class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+            },
         });
+
+        // Global flag to track if listeners for ALS form are attached
+        let alsFormListenersAttached = false;
 
         // =========================
         // Search registry & menus
@@ -826,16 +882,19 @@
         window.searchItems.push(
             { id: 'allocation-rule', title: 'Allocation Rule', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'allocation-strategies', title: 'Allocation Strategies', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'allocation-rule-assignment', title: 'Allocation Rule Assignment', category: 'Configuration', lastUpdated: 'Latest' } // New item
+            { id: 'allocation-rule-assignment', title: 'Allocation Rule Assignment', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'allocation-location-selection', title: 'Allocation Location Selection', category: 'Configuration', lastUpdated: 'Latest' } // New item
         );
         window.allMenus.push(
             { name: 'Allocation Rule', category: 'Configurations' },
             { name: 'Allocation Strategies', category: 'Configurations' },
-            { name: 'Allocation Rule Assignment', category: 'Configurations' } // New menu item
+            { name: 'Allocation Rule Assignment', category: 'Configurations' },
+            { name: 'Allocation Location Selection', category: 'Configurations' } // New menu item
         );
         window.parentMapping['allocation-rule'] = 'configuration';
         window.parentMapping['allocation-strategies'] = 'configuration';
-        window.parentMapping['allocation-rule-assignment'] = 'configuration'; // New parent mapping
+        window.parentMapping['allocation-rule-assignment'] = 'configuration';
+        window.parentMapping['allocation-location-selection'] = 'configuration'; // New parent mapping
 
         // =========================
         // Data seeds
@@ -884,11 +943,18 @@
             { id: 'CRT005', identifier: 'DCB-FROZEN' },
         ];
 
+        // Allocation Location Selection dummy data
+        let allocationLocationSelections = JSON.parse(localStorage.getItem('allocationLocationSelections')) || [
+            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+            { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+        ];
+
 
         // Persist helpers
         function saveAllocationRules() { localStorage.setItem('allocationRules', JSON.stringify(allocationRules)); }
         function saveAllocationStrategies() { localStorage.setItem('allocationStrategies', JSON.stringify(allocationStrategies)); }
-        function saveAllocationRuleAssignments() { localStorage.setItem('allocationRuleAssignments', JSON.stringify(allocationRuleAssignments)); } // New save function
+        function saveAllocationRuleAssignments() { localStorage.setItem('allocationRuleAssignments', JSON.stringify(allocationRuleAssignments)); }
+        function saveAllocationLocationSelections() { localStorage.setItem('allocationLocationSelections', JSON.stringify(allocationLocationSelections)); } // New save function
 
         // =========================
         // Allocation Rule Functions
@@ -1307,7 +1373,7 @@
         };
 
         // ==================================
-        // Allocation Rule Assignment Functions (NEW)
+        // Allocation Rule Assignment Functions
         // ==================================
         window.renderAllocationRuleAssignmentList = function (filter = '') {
             const container = document.getElementById('allocation-rule-assignment-list-container');
@@ -1496,6 +1562,445 @@
             }
         };
 
+        // ==================================
+        // Allocation Location Selection Functions
+        // ==================================
+        let currentFilterRules = [];
+        let currentOrderByRules = [];
+        let selectedFilterRuleIndex = -1;
+        let selectedOrderByRuleIndex = -1;
+
+        window.renderAllocationLocationSelectionList = function (filter = '') {
+            const container = document.getElementById('allocation-location-selection-list-container');
+            if (!container) return;
+
+            const filteredSelections = allocationLocationSelections.filter(als =>
+                als.filterName.toLowerCase().includes(filter.toLowerCase()) ||
+                als.description.toLowerCase().includes(filter.toLowerCase()) ||
+                als.tableName.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Filter Name</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Table Name</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredSelections.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No allocation location selections found.</td></tr>`;
+            } else {
+                filteredSelections.forEach(als => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${als.filterName}</td>
+                            <td class="py-3 px-6 text-left">${als.description}</td>
+                            <td class="py-3 px-6 text-left">${als.tableName}</td>
+                            <td class="py-3 px-6 text-left">${als.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationLocationSelectionForm('edit', '${als.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteAllocationLocationSelection('${als.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        window.filterAllocationLocationSelectionList = function (value) {
+            renderAllocationLocationSelectionList(value);
+        };
+
+        window.showAllocationLocationSelectionForm = function (mode, id = null) {
+            const modal = document.getElementById('allocation-location-selection-form-modal');
+            const form = document.getElementById('allocation-location-selection-form');
+            const title = document.getElementById('allocation-location-selection-form-title');
+            const submitButton = document.getElementById('allocation-location-selection-submit-button');
+            const lastUpdatedInfo = document.getElementById('als-last-updated-info');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            window.setupTabSwitching('allocation-location-selection-form-modal'); // Setup tabs for this modal
+
+            // Reset current filter and order rules
+            currentFilterRules = [];
+            currentOrderByRules = [];
+            selectedFilterRuleIndex = -1;
+            selectedOrderByRuleIndex = -1;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Allocation Location Selection';
+                submitButton.textContent = 'Save';
+                document.getElementById('als-recType').value = 'ALLOC SEL';
+                document.getElementById('als-inactive').checked = false;
+                document.getElementById('als-systemCreated').checked = false;
+                for (let i = 1; i <= 8; i++) { const el = document.getElementById(`als-udf${i}`); if (el) el.value = '0.00000'; } // Default UDFs
+                lastUpdatedInfo.textContent = ''; // Clear last updated info for new entry
+            } else {
+                title.textContent = 'Edit Allocation Location Selection';
+                submitButton.textContent = 'Update';
+                const selection = allocationLocationSelections.find(als => als.id === id);
+                if (selection) {
+                    document.getElementById('als-recType').value = selection.recordType;
+                    document.getElementById('als-filterName').value = selection.filterName;
+                    document.getElementById('als-description').value = selection.description;
+                    document.getElementById('als-tableName').value = selection.tableName;
+                    document.getElementById('als-inactive').checked = selection.inactive;
+                    document.getElementById('als-systemCreated').checked = selection.systemCreated;
+                    for (let i = 1; i <= 8; i++) {
+                        const el = document.getElementById(`als-udf${i}`);
+                        if (el) el.value = selection[`udf${i}`] || '0.00000';
+                    }
+                    currentFilterRules = JSON.parse(JSON.stringify(selection.filterRules || [])); // Deep copy
+                    currentOrderByRules = JSON.parse(JSON.stringify(selection.orderBy || [])); // Deep copy
+
+                    // Set last updated info
+                    lastUpdatedInfo.textContent = `Last updated ${selection.lastUpdated} — User: ${selection.updatedBy}`;
+                }
+            }
+
+            // Attach event listeners for filter/order by controls only once
+            // This block is crucial for fixing the "addEventListener of null" error
+            if (!alsFormListenersAttached) {
+                // Filter rules buttons
+                document.getElementById('als-valPreset').addEventListener('change', e => {
+                    if (e.target.value) { document.getElementById('als-val').value = e.target.value; e.target.value = ''; }
+                });
+                document.getElementById('als-btnClearInputs').addEventListener('click', () => {
+                    document.getElementById('als-attr').selectedIndex = 0;
+                    document.getElementById('als-op').selectedIndex = 0;
+                    document.getElementById('als-val').value = '';
+                    document.getElementById('als-logic-and').checked = true;
+                    selectedFilterRuleIndex = -1; // Clear selection on clear inputs
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnAddRule').addEventListener('click', () => {
+                    const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value; // Scope to current tab
+                    const attribute = document.getElementById('als-attr').value;
+                    const op = document.getElementById('als-op').value;
+                    const val = document.getElementById('als-val').value.trim();
+                    if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
+
+                    const newRule = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
+
+                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newRule);
+                        selectedFilterRuleIndex++;
+                    } else {
+                        currentFilterRules.push(newRule);
+                        selectedFilterRuleIndex = currentFilterRules.length - 1;
+                    }
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnUpdateSelectedRule').addEventListener('click', () => {
+                    if (selectedFilterRuleIndex < 0 || currentFilterRules[selectedFilterRuleIndex]?.type !== 'rule') { window.showCustomAlert('Error', 'Select a rule row first to update.'); return; }
+                    const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value; // Scope to current tab
+                    const attribute = document.getElementById('als-attr').value;
+                    const op = document.getElementById('als-op').value;
+                    const val = document.getElementById('als-val').value.trim();
+                    if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
+                    currentFilterRules[selectedFilterRuleIndex] = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnDeleteSelectedRule').addEventListener('click', () => {
+                    if (selectedFilterRuleIndex < 0) { window.showCustomAlert('Error', 'Select a row first to delete.'); return; }
+                    currentFilterRules.splice(selectedFilterRuleIndex, 1);
+                    if (selectedFilterRuleIndex >= currentFilterRules.length) selectedFilterRuleIndex = currentFilterRules.length - 1;
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnDeleteLastRule').addEventListener('click', () => {
+                    if (currentFilterRules.length === 0) { window.showCustomAlert('Error', 'No rules to delete!'); return; }
+                    currentFilterRules.pop();
+                    selectedFilterRuleIndex = currentFilterRules.length - 1;
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnLParen').addEventListener('click', () => {
+                    const newParen = { type: 'lparen' };
+                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
+                        selectedFilterRuleIndex++;
+                    } else {
+                        currentFilterRules.push(newParen);
+                        selectedFilterRuleIndex = currentFilterRules.length - 1;
+                    }
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnRParen').addEventListener('click', () => {
+                    const newParen = { type: 'rparen' };
+                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
+                        selectedFilterRuleIndex++;
+                    } else {
+                        currentFilterRules.push(newParen);
+                        selectedFilterRuleIndex = currentFilterRules.length - 1;
+                    }
+                    renderFilterRules();
+                });
+                document.getElementById('als-btnDelParen').addEventListener('click', () => {
+                    let deleted = false;
+                    for (let i = currentFilterRules.length - 1; i >= 0; i--) {
+                        if (currentFilterRules[i].type === 'lparen' || currentFilterRules[i].type === 'rparen') {
+                            currentFilterRules.splice(i, 1);
+                            deleted = true;
+                            break;
+                        }
+                    }
+                    if (!deleted) { window.showCustomAlert('Error', 'No parenthesis to delete!'); }
+                    selectedFilterRuleIndex = currentFilterRules.length - 1; renderFilterRules();
+                });
+                document.getElementById('als-btnUpRule').addEventListener('click', () => {
+                    if (selectedFilterRuleIndex <= 0) return;
+                    [currentFilterRules[selectedFilterRuleIndex - 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex - 1]];
+                    selectedFilterRuleIndex--; renderFilterRules();
+                });
+                document.getElementById('als-btnDownRule').addEventListener('click', () => {
+                    if (selectedFilterRuleIndex < 0 || selectedFilterRuleIndex >= currentFilterRules.length - 1) return;
+                    [currentFilterRules[selectedFilterRuleIndex + 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex + 1]];
+                    selectedFilterRuleIndex++; renderFilterRules();
+                });
+
+                // Order By buttons
+                document.getElementById('als-btnAddSortCriteria').addEventListener('click', () => {
+                    const attribute = document.getElementById('als-obAttribute').value;
+                    const direction = document.querySelector('#als-order-by input[name="order-direction"]:checked').value; // Scope to current tab
+                    if (!attribute) { window.showCustomAlert('Error', 'Please select an attribute!'); return; }
+
+                    const newSortItem = { attribute, direction };
+
+                    if (selectedOrderByRuleIndex !== -1 && selectedOrderByRuleIndex < currentOrderByRules.length) {
+                        currentOrderByRules.splice(selectedOrderByRuleIndex + 1, 0, newSortItem);
+                        selectedOrderByRuleIndex++;
+                    } else {
+                        currentOrderByRules.push(newSortItem);
+                        selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                    }
+                    renderOrderByRules();
+                });
+                document.getElementById('als-btnDeleteSelectedSortItem').addEventListener('click', () => {
+                    if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length) { window.showCustomAlert('Error', 'Select a sort item first!'); return; }
+                    currentOrderByRules.splice(selectedOrderByRuleIndex, 1);
+                    if (selectedOrderByRuleIndex >= currentOrderByRules.length) selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                    renderOrderByRules();
+                });
+                document.getElementById('als-btnDeleteLastSortItem').addEventListener('click', () => {
+                    if (currentOrderByRules.length === 0) { window.showCustomAlert('Error', 'No sort items to delete!'); return; }
+                    currentOrderByRules.pop();
+                    selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                    renderOrderByRules();
+                });
+                document.getElementById('als-btnUpOrder').addEventListener('click', () => {
+                    if (selectedOrderByRuleIndex <= 0) return;
+                    [currentOrderByRules[selectedOrderByRuleIndex - 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex - 1]];
+                    selectedOrderByRuleIndex--;
+                    renderOrderByRules();
+                });
+                document.getElementById('als-btnDownOrder').addEventListener('click', () => {
+                    if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length - 1) return;
+                    [currentOrderByRules[selectedOrderByRuleIndex + 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex + 1]];
+                    selectedOrderByRuleIndex++;
+                    renderOrderByRules();
+                });
+
+                // Add change listener for tableName to re-render rules
+                document.getElementById('als-tableName').addEventListener('change', () => {
+                    renderFilterRules();
+                    renderOrderByRules();
+                });
+
+                alsFormListenersAttached = true;
+            }
+
+            renderFilterRules(); // Initial render when form is shown
+            renderOrderByRules(); // Initial render when form is shown
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeAllocationLocationSelectionForm = function () {
+            const modal = document.getElementById('allocation-location-selection-form-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.handleAllocationLocationSelectionSubmit = async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+
+            // Get current date and time for lastUpdated
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = String(now.getFullYear()).slice(2); // Get last two digits of year
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const lastUpdatedString = `${day}-${month}-${year} ${hours}:${minutes}:${seconds} PM`; // Example: 02-08-17 14:09:32 PM
+
+            const newSelection = {
+                recordType: form['recordType'].value,
+                filterName: form['filterName'].value,
+                description: form['description'].value,
+                tableName: form['tableName'].value,
+                inactive: form['inactive'].checked,
+                systemCreated: form['systemCreated'].checked,
+                filterRules: currentFilterRules,
+                orderBy: currentOrderByRules,
+                lastUpdated: lastUpdatedString,
+                updatedBy: 'chandra', // Hardcoded for now
+            };
+            for (let i = 1; i <= 8; i++) { newSelection[`udf${i}`] = form[`udf${i}`]?.value || '0.00000'; }
+
+            if (mode === 'create') {
+                newSelection.id = 'ALS' + String(allocationLocationSelections.length + 1).padStart(3, '0');
+                allocationLocationSelections.push(newSelection);
+                await window.showCustomAlert('Success', 'Allocation Location Selection created successfully!');
+            } else {
+                const index = allocationLocationSelections.findIndex(als => als.id === id);
+                if (index !== -1) {
+                    allocationLocationSelections[index] = { ...allocationLocationSelections[index], ...newSelection };
+                    await window.showCustomAlert('Success', 'Allocation Location Selection updated successfully!');
+                }
+            }
+            saveAllocationLocationSelections();
+            closeAllocationLocationSelectionForm();
+            renderAllocationLocationSelectionList();
+        };
+
+        window.deleteAllocationLocationSelection = async function (id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this allocation location selection?');
+            if (confirmed) {
+                allocationLocationSelections = allocationLocationSelections.filter(als => als.id !== id);
+                saveAllocationLocationSelections();
+                renderAllocationLocationSelectionList();
+                await window.showCustomAlert('Deleted', 'Allocation Location Selection deleted successfully!');
+            }
+        };
+
+        // Helper for filter and order by rules
+        const needsValue = (op) => !(op === 'is null' || op === 'is not null');
+
+        function getTablePrefix(tableName) {
+            if (tableName === 'Location inventory') return 'LOCATION_INVENTORY';
+            if (tableName === 'Location inventory attributes') return 'LOCATION_INVENTORY_ATTRIBUTES';
+            return 'LOCATION';
+        }
+
+        function normalizeField(attribute, tableName) {
+            const p = getTablePrefix(tableName);
+            if (attribute === 'LOC_INV_ATTRIBUTE4') return `${p}.LOC_INV_ATTRIBUTE4`;
+            if (attribute === 'Inventory status') return `${p}.INVENTORY_STS`;
+            if (attribute === 'Warehouse') return `${p}.WAREHOUSE`; // Assuming 'warehouse' field in LOCATION table
+            if (attribute === 'Active') return `LOCATION.ACTIVE`; // Assuming 'active' field in LOCATION table
+            // Add more specific mappings if needed
+            return `${p}.${attribute.replaceAll(' ', '_').toUpperCase()}`;
+        }
+
+        // Filter Rules Functions
+        window.renderFilterRules = function () {
+            const ruleList = document.getElementById('als-ruleList');
+            if (!ruleList) return;
+
+            ruleList.innerHTML = '';
+            if (currentFilterRules.length === 0) {
+                const div = document.createElement('div');
+                div.className = 'p-3 text-sm text-wise-gray';
+                div.textContent = 'No filter rules added.';
+                ruleList.appendChild(div);
+                return;
+            }
+
+            const tableName = document.getElementById('als-tableName').value;
+
+            currentFilterRules.forEach((r, i) => {
+                const el = document.createElement('div');
+                el.className = 'list-row';
+                let text = '';
+                if (r.type === 'lparen' || r.type === 'rparen') { text = (r.type === 'lparen' ? '(' : ')'); }
+                else {
+                    const lg = (i === 0 || currentFilterRules[i-1]?.type === 'lparen' ? '' : r.logic + ' ');
+                    const v = needsValue(r.op) ? (' ' + (r.value || '')) : '';
+                    text = `${lg}${normalizeField(r.attribute, tableName)} ${r.op}${v}`;
+                }
+                el.textContent = text;
+                if (i === selectedFilterRuleIndex) el.classList.add('selected');
+                el.addEventListener('click', () => {
+                    selectedFilterRuleIndex = i;
+                    const row = currentFilterRules[i];
+                    if (row.type === 'rule') {
+                        document.getElementById('als-attr').value = row.attribute;
+                        document.getElementById('als-op').value = row.op;
+                        document.getElementById('als-val').value = row.value || '';
+                        (document.getElementById('als-logic-and').value === row.logic ? document.getElementById('als-logic-and') : document.getElementById('als-logic-or')).checked = true; // Corrected selector
+                    } else {
+                        // If a parenthesis is selected, clear the input fields
+                        document.getElementById('als-attr').selectedIndex = 0;
+                        document.getElementById('als-op').selectedIndex = 0;
+                        document.getElementById('als-val').value = '';
+                        document.getElementById('als-logic-and').checked = true; // Default to AND
+                    }
+                    renderFilterRules();
+                });
+                ruleList.appendChild(el);
+            });
+        };
+
+
+        // Order By Rules Functions
+        window.renderOrderByRules = function () {
+            const orderList = document.getElementById('als-orderList');
+            if (!orderList) return;
+
+            orderList.innerHTML = '';
+            if (!currentOrderByRules.length) {
+                const div = document.createElement('div');
+                div.className = 'p-3 text-sm text-wise-gray';
+                div.textContent = 'No sort added.';
+                orderList.appendChild(div);
+                return;
+            }
+
+            const tableName = document.getElementById('als-tableName').value;
+
+            currentOrderByRules.forEach((o, idx) => {
+                const div = document.createElement('div');
+                div.className = 'list-row flex items-center justify-between p-2';
+                div.innerHTML = `<span>${normalizeField(o.attribute, tableName)} <span class="text-wise-gray">(${o.direction})</span></span>`;
+
+                if (idx === selectedOrderByRuleIndex) div.classList.add('selected');
+
+                div.addEventListener('click', () => {
+                    selectedOrderByRuleIndex = idx;
+                    document.getElementById('als-obAttribute').value = o.attribute;
+                    document.getElementById('als-order-asc').checked = (o.direction === 'Ascending');
+                    document.getElementById('als-order-desc').checked = (o.direction === 'Descending');
+                    renderOrderByRules();
+                });
+                orderList.appendChild(div);
+            });
+        };
+
+
         // =========================
         // Auto-render on mount
         // =========================
@@ -1505,9 +2010,11 @@
                 if (c1) renderAllocationRuleList();
                 const c2 = document.getElementById('allocation-strategy-list-container');
                 if (c2) renderAllocationStrategyList();
-                const c3 = document.getElementById('allocation-rule-assignment-list-container'); // New auto-render
+                const c3 = document.getElementById('allocation-rule-assignment-list-container');
                 if (c3) renderAllocationRuleAssignmentList();
-                if (c1 || c2 || c3) obs.disconnect();
+                const c4 = document.getElementById('allocation-location-selection-list-container'); // New auto-render
+                if (c4) renderAllocationLocationSelectionList();
+                if (c1 || c2 || c3 || c4) obs.disconnect();
             });
             obs.observe(document.body, { childList: true, subtree: true });
         })();
