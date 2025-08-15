@@ -160,6 +160,13 @@
                                    Manage Allocation Location Selection
                                </button>
                            </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                               <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Allocation Rule Assignment Criteria</h3>
+                               <p class="text-wise-gray text-sm mt-1">Set criteria, and record type, etc.</p>
+                               <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('allocation-rule-assignment-criteria')">
+                                   Manage Allocation Rule Assignment Criteria
+                               </button>
+                           </div>
                     </div>
                 `,
             },

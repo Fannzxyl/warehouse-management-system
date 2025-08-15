@@ -874,7 +874,7 @@
             'allocation-rule-assignment-criteria': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment Criteria</h2>
-        <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
+        <p class="text-wise-gray mb-4">Set criteria, and record type, etc.</p>
         
         <div class="flex justify-between items-center mb-4">
             <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
