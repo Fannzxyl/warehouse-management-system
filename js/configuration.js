@@ -1465,6 +1465,7 @@ window.showSearchHistory = function() {
     else if (category === 'allocation-rule') renderAllocationRuleList();
     else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
     else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
+    else if (category === 'allocation-rule-assignment-criteria') renderARACList(); 
 
 
     // Tutup sidebar di mobile setelah memilih

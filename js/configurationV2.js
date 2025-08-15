@@ -871,6 +871,133 @@
                     </div>
                 `,
             },
+            'allocation-rule-assignment-criteria': {
+    full: `
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment Criteria</h2>
+        <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
+        
+        <div class="flex justify-between items-center mb-4">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
+                onclick="showARACForm('create')">Create New</button>
+            <input type="text" id="arac-search" placeholder="Search Allocation Rule Criteria..."
+                class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterARACList(this.value)">
+        </div>
+
+        <div id="arac-list-container" class="overflow-x-auto"></div>
+
+        <div id="arac-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[95vh] card">
+                <h3 class="text-lg font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment Criteria</h3>
+                <p class="text-sm text-wise-gray mb-4 -mt-3">Set criteria, and record type, etc.</p>
+
+                <div class="flex-1 overflow-y-auto pr-2 -mr-4 text-sm text-wise-dark-gray">
+                    <form id="arac-form" onsubmit="handleARACSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                            <div>
+                                <label for="arac-record-type" class="block font-medium mb-1">Record type:</label>
+                                <input type="text" id="arac-record-type" name="recordType" readonly class="input bg-gray-100 cursor-not-allowed">
+                            </div>
+                            <div>
+                                <label for="arac-filter-name" class="block font-medium mb-1">Filter Name:</label>
+                                <input type="text" id="arac-filter-name" name="filterName" required class="input">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="arac-description" class="block font-medium mb-1">Description:</label>
+                                <input type="text" id="arac-description" name="description" class="input">
+                            </div>
+                            <div>
+                                <label for="arac-table-name" class="block font-medium mb-1">Table name:</label>
+                                <select id="arac-table-name" name="tableName" class="select">
+                                    <option>Shipment detail</option>
+                                    <option>Item master</option>
+                                    <option>Customer data</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 p-2 rounded-xl">
+                            <fieldset class="border border-gray-200 p-4 rounded-lg">
+                                <legend class="px-2 font-medium text-red-600">Filter criteria</legend>
+                                <div class="flex gap-4">
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex items-center gap-4">
+                                            <label class="flex items-center gap-2"><input type="radio" name="arac-logic" value="And" class="custom-radio" checked> <span>And</span></label>
+                                            <label class="flex items-center gap-2"><input type="radio" name="arac-logic" value="Or" class="custom-radio"> <span>Or</span></label>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                            <div>
+                                                <label for="arac-attribute" class="block text-xs font-medium mb-1">Attribute:</label>
+                                                <select id="arac-attribute" class="select h-9 text-xs">
+                                                    <option>warehouse</option>
+                                                    <option>ORDER_TYP</option>
+                                                    <option>ITEM.CATEGORY</option>
+                                                    <option>ITEM.SEASON</option>
+                                                    <option>carrier</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="arac-operand" class="block text-xs font-medium mb-1">Operand:</label>
+                                                <select id="arac-operand" class="select h-9 text-xs">
+                                                    <option>=</option>
+                                                    <option>!=</option>
+                                                    <option>></option>
+                                                    <option><</option>
+                                                    <option>>=</option>
+                                                    <option><=</option>
+                                                    <option>is null</option>
+                                                    <option>is not null</option>
+                                                    <option>LIKE</option>
+                                                    <option>NOT LIKE</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="arac-value" class="block text-xs font-medium mb-1">Value:</label>
+                                                <input type="text" id="arac-value" class="input h-9 text-xs">
+                                            </div>
+                                        </div>
+                                        <div class="w-full border border-gray-300 rounded-lg">
+    <div class="flex items-center justify-between px-2 py-1 bg-gray-50 border-b rounded-t-lg">
+        <span class="text-xs font-semibold text-gray-500">CURRENT EXPRESSION</span>
+        <div class="flex gap-2">
+            <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('up')">↑ Up</button>
+            <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('down')">↓ Down</button>
+        </div>
+    </div>
+    <div id="arac-rule-display" class="h-24 p-2 overflow-y-auto font-mono text-xs list-row"></div>
+</div>
+                                    </div>
+                                    <div class="flex flex-col space-y-2">
+                                        <button type="button" class="btn h-9" onclick="addARACRule()">Add Rule</button>
+                                        <button type="button" class="btn h-9" onclick="deleteLastARACRule()">Delete Last Rule</button>
+                                        <button type="button" class="btn h-9" onclick="deleteSelectedARACRule()">Delete Select Rule</button>
+                                        <button type="button" class="btn h-9" onclick="addARACLeftParen()">Insert (</button>
+                                        <button type="button" class="btn h-9" onclick="addARACRightParen()">Insert )</button>
+                                        <button type="button" class="btn h-9" onclick="deleteARACParen()">Delete Parenthesis</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        
+                        <div class="flex items-center gap-8 pt-2">
+                           <label class="flex items-center gap-2">
+                                <input type="checkbox" id="arac-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                <span class="font-medium">Inactive</span>
+                            </label>
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" id="arac-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                                <span class="font-medium">System created</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button type="button" class="btn" onclick="closeARACForm()">Cancel</button>
+                    <button type="submit" form="arac-form" id="arac-submit-button" class="btn text-white bg-blue-400 hover:bg-blue-500 border-blue-400 hover:border-blue-500">OK</button>
+                </div>
+            </div>
+        </div>
+    `,
+},
         });
 
         // Global flag to track if listeners for ALS form are attached
@@ -949,12 +1076,334 @@
             { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
         ];
 
+        // ==================================================
+// Allocation Rule Assignment Criteria 
+// ==================================================
+let allocationRuleAssignmentCriteria = JSON.parse(localStorage.getItem('allocationRuleAssignmentCriteria')) || [
+    { 
+        id: 'ARAC001', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.COOKFOOD', 
+        description: 'DCB.COOKFOOD', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: true,
+        rules: []
+    },
+    { 
+        id: 'ARAC002', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.EXT.DRY', 
+        description: 'DCB.EXT.DRY', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+    { 
+        id: 'ARAC003', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.FASHION', 
+        description: 'DCB.FASHION', 
+        tableName: 'Item master',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+    { 
+        id: 'ARAC004', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.RETURN.DRY', 
+        description: 'DCB.RETURN.DRY', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+    { 
+        id: 'ARAC005', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.RETURN.FRS', 
+        description: 'DCB.RETURN.FRS', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+    { 
+        id: 'ARAC006', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.RETURN.FSH', 
+        description: 'DCB.RETURN.FSH', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+    { 
+        id: 'ARAC007', 
+        recordType: 'OUT RS CRIT',
+        filterName: 'DCB.RETURN.VIRTUAL.SHIP', 
+        description: 'DCB.RETURN.VIRTUAL.SHIP', 
+        tableName: 'Shipment detail',
+        systemCreated: false, 
+        inactive: false,
+        rules: []
+    },
+];
+
+let currentARACRules = [];
+let selectedARACRuleIndex = -1;
+
+window.renderARACList = function (filter = '') {
+    const container = document.getElementById('arac-list-container');
+    if (!container) return;
+
+    const filteredData = allocationRuleAssignmentCriteria.filter(c =>
+        (c.filterName || '').toLowerCase().includes(filter.toLowerCase()) ||
+        (c.description || '').toLowerCase().includes(filter.toLowerCase())
+    );
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">Filter Name</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">System Created</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+
+    if (filteredData.length === 0) {
+        tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No criteria found.</td></tr>`;
+    } else {
+        filteredData.forEach(c => {
+            tableHtml += `
+                <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                    <td class="py-3 px-6 text-left font-medium">${c.filterName}</td>
+                    <td class="py-3 px-6 text-left">${c.description}</td>
+                    <td class="py-3 px-6 text-left">${c.systemCreated ? 'YES' : 'NO'}</td>
+                    <td class="py-3 px-6 text-left">${!c.inactive ? 'YES' : 'NO'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showARACForm('edit', '${c.id}')" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+                            <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteARAC('${c.id}')" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    tableHtml += `</tbody></table>`;
+    container.innerHTML = tableHtml;
+};
+
+window.filterARACList = function (value) {
+    renderARACList(value);
+};
+
+window.renderARACRules = function() {
+    const display = document.getElementById('arac-rule-display');
+    display.innerHTML = '';
+    let indent = 0;
+    currentARACRules.forEach((rule, index) => {
+        const line = document.createElement('div');
+        line.className = 'cursor-pointer hover:bg-gray-100 px-1 rounded';
+        if (index === selectedARACRuleIndex) {
+            line.className += ' bg-blue-100';
+        }
+
+        if (rule.type === 'rparen') indent = Math.max(0, indent - 1);
+        
+        let textContent = '';
+        const padding = '&nbsp;'.repeat(indent * 4);
+        if (rule.type === 'rule') {
+            const logic = (index > 0 && currentARACRules[index - 1].type !== 'lparen') ? `${rule.logic} ` : '';
+            textContent = `${padding}${logic}${rule.attribute} ${rule.op} ${rule.value}`;
+        } else if (rule.type === 'lparen') {
+            const logic = (index > 0) ? 'AND ' : '';
+            textContent = `${padding}${logic}(`;
+            indent++;
+        } else if (rule.type === 'rparen') {
+            textContent = `${padding})`;
+        }
+        
+        line.innerHTML = textContent;
+        line.onclick = () => {
+            selectedARACRuleIndex = index;
+            renderARACRules();
+        };
+        display.appendChild(line);
+    });
+};
+
+window.addARACRule = function() {
+    const logic = document.querySelector('input[name="arac-logic"]:checked').value;
+    const attribute = document.getElementById('arac-attribute').value;
+    const op = document.getElementById('arac-operand').value;
+    const value = document.getElementById('arac-value').value;
+
+    if (!value && op !== 'is null' && op !== 'is not null') {
+        alert('Value is required for this operand.');
+        return;
+    }
+
+    const newRule = { type: 'rule', logic, attribute, op, value };
+
+    if (selectedARACRuleIndex > -1) {
+        currentARACRules.splice(selectedARACRuleIndex + 1, 0, newRule);
+    } else {
+        currentARACRules.push(newRule);
+    }
+    selectedARACRuleIndex++;
+    renderARACRules();
+};
+
+window.deleteLastARACRule = function() {
+    if (currentARACRules.length > 0) {
+        currentARACRules.pop();
+        selectedARACRuleIndex = currentARACRules.length - 1;
+        renderARACRules();
+    }
+};
+
+window.deleteSelectedARACRule = function() {
+    if (selectedARACRuleIndex > -1) {
+        currentARACRules.splice(selectedARACRuleIndex, 1);
+        selectedARACRuleIndex = Math.min(selectedARACRuleIndex, currentARACRules.length - 1);
+        renderARACRules();
+    }
+};
+
+window.addARACLeftParen = function() {
+    currentARACRules.push({ type: 'lparen' });
+    renderARACRules();
+};
+
+window.addARACRightParen = function() {
+    currentARACRules.push({ type: 'rparen' });
+    renderARACRules();
+};
+
+window.deleteARACParen = function() {
+    for (let i = currentARACRules.length - 1; i >= 0; i--) {
+        if (currentARACRules[i].type === 'lparen' || currentARACRules[i].type === 'rparen') {
+            currentARACRules.splice(i, 1);
+            renderARACRules();
+            return;
+        }
+    }
+};
+
+window.moveARACRule = function(direction) {
+    if (selectedARACRuleIndex < 0) return;
+
+    if (direction === 'up' && selectedARACRuleIndex > 0) {
+        [currentARACRules[selectedARACRuleIndex - 1], currentARACRules[selectedARACRuleIndex]] = 
+        [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex - 1]];
+        selectedARACRuleIndex--;
+    } else if (direction === 'down' && selectedARACRuleIndex < currentARACRules.length - 1) {
+        [currentARACRules[selectedARACRuleIndex + 1], currentARACRules[selectedARACRuleIndex]] = 
+        [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex + 1]];
+        selectedARACRuleIndex++;
+    }
+    renderARACRules();
+};
+
+window.showARACForm = function (mode, id = null) {
+    const modal = document.getElementById('arac-form-modal');
+    const form = document.getElementById('arac-form');
+
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+    
+    selectedARACRuleIndex = -1;
+    currentARACRules = [];
+
+    if (mode === 'create') {
+        document.getElementById('arac-record-type').value = 'OUT RS CRIT';
+    } else {
+        const criteria = allocationRuleAssignmentCriteria.find(c => c.id === id);
+        if (criteria) {
+            document.getElementById('arac-record-type').value = criteria.recordType;
+            document.getElementById('arac-filter-name').value = criteria.filterName;
+            document.getElementById('arac-description').value = criteria.description;
+            document.getElementById('arac-table-name').value = criteria.tableName;
+            document.getElementById('arac-inactive').checked = criteria.inactive;
+            document.getElementById('arac-system-created').checked = criteria.systemCreated;
+            currentARACRules = JSON.parse(JSON.stringify(criteria.rules || []));
+        }
+    }
+    renderARACRules();
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+};
+
+window.closeARACForm = function () {
+    const modal = document.getElementById('arac-form-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+};
+
+window.handleARACSubmit = async function (event) {
+    event.preventDefault();
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+
+    const newCriteria = {
+        recordType: form['recordType'].value,
+        filterName: form['filterName'].value,
+        description: form['description'].value,
+        tableName: form['tableName'].value,
+        inactive: document.getElementById('arac-inactive').checked,
+    systemCreated: document.getElementById('arac-system-created').checked,
+    rules: currentARACRules,
+};
+
+    if (mode === 'create') {
+        newCriteria.id = 'ARAC' + String(Date.now()).slice(-5);
+        allocationRuleAssignmentCriteria.unshift(newCriteria);
+        await window.showCustomAlert('Success', 'Criteria created successfully!');
+    } else {
+        const index = allocationRuleAssignmentCriteria.findIndex(c => c.id === id);
+        if (index !== -1) {
+            allocationRuleAssignmentCriteria[index] = { ...allocationRuleAssignmentCriteria[index], ...newCriteria };
+            await window.showCustomAlert('Success', 'Criteria updated successfully!');
+        }
+    }
+    saveAllocationRuleAssignmentCriteria();
+    closeARACForm();
+    renderARACList();
+};
+
+window.deleteARAC = async function (id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this criteria?');
+    if (confirmed) {
+        allocationRuleAssignmentCriteria = allocationRuleAssignmentCriteria.filter(c => c.id !== id);
+        saveAllocationRuleAssignmentCriteria();
+        renderARACList();
+        await window.showCustomAlert('Deleted', 'Criteria deleted successfully!');
+    }
+};
+
 
         // Persist helpers
         function saveAllocationRules() { localStorage.setItem('allocationRules', JSON.stringify(allocationRules)); }
         function saveAllocationStrategies() { localStorage.setItem('allocationStrategies', JSON.stringify(allocationStrategies)); }
         function saveAllocationRuleAssignments() { localStorage.setItem('allocationRuleAssignments', JSON.stringify(allocationRuleAssignments)); }
         function saveAllocationLocationSelections() { localStorage.setItem('allocationLocationSelections', JSON.stringify(allocationLocationSelections)); } // New save function
+        function saveAllocationRuleAssignmentCriteria() { localStorage.setItem('allocationRuleAssignmentCriteria', JSON.stringify(allocationRuleAssignmentCriteria)); }
 
         // =========================
         // Allocation Rule Functions
@@ -1769,12 +2218,14 @@
                 document.getElementById('als-btnUpRule').addEventListener('click', () => {
                     if (selectedFilterRuleIndex <= 0) return;
                     [currentFilterRules[selectedFilterRuleIndex - 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex - 1]];
-                    selectedFilterRuleIndex--; renderFilterRules();
+                    selectedFilterRuleIndex--; 
+                    renderFilterRules();
                 });
                 document.getElementById('als-btnDownRule').addEventListener('click', () => {
                     if (selectedFilterRuleIndex < 0 || selectedFilterRuleIndex >= currentFilterRules.length - 1) return;
                     [currentFilterRules[selectedFilterRuleIndex + 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex + 1]];
-                    selectedFilterRuleIndex++; renderFilterRules();
+                    selectedFilterRuleIndex++; 
+                    renderFilterRules();
                 });
 
                 // Order By buttons
