@@ -570,12 +570,12 @@
                                         <div class="grid grid-cols-1 gap-4 mb-4">
                                             <div>
                                                 <label for="ara-priority" class="block text-sm font-medium text-wise-dark-gray">Priority:</label>
-                                                <input type="number" id="ara-priority" name="priority" required
+                                                <input type="number" id="ara-priority" name="priority"
                                                     class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="ara-criteria" class="block text-sm font-medium text-wise-dark-gray">Criteria:</label>
-                                                <select id="ara-criteria" name="criteria" required
+                                                <select id="ara-criteria" name="criteria"
                                                     class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                     <option value="">Select Criteria...</option>
                                                     <!-- Criteria options will be populated by JS -->
@@ -584,7 +584,7 @@
                                             </div>
                                             <div>
                                                 <label for="ara-allocation-rule" class="block text-sm font-medium text-wise-dark-gray">Allocation Rule:</label>
-                                                <select id="ara-allocation-rule" name="allocationRule" required
+                                                <select id="ara-allocation-rule" name="allocationRule"
                                                     class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                                     <option value="">Select Allocation Rule...</option>
                                                     <!-- Allocation Rule options will be populated by JS -->
@@ -728,31 +728,28 @@
                                                     <option>LOC_INV_ATTRIBUTE4</option>
                                                 </select>
                                             </div>
-                                            <div class="md:col-span-3">
+                                            <div class="md:col-span-2"> <!-- Changed from md:col-span-3 -->
                                                 <label class="block text-sm font-medium text-wise-dark-gray mb-1">Operand</label>
-                                                <select id="als-op" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                    <option>=</option>
-                                                    <option>!=</option>
-                                                    <option>&lt;</option>
-                                                    <option>&gt;</option>
-                                                    <option>&lt;=</option>
-                                                    <option>&gt;=</option>
-                                                    <option>is null</option>
-                                                    <option>is not null</option>
-                                                </select>
+<select id="als-op"
+        class="mt-1 px-3 py-2 border border-wise-border rounded-md shadow-sm 
+               focus:outline-none focus:ring-wise-primary focus:border-wise-primary 
+               sm:text-sm bg-white text-wise-dark-gray h-9 text-xs w-32">
+    <option>=</option>
+    <option>!=</option>
+    <option>&lt;</option>
+    <option>&gt;</option>
+    <option>&lt;=</option>
+    <option>&gt;=</option>
+    <option>is null</option>
+    <option>is not null</option>
+</select>
+
                                             </div>
-                                            <div class="md:col-span-3">
+                                            <div class="md:col-span-4"> <!-- Changed from md:col-span-3 -->
                                                 <label class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
-                                                <div class="flex gap-2">
+                                                <div class="flex gap-2"> <!-- Removed flex gap-2 -->
                                                     <input id="als-val" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" placeholder="N'DCB' / <User_def4>">
-                                                    <select id="als-valPreset" class="mt-1 block w-28 flex-shrink-0 px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                                        <option value="">▼</option>
-                                                        <option value="N'DCB'">N'DCB'</option>
-                                                        <option value="N'Available'">N'Available'</option>
-                                                        <option value="&lt;User_def4&gt;">&lt;User_def4&gt;</option>
-                                                        <option value="N'Y'">N'Y'</option>
-                                                        <option value="0">0</option>
-                                                    </select>
+                                                    <!-- Removed als-valPreset select element -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1948,6 +1945,22 @@ window.deleteARAC = async function (id) {
             const mode = form.dataset.mode;
             const id = form.dataset.id;
 
+            // Explicitly check required fields from the General tab
+            const priorityInput = form['priority'];
+            const criteriaSelect = form['criteria'];
+            const allocationRuleSelect = form['allocationRule'];
+
+            if (!priorityInput.value || !criteriaSelect.value || !allocationRuleSelect.value) {
+                await window.showCustomAlert('Validasi Gagal', 'Harap lengkapi semua bidang wajib di tab "General" (Priority, Criteria, Allocation Rule) sebelum menyimpan.');
+                // Optionally switch back to the General tab
+                const modal = document.getElementById('allocation-rule-assignment-form-modal');
+                const generalTabButton = modal.querySelector('.tab-button[data-tab="ara-general"]');
+                if (generalTabButton) {
+                    generalTabButton.click(); // Programmatically click the General tab button
+                }
+                return; // Stop the submission
+            }
+
             // Get current date and time for lastUpdated
             const now = new Date();
             const day = String(now.getDate()).padStart(2, '0');
@@ -1957,9 +1970,9 @@ window.deleteARAC = async function (id) {
             const lastUpdatedString = `${day}/${month} ${hours}:${minutes} AM`; // Assuming AM for simplicity, adjust if needed
 
             const newAssignment = {
-                priority: parseInt(form['priority'].value, 10),
-                criteria: form['criteria'].value,
-                allocationRule: form['allocationRule'].value,
+                priority: parseInt(priorityInput.value, 10),
+                criteria: criteriaSelect.value,
+                allocationRule: allocationRuleSelect.value,
                 alwaysOverride: form['alwaysOverride'].checked,
                 active: form['active'].checked,
                 lastUpdated: lastUpdatedString, // Add last updated timestamp
@@ -2130,9 +2143,7 @@ window.deleteARAC = async function (id) {
             // This block is crucial for fixing the "addEventListener of null" error
             if (!alsFormListenersAttached) {
                 // Filter rules buttons
-                document.getElementById('als-valPreset').addEventListener('change', e => {
-                    if (e.target.value) { document.getElementById('als-val').value = e.target.value; e.target.value = ''; }
-                });
+                // Removed event listener for als-valPreset since it's removed from HTML
                 document.getElementById('als-btnClearInputs').addEventListener('click', () => {
                     document.getElementById('als-attr').selectedIndex = 0;
                     document.getElementById('als-op').selectedIndex = 0;
@@ -2266,7 +2277,7 @@ window.deleteARAC = async function (id) {
                 document.getElementById('als-btnDownOrder').addEventListener('click', () => {
                     if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length - 1) return;
                     [currentOrderByRules[selectedOrderByRuleIndex + 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex + 1]];
-                    selectedOrderByRuleIndex++;
+                    selectedOrderByRuleIndex++; 
                     renderOrderByRules();
                 });
 
