@@ -943,23 +943,23 @@
                                             </div>
                                         </div>
                                         <div class="w-full border border-gray-300 rounded-lg">
-    <div class="flex items-center justify-between px-2 py-1 bg-gray-50 border-b rounded-t-lg">
-        <span class="text-xs font-semibold text-gray-500">CURRENT EXPRESSION</span>
-        <div class="flex gap-2">
-            <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('up')">↑ Up</button>
-            <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('down')">↓ Down</button>
-        </div>
-    </div>
-    <div id="arac-rule-display" class="h-24 p-2 overflow-y-auto font-mono text-xs list-row"></div>
-</div>
+                                            <div class="flex items-center justify-between px-2 py-1 bg-gray-50 border-b rounded-t-lg">
+                                                <span class="text-xs font-semibold text-gray-500">CURRENT EXPRESSION</span>
+                                                <div class="flex gap-2">
+                                                    <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('up')">↑ Up</button>
+                                                    <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('down')">↓ Down</button>
+                                                </div>
+                                            </div>
+                                            <div id="arac-rule-display" class="h-24 p-2 overflow-y-auto font-mono text-xs list-row"></div>
+                                        </div>
                                     </div>
                                     <div class="flex flex-col space-y-2">
-                                        <button type="button" class="btn h-9" onclick="addARACRule()">Add Rule</button>
-                                        <button type="button" class="btn h-9" onclick="deleteLastARACRule()">Delete Last Rule</button>
-                                        <button type="button" class="btn h-9" onclick="deleteSelectedARACRule()">Delete Select Rule</button>
-                                        <button type="button" class="btn h-9" onclick="addARACLeftParen()">Insert (</button>
-                                        <button type="button" class="btn h-9" onclick="addARACRightParen()">Insert )</button>
-                                        <button type="button" class="btn h-9" onclick="deleteARACParen()">Delete Parenthesis</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACRule()">Add Rule</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteLastARACRule()">Delete Last Rule</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteSelectedARACRule()">Delete Select Rule</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACLeftParen()">Insert (</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACRightParen()">Insert )</button>
+                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteARACParen()">Delete Parenthesis</button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -979,7 +979,7 @@
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-3">
                     <button type="button" class="btn" onclick="closeARACForm()">Cancel</button>
-                    <button type="submit" form="arac-form" id="arac-submit-button" class="btn text-white bg-blue-400 hover:bg-blue-500 border-blue-400 hover:border-blue-500">OK</button>
+                    <button type="submit" form="arac-form" id="arac-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-md">OK</button>
                 </div>
             </div>
         </div>
