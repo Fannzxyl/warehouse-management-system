@@ -366,7 +366,8 @@
                                             ${Array.from({ length: 8 }, (_, i) => `
                                             <div>
                                                 <label for="up-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
-                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                <input type="text" id="up-udf${i + 1}" name="udf${i + 1}"
+                                                    class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             `).join('')}
                                         </div>
@@ -662,7 +663,7 @@
                     <div id="allocation-location-selection-list-container" class="overflow-x-auto"></div>
 
                     <!-- MODAL -->
-                    <div id="allocation-location-selection-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div id="allocation-location-selection-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4"> <!-- Fix: bg-opacity50 to bg-opacity-50 -->
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
                             <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
@@ -730,19 +731,19 @@
                                             </div>
                                             <div class="md:col-span-2"> <!-- Changed from md:col-span-3 -->
                                                 <label class="block text-sm font-medium text-wise-dark-gray mb-1">Operand</label>
-<select id="als-op"
-        class="mt-1 px-3 py-2 border border-wise-border rounded-md shadow-sm 
-               focus:outline-none focus:ring-wise-primary focus:border-wise-primary 
-               sm:text-sm bg-white text-wise-dark-gray h-9 text-xs w-32">
-    <option>=</option>
-    <option>!=</option>
-    <option>&lt;</option>
-    <option>&gt;</option>
-    <option>&lt;=</option>
-    <option>&gt;=</option>
-    <option>is null</option>
-    <option>is not null</option>
-</select>
+                                                <select id="als-op"
+                                                        class="mt-1 px-3 py-2 border border-wise-border rounded-md shadow-sm 
+                                                            focus:outline-none focus:ring-wise-primary focus:border-wise-primary 
+                                                            sm:text-sm bg-white text-wise-dark-gray h-9 text-xs w-32">
+                                                    <option>=</option>
+                                                    <option>!=</option>
+                                                    <option>&lt;</option>
+                                                    <option>&gt;</option>
+                                                    <option>&lt;=</option>
+                                                    <option>&gt;=</option>
+                                                    <option>is null</option>
+                                                    <option>is not null</option>
+                                                </select>
 
                                             </div>
                                             <div class="md:col-span-4"> <!-- Changed from md:col-span-3 -->
@@ -1003,22 +1004,27 @@
         // =========================
         // Search registry & menus
         // =========================
+        // Samakan kategori dan daftarkan ARAC
         window.searchItems.push(
             { id: 'allocation-rule', title: 'Allocation Rule', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'allocation-strategies', title: 'Allocation Strategies', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'allocation-rule-assignment', title: 'Allocation Rule Assignment', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'allocation-location-selection', title: 'Allocation Location Selection', category: 'Configuration', lastUpdated: 'Latest' } // New item
+            { id: 'allocation-location-selection', title: 'Allocation Location Selection', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'allocation-rule-assignment-criteria', title: 'Allocation Rule Assignment Criteria', category: 'Configuration', lastUpdated: 'Latest' } // Tambah ARAC
         );
         window.allMenus.push(
-            { name: 'Allocation Rule', category: 'Configurations' },
-            { name: 'Allocation Strategies', category: 'Configurations' },
-            { name: 'Allocation Rule Assignment', category: 'Configurations' },
-            { name: 'Allocation Location Selection', category: 'Configurations' } // New menu item
+            { name: 'Allocation Rule', category: 'Configuration' }, // Samakan kategori
+            { name: 'Allocation Strategies', category: 'Configuration' }, // Samakan kategori
+            { name: 'Allocation Rule Assignment', category: 'Configuration' }, // Samakan kategori
+            { name: 'Allocation Location Selection', category: 'Configuration' }, // Samakan kategori
+            { name: 'Allocation Rule Assignment Criteria', category: 'Configuration' } // Tambah ARAC
         );
         window.parentMapping['allocation-rule'] = 'configuration';
         window.parentMapping['allocation-strategies'] = 'configuration';
         window.parentMapping['allocation-rule-assignment'] = 'configuration';
-        window.parentMapping['allocation-location-selection'] = 'configuration'; // New parent mapping
+        window.parentMapping['allocation-location-selection'] = 'configuration';
+        window.parentMapping['allocation-rule-assignment-criteria'] = 'configuration'; // Tambah ARAC parent mapping
+
 
         // =========================
         // Data seeds
@@ -1052,10 +1058,10 @@
 
         // Allocation Rule Assignments (new dummy data)
         let allocationRuleAssignments = JSON.parse(localStorage.getItem('allocationRuleAssignments')) || [
-            { id: 'ARA001', priority: 1, criteria: 'DCB-COOKFOOD', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
-            { id: 'ARA002', priority: 2, criteria: 'DCB-EXT-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
-            { id: 'ARA003', priority: 3, criteria: 'DCB-FASHION', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
-            { id: 'ARA004', priority: 4, criteria: 'DCB-RETURN-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '21/22 10:21 AM', updatedBy: 'Candra' },
+            { id: 'ARA001', priority: 1, criteria: 'DCB-COOKFOOD', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('Candra'), updatedBy: 'Candra' },
+            { id: 'ARA002', priority: 2, criteria: 'DCB-EXT-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('Candra'), updatedBy: 'Candra' },
+            { id: 'ARA003', priority: 3, criteria: 'DCB-FASHION', allocationRule: 'Standard Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('Candra'), updatedBy: 'Candra' },
+            { id: 'ARA004', priority: 4, criteria: 'DCB-RETURN-DRY', allocationRule: 'FIFO Allocation', alwaysOverride: false, active: true, udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('Candra'), updatedBy: 'Candra' },
         ];
 
         // Dummy criteria for Allocation Rule Assignment
@@ -1069,8 +1075,8 @@
 
         // Allocation Location Selection dummy data
         let allocationLocationSelections = JSON.parse(localStorage.getItem('allocationLocationSelections')) || [
-            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
-            { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('chandra'), updatedBy: 'chandra' },
+            { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: fmtLastUpdated('chandra'), updatedBy: 'chandra' },
         ];
 
         // ==================================================
@@ -1186,7 +1192,7 @@ window.renderARACList = function (filter = '') {
                     <td class="py-3 px-6 text-left">${c.systemCreated ? 'YES' : 'NO'}</td>
                     <td class="py-3 px-6 text-left">${!c.inactive ? 'YES' : 'NO'}</td>
                     <td class="py-3 px-6 text-center">
-                        <div class="flex item-center justify-center">
+                        <div class="flex items-center justify-center">
                             <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showARACForm('edit', '${c.id}')" title="Edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                             </button>
@@ -1250,7 +1256,7 @@ window.addARACRule = function() {
     const value = document.getElementById('arac-value').value;
 
     if (!value && op !== 'is null' && op !== 'is not null') {
-        alert('Value is required for this operand.');
+        window.showCustomAlert('Error', 'Value is required for this operand.'); // Fix: use custom alert
         return;
     }
 
@@ -1364,9 +1370,9 @@ window.handleARACSubmit = async function (event) {
         description: form['description'].value,
         tableName: form['tableName'].value,
         inactive: document.getElementById('arac-inactive').checked,
-    systemCreated: document.getElementById('arac-system-created').checked,
-    rules: currentARACRules,
-};
+        systemCreated: document.getElementById('arac-system-created').checked,
+        rules: currentARACRules,
+    };
 
     if (mode === 'create') {
         newCriteria.id = 'ARAC' + String(Date.now()).slice(-5);
@@ -1439,7 +1445,7 @@ window.deleteARAC = async function (id) {
                             <td class="py-3 px-6 text-left">${ar.description}</td>
                             <td class="py-3 px-6 text-left">${ar.inactive ? 'Yes' : 'No'}</td>
                             <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
+                                <div class="flex items-center justify-center">
                                     <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationRuleForm('edit', '${ar.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
@@ -1695,7 +1701,7 @@ window.deleteARAC = async function (id) {
                             <td class="py-3 px-6 text-left">${as.inactive ? 'No' : 'Yes'}</td>
                             <td class="py-3 px-6 text-left whitespace-nowrap">${as.identifier}</td>
                             <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
+                                <div class="flex items-center justify-center">
                                     <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationStrategyForm('edit', '${as.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
@@ -1856,7 +1862,7 @@ window.deleteARAC = async function (id) {
                             <td class="py-3 px-6 text-left">${ara.allocationRule}</td>
                             <td class="py-3 px-6 text-left">${ara.active ? 'Yes' : 'No'}</td>
                             <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
+                                <div class="flex items-center justify-center">
                                     <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationRuleAssignmentForm('edit', '${ara.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
@@ -1931,6 +1937,12 @@ window.deleteARAC = async function (id) {
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
+            // Synchronize toggle switch appearance after setting checked state
+            ['ara-always-override','ara-active'].forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) window.toggleSwitch(cb);
+            });
         };
 
         window.closeAllocationRuleAssignmentForm = function () {
@@ -1960,25 +1972,19 @@ window.deleteARAC = async function (id) {
                 }
                 return; // Stop the submission
             }
-
-            // Get current date and time for lastUpdated
-            const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const lastUpdatedString = `${day}/${month} ${hours}:${minutes} AM`; // Assuming AM for simplicity, adjust if needed
-
+            
             const newAssignment = {
                 priority: parseInt(priorityInput.value, 10),
                 criteria: criteriaSelect.value,
                 allocationRule: allocationRuleSelect.value,
                 alwaysOverride: form['alwaysOverride'].checked,
                 active: form['active'].checked,
-                lastUpdated: lastUpdatedString, // Add last updated timestamp
+                lastUpdated: fmtLastUpdated('Candra'), // Use the new function
                 updatedBy: 'Candra', // Hardcoded for now, can be dynamic later
             };
-            for (let i = 1; i <= 8; i++) { newAssignment[`udf${i}`] = form[`udf${i}`]?.value || ''; }
+            for (let i = 1; i <= 8; i++) {
+                newAssignment[`udf${i}`] = form[`udf${i}`]?.value ?? ''; // Fixed syntax error and added nullish coalescing
+            }
 
 
             if (mode === 'create') {
@@ -2008,19 +2014,19 @@ window.deleteARAC = async function (id) {
         };
 
         // Custom toggle switch styling and behavior
-        window.toggleSwitch = function(checkbox) {
-            const toggleContainer = checkbox.closest('.flex.items-center');
-            const block = toggleContainer.querySelector('.block');
-            const dot = toggleContainer.querySelector('.dot');
+        window.toggleSwitch = window.toggleSwitch || function (checkbox) {
+            const box  = checkbox.closest('.relative') || checkbox.parentElement; // Added null-guard and closest('.relative')
+            const track = box?.querySelector('.block'); // Added null-guard
+            const dot   = box?.querySelector('.dot');   // Added null-guard
+            const on = checkbox.checked;
 
-            if (checkbox.checked) {
-                block.classList.remove('bg-gray-300');
-                block.classList.add('bg-wise-primary');
-                dot.classList.add('translate-x-full');
-            } else {
-                block.classList.remove('bg-wise-primary');
-                block.classList.add('bg-gray-300');
-                dot.classList.remove('translate-x-full');
+            if (track) {
+                track.classList.toggle('bg-wise-primary', on);
+                track.classList.toggle('bg-gray-300', !on);
+            }
+            if (dot) {
+                dot.classList.toggle('translate-x-full', on);
+                dot.classList.toggle('translate-x-0', !on); // Ensure it moves back
             }
         };
 
@@ -2067,7 +2073,7 @@ window.deleteARAC = async function (id) {
                             <td class="py-3 px-6 text-left">${als.tableName}</td>
                             <td class="py-3 px-6 text-left">${als.inactive ? 'Yes' : 'No'}</td>
                             <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
+                                <div class="flex items-center justify-center">
                                     <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showAllocationLocationSelectionForm('edit', '${als.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
@@ -2310,15 +2316,6 @@ window.deleteARAC = async function (id) {
             const id = form.dataset.id;
 
             // Get current date and time for lastUpdated
-            const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const year = String(now.getFullYear()).slice(2); // Get last two digits of year
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const lastUpdatedString = `${day}-${month}-${year} ${hours}:${minutes}:${seconds} PM`; // Example: 02-08-17 14:09:32 PM
-
             const newSelection = {
                 recordType: form['recordType'].value,
                 filterName: form['filterName'].value,
@@ -2328,7 +2325,7 @@ window.deleteARAC = async function (id) {
                 systemCreated: form['systemCreated'].checked,
                 filterRules: currentFilterRules,
                 orderBy: currentOrderByRules,
-                lastUpdated: lastUpdatedString,
+                lastUpdated: fmtLastUpdated('chandra'), // Use the new function
                 updatedBy: 'chandra', // Hardcoded for now
             };
             for (let i = 1; i <= 8; i++) { newSelection[`udf${i}`] = form[`udf${i}`]?.value || '0.00000'; }
@@ -2462,6 +2459,32 @@ window.deleteARAC = async function (id) {
             });
         };
 
+        // ===== quick patches and general utilities =====
+        window.defaultStandardOptions = window.defaultStandardOptions || [
+            '-- Select --', 'Standard', 'Fast', 'Eco'
+        ];
+
+        // Function to format last updated timestamp
+        function fmtLastUpdated(user = 'Candra') {
+            const d = new Date();
+            let h = d.getHours();
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12; if (h === 0) h = 12;
+            const m = String(d.getMinutes()).padStart(2,'0');
+            const day = String(d.getDate()).padStart(2,'0');
+            const month = String(d.getMonth()+1).padStart(2,'0');
+            return `${day}/${month} ${h}:${m} ${ampm} — ${user}`;
+        }
+        window.fmtLastUpdated = fmtLastUpdated; // Make it globally accessible
+
+        // Stub handlers for ALS buttons
+        ['AddRule','UpdateSelectedRule','ClearInputs','UpRule','DownRule','DeleteSelectedRule','DeleteLastRule',
+        'LParen','RParen','DelParen','AddSortCriteria','UpOrder','DownOrder','DeleteSelectedSortItem','DeleteLastSortItem'
+        ].forEach(s => {
+        const id = `als-btn${s}`;
+        const btn = document.getElementById(id);
+        if (btn && !btn.onclick) btn.onclick = () => console.warn(id,'not implemented yet');
+        });
 
         // =========================
         // Auto-render on mount
@@ -2476,7 +2499,9 @@ window.deleteARAC = async function (id) {
                 if (c3) renderAllocationRuleAssignmentList();
                 const c4 = document.getElementById('allocation-location-selection-list-container'); // New auto-render
                 if (c4) renderAllocationLocationSelectionList();
-                if (c1 || c2 || c3 || c4) obs.disconnect();
+                const c5 = document.getElementById('arac-list-container'); // Auto-render ARAC
+                if (c5) renderARACList();
+                if (c1 || c2 || c3 || c4 || c5) obs.disconnect(); // Disconnect if any container is found
             });
             obs.observe(document.body, { childList: true, subtree: true });
         })();
