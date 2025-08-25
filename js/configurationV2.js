@@ -649,6 +649,24 @@
             },
             'allocation-location-selection': {
     full: `
+        <style>
+            /* kunci page di belakang saat modal terbuka */
+            body.modal-open { height: 100vh; overflow: hidden; }
+            /* cegah scroll chaining ke body (opsional tapi bagus) */
+            html, body { overscroll-behavior: contain; }
+            /* pastikan isi modal tidak bikin scrollbar internal */
+            #alsModal .als-body { overflow: visible; }
+
+            /* Optional: Adjust header/footer padding for compactness */
+            #alsModal .als-header {
+                padding-top: 12px; /* py-3 equivalent */
+                padding-bottom: 8px; /* pb-2 equivalent */
+            }
+            #alsModal .als-footer {
+                padding-top: 8px; /* pt-2 equivalent */
+                padding-bottom: 12px; /* pb-3 equivalent */
+            }
+        </style>
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Location Selection</h2>
         <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
 
@@ -661,10 +679,17 @@
 
         <div id="allocation-location-selection-list-container" class="overflow-x-auto"></div>
 
-        <div id="allocation-location-selection-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
-                <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+        <!-- MODAL STRUCTURE -->
+        <div id="alsModal"
+             class="fixed inset-0 z-[60] flex items-start justify-center
+                    p-4 md:p-6 bg-black/30 overflow-y-auto hidden">
+            <div class="als-content w-[min(1100px,95vw)] bg-white rounded-xl shadow-2xl">
+                <div class="als-header px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
+
+                    <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-2"></h3>
+                    <!-- Close button can be added here if needed -->
+                </div>
+                <div class="als-body px-6 py-5">
                     <form id="allocation-location-selection-form" onsubmit="handleAllocationLocationSelectionSubmit(event)">
                         <div class="p-5 md:p-6 border-b border-gray-100 -mx-6 -mt-6 mb-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -739,47 +764,46 @@
                                 </div>
                                 <div class="md:col-span-3">
                                     <label class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
-                                    <div class="flex gap-2">
-                                        <input id="als-val" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray" placeholder="N'DCB' / <User_def4>">
-                                        <select id="als-valPreset" class="mt-1 block w-28 flex-shrink-0 px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            <option value="">▼</option>
-                                            <option value="N'DCB'">N'DCB'</option>
-                                            <option value="N'Available'">N'Available'</option>
-                                            <option value="&lt;User_def4&gt;">&lt;User_def4&gt;</option>
-                                            <option value="N'Y'">N'Y'</option>
-                                            <option value="0">0</option>
-                                        </select>
-                                    </div>
+                                    <input id="als-val" list="als-valOptions"
+                                           class="mt-1 block w-64 md:w-72 max-w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray"
+                                           placeholder="N'DCB' / <User_def4>">
+                                    <datalist id="als-valOptions">
+                                      <option value="N'DCB'">
+                                      <option value="N'Available'">
+                                      <option value="<User_def4>">
+                                      <option value="N'Y'">
+                                      <option value="0">
+                                    </datalist>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-12 gap-4">
-                                <div class="col-span-12 lg:col-span-3 xl:col-span-2 flex flex-col gap-2">
+                                <div class="col-span-12 lg:col-span-2 xl:col-span-2 flex flex-col gap-2">
                                     <button id="als-btnAddRule" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform whitespace-nowrap">Add rule</button>
                                     <button id="als-btnUpdateSelectedRule" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform whitespace-nowrap">Update selected</button>
                                     <button id="als-btnClearInputs" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform whitespace-nowrap">Clear inputs</button>
                                 </div>
 
-                                <div class="col-span-12 lg:col-span-6 xl:col-span-7">
+                                <div class="col-span-12 lg:col-span-7 xl:col-span-8">
                                     <div class="rounded-2xl border border-wise-border bg-white h-full">
                                         <div class="flex items-center justify-between px-3 py-2 border-b border-wise-border">
                                             <span class="text-xs uppercase tracking-wider text-wise-gray">Current expression</span>
                                             <div class="flex gap-2">
-                                                <button id="als-btnUpRule" type="button" class="px-2.5 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
-                                                <button id="als-btnDownRule" type="button" class="px-2.5 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
+                                                <button id="als-btnUpRule" type="button" class="px-2.5 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
+                                                <button id="als-btnDownRule" type="button" class="px-2.5 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
                                             </div>
                                         </div>
                                         <div id="als-ruleList" class="mono scroll-slim max-h-64 overflow-auto p-3 text-[13px] leading-6 text-wise-dark-gray"></div>
                                     </div>
                                 </div>
                                 
-                                <div class="col-span-12 lg:col-span-3 xl:col-span-3 flex flex-col gap-2">
-                                    <button id="als-btnDeleteSelectedRule" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete selected</button>
-                                    <button id="als-btnDeleteLastRule" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete last</button>
+                                <div class="col-span-12 lg:col-span-2 xl:col-span-2 flex flex-col gap-2 items-start">
+                                    <button id="als-btnDeleteSelectedRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete selected</button>
+                                    <button id="als-btnDeleteLastRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete last</button>
                                     <div class="h-1"></div>
-                                    <button id="als-btnLParen" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Insert (</button>
-                                    <button id="als-btnRParen" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Insert )</button>
-                                    <button id="als-btnDelParen" type="button" class="px-3 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">Delete ( )</button>
+                                    <button id="als-btnLParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Insert (</button>
+                                    <button id="als-btnRParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Insert )</button>
+                                    <button id="als-btnDelParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete ( )</button>
                                 </div>
                             </div>
                             <div class="flex items-center gap-6 pt-1">
@@ -824,8 +848,8 @@
                                         <div class="flex items-center justify-between px-3 py-2 border-b border-wise-border">
                                             <span class="text-xs uppercase tracking-wider text-wise-gray">Sorted items</span>
                                             <div class="flex gap-2">
-                                                <button id="als-btnUpOrder" type="button" class="px-2.5 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
-                                                <button id="als-btnDownOrder" type="button" class="px-2.5 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
+                                                <button id="als-btnUpOrder" type="button" class="px-2.5 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↑ Up</button>
+                                                <button id="als-btnDownOrder" type="button" class="px-2.5 py-1.5 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform">↓ Down</button>
                                             </div>
                                         </div>
                                         <div id="als-orderList" class="mono scroll-slim max-h-48 overflow-auto p-3 text-[13px] leading-6 text-wise-dark-gray">
@@ -841,7 +865,7 @@
                     </form>
                 </div>
 
-                <div class="mt-4 pt-4 border-t border-wise-border flex justify-between items-center">
+                <div class="als-footer px-6 pt-2 pb-3 border-t border-wise-border bg-white rounded-b-xl flex justify-between items-center">
                     <div class="text-xs text-wise-gray flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -979,7 +1003,7 @@
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-3">
                     <button type="button" class="btn" onclick="closeARACForm()">Cancel</button>
-                    <button type="submit" form="arac-form" id="arac-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-md">OK</button>
+                    <button type="submit" form="arac-form" id="arac-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm">OK</button>
                 </div>
             </div>
         </div>
@@ -1059,7 +1083,7 @@
 
         // Allocation Location Selection dummy data
         let allocationLocationSelections = JSON.parse(localStorage.getItem('allocationLocationSelections')) || [
-            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
             { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
         ];
 
@@ -1240,7 +1264,7 @@ window.addARACRule = function() {
     const value = document.getElementById('arac-value').value;
 
     if (!value && op !== 'is null' && op !== 'is not null') {
-        alert('Value is required for this operand.');
+        window.showCustomAlert('Error', 'Value is required for this operand.');
         return;
     }
 
@@ -2063,8 +2087,27 @@ window.deleteARAC = async function (id) {
             renderAllocationLocationSelectionList(value);
         };
 
+        // Function to open the modal
+        function openAlsModal() {
+            const m = document.getElementById('alsModal');
+            document.body.classList.add('modal-open');
+            m.classList.remove('hidden');
+            m.scrollTop = 0;                              // mulai dari atas overlay
+            m.querySelector('input,select,textarea')?.focus();
+        }
+
+        // Function to close the modal
+        function closeAlsModal() {
+            const m = document.getElementById('alsModal');
+            m.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }
+
+        // Add event listener for resize globally (no scaling needed for this approach)
+        // window.addEventListener('resize', fitAlsModal); // Removed as scaling is no longer used
+
+
         window.showAllocationLocationSelectionForm = function (mode, id = null) {
-            const modal = document.getElementById('allocation-location-selection-form-modal');
             const form = document.getElementById('allocation-location-selection-form');
             const title = document.getElementById('allocation-location-selection-form-title');
             const submitButton = document.getElementById('allocation-location-selection-submit-button');
@@ -2074,7 +2117,8 @@ window.deleteARAC = async function (id) {
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            window.setupTabSwitching('allocation-location-selection-form-modal'); // Setup tabs for this modal
+            // Use the correct ID for tab switching, which is the content container inside alsModal
+            window.setupTabSwitching('alsModal'); 
 
             // Reset current filter and order rules
             currentFilterRules = [];
@@ -2114,12 +2158,7 @@ window.deleteARAC = async function (id) {
             }
 
             // Attach event listeners for filter/order by controls only once
-            // This block is crucial for fixing the "addEventListener of null" error
             if (!alsFormListenersAttached) {
-                // Filter rules buttons
-                document.getElementById('als-valPreset').addEventListener('change', e => {
-                    if (e.target.value) { document.getElementById('als-val').value = e.target.value; e.target.value = ''; }
-                });
                 document.getElementById('als-btnClearInputs').addEventListener('click', () => {
                     document.getElementById('als-attr').selectedIndex = 0;
                     document.getElementById('als-op').selectedIndex = 0;
@@ -2266,17 +2305,13 @@ window.deleteARAC = async function (id) {
                 alsFormListenersAttached = true;
             }
 
+            openAlsModal(); // Use the new open modal function
             renderFilterRules(); // Initial render when form is shown
             renderOrderByRules(); // Initial render when form is shown
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
         };
 
         window.closeAllocationLocationSelectionForm = function () {
-            const modal = document.getElementById('allocation-location-selection-form-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            closeAlsModal(); // Use the new close modal function
         };
 
         window.handleAllocationLocationSelectionSubmit = async function (event) {
@@ -2466,3 +2501,4 @@ window.deleteARAC = async function (id) {
         console.log('Configuration V2 loaded successfully');
     });
 })();
+
