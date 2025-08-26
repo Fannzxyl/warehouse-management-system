@@ -1,4 +1,7 @@
 (function () {
+    // Global flag to track if listeners for ALS form are attached
+    if (window.alsFormListenersAttached === undefined) window.alsFormListenersAttached = false;
+
     document.addEventListener('DOMContentLoaded', () => {
         // Memastikan variabel global dari configuration.js sudah tersedia
         if (typeof window.contentData === 'undefined') {
@@ -396,7 +399,7 @@
                     <div id="allocation-rule-list-container" class="overflow-x-auto"></div>
 
                     <!-- MODAL -->
-                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                             <h3 id="allocation-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
@@ -684,8 +687,7 @@
              class="fixed inset-0 z-[60] flex items-start justify-center
                     p-4 md:p-6 bg-black/30 overflow-y-auto hidden">
             <div class="als-content w-[min(1100px,95vw)] bg-white rounded-xl shadow-2xl">
-                <div class="als-header px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
-
+                <div class="als-header sticky top-0 z-10 px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
                     <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-2"></h3>
                     <!-- Close button can be added here if needed -->
                 </div>
@@ -1012,7 +1014,8 @@
         });
 
         // Global flag to track if listeners for ALS form are attached
-        let alsFormListenersAttached = false;
+        // Moved to the top of the file for global scope
+        if (window.alsFormListenersAttached === undefined) window.alsFormListenersAttached = false;
 
         // =========================
         // Search registry & menus
@@ -2103,10 +2106,6 @@ window.deleteARAC = async function (id) {
             document.body.classList.remove('modal-open');
         }
 
-        // Add event listener for resize globally (no scaling needed for this approach)
-        // window.addEventListener('resize', fitAlsModal); // Removed as scaling is no longer used
-
-
         window.showAllocationLocationSelectionForm = function (mode, id = null) {
             const form = document.getElementById('allocation-location-selection-form');
             const title = document.getElementById('allocation-location-selection-form-title');
@@ -2158,7 +2157,7 @@ window.deleteARAC = async function (id) {
             }
 
             // Attach event listeners for filter/order by controls only once
-            if (!alsFormListenersAttached) {
+            if (!window.alsFormListenersAttached) {
                 document.getElementById('als-btnClearInputs').addEventListener('click', () => {
                     document.getElementById('als-attr').selectedIndex = 0;
                     document.getElementById('als-op').selectedIndex = 0;
@@ -2195,14 +2194,18 @@ window.deleteARAC = async function (id) {
                     currentFilterRules[selectedFilterRuleIndex] = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
                     renderFilterRules();
                 });
-                document.getElementById('als-btnDeleteSelectedRule').addEventListener('click', () => {
+                document.getElementById('als-btnDeleteSelectedRule').addEventListener('click', async () => {
                     if (selectedFilterRuleIndex < 0) { window.showCustomAlert('Error', 'Select a row first to delete.'); return; }
+                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete selected rule?');
+                    if (!ok) return;
                     currentFilterRules.splice(selectedFilterRuleIndex, 1);
                     if (selectedFilterRuleIndex >= currentFilterRules.length) selectedFilterRuleIndex = currentFilterRules.length - 1;
                     renderFilterRules();
                 });
-                document.getElementById('als-btnDeleteLastRule').addEventListener('click', () => {
+                document.getElementById('als-btnDeleteLastRule').addEventListener('click', async () => {
                     if (currentFilterRules.length === 0) { window.showCustomAlert('Error', 'No rules to delete!'); return; }
+                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the last rule?');
+                    if (!ok) return;
                     currentFilterRules.pop();
                     selectedFilterRuleIndex = currentFilterRules.length - 1;
                     renderFilterRules();
@@ -2229,7 +2232,9 @@ window.deleteARAC = async function (id) {
                     }
                     renderFilterRules();
                 });
-                document.getElementById('als-btnDelParen').addEventListener('click', () => {
+                document.getElementById('als-btnDelParen').addEventListener('click', async () => {
+                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the nearest parenthesis?');
+                    if (!ok) return;
                     let deleted = false;
                     for (let i = currentFilterRules.length - 1; i >= 0; i--) {
                         if (currentFilterRules[i].type === 'lparen' || currentFilterRules[i].type === 'rparen') {
@@ -2302,7 +2307,7 @@ window.deleteARAC = async function (id) {
                     renderOrderByRules();
                 });
 
-                alsFormListenersAttached = true;
+                window.alsFormListenersAttached = true; // Set the global flag to true
             }
 
             openAlsModal(); // Use the new open modal function
@@ -2349,6 +2354,12 @@ window.deleteARAC = async function (id) {
                 allocationLocationSelections.push(newSelection);
                 await window.showCustomAlert('Success', 'Allocation Location Selection created successfully!');
             } else {
+                const ok = await window.showCustomConfirm(
+                    'Confirm Update',
+                    'Apply changes to this Allocation Location Selection?'
+                );
+                if (!ok) return;
+
                 const index = allocationLocationSelections.findIndex(als => als.id === id);
                 if (index !== -1) {
                     allocationLocationSelections[index] = { ...allocationLocationSelections[index], ...newSelection };
@@ -2501,4 +2512,3 @@ window.deleteARAC = async function (id) {
         console.log('Configuration V2 loaded successfully');
     });
 })();
-
