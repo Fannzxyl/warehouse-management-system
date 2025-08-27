@@ -41,8 +41,6 @@
                             e.preventDefault();
                         }
                     }
-                } else if (e.key === 'Escape') {
-                    closeAdjustmentTypeForm();
                 }
             };
 
@@ -54,8 +52,57 @@
                 modal.removeEventListener('keydown', keydownHandler);
             };
         }
+        
+        // Helper function for custom alerts/confirms
+        // Mengimplementasikan pop-up kustom untuk menggantikan alert() dan console.log()
+        window.showCustomAlert = async (title, message) => {
+            return new Promise((resolve) => {
+                const modalHtml = `
+                    <div id="custom-alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+                        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                            <h3 class="text-lg font-bold mb-2">${title}</h3>
+                            <p class="text-sm text-gray-700 mb-4">${message}</p>
+                            <div class="flex justify-end">
+                                <button id="custom-alert-ok-button" class="btn btn-primary">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                document.getElementById('custom-alert-ok-button').addEventListener('click', () => {
+                    document.getElementById('custom-alert-modal').remove();
+                    resolve();
+                });
+            });
+        };
 
-        // DUMMY DATA
+        window.showCustomConfirm = async (title, message) => {
+            return new Promise((resolve) => {
+                const modalHtml = `
+                    <div id="custom-confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+                        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+                            <h3 class="text-lg font-bold mb-2">${title}</h3>
+                            <p class="text-sm text-gray-700 mb-4">${message}</p>
+                            <div class="flex justify-end gap-2">
+                                <button id="custom-confirm-cancel-button" class="btn">Cancel</button>
+                                <button id="custom-confirm-ok-button" class="btn btn-primary">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                document.getElementById('custom-confirm-ok-button').addEventListener('click', () => {
+                    document.getElementById('custom-confirm-modal').remove();
+                    resolve(true);
+                });
+                document.getElementById('custom-confirm-cancel-button').addEventListener('click', () => {
+                    document.getElementById('custom-confirm-modal').remove();
+                    resolve(false);
+                });
+            });
+        };
+
+        // --- DUMMY DATA ---
         window._adjUsers = [
             'Administrator', 'AgungI100534', 'Asep20180322', 'BagusI17070009', 'BudI12020069', 'Checkreceiving01',
             'Checkreturn01', 'Cyclecounter01', 'FadhilI100520', 'FitrianiI100532', 'HadiP17070019', 'HasanI100536',
@@ -67,7 +114,11 @@
         ].sort();
 
         window._workCreationMasters = ['PUTAWAY', 'REPLENISHMENT', 'PICKING', 'COUNTING'].sort();
+        window._itemBalanceUploadValues = ['Yes', 'No'];
+        window._systemValue1Values = ['Yes', 'No'];
 
+        // --- STATE & LOCAL STORAGE ---
+        // Penyatuan data untuk Adjustment Type
         let adjustmentTypes = JSON.parse(localStorage.getItem('adjustmentTypes')) || [
              { id: 'ADJ000', identifier: '000-Adj empties', recordType: 'ADJTYPE', description: '000-Adj empties (provisi by GOLD)', inactive: false, systemCreated: true, class: 'adjustment', qtyMin: -9999999, qtyMax: 0.00, rfInitiation: 'item_location', createWork: true, workCreationMaster: 'PUTAWAY', allowFrozenLocations: false, includeInInterfaceUploads: false, authorizedUsers: ['Administrator'], userDefined: {} },
              { id: 'ADJ001', identifier: '000-Invoice Matching', recordType: 'ADJTYPE', description: '000-Invoice Matching', inactive: false, systemCreated: false, class: 'adjustment', qtyMin: -9999999, qtyMax: 0.00, rfInitiation: 'item_location', createWork: false, workCreationMaster: '', allowFrozenLocations: false, includeInInterfaceUploads: false, authorizedUsers: [], userDefined: {} },
@@ -108,9 +159,40 @@
             { id: 'HC001', identifier: '9876.54.3210', recordType: 'HARMONIZED', description: 'Dummy Harmonized Code 2', inactive: false, systemCreated: false },
             { id: 'HC002', identifier: '1122.33.4455', recordType: 'HARMONIZED', description: 'Dummy Harmonized Code 3', inactive: true, systemCreated: false }
         ];
+        
+        // Menambahkan state dan seed data untuk Location Class & Location Status
+        let locationClasses = JSON.parse(localStorage.getItem('locationClasses')) || [
+             { id: 'LC000', identifier: 'Equipment', recordType: 'LOCLASS', description: 'Material Handling Equipment', includeInItemBalanceUpload: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LC001', identifier: 'Inventory Storage', recordType: 'LOCLASS', description: 'Inventory Storage', includeInItemBalanceUpload: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LC002', identifier: 'P&D', recordType: 'LOCLASS', description: 'P&D', includeInItemBalanceUpload: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LC003', identifier: 'Put to Store', recordType: 'LOCLASS', description: 'Put to Store', includeInItemBalanceUpload: 'Yes', systemCreated: false, inactive: false },
+             { id: 'LC004', identifier: 'Receiving Dock', recordType: 'LOCLASS', description: 'Receiving Dock', includeInItemBalanceUpload: 'No', systemCreated: true, inactive: false },
+             { id: 'LC005', identifier: 'Receiving Pre-Check In', recordType: 'LOCLASS', description: 'Receiving Pre-Check In', includeInItemBalanceUpload: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LC006', identifier: 'Receiving Pre-Locate', recordType: 'LOCLASS', description: 'Receiving Pre-Locate', includeInItemBalanceUpload: 'No', systemCreated: true, inactive: false },
+             { id: 'LC007', identifier: 'Shipping Dock', recordType: 'LOCLASS', description: 'Shipping Dock', includeInItemBalanceUpload: 'No', systemCreated: true, inactive: false },
+             { id: 'LC008', identifier: 'Work Order Build', recordType: 'LOCLASS', description: 'Work Order Build', includeInItemBalanceUpload: 'Yes', systemCreated: false, inactive: false },
+        ];
+        
+        let locationStatuses = JSON.parse(localStorage.getItem('locationStatuses')) || [
+             { id: 'LS000', identifier: 'Empty', recordType: 'LOCSTATUS', description: 'Empty', systemValue1: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LS001', identifier: 'Frozen', recordType: 'LOCSTATUS', description: 'Frozen', systemValue1: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LS002', identifier: 'Picking', recordType: 'LOCSTATUS', description: 'Picking', systemValue1: 'Yes', systemCreated: true, inactive: false },
+             { id: 'LS003', identifier: 'Storage', recordType: 'LOCSTATUS', description: 'Storage', systemValue1: 'Yes', systemCreated: true, inactive: false },
+        ];
+        
 
+        // --- SAVE HELPERS ---
+        function saveAdjustmentTypes() { 
+            localStorage.setItem('adjustmentTypes', JSON.stringify(adjustmentTypes)); 
+        }
         function saveHarmonizedCodes() {
             localStorage.setItem('harmonizedCodes', JSON.stringify(harmonizedCodes));
+        }
+        function saveLocationClasses() {
+            localStorage.setItem('locationClasses', JSON.stringify(locationClasses));
+        }
+        function saveLocationStatuses() {
+            localStorage.setItem('locationStatuses', JSON.stringify(locationStatuses));
         }
         
         let currentAdjUsers = [];
@@ -160,10 +242,6 @@
             if (activePane) activePane.classList.remove('hidden');
         };
 
-        function saveAdjustmentTypes() { 
-            localStorage.setItem('adjustmentTypes', JSON.stringify(adjustmentTypes)); 
-        }
-        
         function validateAdjustmentTypeForm() {
             const identifier = document.getElementById('adj-type-identifier');
             const qtyMin = document.getElementById('adj-type-qtyMin');
@@ -244,6 +322,59 @@
             }
             return isValid;
         }
+        
+        // Fungsi validasi baru untuk Location Class
+        function validateLocationClassForm() {
+            const identifier = document.getElementById('lc-identifier');
+            const submitBtn = document.getElementById('lc-submit-button');
+            
+            let isValid = true;
+            if (!identifier.value.trim()) {
+                isValid = false;
+            }
+            
+            const identifierError = document.getElementById('lc-identifier-error');
+            if (identifierError) {
+                if (!isValid) {
+                    identifierError.textContent = "Identifier is required.";
+                    identifierError.classList.remove('hidden');
+                } else {
+                    identifierError.classList.add('hidden');
+                }
+            }
+            
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
+        
+        // Fungsi validasi baru untuk Location Status
+        function validateLocationStatusForm() {
+            const identifier = document.getElementById('ls-identifier');
+            const submitBtn = document.getElementById('ls-submit-button');
+            
+            let isValid = true;
+            if (!identifier.value.trim()) {
+                isValid = false;
+            }
+            
+            const identifierError = document.getElementById('ls-identifier-error');
+            if (identifierError) {
+                if (!isValid) {
+                    identifierError.textContent = "Identifier is required.";
+                    identifierError.classList.remove('hidden');
+                } else {
+                    identifierError.classList.add('hidden');
+                }
+            }
+            
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
+
 
         // --- INVENTORY CONTROL: landing page + daftar anak ---
         const invChildren = [
@@ -539,7 +670,132 @@
                 </div>
             `
         };
-        // Tambahkan konten untuk semua sub-menu lainnya...
+        // Konten untuk Location Class
+        window.contentData['location-class'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Location Class</h2>
+                <p class="text-gray-600">Manage location classifications.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationClassForm('create')">
+                        Create New Location Class
+                    </button>
+                    <input type="text" id="lc-search" placeholder="Search location class..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationClassList(this.value)">
+                </div>
+                <div id="lc-list-container" class="mt-4 overflow-x-auto">
+                    <!-- Table will be rendered here -->
+                </div>
+
+                <!-- Modal Location Class -->
+                <div id="lc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(1100px,95vw)] max-w-3xl bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
+                            <h3 id="lc-form-title" class="text-lg font-semibold text-wise-dark-gray">Create New Location Class</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeLocationClassForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="lc-form" onsubmit="handleLocationClassSubmit(event)">
+                                <div class="grid gap-4">
+                                    <div>
+                                        <label for="lc-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                                        <input id="lc-identifier" name="identifier" required class="input" placeholder="e.g. Equipment">
+                                        <p id="lc-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div>
+                                        <label for="lc-recordType" class="block text-sm mb-1">Record type</label>
+                                        <input id="lc-recordType" name="recordType" class="input bg-gray-100 text-wise-gray cursor-not-allowed" value="LOCLASS" readonly>
+                                    </div>
+                                    <div>
+                                        <label for="lc-description" class="block text-sm mb-1">Description</label>
+                                        <input id="lc-description" name="description" class="input" placeholder="Description">
+                                    </div>
+                                    <div>
+                                        <label for="lc-includeInItemBalanceUpload" class="block text-sm mb-1">Include in Item Balance Upload</label>
+                                        <select id="lc-includeInItemBalanceUpload" name="includeInItemBalanceUpload" class="select">
+                                            ${window._itemBalanceUploadValues.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="lc-inactive" name="inactive" type="checkbox"> Inactive
+                                    </label>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="lc-systemCreated" name="systemCreated" type="checkbox"> System created
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeLocationClassForm()">Cancel</button>
+                            <button id="lc-submit-button" type="submit" form="lc-form" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        
+        // Konten baru untuk Location Status
+        window.contentData['location-status'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Location Status</h2>
+                <p class="text-gray-600">Manage different statuses for warehouse locations.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationStatusForm('create')">
+                        Create New Location Status
+                    </button>
+                    <input type="text" id="ls-search" placeholder="Search location status..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationStatusList(this.value)">
+                </div>
+                <div id="ls-list-container" class="mt-4 overflow-x-auto">
+                    <!-- Table will be rendered here -->
+                </div>
+
+                <!-- Modal Location Status -->
+                <div id="ls-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(1100px,95vw)] max-w-3xl bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
+                            <h3 id="ls-form-title" class="text-lg font-semibold text-wise-dark-gray">Create New Location Status</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeLocationStatusForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="ls-form" onsubmit="handleLocationStatusSubmit(event)">
+                                <div class="grid gap-4">
+                                    <div>
+                                        <label for="ls-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                                        <input id="ls-identifier" name="identifier" required class="input" placeholder="e.g. Empty">
+                                        <p id="ls-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div>
+                                        <label for="ls-recordType" class="block text-sm mb-1">Record type</label>
+                                        <input id="ls-recordType" name="recordType" class="input bg-gray-100 text-wise-gray cursor-not-allowed" value="LOCSTATUS" readonly>
+                                    </div>
+                                    <div>
+                                        <label for="ls-description" class="block text-sm mb-1">Description</label>
+                                        <input id="ls-description" name="description" class="input" placeholder="Description">
+                                    </div>
+                                    <div>
+                                        <label for="ls-systemValue1" class="block text-sm mb-1">System value 1</label>
+                                        <select id="ls-systemValue1" name="systemValue1" class="select">
+                                            ${window._systemValue1Values.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="ls-inactive" name="inactive" type="checkbox"> Inactive
+                                    </label>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="ls-systemCreated" name="systemCreated" type="checkbox"> System created
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeLocationStatusForm()">Cancel</button>
+                            <button id="ls-submit-button" type="submit" form="ls-form" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        
         window.contentData['inventory-control-values'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2><p class="text-gray-600">Configure inventory control values and defaults.</p>` };
         window.contentData['inventory-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Status</h2><p class="text-gray-600">Manage different inventory statuses (e.g., Available, Damaged).</p>` };
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
@@ -550,17 +806,15 @@
         window.contentData['item-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Template</h2><p class="text-gray-600">Create templates for new items to standardize properties.</p>` };
         window.contentData['item-unit-of-measure'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Unit of Measure</h2><p class="text-gray-600">Manage different units of measure for items.</p>` };
         window.contentData['location'] = { full: `<h2 class="text-xl font-semibold mb-4">Location</h2><p class="text-gray-600">Manage all storage locations in the warehouse.</p>` };
-        window.contentData['location-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Class</h2><p class="text-gray-600">Categorize locations for logical grouping and rules.</p>` };
-        window.contentData['location-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Status</h2><p class="text-gray-600">Define statuses for warehouse locations (e.g., Available, Damaged).</p>` };
         window.contentData['location-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Template</h2><p class="text-gray-600">Blueprint to create locations.</p>` };
         window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
         window.contentData['lot-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Lot Template</h2><p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>` };
         window.contentData['movement-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Movement Class</h2><p class="text-gray-600">Categorize movements for tracking and reporting purposes.</p>` };
-        window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Create templates for serial number generation.</p>` };
-        window.contentData['storage-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Storage Template</h2><p class="text-gray-600">Manage templates for storage configurations.</p>` };
+        window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Pattern for serials.</p>` };
+        window.contentData['storage-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Storage Template</h2><p class="text-gray-600">Storage rule presets.</p>` };
         window.contentData['zone'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone</h2><p class="text-gray-600">Manage all zones in the warehouse.</p>` };
-        window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Manage different zone types in the warehouse.</p>` };
-        
+        window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Types of zones.</p>` };
+
         // Mapping parent→children & registrasi ke pencarian/menu global
         window.parentMapping['inventory-control'] = 'configuration'; // Parent dari Inventory Control adalah Configuration
         invChildren.forEach(key => {
@@ -574,7 +828,7 @@
         window.searchItems.push({ id: 'inventory-control', title: 'Inventory Control', category: 'Configurations', lastUpdated: 'Latest' });
         window.allMenus.push({ name: 'Inventory Control', category: 'Configurations' });
         
-        // DUMMY DATA & RENDER FUNCTIONS
+        // --- RENDER LIST FUNCTIONS ---
         window.renderAdjustmentTypeList = function(filter = '') {
             const container = document.getElementById('adjustment-type-list-container');
             if (!container) return;
@@ -667,10 +921,119 @@
             }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
-        }
+        };
 
+        window.filterAdjustmentTypeList = function(value) {
+            renderAdjustmentTypeList(value);
+        };
+        
         window.filterHarmonizedCodeList = function(value) {
             renderHarmonizedCodeList(value);
+        };
+
+        // Fungsi render list baru untuk Location Class
+        window.renderLocationClassList = function(filter = '') {
+            const container = document.getElementById('lc-list-container');
+            if (!container) return;
+            const filteredData = locationClasses.filter(lc => lc.identifier.toLowerCase().includes(filter.toLowerCase()) || lc.description.toLowerCase().includes(filter.toLowerCase()));
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Include in Item Balance Upload</th>
+                            <th class="py-3 px-6 text-left">System Created</th>
+                            <th class="py-3 px-6 text-left">Active</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="6" class="py-3 px-6 text-center">No location classes found.</td></tr>`;
+            } else {
+                filteredData.forEach(lc => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${lc.identifier}</td>
+                            <td class="py-3 px-6 text-left">${lc.description}</td>
+                            <td class="py-3 px-6 text-left">${lc.includeInItemBalanceUpload}</td>
+                            <td class="py-3 px-6 text-left">${lc.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${!lc.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showLocationClassForm('edit', '${lc.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteLocationClass('${lc.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        // Fungsi render list baru untuk Location Status
+        window.renderLocationStatusList = function(filter = '') {
+            const container = document.getElementById('ls-list-container');
+            if (!container) return;
+            const filteredData = locationStatuses.filter(ls => ls.identifier.toLowerCase().includes(filter.toLowerCase()) || ls.description.toLowerCase().includes(filter.toLowerCase()));
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">System value 1</th>
+                            <th class="py-3 px-6 text-left">System created</th>
+                            <th class="py-3 px-6 text-left">Active</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="6" class="py-3 px-6 text-center">No location statuses found.</td></tr>`;
+            } else {
+                filteredData.forEach(ls => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${ls.identifier}</td>
+                            <td class="py-3 px-6 text-left">${ls.description}</td>
+                            <td class="py-3 px-6 text-left">${ls.systemValue1}</td>
+                            <td class="py-3 px-6 text-left">${ls.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${!ls.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showLocationStatusForm('edit', '${ls.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteLocationStatus('${ls.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        window.filterLocationClassList = function(value) {
+            renderLocationClassList(value);
+        };
+        
+        // Fungsi filter baru untuk Location Status
+        window.filterLocationStatusList = function(value) {
+            renderLocationStatusList(value);
         };
 
         window.showAdjustmentTypeForm = function(mode, id = null) {
@@ -894,6 +1257,133 @@
             validateHarmonizedCodeForm();
             document.getElementById('hc-identifier').focus();
         };
+        
+        // Fungsi show form baru untuk Location Class
+        window.showLocationClassForm = function(mode, id = null) {
+            const modal = document.getElementById('lc-form-modal');
+            const form = document.getElementById('lc-form');
+            const title = document.getElementById('lc-form-title');
+            const submitButton = document.getElementById('lc-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Set default values
+            document.getElementById('lc-recordType').value = 'LOCLASS';
+            document.getElementById('lc-inactive').checked = false;
+            document.getElementById('lc-systemCreated').checked = false;
+            document.getElementById('lc-includeInItemBalanceUpload').value = 'Yes';
+            
+            // Handle edit mode
+            if (mode === 'create') {
+                title.textContent = 'Create New Location Class';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('lc-identifier').removeAttribute('readonly');
+                document.getElementById('lc-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+
+            } else {
+                title.textContent = 'Edit Location Class';
+                if (submitButton) submitButton.textContent = 'Update';
+                const item = locationClasses.find(lc => lc.id === id);
+                if (item) {
+                    document.getElementById('lc-identifier').value = item.identifier;
+                    document.getElementById('lc-description').value = item.description;
+                    document.getElementById('lc-inactive').checked = item.inactive;
+                    document.getElementById('lc-systemCreated').checked = item.systemCreated;
+                    document.getElementById('lc-includeInItemBalanceUpload').value = item.includeInItemBalanceUpload;
+                    if (item.systemCreated) {
+                         document.getElementById('lc-identifier').setAttribute('readonly', true);
+                         document.getElementById('lc-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
+                }
+            }
+            
+            // Modal visibility
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            
+            // Backdrop click handler
+            modal.onclick = (e) => {
+                if (e.target.id === 'lc-form-modal') closeLocationClassForm();
+            };
+
+            // Panggil validasi saat modal dibuka
+            validateLocationClassForm();
+            document.getElementById('lc-identifier').focus();
+        };
+        
+        // Fungsi show form baru untuk Location Status
+        window.showLocationStatusForm = function(mode, id = null) {
+            const modal = document.getElementById('ls-form-modal');
+            const form = document.getElementById('ls-form');
+            const title = document.getElementById('ls-form-title');
+            const submitButton = document.getElementById('ls-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Set default values
+            document.getElementById('ls-recordType').value = 'LOCSTATUS';
+            document.getElementById('ls-inactive').checked = false;
+            document.getElementById('ls-systemCreated').checked = false;
+            document.getElementById('ls-systemValue1').value = 'Yes';
+            
+            // Handle edit mode
+            if (mode === 'create') {
+                title.textContent = 'Create New Location Status';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('ls-identifier').removeAttribute('readonly');
+                document.getElementById('ls-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+
+            } else {
+                title.textContent = 'Edit Location Status';
+                if (submitButton) submitButton.textContent = 'Update';
+                const item = locationStatuses.find(ls => ls.id === id);
+                if (item) {
+                    document.getElementById('ls-identifier').value = item.identifier;
+                    document.getElementById('ls-description').value = item.description;
+                    document.getElementById('ls-inactive').checked = item.inactive;
+                    document.getElementById('ls-systemCreated').checked = item.systemCreated;
+                    document.getElementById('ls-systemValue1').value = item.systemValue1;
+                    if (item.systemCreated) {
+                         document.getElementById('ls-identifier').setAttribute('readonly', true);
+                         document.getElementById('ls-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
+                }
+            }
+            
+            // Modal visibility
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            
+            // Backdrop click handler
+            modal.onclick = (e) => {
+                if (e.target.id === 'ls-form-modal') closeLocationStatusForm();
+            };
+
+            // Panggil validasi saat modal dibuka
+            validateLocationStatusForm();
+            document.getElementById('ls-identifier').focus();
+        };
+
 
         window.closeAdjustmentTypeForm = function() {
             const modal = document.getElementById('adjustment-type-form-modal');
@@ -915,6 +1405,42 @@
 
         window.closeHarmonizedCodeForm = function() {
             const modal = document.getElementById('hc-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+        
+        // Fungsi close form baru untuk Location Class
+        window.closeLocationClassForm = function() {
+            const modal = document.getElementById('lc-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+        
+        // Fungsi close form baru untuk Location Status
+        window.closeLocationStatusForm = function() {
+            const modal = document.getElementById('ls-form-modal');
             const modalContent = modal.querySelector('.modal-content');
             if (modalContent) {
                 modalContent.classList.remove('scale-100', 'opacity-100');
@@ -1034,6 +1560,88 @@
             await window.showCustomAlert('Success', msg);
         };
 
+        // Fungsi submit baru untuk Location Class
+        window.handleLocationClassSubmit = async function(event) {
+            event.preventDefault();
+            if (!validateLocationClassForm()) return;
+
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            
+            const newClass = {
+                identifier: form['identifier'].value,
+                recordType: 'LOCLASS',
+                description: form['description'].value,
+                includeInItemBalanceUpload: form['includeInItemBalanceUpload'].value,
+                systemCreated: form['systemCreated'].checked,
+                inactive: form['inactive'].checked,
+            };
+
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = locationClasses.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('LC', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newClass.id = 'LC' + String(maxId + 1).padStart(3, '0');
+                
+                locationClasses.push(newClass);
+                msg = 'Location Class created successfully!';
+            } else {
+                const index = locationClasses.findIndex(lc => lc.id === id);
+                if (index !== -1) {
+                    locationClasses[index] = { ...locationClasses[index], ...newClass };
+                    msg = 'Location Class updated successfully!';
+                }
+            }
+            saveLocationClasses();
+            closeLocationClassForm();
+            window.renderLocationClassList();
+            await window.showCustomAlert('Success', msg);
+        };
+        
+        // Fungsi submit baru untuk Location Status
+        window.handleLocationStatusSubmit = async function(event) {
+            event.preventDefault();
+            if (!validateLocationStatusForm()) return;
+
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            
+            const newStatus = {
+                identifier: form['identifier'].value,
+                recordType: 'LOCSTATUS',
+                description: form['description'].value,
+                systemValue1: form['systemValue1'].value,
+                systemCreated: form['systemCreated'].checked,
+                inactive: form['inactive'].checked,
+            };
+
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = locationStatuses.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('LS', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newStatus.id = 'LS' + String(maxId + 1).padStart(3, '0');
+                
+                locationStatuses.push(newStatus);
+                msg = 'Location Status created successfully!';
+            } else {
+                const index = locationStatuses.findIndex(ls => ls.id === id);
+                if (index !== -1) {
+                    locationStatuses[index] = { ...locationStatuses[index], ...newStatus };
+                    msg = 'Location Status updated successfully!';
+                }
+            }
+            saveLocationStatuses();
+            closeLocationStatusForm();
+            window.renderLocationStatusList();
+            await window.showCustomAlert('Success', msg);
+        };
+
 
         window.deleteAdjustmentType = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this adjustment type?');
@@ -1055,21 +1663,49 @@
             }
         };
         
+        // Fungsi delete baru untuk Location Class
+        window.deleteLocationClass = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location class?');
+            if (confirmed) {
+                locationClasses = locationClasses.filter(lc => lc.id !== id);
+                saveLocationClasses();
+                window.renderLocationClassList();
+                await window.showCustomAlert('Deleted', 'Location Class deleted successfully!');
+            }
+        };
+        
+        // Fungsi delete baru untuk Location Status
+        window.deleteLocationStatus = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location status?');
+            if (confirmed) {
+                locationStatuses = locationStatuses.filter(ls => ls.id !== id);
+                saveLocationStatuses();
+                window.renderLocationStatusList();
+                await window.showCustomAlert('Deleted', 'Location Status deleted successfully!');
+            }
+        };
+
         // --- EVENT LISTENERS ---
         // Listen for ESC key press on the whole document to close the modal
         document.addEventListener('keydown', (e) => {
             const adjModal = document.getElementById('adjustment-type-form-modal');
             const hcModal = document.getElementById('hc-form-modal');
+            const lcModal = document.getElementById('lc-form-modal');
+            const lsModal = document.getElementById('ls-form-modal'); // Tambahkan modal baru
             const overlay = document.getElementById('custom-modal-overlay');
 
             if (e.key === 'Escape') {
-                // Check adjModal first
                 if (adjModal && !adjModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
                     closeAdjustmentTypeForm();
                 }
-                // Then check hcModal
-                if (hcModal && !hcModal.classList.contains('hidden')) {
+                if (hcModal && !hcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
                     closeHarmonizedCodeForm();
+                }
+                if (lcModal && !lcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeLocationClassForm();
+                }
+                if (lsModal && !lsModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeLocationStatusForm();
                 }
             }
         });
@@ -1081,6 +1717,13 @@
             }
             if (e.target && e.target.id === 'hc-identifier') {
                 validateHarmonizedCodeForm();
+            }
+            if (e.target && e.target.id === 'lc-identifier') {
+                validateLocationClassForm();
+            }
+            // Tambahkan listener validasi untuk Location Status
+            if (e.target && e.target.id === 'ls-identifier') {
+                validateLocationStatusForm();
             }
         });
 
@@ -1102,14 +1745,34 @@
                     c.dataset.bound = '1';
                 }
             };
+            const ensureLcList = () => {
+                const c = document.getElementById('lc-list-container');
+                if (c && !c.dataset.bound) {
+                    window.renderLocationClassList();
+                    c.dataset.bound = '1';
+                }
+            };
+            // Tambahkan auto-render untuk Location Status
+            const ensureLsList = () => {
+                const c = document.getElementById('ls-list-container');
+                if (c && !c.dataset.bound) {
+                    window.renderLocationStatusList();
+                    c.dataset.bound = '1';
+                }
+            };
+            
             // cek awal & setiap ada perubahan DOM
             const obs = new MutationObserver((mutations) => {
                 ensureAdjList();
                 ensureHcList();
+                ensureLcList();
+                ensureLsList(); // Panggil auto-render untuk LS
             });
             obs.observe(document.body, { childList: true, subtree: true });
             ensureAdjList();
             ensureHcList();
+            ensureLcList();
+            ensureLsList(); // Panggil saat inisialisasi
         })();
         
         console.log('Configuration V3 (Inventory Control) loaded successfully');
