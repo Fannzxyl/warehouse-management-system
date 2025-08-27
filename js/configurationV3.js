@@ -223,7 +223,74 @@
             { id: 'st_6', identifier: 'PC-PCK-PLT', description: 'Piece-Pack-Pallet', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'PC', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 2, um: 'PCK', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 3, um: 'PLT', treatAsFullPercent: 100, groupDuringCheckIn: false }] },
         ];
 
+        let inventoryStatuses = JSON.parse(localStorage.getItem('inventoryStatuses')) || [
+    { id: 'is_1', identifier: 'Available', recordType: 'INVSTATUS', description: 'Available', inactive: false, systemCreated: true },
+    { id: 'is_2', identifier: 'Held', recordType: 'INVSTATUS', description: 'Held', inactive: false, systemCreated: false }
+];
+
+let locationTemplates = JSON.parse(localStorage.getItem('locationTemplates')) || [
+    { 
+        id: 'lt_1', 
+        identifier: '10A', 
+        inactive: false, 
+        separator: '', 
+        useSpaceSeparator: true, 
+        fields: [
+            { length: 10, type: 'Alpha', description: 'LOCATION' },
+            { length: null, type: '', description: '' },
+            { length: null, type: '', description: '' },
+            { length: null, type: '', description: '' },
+            { length: null, type: '', description: '' }
+        ],
+        userDefined: {} 
+    },
+    { 
+        id: 'lt_2', 
+        identifier: '1A.1A.1N.1A', 
+        inactive: false, 
+        separator: '.', 
+        useSpaceSeparator: false, 
+        fields: [
+            { length: 1, type: 'Alpha', description: 'AGING' },
+            { length: 1, type: 'Alpha', description: 'STORE' },
+            { length: 1, type: 'Num', description: 'num' },
+            { length: 1, type: 'Alpha', description: 'alpha' },
+            { length: null, type: '', description: '' }
+        ],
+        userDefined: {} 
+    }
+];
+// Letakkan di bawah deklarasi `let locationTemplates = ...`
+let lotTemplates = JSON.parse(localStorage.getItem('lotTemplates')) || [
+    {
+        id: 'lot_1',
+        name: 'Expiry Date',
+        inactive: false,
+        descriptions: ['Expiry Date'],
+        patternFields: [
+            { type: 'Alphanumeric', length: 6, value: '' }
+        ],
+        userDefined: {}
+    },
+    {
+        id: 'lot_2',
+        name: 'Manufacturing Date',
+        inactive: false,
+        descriptions: ['Packing / Manufacturing Date'],
+        patternFields: [],
+        userDefined: {}
+    }
+];
+let zones = JSON.parse(localStorage.getItem('zones')) || [
+    { id: 'zone_1', identifier: 'A-DCB.BB.FACE', description: 'Zone pick face or raw material premix & Suggar', zoneType: 'Allocation', pickManagementActive: true, inactive: false, userDefined: {} },
+    { id: 'zone_2', identifier: 'A-DCB.CDX.OPEN', description: 'Zone pick crossdock open', zoneType: 'Allocation', pickManagementActive: false, inactive: false, userDefined: {} }
+];
+
+        // Letakkan di bawah deklarasi `window._storageTemplates = ...`
+        window._locationTemplateFieldTypes = ['Alpha', 'Num'];
         window._ums = ['PLT', 'KG', 'PC', 'IPCK', 'PCK'];
+        window._lotTemplatePatternTypes = ['Alphanumeric', 'Date', 'Julian Date', 'Literal', 'Sequence Number'];
+        window._zoneTypes = ['Allocation', 'Storage', 'Picking'];
 
         // --- SAVE HELPERS ---
         function saveAdjustmentTypes() { 
@@ -247,10 +314,21 @@
         function saveItemClasses() {
             localStorage.setItem('itemClasses', JSON.stringify(itemClasses));
         }
-
         function saveStorageTemplates() {
             localStorage.setItem('storageTemplates', JSON.stringify(storageTemplates));
         }
+        function saveInventoryStatuses() {
+    localStorage.setItem('inventoryStatuses', JSON.stringify(inventoryStatuses));
+}
+function saveLocationTemplates() {
+    localStorage.setItem('locationTemplates', JSON.stringify(locationTemplates));
+}
+function saveLotTemplates() {
+    localStorage.setItem('lotTemplates', JSON.stringify(lotTemplates));
+}
+function saveZones() {
+    localStorage.setItem('zones', JSON.stringify(zones));
+}
         
         let currentAdjUsers = [];
         let adjTypeFormValidation = {};
@@ -310,7 +388,7 @@
 
             // Validation 1: Identifier is required
             if (!identifier.value.trim()) {
-                adjTypeFormValidation.identifier = "Identifier is required.";
+                // adjTypeFormValidation.identifier = "Identifier is required.";
                 isValid = false;
             } else {
                 delete adjTypeFormValidation.identifier;
@@ -366,7 +444,7 @@
             const identifierError = document.getElementById('hc-identifier-error');
             if (identifierError) {
                 if (!isValid) {
-                    identifierError.textContent = "Identifier is required.";
+                    // identifierError.textContent = "Identifier is required.";
                     identifierError.classList.remove('hidden');
                 } else {
                     identifierError.classList.add('hidden');
@@ -392,7 +470,7 @@
             const identifierError = document.getElementById('lc-identifier-error');
             if (identifierError) {
                 if (!isValid) {
-                    identifierError.textContent = "Identifier is required.";
+                    // identifierError.textContent = "Identifier is required.";
                     identifierError.classList.remove('hidden');
                 } else {
                     identifierError.classList.add('hidden');
@@ -418,7 +496,7 @@
             const identifierError = document.getElementById('ls-identifier-error');
             if (identifierError) {
                 if (!isValid) {
-                    identifierError.textContent = "Identifier is required.";
+                    // identifierError.textContent = "Identifier is required.";
                     identifierError.classList.remove('hidden');
                 } else {
                     identifierError.classList.add('hidden');
@@ -444,7 +522,7 @@
             const identifierError = document.getElementById('mc-identifier-error');
             if (identifierError) {
                 if (!isValid) {
-                    identifierError.textContent = "Identifier is required.";
+                    // identifierError.textContent = "Identifier is required.";
                     identifierError.classList.remove('hidden');
                 } else {
                     identifierError.classList.add('hidden');
@@ -492,7 +570,7 @@
             const identifierError = document.getElementById('ic-identifier-error');
             if (identifierError) {
                 if (!isValid) {
-                    identifierError.textContent = "Identifier is required.";
+                    // identifierError.textContent = "Identifier is required.";
                     identifierError.classList.remove('hidden');
                 } else {
                     identifierError.classList.add('hidden');
@@ -1194,21 +1272,329 @@
         </div>
     `
 };
+window.contentData['inventory-status'] = {
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Inventory Status</h2>
+        <p class="text-gray-600">Manage inventory statuses like Available, Held, or Damaged.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="btn btn-primary" onclick="showInventoryStatusForm('create')">
+                Create New Status
+            </button>
+            <input type="text" id="is-search" placeholder="Search by identifier..."
+                    class="input max-w-xs" oninput="filterInventoryStatusList(this.value)">
+        </div>
+        <div id="is-list-container" class="mt-4 overflow-x-auto">
+            <!-- Tabel dirender di sini -->
+        </div>
 
-        window.contentData['inventory-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Status</h2><p class="text-gray-600">Manage different inventory statuses (e.g., Available, Damaged).</p>` };
+        <!-- Modal untuk Inventory Status -->
+        <div id="is-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(600px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                <div class="px-6 pt-5 pb-3 border-b">
+                    <h3 id="is-form-title" class="text-lg font-semibold">Create New Status</h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeInventoryStatusForm()" aria-label="Close">✕</button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <form id="is-form" onsubmit="handleInventoryStatusSubmit(event)" class="grid gap-4">
+                        <div>
+                            <label for="is-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                            <input id="is-identifier" name="identifier" required class="input" placeholder="e.g. Available">
+                            <p id="is-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+                        <div>
+                            <label for="is-recordType" class="block text-sm mb-1">Record type</label>
+                            <input id="is-recordType" name="recordType" class="input bg-gray-100" value="INVSTATUS" readonly>
+                        </div>
+                        <div>
+                            <label for="is-description" class="block text-sm mb-1">Description</label>
+                            <input id="is-description" name="description" class="input" placeholder="Description of the status">
+                        </div>
+                        <div class="flex items-center gap-4 mt-2">
+                            <label class="flex items-center gap-2 text-sm">
+                                <input id="is-inactive" name="inactive" type="checkbox"> Inactive
+                            </label>
+                            <label class="flex items-center gap-2 text-sm">
+                                <input id="is-systemCreated" name="systemCreated" type="checkbox"> System created
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end gap-3">
+                    <button type="button" class="btn" onclick="closeInventoryStatusForm()">Cancel</button>
+                    <button id="is-submit-button" type="submit" form="is-form" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    `
+};
+window.contentData['location-template'] = {
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Location Template</h2>
+        <p class="text-gray-600">Define blueprints to generate new warehouse locations systematically.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="btn btn-primary" onclick="showLocationTemplateForm('create')">
+                Create New Template
+            </button>
+            <input type="text" id="lt-search" placeholder="Search by template..."
+                    class="input max-w-xs" oninput="filterLocationTemplateList(this.value)">
+        </div>
+        <div id="lt-list-container" class="mt-4 overflow-x-auto">
+            <!-- Tabel dirender di sini -->
+        </div>
+
+        <!-- Modal untuk Location Template -->
+        <div id="lt-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                <div class="px-6 pt-5 pb-3 border-b">
+                    <h3 id="lt-form-title" class="text-lg font-semibold">Create New Template</h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeLocationTemplateForm()" aria-label="Close">✕</button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <form id="lt-form" onsubmit="handleLocationTemplateSubmit(event)">
+                        <div role="tablist" id="lt-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                            <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
+                            <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
+                        </div>
+
+                        <!-- Tab General -->
+                        <div id="pane-gen" role="tabpanel" data-pane="gen">
+                            <div>
+                                <label for="lt-identifier" class="block text-sm mb-1">Location template <span class="text-red-500">*</span></label>
+                                <input id="lt-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
+                                <p id="lt-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                            </div>
+                            <div class="flex items-center gap-4 mt-4">
+                                <div>
+                                    <label for="lt-separator" class="block text-sm mb-1">Separator character</label>
+                                    <input id="lt-separator" name="separator" class="input w-24" maxlength="1">
+                                </div>
+                                <label class="flex items-center gap-2 text-sm mt-6">
+                                    <input id="lt-useSpaceSeparator" name="useSpaceSeparator" type="checkbox"> Use space as separator
+                                </label>
+                            </div>
+                            <div id="lt-fields-container" class="mt-4 space-y-2">
+                                <!-- Fields dirender di sini -->
+                            </div>
+                             <label class="flex items-center gap-2 text-sm mt-4">
+                                <input id="lt-inactive" name="inactive" type="checkbox"> Inactive
+                            </label>
+                        </div>
+
+                        <!-- Tab User Defined Data -->
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
+                            ${Array.from({length: 8}, (_, i) => `
+                            <div>
+                                <label for="lt-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                <input id="lt-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                            </div>
+                            `).join('')}
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end gap-3">
+                    <button type="button" class="btn" onclick="closeLocationTemplateForm()">Cancel</button>
+                    <button id="lt-submit-button" type="submit" form="lt-form" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    `
+};
+window.contentData['lot-template'] = {
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Lot Template</h2>
+        <p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="btn btn-primary" onclick="showLotTemplateForm('create')">
+                Create New Template
+            </button>
+            <input type="text" id="lot-template-search" placeholder="Search by template name..."
+                    class="input max-w-xs" oninput="filterLotTemplateList(this.value)">
+        </div>
+        <div id="lot-template-list-container" class="mt-4 overflow-x-auto">
+            <!-- Tabel list akan dirender di sini -->
+        </div>
+
+        <!-- MODAL STRUCTURE BARU (Mirip Allocation Selection) -->
+        <div id="lot-template-form-modal" class="hidden fixed inset-0 z-[60] flex items-start justify-center p-4 md:p-6 bg-black/40 overflow-y-auto" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(1000px,95vw)] bg-white rounded-xl shadow-2xl flex flex-col max-h-[95vh] transition-all duration-300 opacity-0 scale-95">
+                
+                <!-- HEADER (Sticky) -->
+                <div class="sticky top-0 z-10 px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl flex-shrink-0">
+                    <h3 id="lot-template-form-title" class="text-lg font-semibold text-wise-dark-gray"></h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeLotTemplateForm()" aria-label="Close">✕</button>
+                </div>
+                
+                <!-- BODY (Non-Scrollable) -->
+                <div class="px-6 py-5 flex-grow">
+                    <form id="lot-template-form" onsubmit="handleLotTemplateSubmit(event)">
+                        <div class="p-5 border-b border-gray-100 -mx-6 -mt-5 mb-4 bg-gray-50/50">
+                           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="lot-template-name" class="block text-sm mb-1 font-medium">Template name: <span class="text-red-500">*</span></label>
+                                    <input id="lot-template-name" name="name" required class="input">
+                                    <p id="lot-template-name-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                </div>
+                                <div>
+                                    <label for="lot-template-description" class="block text-sm mb-1 font-medium">Description</label>
+                                    <input id="lot-template-description" name="description" class="input">
+                                </div>
+                           </div>
+                        </div>
+
+                        <div role="tablist" id="lot-template-tab-list" class="flex space-x-6 mb-4 border-b border-wise-border">
+                            <button role="tab" type="button" data-tab="pattern" class="tab-button tab-active">Pattern fields</button>
+                            <button role="tab" type="button" data-tab="ud" class="tab-button">User defined data</button>
+                        </div>
+
+                        <div id="pane-pattern" role="tabpanel" data-pane="pattern">
+                            <h3 class="text-sm font-semibold text-wise-dark-gray mb-3">Field criteria</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                               <div class="md:col-span-5">
+                                    <label for="lt-pattern-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Type</label>
+                                    <select id="lt-pattern-type" class="select">${window._lotTemplatePatternTypes.map(t => `<option value="${t}">${t}</option>`).join('')}</select>
+                               </div>
+                               <div class="md:col-span-3">
+                                    <label for="lt-pattern-length" class="block text-sm font-medium text-wise-dark-gray mb-1">Length</label>
+                                    <input id="lt-pattern-length" type="number" class="input">
+                               </div>
+                               <div class="md:col-span-4">
+                                    <label for="lt-pattern-value" class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
+                                    <input id="lt-pattern-value" type="text" class="input">
+                               </div>
+                            </div>
+
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 lg:col-span-2 flex flex-col gap-2">
+                                    <button type="button" class="btn btn-primary" id="lt-btn-add">Add</button>
+                                    <button type="button" class="btn btn-primary" id="lt-btn-update">Update</button>
+                                    <button type="button" class="btn btn-primary" id="lt-btn-clear">Clear</button>
+                                </div>
+                                <div class="col-span-12 lg:col-span-7">
+                                     <div class="border rounded-lg h-full flex flex-col">
+                                        <div class="flex items-center justify-between px-3 py-2 border-b bg-gray-50/70 rounded-t-lg">
+                                            <span class="text-xs uppercase tracking-wider text-wise-gray">Current Pattern</span>
+                                        </div>
+                                        <div id="lot-template-patterns-list" class="p-2 flex-1 overflow-auto min-h-[120px] font-mono text-sm">
+                                            <!-- Pattern list rendered here -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-span-12 lg:col-span-3 flex flex-col gap-2">
+                                    <button type="button" id="lt-btn-up" class="btn btn-primary">↑ Up</button>
+                                    <button type="button" id="lt-btn-down" class="btn btn-primary">↓ Down</button>
+                                    <div class="h-2"></div>
+                                    <button type="button" id="lt-btn-remove" class="btn btn-primary">Remove selected</button>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="flex items-center gap-2 text-sm">
+                                   <input id="lot-template-inactive" name="inactive" type="checkbox"> Inactive
+                               </label>
+                            </div>
+                        </div>
+
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
+                            ${Array.from({length: 8}, (_, i) => `
+                            <div>
+                                <label for="lot-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                <input id="lot-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                            </div>
+                            `).join('')}
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- FOOTER (Sticky) -->
+                <div class="sticky bottom-0 z-10 px-6 py-3 border-t border-gray-200 flex justify-end gap-3 bg-white rounded-b-xl flex-shrink-0">
+                    <button type="button" class="btn" onclick="closeLotTemplateForm()">Cancel</button>
+                    <button id="lot-template-submit-button" type="submit" form="lot-template-form" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    `
+};
+window.contentData['zone'] = {
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Zone</h2>
+        <p class="text-gray-600">Manage warehouse zones for different purposes like picking or storage.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="btn btn-primary" onclick="showZoneForm('create')">
+                Create New Zone
+            </button>
+            <input type="text" id="zone-search" placeholder="Search by zone..."
+                    class="input max-w-xs" oninput="filterZoneList(this.value)">
+        </div>
+        <div id="zone-list-container" class="mt-4 overflow-x-auto">
+            <!-- Tabel dirender di sini -->
+        </div>
+
+        <!-- Modal untuk Zone -->
+        <div id="zone-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                <div class="px-6 pt-5 pb-3 border-b">
+                    <h3 id="zone-form-title" class="text-lg font-semibold">Create New Zone</h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeZoneForm()" aria-label="Close">✕</button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <form id="zone-form" onsubmit="handleZoneSubmit(event)">
+                        <div class="mb-4">
+                            <label for="zone-identifier" class="block text-sm mb-1">Zone: <span class="text-red-500">*</span></label>
+                            <input id="zone-identifier" name="identifier" required class="input">
+                            <p id="zone-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+                        <div class="mb-4">
+                            <label for="zone-description" class="block text-sm mb-1">Description:</label>
+                            <input id="zone-description" name="description" class="input">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="zone-type" class="block text-sm mb-1">Zone type:</label>
+                                <select id="zone-type" name="zoneType" class="select">
+                                    ${window._zoneTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="flex items-end pb-2">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input id="zone-pick-management" name="pickManagementActive" type="checkbox"> Pick management active
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div role="tablist" id="zone-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                            <button role="tab" type="button" data-tab="ud" class="tab-active">User defined data</button>
+                        </div>
+
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="grid gap-3 md:grid-cols-2">
+                            ${Array.from({length: 8}, (_, i) => `
+                            <div>
+                                <label for="zone-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                <input id="zone-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                            </div>
+                            `).join('')}
+                        </div>
+                        
+                        <label class="flex items-center gap-2 text-sm mt-4">
+                            <input id="zone-inactive" name="inactive" type="checkbox"> Inactive
+                        </label>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end gap-3">
+                    <button type="button" class="btn" onclick="closeZoneForm()">Cancel</button>
+                    <button id="zone-submit-button" type="submit" form="zone-form" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    `
+};
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
-    
         window.contentData['item-cross-reference'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Cross Reference</h2><p class="text-gray-600">Manage cross-references for items (e.g., different part numbers).</p>` };
         window.contentData['item-location-assignment'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Location Assignment</h2><p class="text-gray-600">Assign specific items to warehouse locations.</p>` };
         window.contentData['item-location-capacity'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Location Capacity</h2><p class="text-gray-600">Define capacity rules for items in specific locations.</p>` };
         window.contentData['item-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Template</h2><p class="text-gray-600">Create templates for new items to standardize properties.</p>` };
         window.contentData['item-unit-of-measure'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Unit of Measure</h2><p class="text-gray-600">Manage different units of measure for items.</p>` };
         window.contentData['location'] = { full: `<h2 class="text-xl font-semibold mb-4">Location</h2><p class="text-gray-600">Manage all storage locations in the warehouse.</p>` };
-        window.contentData['location-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Template</h2><p class="text-gray-600">Blueprint to create locations.</p>` };
         window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
-        window.contentData['lot-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Lot Template</h2><p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>` };
         window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Pattern for serials.</p>` };
-        window.contentData['zone'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone</h2><p class="text-gray-600">Manage all zones in the warehouse.</p>` };
         window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Types of zones.</p>` };
 
 
@@ -2808,71 +3194,171 @@ window.handleItemClassSubmit = async function(event) {
         };
 
 
-        // --- EVENT LISTENERS ---
-        // Listen for ESC key press on the whole document to close the modal
-        document.addEventListener('keydown', (e) => {
-            const adjModal = document.getElementById('adjustment-type-form-modal');
-            const hcModal = document.getElementById('hc-form-modal');
-            const lcModal = document.getElementById('lc-form-modal');
-            const lsModal = document.getElementById('ls-form-modal');
-            const mcModal = document.getElementById('mc-form-modal');
-            const icvModal = document.getElementById('icv-form-modal');
-            const icModal = document.getElementById('item-class-form-modal');
-            const overlay = document.getElementById('custom-modal-overlay');
+        // ===================================================================================
+// EVENT LISTENERS
+// ===================================================================================
+// Listen for ESC key press on the whole document to close the active modal
+document.addEventListener('keydown', (e) => {
+    // Cari modal yang sedang aktif (yang tidak punya class 'hidden')
+    const activeModal = document.querySelector('.fixed.inset-0.z-\\[60\\]:not(.hidden)');
+    const customOverlay = document.getElementById('custom-alert-modal') || document.getElementById('custom-confirm-modal');
 
-            if (e.key === 'Escape') {
-                if (adjModal && !adjModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeAdjustmentTypeForm();
-                }
-                if (hcModal && !hcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeHarmonizedCodeForm();
-                }
-                if (lcModal && !lcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeLocationClassForm();
-                }
-                if (lsModal && !lsModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeLocationStatusForm();
-                }
-                if (mcModal && !mcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeMovementClassForm();
-                }
-                if (icvModal && !icvModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeICVForm();
-                }
-                if (icModal && !icModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                    closeItemClassForm();
-                }
-            }
-        });
-
-        // General input validation listeners
-document.addEventListener('input', (e) => {
-    if (e.target && ['adj-type-identifier', 'adj-type-qtyMin', 'adj-type-qtyMax'].includes(e.target.id)) {
-        validateAdjustmentTypeForm();
-    }
-    if (e.target && e.target.id === 'hc-identifier') {
-        validateHarmonizedCodeForm();
-    }
-    if (e.target && e.target.id === 'lc-identifier') {
-        validateLocationClassForm();
-    }
-    if (e.target && e.target.id === 'ls-identifier') {
-        validateLocationStatusForm();
-    }
-    if (e.target && e.target.id === 'mc-identifier') {
-        validateMovementClassForm();
-    }
-    if (e.target && e.target.id === 'icv-key') {
-        validateICVForm();
-    }
-    if (e.target && e.target.id === 'ic-identifier') {
-        validateItemClassForm();
-    }
-    // FIX: Tambahkan baris ini untuk Storage Template
-    if (e.target && e.target.id === 'st-identifier') {
-        validateStorageTemplateForm();
+    // Hanya tutup modal jika tombolnya 'Escape' dan tidak ada custom alert/confirm yang aktif
+    if (e.key === 'Escape' && activeModal && !customOverlay) {
+        switch (activeModal.id) {
+            case 'adjustment-type-form-modal':
+                closeAdjustmentTypeForm();
+                break;
+            case 'hc-form-modal':
+                closeHarmonizedCodeForm();
+                break;
+            case 'lc-form-modal':
+                closeLocationClassForm();
+                break;
+            case 'ls-form-modal':
+                closeLocationStatusForm();
+                break;
+            case 'mc-form-modal':
+                closeMovementClassForm();
+                break;
+            case 'icv-form-modal':
+                closeICVForm();
+                break;
+            case 'item-class-form-modal':
+                closeItemClassForm();
+                break;
+            case 'is-form-modal':
+                closeInventoryStatusForm();
+                break;
+            case 'lt-form-modal':
+                closeLocationTemplateForm();
+                break;
+            case 'lot-template-form-modal':
+                closeLotTemplateForm();
+                break;
+            case 'zone-form-modal':
+                closeZoneForm();
+                break;
+            // Tambahkan case untuk modal lain di sini jika ada
+        }
     }
 });
+
+// General input validation listeners
+document.addEventListener('input', (e) => {
+    if (!e.target || !e.target.id) return; // Pastikan elemen dan ID-nya ada
+
+    const id = e.target.id;
+
+    if (['adj-type-identifier', 'adj-type-qtyMin', 'adj-type-qtyMax'].includes(id)) {
+        validateAdjustmentTypeForm();
+    } else if (id === 'hc-identifier') {
+        validateHarmonizedCodeForm();
+    } else if (id === 'lc-identifier') {
+        validateLocationClassForm();
+    } else if (id === 'ls-identifier') {
+        validateLocationStatusForm();
+    } else if (id === 'mc-identifier') {
+        validateMovementClassForm();
+    } else if (id === 'icv-key') {
+        validateICVForm();
+    } else if (id === 'ic-identifier') {
+        validateItemClassForm();
+    } else if (id === 'is-identifier') {
+        validateInventoryStatusForm();
+    } else if (id === 'lt-identifier') {
+        validateLocationTemplateForm();
+    } else if (id === 'lot-template-name') {
+        validateLotTemplateForm();
+    } else if (id === 'zone-identifier') {
+        validateZoneForm();
+    }
+    // Tambahkan validasi untuk fitur lain di sini
+});
+
+function validateInventoryStatusForm() {
+    const identifier = document.getElementById('is-identifier');
+    const submitBtn = document.getElementById('is-submit-button');
+    let isValid = !!identifier.value.trim();
+    
+    const identifierError = document.getElementById('is-identifier-error');
+    if (identifierError) {
+        if (!isValid) {
+            // identifierError.textContent = "Identifier is required.";
+            identifierError.classList.remove('hidden');
+        } else {
+            identifierError.classList.add('hidden');
+        }
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = !isValid;
+    }
+    return isValid;
+}
+
+function validateLocationTemplateForm() {
+    const identifier = document.getElementById('lt-identifier');
+    const submitBtn = document.getElementById('lt-submit-button');
+    let isValid = !!identifier.value.trim();
+    
+    const identifierError = document.getElementById('lt-identifier-error');
+    if (identifierError) {
+        if (!isValid) {
+            // identifierError.textContent = "Location template identifier is required.";
+            identifierError.classList.remove('hidden');
+        } else {
+            identifierError.classList.add('hidden');
+        }
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = !isValid;
+    }
+    return isValid;
+}
+
+function validateLotTemplateForm() {
+    const nameInput = document.getElementById('lot-template-name');
+    const submitBtn = document.getElementById('lot-template-submit-button');
+    let isValid = !!nameInput.value.trim();
+    
+    const nameError = document.getElementById('lot-template-name-error');
+    if (nameError) {
+        if (!isValid) {
+            // nameError.textContent = "Template name is required.";
+            nameError.classList.remove('hidden');
+        } else {
+            nameError.classList.add('hidden');
+        }
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = !isValid;
+    }
+    return isValid;
+}
+
+function validateZoneForm() {
+    const identifierInput = document.getElementById('zone-identifier');
+    const submitBtn = document.getElementById('zone-submit-button');
+    let isValid = !!identifierInput.value.trim();
+    
+    const identifierError = document.getElementById('zone-identifier-error');
+    if (identifierError) {
+        if (!isValid) {
+            // identifierError.textContent = "Zone identifier is required.";
+            identifierError.classList.remove('hidden');
+        } else {
+            identifierError.classList.add('hidden');
+        }
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = !isValid;
+    }
+    return isValid;
+}
         
         // Event delegation for tabs on Movement Class modal
         const mcModal = document.getElementById('mc-form-modal');
@@ -3093,7 +3579,7 @@ function validateStorageTemplateForm() {
     const identifierError = document.getElementById('st-identifier-error');
     if (identifierError) {
         if (!isValid) {
-            identifierError.textContent = "Storage template is required.";
+            // identifierError.textContent = "Storage template is required.";
             identifierError.classList.remove('hidden');
         } else {
             identifierError.classList.add('hidden');
@@ -3106,39 +3592,39 @@ function validateStorageTemplateForm() {
     return isValid;
 }
 
+// Ganti fungsi ini
 window.renderStorageTemplateDetails = function(records) {
     const container = document.getElementById('st-detail-records-list');
     if (!container) return;
     container.innerHTML = '';
-    
-    if (records.length === 0) {
-        records.push({ sequence: 1, um: '', treatAsFullPercent: 100, groupDuringCheckIn: false });
-    }
 
-    records.forEach(record => {
+    // Selalu buat salinan array biar aman
+    const recordsToRender = records && records.length > 0 ? [...records] : [{ sequence: 1, um: '', treatAsFullPercent: 100, groupDuringCheckIn: false }];
+
+    recordsToRender.forEach((record, index) => {
+        const sequence = index + 1; // Pastikan sequence selalu urut
         const div = document.createElement('div');
         div.className = 'detail-record-item p-3 border border-gray-200 rounded-md bg-gray-50 relative';
+        // Tambahkan tombol hapus di setiap baris
         div.innerHTML = `
-            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700" onclick="removeStorageTemplateDetailRecord(this)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700 p-1" onclick="removeStorageTemplateDetailRecord(this)" title="Remove">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                    <label for="detail-um-${record.sequence}" class="block text-sm mb-1">UM:</label>
-                    <select id="detail-um-${record.sequence}" name="detail-um" class="select">
-                        <option value="">-- Select UM --</option>
+                    <label for="detail-um-${sequence}" class="block text-sm mb-1">UM:</label>
+                    <select id="detail-um-${sequence}" name="detail-um" class="select">
+                        <option value="">-- Pilih UM --</option>
                         ${window._ums.map(um => `<option value="${um}" ${record.um === um ? 'selected' : ''}>${um}</option>`).join('')}
                     </select>
                 </div>
                 <div>
-                    <label for="detail-treatAsFullPercent-${record.sequence}" class="block text-sm mb-1">Treat as full percent:</label>
-                    <input id="detail-treatAsFullPercent-${record.sequence}" name="detail-treatAsFullPercent" type="number" value="${record.treatAsFullPercent}" class="input">
+                    <label for="detail-treatAsFullPercent-${sequence}" class="block text-sm mb-1">Treat as full percent:</label>
+                    <input id="detail-treatAsFullPercent-${sequence}" name="detail-treatAsFullPercent" type="number" value="${record.treatAsFullPercent || 100}" class="input">
                 </div>
                 <div class="md:col-span-2">
                     <label class="flex items-center gap-2 text-sm">
-                        <input id="detail-groupDuringCheckIn-${record.sequence}" name="detail-groupDuringCheckIn" type="checkbox" ${record.groupDuringCheckIn ? 'checked' : ''}> Group during check in
+                        <input id="detail-groupDuringCheckIn-${sequence}" name="detail-groupDuringCheckIn" type="checkbox" ${record.groupDuringCheckIn ? 'checked' : ''}> Group during check in
                     </label>
                 </div>
             </div>
@@ -3147,111 +3633,833 @@ window.renderStorageTemplateDetails = function(records) {
     });
 };
 
+// Ganti fungsi ini
 window.addStorageTemplateDetailRecord = function() {
     const container = document.getElementById('st-detail-records-list');
-    const newRecord = { sequence: container.children.length + 1, um: '', treatAsFullPercent: 100, groupDuringCheckIn: false };
-    renderStorageTemplateDetails([newRecord], true); // Append mode
+    if (!container) return;
+    
+    // Buat baris baru yang kosong
+    const newRecordHtml = `
+        <div class="detail-record-item p-3 border border-gray-200 rounded-md bg-gray-50 relative">
+            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700 p-1" onclick="removeStorageTemplateDetailRecord(this)" title="Remove">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-sm mb-1">UM:</label>
+                    <select name="detail-um" class="select">
+                        <option value="">-- Pilih UM --</option>
+                        ${window._ums.map(um => `<option value="${um}">${um}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Treat as full percent:</label>
+                    <input name="detail-treatAsFullPercent" type="number" value="100" class="input">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input name="detail-groupDuringCheckIn" type="checkbox"> Group during check in
+                    </label>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newRecordHtml);
 };
 
+// Tambahkan fungsi baru ini
 window.removeStorageTemplateDetailRecord = function(button) {
-    const recordItem = button.closest('.detail-record-item');
-    if (recordItem) {
-        recordItem.remove();
+    // Hapus elemen parent dari tombol (yaitu baris detail record)
+    button.closest('.detail-record-item').remove();
+};
+
+
+// Letakkan di bagian RENDER & FILTER FUNCTIONS
+window.renderInventoryStatusList = function(filter = '') {
+    const container = document.getElementById('is-list-container');
+    if (!container) return;
+    const lowerFilter = filter.toLowerCase();
+    const filteredData = inventoryStatuses.filter(is => 
+        is.identifier.toLowerCase().includes(lowerFilter) || 
+        is.description.toLowerCase().includes(lowerFilter)
+    );
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm">
+                    <th class="py-3 px-6 text-left">Identifier</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">System Created</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+
+    if (filteredData.length === 0) {
+        tableHtml += '<tr><td colspan="5" class="py-3 px-6 text-center">No inventory statuses found.</td></tr>';
+    } else {
+        filteredData.forEach(is => {
+            tableHtml += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-6 text-left font-semibold text-wise-dark-gray">${is.identifier}</td>
+                    <td class="py-3 px-6 text-left">${is.description}</td>
+                    <td class="py-3 px-6 text-left">${is.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-left">${!is.inactive ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showInventoryStatusForm('edit', '${is.id}')" title="Edit">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteInventoryStatus('${is.id}')" title="Delete">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    tableHtml += '</tbody></table>';
+    container.innerHTML = tableHtml;
+};
+
+window.filterInventoryStatusList = function(value) {
+    renderInventoryStatusList(value);
+};
+
+window.showInventoryStatusForm = function(mode, id = null) {
+    const modal = document.getElementById('is-form-modal');
+    const form = document.getElementById('is-form');
+    const title = document.getElementById('is-form-title');
+    
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+
+    const identifierInput = document.getElementById('is-identifier');
+    identifierInput.readOnly = false;
+    identifierInput.classList.remove('bg-gray-100');
+    
+    if (mode === 'create') {
+        title.textContent = 'Create New Inventory Status';
+    } else {
+        title.textContent = 'Edit Inventory Status';
+        const status = inventoryStatuses.find(is => is.id === id);
+        if (status) {
+            identifierInput.value = status.identifier;
+            document.getElementById('is-description').value = status.description;
+            document.getElementById('is-inactive').checked = status.inactive;
+            document.getElementById('is-systemCreated').checked = status.systemCreated;
+
+            if(status.systemCreated) {
+                identifierInput.readOnly = true;
+                identifierInput.classList.add('bg-gray-100');
+            }
+        }
+    }
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.classList.add('scale-100', 'opacity-100');
+        modal._untrap = trapFocus(modalContent);
+    }, 10);
+    validateInventoryStatusForm();
+};
+
+window.closeInventoryStatusForm = function() {
+    const modal = document.getElementById('is-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        if (modal._untrap) modal._untrap();
+    }, 300);
+};
+
+// Di dalam file configurationV3.js
+window.handleInventoryStatusSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateInventoryStatusForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+    
+    const newStatus = {
+        identifier: form.identifier.value,
+        recordType: 'INVSTATUS',
+        description: form.description.value,
+        inactive: form.inactive.checked,
+        systemCreated: form.systemCreated.checked,
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        // FIX: Ganti cara pembuatan ID biar konsisten dengan fitur lain
+        const maxId = inventoryStatuses.reduce((max, item) => {
+            if (item && item.id && typeof item.id === 'string') {
+                const num = parseInt(item.id.replace('is_', ''), 10);
+                return Math.max(max, isNaN(num) ? 0 : num);
+            }
+            return max;
+        }, 0);
+        newStatus.id = 'is_' + String(maxId + 1);
+        
+        inventoryStatuses.push(newStatus);
+        msg = 'Inventory Status created successfully!';
+    } else {
+        const index = inventoryStatuses.findIndex(is => is.id === id);
+        if (index !== -1) {
+            inventoryStatuses[index] = { ...inventoryStatuses[index], ...newStatus };
+            msg = 'Inventory Status updated successfully!';
+        }
+    }
+    saveInventoryStatuses();
+    closeInventoryStatusForm();
+    renderInventoryStatusList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteInventoryStatus = async function(id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this status?');
+    if (confirmed) {
+        inventoryStatuses = inventoryStatuses.filter(is => is.id !== id);
+        saveInventoryStatuses();
+        renderInventoryStatusList();
+        await window.showCustomAlert('Deleted', 'Inventory Status deleted successfully!');
     }
 };
         
-        // ======================================
-        // AUTO-RENDER on MOUNT
-        // ======================================
-        (function autoRenderV3() {
-    const ensureAdjList = () => {
-        const c = document.getElementById('adjustment-type-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderAdjustmentTypeList();
-            c.dataset.bound = '1';
-        }
-    };
-    const ensureHcList = () => {
-        const c = document.getElementById('hc-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderHarmonizedCodeList();
-            c.dataset.bound = '1';
-        }
-    };
-    const ensureLcList = () => {
-        const c = document.getElementById('lc-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderLocationClassList();
-            c.dataset.bound = '1';
-        }
-    };
-    const ensureLsList = () => {
-        const c = document.getElementById('ls-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderLocationStatusList();
-            c.dataset.bound = '1';
-        }
-    };
-    const ensureMcList = () => {
-        const c = document.getElementById('mc-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderMovementClassList();
-            c.dataset.bound = '1';
-        }
-    };
-    // Tambahkan auto-render untuk Inventory Control Values
-    const ensureICVList = () => {
-        const c = document.getElementById('icv-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderICVList();
-            c.dataset.bound = '1';
-        }
-    };
-    // Tambahkan auto-render untuk Item Class
-    const ensureItemClassList = () => {
-        const c = document.getElementById('item-class-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderItemClassList();
-            c.dataset.bound = '1';
-        }
-    };
+// Letakkan di bagian RENDER & FILTER FUNCTIONS
+window.renderLocationTemplateList = function(filter = '') {
+    const container = document.getElementById('lt-list-container');
+    if (!container) return;
+    const lowerFilter = filter.toLowerCase();
+    const filteredData = locationTemplates.filter(lt => lt.identifier.toLowerCase().includes(lowerFilter));
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm">
+                    <th class="py-3 px-6 text-left">Location template</th>
+                    ${Array.from({length: 5}, (_, i) => `<th class="py-3 px-6 text-left">Field ${i+1} description</th>`).join('')}
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+
+    if (filteredData.length === 0) {
+        tableHtml += '<tr><td colspan="8" class="py-3 px-6 text-center">No location templates found.</td></tr>';
+    } else {
+        filteredData.forEach(lt => {
+            // PERBAIKAN: Pastikan selalu ada 5 field, isi dengan string kosong jika tidak ada
+            const fullFields = Array.from({ length: 5 }, (_, i) => lt.fields[i] || { description: '' });
+            tableHtml += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-6 text-left font-semibold text-wise-dark-gray">${lt.identifier}</td>
+                    ${fullFields.map(f => `<td class="py-3 px-6 text-left">${f.description}</td>`).join('')}
+                    <td class="py-3 px-6 text-left">${!lt.inactive ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationTemplateForm('edit', '${lt.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocationTemplate('${lt.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    tableHtml += '</tbody></table>';
+    container.innerHTML = tableHtml;
+};
+
+
+window.filterLocationTemplateList = function(value) {
+    renderLocationTemplateList(value);
+};
+
+// Letakkan di bagian MODAL FUNCTIONS
+function renderLocationTemplateFields(fields = []) {
+    const container = document.getElementById('lt-fields-container');
+    if (!container) return;
+    container.innerHTML = ''; // Kosongkan dulu
     
-    // Tambahkan auto-render untuk Storage Template
-    const ensureStList = () => {
-        const c = document.getElementById('st-list-container');
-        if (c && !c.dataset.bound) {
-            window.renderStorageTemplateList();
-            c.dataset.bound = '1';
-        }
-    };
-    
-    // cek awal & setiap ada perubahan DOM
-    const obs = new MutationObserver((mutations) => {
-        ensureAdjList();
-        ensureHcList();
-        ensureLcList();
-        ensureLsList(); 
-        ensureMcList();
-        ensureICVList(); 
-        ensureItemClassList();
-        ensureStList(); 
+    // PERBAIKAN: Pastikan selalu ada 5 field, isi yang kosong jika perlu
+    const fullFields = Array.from({ length: 5 }, (_, i) => fields[i] || { length: null, type: '', description: '' });
+
+    fullFields.forEach((field, i) => {
+        const fieldHtml = `
+            <div class="grid grid-cols-[auto,1fr,auto,1.5fr] gap-2 items-center">
+                <label class="text-sm font-medium">Field ${i + 1}:</label>
+                <input name="field_length_${i}" type="number" class="input w-24" placeholder="Length" value="${field.length || ''}">
+                <select name="field_type_${i}" class="select w-32">
+                    <option value="">-- Tipe --</option>
+                    ${window._locationTemplateFieldTypes.map(t => `<option value="${t}" ${field.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+                </select>
+                <input name="field_description_${i}" class="input" placeholder="Description" value="${field.description || ''}">
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', fieldHtml);
     });
+}
+
+window.showLocationTemplateForm = function(mode, id = null) {
+    const modal = document.getElementById('lt-form-modal');
+    const form = document.getElementById('lt-form');
+    const title = document.getElementById('lt-form-title');
+    
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+    activateTab('gen', modal);
+
+    const identifierInput = document.getElementById('lt-identifier');
+    identifierInput.readOnly = false;
+    identifierInput.classList.remove('bg-gray-100');
+    
+    if (mode === 'create') {
+        title.textContent = 'Create New Location Template';
+        renderLocationTemplateFields([]); // Render field kosong
+    } else {
+        title.textContent = 'Edit Location Template';
+        const template = locationTemplates.find(lt => lt.id === id);
+        if (template) {
+            identifierInput.value = template.identifier;
+            document.getElementById('lt-separator').value = template.separator;
+            document.getElementById('lt-useSpaceSeparator').checked = template.useSpaceSeparator;
+            document.getElementById('lt-inactive').checked = template.inactive;
+            renderLocationTemplateFields(template.fields);
+            
+            if (template.userDefined) {
+                for(let i = 1; i <= 8; i++) {
+                    const udfInput = document.getElementById(`lt-udf${i}`);
+                    if (udfInput) udfInput.value = template.userDefined[`udf${i}`] || '';
+                }
+            }
+        }
+    }
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.classList.add('scale-100', 'opacity-100');
+        modal._untrap = trapFocus(modalContent);
+    }, 10);
+    validateLocationTemplateForm();
+};
+
+window.closeLocationTemplateForm = function() {
+    const modal = document.getElementById('lt-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        if (modal._untrap) modal._untrap();
+    }, 300);
+};
+
+window.handleLocationTemplateSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateLocationTemplateForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+    
+    const fields = [];
+    for (let i = 0; i < 5; i++) {
+        const length = form[`field_length_${i}`].value;
+        fields.push({
+            length: length ? parseInt(length, 10) : null,
+            type: form[`field_type_${i}`].value,
+            description: form[`field_description_${i}`].value,
+        });
+    }
+
+    const userDefined = {};
+    for(let i = 1; i <= 8; i++) { userDefined[`udf${i}`] = form[`udf${i}`].value; }
+    
+    const newTemplate = {
+        identifier: form.identifier.value,
+        separator: form.separator.value,
+        useSpaceSeparator: form.useSpaceSeparator.checked,
+        inactive: form.inactive.checked,
+        fields,
+        userDefined,
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        newTemplate.id = 'lt_' + Date.now();
+        locationTemplates.push(newTemplate);
+        msg = 'Location Template created successfully!';
+    } else {
+        const index = locationTemplates.findIndex(lt => lt.id === id);
+        if (index !== -1) {
+            locationTemplates[index] = { ...locationTemplates[index], ...newTemplate };
+            msg = 'Location Template updated successfully!';
+        }
+    }
+    saveLocationTemplates();
+    closeLocationTemplateForm();
+    renderLocationTemplateList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteLocationTemplate = async function(id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this template?');
+    if (confirmed) {
+        locationTemplates = locationTemplates.filter(lt => lt.id !== id);
+        saveLocationTemplates();
+        renderLocationTemplateList();
+        await window.showCustomAlert('Deleted', 'Location Template deleted successfully!');
+    }
+};
+
+// Ganti semua fungsi lot template yang lama dengan blok kode ini
+
+// Ganti semua fungsi lot template yang lama dengan blok kode revisi ini
+
+// --- State (tetap sama)
+let currentPatternFields = [];
+let selectedPatternIndex = -1;
+
+// --- RENDER & FILTER FUNCTIONS
+window.renderLotTemplateList = function(filter = '') {
+    const container = document.getElementById('lot-template-list-container');
+    if (!container) return;
+    const lowerFilter = filter.toLowerCase();
+    const filteredData = lotTemplates.filter(lt => lt.name.toLowerCase().includes(lowerFilter));
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm">
+                    <th class="py-3 px-6 text-left">Lot template</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+
+    if (filteredData.length === 0) {
+        tableHtml += '<tr><td colspan="4" class="py-3 px-6 text-center">No lot templates found.</td></tr>';
+    } else {
+        filteredData.forEach(lt => {
+            tableHtml += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-6 text-left font-semibold text-wise-dark-gray">${lt.name}</td>
+                    <td class="py-3 px-6 text-left">${lt.description || ''}</td>
+                    <td class="py-3 px-6 text-left">${!lt.inactive ? 'Y' : 'N'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLotTemplateForm('edit', '${lt.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLotTemplate('${lt.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    tableHtml += '</tbody></table>';
+    container.innerHTML = tableHtml;
+};
+
+window.filterLotTemplateList = function(value) {
+    renderLotTemplateList(value);
+};
+
+// --- MODAL & FORM FUNCTIONS (REVISI)
+function renderLotTemplatePatterns() {
+    const container = document.getElementById('lot-template-patterns-list');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    if(currentPatternFields.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-gray-400 text-sm">No pattern fields added.</div>';
+        return;
+    }
+
+    currentPatternFields.forEach((pattern, index) => {
+        const div = document.createElement('div');
+        div.className = 'list-row';
+        div.dataset.index = index;
+        if (index === selectedPatternIndex) {
+            div.classList.add('selected');
+        }
+        div.textContent = `[${pattern.type}] Length: ${pattern.length || 'N/A'}, Value: ${pattern.value || 'N/A'}`;
+        
+        div.onclick = () => {
+            selectedPatternIndex = index;
+            document.getElementById('lt-pattern-type').value = pattern.type;
+            document.getElementById('lt-pattern-length').value = pattern.length || '';
+            document.getElementById('lt-pattern-value').value = pattern.value || '';
+            renderLotTemplatePatterns(); 
+        };
+        container.appendChild(div);
+    });
+}
+
+function clearPatternInputs() {
+    document.getElementById('lt-pattern-type').value = 'Alphanumeric';
+    document.getElementById('lt-pattern-length').value = '';
+    document.getElementById('lt-pattern-value').value = '';
+    selectedPatternIndex = -1;
+    renderLotTemplatePatterns();
+}
+
+function addPatternField() {
+    const type = document.getElementById('lt-pattern-type').value;
+    const length = document.getElementById('lt-pattern-length').value;
+    const value = document.getElementById('lt-pattern-value').value;
+    currentPatternFields.push({ type, length: length || null, value: value || null });
+    selectedPatternIndex = currentPatternFields.length - 1;
+    renderLotTemplatePatterns();
+}
+
+function updatePatternField() {
+    if (selectedPatternIndex < 0) {
+        window.showCustomAlert('Info', 'Please select a field to update.');
+        return;
+    }
+    const type = document.getElementById('lt-pattern-type').value;
+    const length = document.getElementById('lt-pattern-length').value;
+    const value = document.getElementById('lt-pattern-value').value;
+    currentPatternFields[selectedPatternIndex] = { type, length: length || null, value: value || null };
+    renderLotTemplatePatterns();
+}
+
+function removePatternField() {
+    if (selectedPatternIndex < 0) {
+        window.showCustomAlert('Info', 'Please select a field to remove.');
+        return;
+    }
+    currentPatternFields.splice(selectedPatternIndex, 1);
+    clearPatternInputs();
+}
+
+function movePatternField(direction) {
+    if (selectedPatternIndex < 0) {
+        window.showCustomAlert('Info', 'Please select a field to move.');
+        return;
+    }
+    const newIndex = direction === 'up' ? selectedPatternIndex - 1 : selectedPatternIndex + 1;
+    if (newIndex >= 0 && newIndex < currentPatternFields.length) {
+        [currentPatternFields[selectedPatternIndex], currentPatternFields[newIndex]] = [currentPatternFields[newIndex], currentPatternFields[selectedPatternIndex]];
+        selectedPatternIndex = newIndex;
+        renderLotTemplatePatterns();
+    }
+}
+
+window.showLotTemplateForm = function(mode, id = null) {
+    const modal = document.getElementById('lot-template-form-modal');
+    const form = document.getElementById('lot-template-form');
+    const title = document.getElementById('lot-template-form-title');
+    
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+    activateTab('pattern', modal);
+    
+    currentPatternFields = [];
+    selectedPatternIndex = -1;
+
+    if (mode === 'create') {
+        title.textContent = 'Create New Lot Template';
+    } else {
+        title.textContent = 'Edit Lot Template';
+        const template = lotTemplates.find(lt => lt.id === id);
+        if (template) {
+            document.getElementById('lot-template-name').value = template.name;
+            document.getElementById('lot-template-description').value = template.description || '';
+            document.getElementById('lot-template-inactive').checked = template.inactive;
+            currentPatternFields = JSON.parse(JSON.stringify(template.patternFields || []));
+        }
+    }
+    
+    clearPatternInputs(); 
+
+    // Buka modal dengan animasi
+    document.body.classList.add('modal-open');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modal._untrap = trapFocus(modalContent);
+
+        if (!modal._listenersAttached) {
+            document.getElementById('lt-btn-add').onclick = addPatternField;
+            document.getElementById('lt-btn-update').onclick = updatePatternField;
+            document.getElementById('lt-btn-clear').onclick = clearPatternInputs;
+            document.getElementById('lt-btn-remove').onclick = removePatternField;
+            document.getElementById('lt-btn-up').onclick = () => movePatternField('up');
+            document.getElementById('lt-btn-down').onclick = () => movePatternField('down');
+
+            const tabList = document.getElementById('lot-template-tab-list');
+            tabList.onclick = (e) => {
+                if (e.target.role === 'tab') {
+                    activateTab(e.target.dataset.tab, modal);
+                }
+            };
+            modal._listenersAttached = true;
+        }
+    }, 10);
+    validateLotTemplateForm();
+};
+
+window.closeLotTemplateForm = function() {
+    const modal = document.getElementById('lot-template-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.add('opacity-0', 'scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        if (modal._untrap) modal._untrap();
+    }, 300);
+};
+
+window.handleLotTemplateSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateLotTemplateForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+    
+    const newTemplate = {
+        name: form.name.value,
+        description: form.description.value,
+        inactive: form.inactive.checked,
+        patternFields: currentPatternFields,
+        userDefined: {},
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        newTemplate.id = 'lot_' + Date.now();
+        lotTemplates.push(newTemplate);
+        msg = 'Lot Template created successfully!';
+    } else {
+        const index = lotTemplates.findIndex(lt => lt.id === id);
+        if (index !== -1) {
+            lotTemplates[index] = { ...lotTemplates[index], ...newTemplate };
+            msg = 'Lot Template updated successfully!';
+        }
+    }
+    saveLotTemplates();
+    closeLotTemplateForm();
+    renderLotTemplateList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteLotTemplate = async function(id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this lot template?');
+    if (confirmed) {
+        lotTemplates = lotTemplates.filter(lt => lt.id !== id);
+        saveLotTemplates();
+        renderLotTemplateList();
+        await window.showCustomAlert('Deleted', 'Lot Template deleted successfully!');
+    }
+};
+
+window.renderZoneList = function(filter = '') {
+    const container = document.getElementById('zone-list-container');
+    if (!container) return;
+    const lowerFilter = filter.toLowerCase();
+    const filteredData = zones.filter(z => 
+        z.identifier.toLowerCase().includes(lowerFilter) ||
+        z.description.toLowerCase().includes(lowerFilter)
+    );
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm">
+                    <th class="py-3 px-6 text-left">Zone</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">Zone type</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+
+    if (filteredData.length === 0) {
+        tableHtml += '<tr><td colspan="5" class="py-3 px-6 text-center">No zones found.</td></tr>';
+    } else {
+        filteredData.forEach(z => {
+            tableHtml += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-6 text-left font-semibold text-wise-dark-gray">${z.identifier}</td>
+                    <td class="py-3 px-6 text-left">${z.description}</td>
+                    <td class="py-3 px-6 text-left">${z.zoneType}</td>
+                    <td class="py-3 px-6 text-left">${!z.inactive ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showZoneForm('edit', '${z.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                            <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteZone('${z.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    tableHtml += '</tbody></table>';
+    container.innerHTML = tableHtml;
+};
+
+window.filterZoneList = function(value) {
+    renderZoneList(value);
+};
+
+// Letakkan di bagian MODAL FUNCTIONS
+window.showZoneForm = function(mode, id = null) {
+    const modal = document.getElementById('zone-form-modal');
+    const form = document.getElementById('zone-form');
+    const title = document.getElementById('zone-form-title');
+    
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+    
+    if (mode === 'create') {
+        title.textContent = 'Create New Zone';
+    } else {
+        title.textContent = 'Edit Zone';
+        const zone = zones.find(z => z.id === id);
+        if (zone) {
+            document.getElementById('zone-identifier').value = zone.identifier;
+            document.getElementById('zone-description').value = zone.description;
+            document.getElementById('zone-type').value = zone.zoneType;
+            document.getElementById('zone-pick-management').checked = zone.pickManagementActive;
+            document.getElementById('zone-inactive').checked = zone.inactive;
+            
+            if (zone.userDefined) {
+                for(let i = 1; i <= 8; i++) {
+                    const udfInput = document.getElementById(`zone-udf${i}`);
+                    if (udfInput) udfInput.value = zone.userDefined[`udf${i}`] || '';
+                }
+            }
+        }
+    }
+    
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.classList.add('scale-100', 'opacity-100');
+        modal._untrap = trapFocus(modalContent);
+    }, 10);
+    validateZoneForm();
+};
+
+window.closeZoneForm = function() {
+    const modal = document.getElementById('zone-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        if (modal._untrap) modal._untrap();
+    }, 300);
+};
+
+window.handleZoneSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateZoneForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+    
+    const userDefined = {};
+    for(let i = 1; i <= 8; i++) { userDefined[`udf${i}`] = form[`udf${i}`].value; }
+    
+    const newZone = {
+        identifier: form.identifier.value,
+        description: form.description.value,
+        zoneType: form.zoneType.value,
+        pickManagementActive: form.pickManagementActive.checked,
+        inactive: form.inactive.checked,
+        userDefined,
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        newZone.id = 'zone_' + Date.now();
+        zones.push(newZone);
+        msg = 'Zone created successfully!';
+    } else {
+        const index = zones.findIndex(z => z.id === id);
+        if (index !== -1) {
+            zones[index] = { ...zones[index], ...newZone };
+            msg = 'Zone updated successfully!';
+        }
+    }
+    saveZones();
+    closeZoneForm();
+    renderZoneList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteZone = async function(id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this zone?');
+    if (confirmed) {
+        zones = zones.filter(z => z.id !== id);
+        saveZones();
+        renderZoneList();
+        await window.showCustomAlert('Deleted', 'Zone deleted successfully!');
+    }
+};
+
+       // ===================================================================================
+// AUTO-RENDER on MOUNT
+// ===================================================================================
+(function autoRenderV3() {
+    // Satu peta untuk semua fungsi render, biar rapi
+    const renderMap = {
+        'adjustment-type-list-container': window.renderAdjustmentTypeList,
+        'hc-list-container': window.renderHarmonizedCodeList,
+        'lc-list-container': window.renderLocationClassList,
+        'ls-list-container': window.renderLocationStatusList,
+        'mc-list-container': window.renderMovementClassList,
+        'icv-list-container': window.renderICVList,
+        'item-class-list-container': window.renderItemClassList,
+        'is-list-container': window.renderInventoryStatusList,
+        'lt-list-container': window.renderLocationTemplateList,
+        'lot-template-list-container': window.renderLotTemplateList,
+        'st-list-container': window.renderStorageTemplateList,
+        'zone-list-container': window.renderZoneList,
+        // Tambahkan fitur baru di sini, formatnya: 'id-container': window.fungsiRender
+    };
+
+    // Satu fungsi untuk ngecek dan render semua list yang ada di halaman
+    const ensureAllLists = () => {
+        for (const id in renderMap) {
+            const container = document.getElementById(id);
+            // Cek kalau container-nya ada di DOM dan belum di-render
+            if (container && !container.dataset.bound) {
+                renderMap[id](); // Panggil fungsi rendernya
+                container.dataset.bound = '1'; // Tandain udah di-render
+            }
+        }
+    };
+    
+    // Observer ini bakal jalanin `ensureAllLists` setiap kali ada perubahan di halaman
+    const obs = new MutationObserver(ensureAllLists);
     obs.observe(document.body, { childList: true, subtree: true });
-
-    // Panggil auto-render saat inisialisasi
-    ensureAdjList();
-    ensureHcList();
-    ensureLcList();
-    ensureLsList(); 
-    ensureMcList(); 
-    ensureICVList();
-    ensureItemClassList();
-    ensureStList();
-
-    console.log('Configuration V3 (Inventory Control) loaded successfully');
+    
+    // Panggil sekali pas pertama kali script-nya jalan
+    ensureAllLists();
 })();
 
-        
         console.log('Configuration V3 (Inventory Control) loaded successfully');
     });
 })();

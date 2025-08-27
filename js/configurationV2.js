@@ -687,10 +687,10 @@
              class="fixed inset-0 z-[60] flex items-start justify-center
                     p-4 md:p-6 bg-black/30 overflow-y-auto hidden">
             <div class="als-content w-[min(1100px,95vw)] bg-white rounded-xl shadow-2xl">
-                <div class="als-header sticky top-0 z-10 px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
-                    <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-2"></h3>
-                    <!-- Close button can be added here if needed -->
-                </div>
+                <div class="als-header px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
+    <h3 id="allocation-location-selection-form-title" class="text-lg font-semibold text-wise-dark-gray mb-2"></h3>
+    <!-- Close button can be added here if needed -->
+</div>
                 <div class="als-body px-6 py-5">
                     <form id="allocation-location-selection-form" onsubmit="handleAllocationLocationSelectionSubmit(event)">
                         <div class="p-5 md:p-6 border-b border-gray-100 -mx-6 -mt-6 mb-4">
@@ -800,12 +800,12 @@
                                 </div>
                                 
                                 <div class="col-span-12 lg:col-span-2 xl:col-span-2 flex flex-col gap-2 items-start">
-                                    <button id="als-btnDeleteSelectedRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete selected</button>
-                                    <button id="als-btnDeleteLastRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete last</button>
+                                    <button id="als-btnDeleteSelectedRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Del selected rule</button>
+                                    <button id="als-btnDeleteLastRule" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Del last rule</button>
                                     <div class="h-1"></div>
-                                    <button id="als-btnLParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Insert (</button>
-                                    <button id="als-btnRParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Insert )</button>
-                                    <button id="als-btnDelParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Delete ( )</button>
+                                    <button id="als-btnLParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Ins (</button>
+                                    <button id="als-btnRParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Ins )</button>
+                                    <button id="als-btnDelParen" type="button" class="als-action inline-flex items-center justify-center w-[160px] whitespace-nowrap px-3 py-1.5 text-sm font-medium rounded-md shadow-sm bg-wise-primary text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wise-primary">Del parenthesis</button>
                                 </div>
                             </div>
                             <div class="flex items-center gap-6 pt-1">
@@ -884,128 +884,118 @@
         </div>
     `,
 },
-            'allocation-rule-assignment-criteria': {
+// Ganti semua isi 'allocation-rule-assignment-criteria' dengan ini
+'allocation-rule-assignment-criteria': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment Criteria</h2>
         <p class="text-wise-gray mb-4">Set criteria, and record type, etc.</p>
         
         <div class="flex justify-between items-center mb-4">
-            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform"
-                onclick="showARACForm('create')">Create New</button>
-            <input type="text" id="arac-search" placeholder="Search Allocation Rule Criteria..."
-                class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterARACList(this.value)">
+            <button class="btn btn-primary" onclick="showARACForm('create')">Create New</button>
+            <input type="text" id="arac-search" placeholder="Search Allocation Rule Criteria..." class="input max-w-xs" oninput="filterARACList(this.value)">
         </div>
 
         <div id="arac-list-container" class="overflow-x-auto"></div>
 
-        <div id="arac-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[95vh] card">
-                <h3 class="text-lg font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment Criteria</h3>
-                <p class="text-sm text-wise-gray mb-4 -mt-3">Set criteria, and record type, etc.</p>
-
-                <div class="flex-1 overflow-y-auto pr-2 -mr-4 text-sm text-wise-dark-gray">
-                    <form id="arac-form" onsubmit="handleARACSubmit(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                            <div>
-                                <label for="arac-record-type" class="block font-medium mb-1">Record type:</label>
-                                <input type="text" id="arac-record-type" name="recordType" readonly class="input bg-gray-100 cursor-not-allowed">
-                            </div>
-                            <div>
-                                <label for="arac-filter-name" class="block font-medium mb-1">Filter Name:</label>
-                                <input type="text" id="arac-filter-name" name="filterName" required class="input">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="arac-description" class="block font-medium mb-1">Description:</label>
-                                <input type="text" id="arac-description" name="description" class="input">
-                            </div>
-                            <div>
-                                <label for="arac-table-name" class="block font-medium mb-1">Table name:</label>
-                                <select id="arac-table-name" name="tableName" class="select">
-                                    <option>Shipment detail</option>
-                                    <option>Item master</option>
-                                    <option>Customer data</option>
-                                </select>
+        <div id="arac-form-modal" class="hidden fixed inset-0 z-[60] flex items-start justify-center p-4 md:p-6 bg-black/40 overflow-y-auto">
+            <div class="modal-content w-[min(1100px,95vw)] bg-white rounded-xl shadow-2xl transition-all duration-300 opacity-0 scale-95">
+                <div class="px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl">
+                    <h3 id="arac-form-title" class="text-lg font-semibold text-wise-dark-gray"></h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeARACForm()" aria-label="Close">✕</button>
+                </div>
+                <div class="px-6 py-5">
+                    <form id="arac-form" onsubmit="handleARACSubmit(event)">
+                        <div class="p-5 border-b border-gray-100 -mx-6 -mt-5 mb-4 bg-gray-50/50">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div>
+                                    <label for="arac-record-type" class="block text-sm font-medium">Record type</label>
+                                    <input type="text" id="arac-record-type" name="recordType" readonly class="input bg-gray-100 cursor-not-allowed mt-1">
+                                </div>
+                                <div class="lg:col-span-2">
+                                    <label for="arac-filter-name" class="block text-sm font-medium">Filter Name</label>
+                                    <input type="text" id="arac-filter-name" name="filterName" required class="input mt-1">
+                                </div>
+                                <div>
+                                    <label for="arac-table-name" class="block text-sm font-medium">Table name</label>
+                                    <select id="arac-table-name" name="tableName" class="select mt-1">
+                                        <option>Shipment detail</option>
+                                        <option>Item master</option>
+                                        <option>Customer data</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2 lg:col-span-4">
+                                    <label for="arac-description" class="block text-sm font-medium">Description</label>
+                                    <input type="text" id="arac-description" name="description" class="input mt-1">
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="border border-gray-200 p-2 rounded-xl">
-                            <fieldset class="border border-gray-200 p-4 rounded-lg">
-                                <legend class="px-2 font-medium text-red-600">Filter criteria</legend>
-                                <div class="flex gap-4">
-                                    <div class="flex-1 space-y-3">
-                                        <div class="flex items-center gap-4">
-                                            <label class="flex items-center gap-2"><input type="radio" name="arac-logic" value="And" class="custom-radio" checked> <span>And</span></label>
-                                            <label class="flex items-center gap-2"><input type="radio" name="arac-logic" value="Or" class="custom-radio"> <span>Or</span></label>
+
+                        <div class="space-y-5">
+                            <div class="flex items-center justify-between flex-wrap gap-3">
+                                <h3 class="text-sm font-semibold text-wise-dark-gray">Filter criteria</h3>
+                                <div class="segmented">
+                                    <input type="radio" id="arac-logic-and" name="arac-logic" value="And" checked>
+                                    <label for="arac-logic-and">And</label>
+                                    <input type="radio" id="arac-logic-or" name="arac-logic" value="Or">
+                                    <label for="arac-logic-or">Or</label>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                <div class="md:col-span-5">
+                                    <label class="block text-sm font-medium text-wise-dark-gray mb-1">Attribute</label>
+                                    <select id="arac-attribute" class="select">
+                                        <option>warehouse</option> <option>ORDER_TYP</option> <option>ITEM.CATEGORY</option> <option>ITEM.SEASON</option> <option>carrier</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-3">
+                                    <label class="block text-sm font-medium text-wise-dark-gray mb-1">Operand</label>
+                                    <select id="arac-operand" class="select">
+                                        <option>=</option> <option>!=</option> <option>></option> <option><</option> <option>>=</option> <option><=</option> <option>is null</option> <option>is not null</option> <option>LIKE</option> <option>NOT LIKE</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-4">
+                                    <label class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
+                                    <input id="arac-value" type="text" class="input">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-12 gap-4">
+                                <div class="col-span-12 lg:col-span-2 flex flex-col gap-2">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addARACLeftParen()">Ins (</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addARACRightParen()">Ins )</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="deleteARACParen()">Del Parenthesis</button>
+                                </div>
+
+                                <div class="col-span-12 lg:col-span-8">
+                                    <div class="rounded-lg border border-wise-border bg-white h-full">
+                                        <div class="flex items-center justify-between px-3 py-2 border-b">
+                                            <span class="text-xs uppercase tracking-wider text-wise-gray">Current expression</span>
+                                            <div class="flex gap-2">
+                                                <button type="button" class="btn btn-primary btn-xs" onclick="moveARACRule('up')">↑ Up</button>
+                                                <button type="button" class="btn btn-primary btn-xs" onclick="moveARACRule('down')">↓ Down</button>
+                                            </div>
                                         </div>
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                                            <div>
-                                                <label for="arac-attribute" class="block text-xs font-medium mb-1">Attribute:</label>
-                                                <select id="arac-attribute" class="select h-9 text-xs">
-                                                    <option>warehouse</option>
-                                                    <option>ORDER_TYP</option>
-                                                    <option>ITEM.CATEGORY</option>
-                                                    <option>ITEM.SEASON</option>
-                                                    <option>carrier</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label for="arac-operand" class="block text-xs font-medium mb-1">Operand:</label>
-                                                <select id="arac-operand" class="select h-9 text-xs">
-                                                    <option>=</option>
-                                                    <option>!=</option>
-                                                    <option>></option>
-                                                    <option><</option>
-                                                    <option>>=</option>
-                                                    <option><=</option>
-                                                    <option>is null</option>
-                                                    <option>is not null</option>
-                                                    <option>LIKE</option>
-                                                    <option>NOT LIKE</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label for="arac-value" class="block text-xs font-medium mb-1">Value:</label>
-                                                <input type="text" id="arac-value" class="input h-9 text-xs">
-                                            </div>
-                                        </div>
-                                        <div class="w-full border border-gray-300 rounded-lg">
-                                            <div class="flex items-center justify-between px-2 py-1 bg-gray-50 border-b rounded-t-lg">
-                                                <span class="text-xs font-semibold text-gray-500">CURRENT EXPRESSION</span>
-                                                <div class="flex gap-2">
-                                                    <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('up')">↑ Up</button>
-                                                    <button type="button" class="px-2 py-0.5 border rounded-md text-xs hover:bg-gray-100" onclick="moveARACRule('down')">↓ Down</button>
-                                                </div>
-                                            </div>
-                                            <div id="arac-rule-display" class="h-24 p-2 overflow-y-auto font-mono text-xs list-row"></div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col space-y-2">
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACRule()">Add Rule</button>
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteLastARACRule()">Delete Last Rule</button>
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteSelectedARACRule()">Delete Select Rule</button>
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACLeftParen()">Insert (</button>
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="addARACRightParen()">Insert )</button>
-                                        <button type="button" class="px-3 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm whitespace-nowrap" onclick="deleteARACParen()">Delete Parenthesis</button>
+                                        <div id="arac-rule-display" class="font-mono text-xs overflow-auto p-3 min-h-[120px]"></div>
                                     </div>
                                 </div>
-                            </fieldset>
-                        </div>
-                        
-                        <div class="flex items-center gap-8 pt-2">
-                           <label class="flex items-center gap-2">
-                                <input type="checkbox" id="arac-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                <span class="font-medium">Inactive</span>
-                            </label>
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="arac-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
-                                <span class="font-medium">System created</span>
-                            </label>
+                                
+                                <div class="col-span-12 lg:col-span-2 flex flex-col gap-2">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addARACRule()">Add Rule</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="deleteLastARACRule()">Del Last Rule</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="deleteSelectedARACRule()">Del Select Rule</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6 pt-1">
+                               <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="arac-inactive" name="inactive" class="form-checkbox h-4 w-4"> Inactive</label>
+                               <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="arac-system-created" name="systemCreated" class="form-checkbox h-4 w-4"> System created</label>
+                            </div>
                         </div>
                     </form>
                 </div>
-                <div class="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-3">
+                <div class="px-6 pt-2 pb-3 border-t border-wise-border bg-white rounded-b-xl flex justify-end space-x-3">
                     <button type="button" class="btn" onclick="closeARACForm()">Cancel</button>
-                    <button type="submit" form="arac-form" id="arac-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 shadow-sm text-sm">OK</button>
+                    <button type="submit" form="arac-form" id="arac-submit-button" class="btn btn-primary">OK</button>
                 </div>
             </div>
         </div>
@@ -1336,6 +1326,7 @@ window.moveARACRule = function(direction) {
 window.showARACForm = function (mode, id = null) {
     const modal = document.getElementById('arac-form-modal');
     const form = document.getElementById('arac-form');
+    const title = document.getElementById('arac-form-title');
 
     form.reset();
     form.dataset.mode = mode;
@@ -1345,8 +1336,10 @@ window.showARACForm = function (mode, id = null) {
     currentARACRules = [];
 
     if (mode === 'create') {
+        title.textContent = 'Create New Allocation Rule Assignment Criteria';
         document.getElementById('arac-record-type').value = 'OUT RS CRIT';
     } else {
+        title.textContent = 'Edit Allocation Rule Assignment Criteria';
         const criteria = allocationRuleAssignmentCriteria.find(c => c.id === id);
         if (criteria) {
             document.getElementById('arac-record-type').value = criteria.recordType;
@@ -1359,15 +1352,30 @@ window.showARACForm = function (mode, id = null) {
         }
     }
     renderARACRules();
+
+    // Logika baru untuk menampilkan modal dengan animasi
+    document.body.classList.add('modal-open');
     modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        // Pastikan ada elemen yang bisa difokus
+        const focusable = modalContent.querySelector('input, select, button');
+        if(focusable) focusable.focus();
+    }, 10);
 };
 
+// Ganti fungsi closeARACForm yang lama
 window.closeARACForm = function () {
     const modal = document.getElementById('arac-form-modal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.add('opacity-0', 'scale-95');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+    }, 300); // Sesuaikan dengan durasi transisi
 };
+
 
 window.handleARACSubmit = async function (event) {
     event.preventDefault();
