@@ -407,8 +407,6 @@
                 <div class="space-y-2">
                     <!-- Configuration Section -->
                     <div class="sidebar-section">
-                        <!-- Ini adalah ITEM MENU UTAMA yang bisa di-KLIK untuk expand/collapse -->
-                        <!-- PENTING: Semua konten yang bisa diklik (icon, teks, panah) harus ADA DI DALAM div ini -->
                         <div id="configuration"
                              class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
                              onclick="toggleChildren('configuration'); selectCategory('configuration')"
@@ -418,20 +416,14 @@
                              aria-controls="configuration-children"
                              aria-label="Toggle Configuration sub-menu">
                             
-                            <!-- Icon -->
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-cogs text-wise-gray"></i>
                             </div>
-                            <!-- Teks Menu -->
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Configuration</span>
-                            <!-- Panah yang akan dirotasi oleh JavaScript -->
                             <i id="configuration-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
 
-                        <!-- Ini adalah CONTAINER untuk SUB-MENU (anak-anak) dari Configuration -->
-                        <!-- Pastikan ID-nya 'configuration-children' dan kelas 'hidden' untuk awal -->
                         <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="configuration">
-                            <!-- Setiap item sub-menu (div sidebar-child) -->
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button" aria-label="Select Warehouse">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
                             </div>
@@ -459,7 +451,6 @@
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('allocation-rule')" tabindex="0" role="button" aria-label="Select Allocation Rule">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Rule</span>
                             </div>
-                            <!-- PERBAIKAN: Pastikan ini menggunakan huruf kecil konsisten -->
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('allocation-strategies')" tabindex="0" role="button" aria-label="Select Allocation Strategies">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Strategies</span>
                             </div>
@@ -478,8 +469,95 @@
                                 aria-label="Select Allocation Rule Assignment Criteria">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Rule Assignment Criteria</span>
                             </div>
+                            
+                            <!-- Sub-folder Inventory Control di dalam Configuration -->
+                            <div id="inventory-control"
+                                class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
+                                onclick="toggleChildren('inventory-control'); selectCategory('inventory-control')"
+                                tabindex="0"
+                                role="button"
+                                aria-expanded="false"
+                                aria-controls="inventory-control-children"
+                                aria-label="Toggle Inventory Control sub-menu">
+                                
+                                <div class="w-6 h-6 flex items-center justify-center">
+                                    <i class="fas fa-boxes text-wise-gray text-sm"></i>
+                                </div>
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors flex-1">Inventory Control</span>
+                                <i id="inventory-control-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            </div>
+
+                            <div id="inventory-control-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="inventory-control">
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('adjustment-type')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Adjustment Type</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('harmonized-code')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Harmonized Code</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-control-values')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory Control Values</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-status')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory Status</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-class')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Class</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-cross-reference')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Cross Reference</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-location-assignment')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Location Assignment</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-location-capacity')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Location Capacity</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-template')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Template</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('item-unit-of-measure')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Unit of Measure</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('location')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('location-class')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Class</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('location-status')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Status</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('location-template')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Template</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('location-type')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Type</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('lot-template')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Lot Template</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('movement-class')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Movement Class</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('serial-number-template')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Serial Number Template</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('storage-template')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Storage Template</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('zone')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Zone</span>
+                                </div>
+                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('zone-type')" tabindex="0" role="button">
+                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Zone Type</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </aside>
@@ -557,5 +635,11 @@
         <script src="./js/configuration.js"></script>
         <!-- Lalu, muat configurationV2.js setelahnya -->
         <script src="./js/configurationV2.js"></script>
+        <!-- Lalu, muat configurationV3.js setelahnya -->
+        <script src="./js/configurationV3.js"></script>
+        <script>
+            // Mengubah default load dari 'configuration' menjadi 'inventory-control'
+            window.addEventListener('load', () => selectCategory('inventory-control'));
+        </script>
     </body>
 </html>
