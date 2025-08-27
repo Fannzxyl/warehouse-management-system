@@ -180,6 +180,21 @@
              { id: 'LS003', identifier: 'Storage', recordType: 'LOCSTATUS', description: 'Storage', systemValue1: 'Yes', systemCreated: true, inactive: false },
         ];
         
+        // Menambahkan state dan seed data untuk Movement Class
+        let movementClasses = JSON.parse(localStorage.getItem('movementClasses')) || [
+            { id: 'MC0001', identifier: 'GRAS', recordType: 'MOVEMNTCLS', description: 'PROD RAS RETURN SUPPLIER', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0002', identifier: 'RED LIST SPM', recordType: 'MOVEMNTCLS', description: 'RED LIST SPM', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0003', identifier: 'BLAC', recordType: 'MOVEMNTCLS', description: 'PROD DELETE', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0004', identifier: 'BLU1', recordType: 'MOVEMNTCLS', description: 'Produk Private Label', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0005', identifier: 'BLUB', recordType: 'MOVEMNTCLS', description: 'PL Bahan Baku', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0006', identifier: 'BLUS', recordType: 'MOVEMNTCLS', description: 'PL Seasonal', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0007', identifier: 'CONS', recordType: 'MOVEMNTCLS', description: 'Produk Konsinyasi', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0008', identifier: 'GRAC', recordType: 'MOVEMNTCLS', description: 'PRODUK CONSIGNMENT RASIONALISASI', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0009', identifier: 'GRAD', recordType: 'MOVEMNTCLS', description: 'Produk Rasionalisasi Retur DC', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0010', identifier: 'GRAN', recordType: 'MOVEMNTCLS', description: 'produk food mayonnaise', systemValue1: 'No', systemCreated: true, inactive: false },
+            { id: 'MC0011', identifier: 'GRASS', recordType: 'MOVEMNTCLS', description: 'PROD RAS RETURN SUPPLIER', systemValue1: 'No', systemCreated: true, inactive: false },
+        ];
+
 
         // --- SAVE HELPERS ---
         function saveAdjustmentTypes() { 
@@ -193,6 +208,9 @@
         }
         function saveLocationStatuses() {
             localStorage.setItem('locationStatuses', JSON.stringify(locationStatuses));
+        }
+        function saveMovementClasses() {
+            localStorage.setItem('movementClasses', JSON.stringify(movementClasses));
         }
         
         let currentAdjUsers = [];
@@ -222,8 +240,7 @@
                 </label>`).join('');
         };
 
-        const activateTab = (tabId) => {
-            const modal = document.getElementById('adjustment-type-form-modal');
+        const activateTab = (tabId, modal) => {
             const tabButtons = modal.querySelectorAll('[role="tab"]');
             const tabPanes = modal.querySelectorAll('[role="tabpanel"]');
             
@@ -360,6 +377,32 @@
             }
             
             const identifierError = document.getElementById('ls-identifier-error');
+            if (identifierError) {
+                if (!isValid) {
+                    identifierError.textContent = "Identifier is required.";
+                    identifierError.classList.remove('hidden');
+                } else {
+                    identifierError.classList.add('hidden');
+                }
+            }
+            
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
+
+        // Fungsi validasi baru untuk Movement Class
+        function validateMovementClassForm() {
+            const identifier = document.getElementById('mc-identifier');
+            const submitBtn = document.getElementById('mc-submit-button');
+            
+            let isValid = true;
+            if (!identifier.value.trim()) {
+                isValid = false;
+            }
+            
+            const identifierError = document.getElementById('mc-identifier-error');
             if (identifierError) {
                 if (!isValid) {
                     identifierError.textContent = "Identifier is required.";
@@ -796,6 +839,71 @@
             `
         };
         
+        // Konten baru untuk Movement Class
+        window.contentData['movement-class'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Movement Class</h2>
+                <p class="text-gray-600">Categorize movements for tracking and reporting purposes.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showMovementClassForm('create')">
+                        Create New Movement Class
+                    </button>
+                    <input type="text" id="mc-search" placeholder="Search movement class..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterMovementClassList(this.value)">
+                </div>
+                <div id="mc-list-container" class="mt-4 overflow-x-auto">
+                    <!-- Table will be rendered here -->
+                </div>
+
+                <!-- Modal Movement Class -->
+                <div id="mc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(1100px,95vw)] max-w-3xl bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
+                            <h3 id="mc-form-title" class="text-lg font-semibold text-wise-dark-gray">Create New Movement Class</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeMovementClassForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="mc-form" onsubmit="handleMovementClassSubmit(event)">
+                                <div class="grid gap-4">
+                                    <div>
+                                        <label for="mc-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                                        <input id="mc-identifier" name="identifier" required class="input" placeholder="e.g. GRAS">
+                                        <p id="mc-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="mc-recordType" class="block text-sm mb-1">Record type</label>
+                                        <input id="mc-recordType" name="recordType" class="input bg-gray-100 text-wise-gray cursor-not-allowed" value="MOVEMNTCLS" readonly>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="mc-description" class="block text-sm mb-1">Description</label>
+                                        <input id="mc-description" name="description" class="input" placeholder="Description">
+                                    </div>
+                                    <div>
+                                        <label for="mc-systemValue1" class="block text-sm mb-1">System value 1</label>
+                                        <select id="mc-systemValue1" name="systemValue1" class="select">
+                                            ${window._systemValue1Values.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2 flex items-center gap-4 mt-2">
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="mc-inactive" name="inactive" type="checkbox"> Inactive
+                                        </label>
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="mc-systemCreated" name="systemCreated" type="checkbox"> System created
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeMovementClassForm()">Cancel</button>
+                            <button id="mc-submit-button" type="submit" form="mc-form" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        
         window.contentData['inventory-control-values'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2><p class="text-gray-600">Configure inventory control values and defaults.</p>` };
         window.contentData['inventory-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Status</h2><p class="text-gray-600">Manage different inventory statuses (e.g., Available, Damaged).</p>` };
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
@@ -809,11 +917,11 @@
         window.contentData['location-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Template</h2><p class="text-gray-600">Blueprint to create locations.</p>` };
         window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
         window.contentData['lot-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Lot Template</h2><p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>` };
-        window.contentData['movement-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Movement Class</h2><p class="text-gray-600">Categorize movements for tracking and reporting purposes.</p>` };
         window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Pattern for serials.</p>` };
         window.contentData['storage-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Storage Template</h2><p class="text-gray-600">Storage rule presets.</p>` };
         window.contentData['zone'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone</h2><p class="text-gray-600">Manage all zones in the warehouse.</p>` };
         window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Types of zones.</p>` };
+
 
         // Mapping parent→children & registrasi ke pencarian/menu global
         window.parentMapping['inventory-control'] = 'configuration'; // Parent dari Inventory Control adalah Configuration
@@ -1036,6 +1144,60 @@
             renderLocationStatusList(value);
         };
 
+        // Fungsi render list baru untuk Movement Class
+        window.renderMovementClassList = function(filter = '') {
+            const container = document.getElementById('mc-list-container');
+            if (!container) return;
+            const filteredData = movementClasses.filter(mc => mc.identifier.toLowerCase().includes(filter.toLowerCase()) || mc.description.toLowerCase().includes(filter.toLowerCase()));
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">System value 1</th>
+                            <th class="py-3 px-6 text-left">System created</th>
+                            <th class="py-3 px-6 text-left">Active</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="6" class="py-3 px-6 text-center">No movement classes found.</td></tr>`;
+            } else {
+                filteredData.forEach(mc => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${mc.identifier}</td>
+                            <td class="py-3 px-6 text-left">${mc.description}</td>
+                            <td class="py-3 px-6 text-left">${mc.systemValue1}</td>
+                            <td class="py-3 px-6 text-left">${mc.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${!mc.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showMovementClassForm('edit', '${mc.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteMovementClass('${mc.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        // Fungsi filter baru untuk Movement Class
+        window.filterMovementClassList = function(value) {
+            renderMovementClassList(value);
+        };
+
+
         window.showAdjustmentTypeForm = function(mode, id = null) {
             const modal = document.getElementById('adjustment-type-form-modal');
             const form = document.getElementById('adjustment-type-form');
@@ -1083,7 +1245,7 @@
                 }
                 tabList._onClickHandler = (e) => {
                     if (e.target.role === 'tab') {
-                        activateTab(e.target.dataset.tab);
+                        activateTab(e.target.dataset.tab, modal);
                     }
                 };
                 tabList.addEventListener('click', tabList._onClickHandler);
@@ -1111,7 +1273,7 @@
                     
                     if (newTab) {
                         newTab.focus();
-                        activateTab(newTab.dataset.tab);
+                        activateTab(newTab.dataset.tab, modal);
                     }
                 };
                 tabList.addEventListener('keydown', tabList._onKeydownHandler);
@@ -1383,6 +1545,125 @@
             validateLocationStatusForm();
             document.getElementById('ls-identifier').focus();
         };
+        
+        // Fungsi show form baru untuk Movement Class
+        window.showMovementClassForm = function(mode, id = null) {
+            const modal = document.getElementById('mc-form-modal');
+            const form = document.getElementById('mc-form');
+            const title = document.getElementById('mc-form-title');
+            const submitButton = document.getElementById('mc-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Set default values
+            document.getElementById('mc-recordType').value = 'MOVEMNTCLS';
+            document.getElementById('mc-systemValue1').value = 'Yes';
+            document.getElementById('mc-inactive').checked = false;
+            document.getElementById('mc-systemCreated').checked = false;
+            
+            // Handle edit mode
+            if (mode === 'create') {
+                title.textContent = 'Create New Movement Class';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('mc-identifier').removeAttribute('readonly');
+                document.getElementById('mc-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                
+                // Set default for tabs
+                const tabList = document.getElementById('mc-tab-list');
+                if (tabList) {
+                    const firstTab = tabList.querySelector('[data-tab="gen"]');
+                    if(firstTab) activateTab('gen', modal);
+                }
+
+            } else {
+                title.textContent = 'Edit Movement Class';
+                if (submitButton) submitButton.textContent = 'Update';
+                const item = movementClasses.find(mc => mc.id === id);
+                if (item) {
+                    document.getElementById('mc-identifier').value = item.identifier;
+                    document.getElementById('mc-description').value = item.description;
+                    document.getElementById('mc-systemValue1').value = item.systemValue1;
+                    document.getElementById('mc-inactive').checked = item.inactive;
+                    document.getElementById('mc-systemCreated').checked = item.systemCreated;
+                    if (item.systemCreated) {
+                         document.getElementById('mc-identifier').setAttribute('readonly', true);
+                         document.getElementById('mc-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
+                    const tabList = document.getElementById('mc-tab-list');
+                    if (tabList) {
+                        const firstTab = tabList.querySelector('[data-tab="gen"]');
+                        if(firstTab) activateTab('gen', modal);
+                    }
+                }
+            }
+
+            // Modal visibility
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            
+            // Backdrop click handler
+            modal.onclick = (e) => {
+                if (e.target.id === 'mc-form-modal') closeMovementClassForm();
+            };
+            
+            // Event delegation for tabs
+            const tabList = document.getElementById('mc-tab-list');
+            if (tabList) {
+                // Remove existing click handler to prevent duplicates
+                if (tabList._onClickHandler) {
+                    tabList.removeEventListener('click', tabList._onClickHandler);
+                }
+                tabList._onClickHandler = (e) => {
+                    if (e.target.role === 'tab') {
+                        activateTab(e.target.dataset.tab, modal);
+                    }
+                };
+                tabList.addEventListener('click', tabList._onClickHandler);
+                
+                // Keyboard navigation
+                if (tabList._onKeydownHandler) {
+                    tabList.removeEventListener('keydown', tabList._onKeydownHandler);
+                }
+                tabList._onKeydownHandler = (e) => {
+                    const currentTab = e.target;
+                    if (currentTab.getAttribute('role') !== 'tab') return;
+                    
+                    const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+                    let newTab;
+                    
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                        const currentIndex = tabs.indexOf(currentTab);
+                        let newIndex = (currentIndex + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+                        newTab = tabs[newIndex];
+                    } else if (e.key === 'Home') {
+                        newTab = tabs[0];
+                    } else if (e.key === 'End') {
+                        newTab = tabs[tabs.length - 1];
+                    }
+                    
+                    if (newTab) {
+                        newTab.focus();
+                        activateTab(newTab.dataset.tab, modal);
+                    }
+                };
+                tabList.addEventListener('keydown', tabList._onKeydownHandler);
+            }
+            
+            // Panggil validasi saat modal dibuka
+            validateMovementClassForm();
+            document.getElementById('mc-identifier').focus();
+        };
+
 
 
         window.closeAdjustmentTypeForm = function() {
@@ -1441,6 +1722,24 @@
         // Fungsi close form baru untuk Location Status
         window.closeLocationStatusForm = function() {
             const modal = document.getElementById('ls-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+
+        // Fungsi close form baru untuk Movement Class
+        window.closeMovementClassForm = function() {
+            const modal = document.getElementById('mc-form-modal');
             const modalContent = modal.querySelector('.modal-content');
             if (modalContent) {
                 modalContent.classList.remove('scale-100', 'opacity-100');
@@ -1642,6 +1941,47 @@
             await window.showCustomAlert('Success', msg);
         };
 
+        // Fungsi submit baru untuk Movement Class
+        window.handleMovementClassSubmit = async function(event) {
+            event.preventDefault();
+            if (!validateMovementClassForm()) return;
+
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            
+            const newClass = {
+                identifier: form['identifier'].value,
+                recordType: 'MOVEMNTCLS',
+                description: form['description'].value,
+                systemValue1: form['systemValue1'].value,
+                systemCreated: form['systemCreated'].checked,
+                inactive: form['inactive'].checked,
+            };
+
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = movementClasses.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('MC', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newClass.id = 'MC' + String(maxId + 1).padStart(3, '0');
+                
+                movementClasses.push(newClass);
+                msg = 'Movement Class created successfully!';
+            } else {
+                const index = movementClasses.findIndex(mc => mc.id === id);
+                if (index !== -1) {
+                    movementClasses[index] = { ...movementClasses[index], ...newClass };
+                    msg = 'Movement Class updated successfully!';
+                }
+            }
+            saveMovementClasses();
+            closeMovementClassForm();
+            window.renderMovementClassList();
+            await window.showCustomAlert('Success', msg);
+        };
+
 
         window.deleteAdjustmentType = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this adjustment type?');
@@ -1684,6 +2024,17 @@
                 await window.showCustomAlert('Deleted', 'Location Status deleted successfully!');
             }
         };
+        
+        // Fungsi delete baru untuk Movement Class
+        window.deleteMovementClass = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this Movement Class?');
+            if (confirmed) {
+                movementClasses = movementClasses.filter(mc => mc.id !== id);
+                saveMovementClasses();
+                window.renderMovementClassList();
+                await window.showCustomAlert('Deleted', 'Movement Class deleted successfully!');
+            }
+        };
 
         // --- EVENT LISTENERS ---
         // Listen for ESC key press on the whole document to close the modal
@@ -1691,7 +2042,8 @@
             const adjModal = document.getElementById('adjustment-type-form-modal');
             const hcModal = document.getElementById('hc-form-modal');
             const lcModal = document.getElementById('lc-form-modal');
-            const lsModal = document.getElementById('ls-form-modal'); // Tambahkan modal baru
+            const lsModal = document.getElementById('ls-form-modal');
+            const mcModal = document.getElementById('mc-form-modal');
             const overlay = document.getElementById('custom-modal-overlay');
 
             if (e.key === 'Escape') {
@@ -1706,6 +2058,9 @@
                 }
                 if (lsModal && !lsModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
                     closeLocationStatusForm();
+                }
+                if (mcModal && !mcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeMovementClassForm();
                 }
             }
         });
@@ -1725,7 +2080,69 @@
             if (e.target && e.target.id === 'ls-identifier') {
                 validateLocationStatusForm();
             }
+            // Tambahkan listener validasi untuk Movement Class
+            if (e.target && e.target.id === 'mc-identifier') {
+                validateMovementClassForm();
+            }
         });
+        
+        // Event delegation for tabs on Movement Class modal
+        const mcModal = document.getElementById('mc-form-modal');
+        if(mcModal){
+            const tabList = mcModal.querySelector('#mc-tab-list');
+            if(tabList){
+                tabList.addEventListener('click', (e) => {
+                    if (e.target.role === 'tab') {
+                        activateTab(e.target.dataset.tab, mcModal);
+                    }
+                });
+                tabList.addEventListener('keydown', (e) => {
+                    const currentTab = e.target;
+                    if (currentTab.getAttribute('role') !== 'tab') return;
+                    
+                    const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+                    let newTab;
+                    
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                        const currentIndex = tabs.indexOf(currentTab);
+                        let newIndex = (currentIndex + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+                        newTab = tabs[newIndex];
+                    } else if (e.key === 'Home') {
+                        newTab = tabs[0];
+                    } else if (e.key === 'End') {
+                        newTab = tabs[tabs.length - 1];
+                    }
+                    
+                    if (newTab) {
+                        newTab.focus();
+                        activateTab(newTab.dataset.tab, mcModal);
+                    }
+                });
+            }
+            const authTab = mcModal.querySelector('[data-tab="auth"]');
+            if(authTab){
+                 authTab.addEventListener('click', () => {
+                     _renderAdjUsers();
+                     const searchInput = document.getElementById('mc-search-users');
+                     if (searchInput) {
+                         searchInput.oninput = debounce(() => {
+                             const q = searchInput.value.toLowerCase();
+                             const labels = document.querySelectorAll('#mc-users-list .adj-type-user-label');
+                             labels.forEach(label => {
+                                 label.style.display = label.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+                             });
+                         }, 300);
+                     }
+                     const checkAllCheckbox = document.getElementById('mc-check-all');
+                     if (checkAllCheckbox) {
+                         checkAllCheckbox.onchange = (e) => {
+                             document.querySelectorAll('#mc-users-list .adj-type-user-checkbox').forEach(cb => cb.checked = e.target.checked);
+                         };
+                     }
+                 });
+            }
+        }
+
 
         // ======================================
         // AUTO-RENDER on MOUNT
@@ -1760,19 +2177,29 @@
                     c.dataset.bound = '1';
                 }
             };
+            // Tambahkan auto-render untuk Movement Class
+            const ensureMcList = () => {
+                const c = document.getElementById('mc-list-container');
+                if (c && !c.dataset.bound) {
+                    window.renderMovementClassList();
+                    c.dataset.bound = '1';
+                }
+            };
             
             // cek awal & setiap ada perubahan DOM
             const obs = new MutationObserver((mutations) => {
                 ensureAdjList();
                 ensureHcList();
                 ensureLcList();
-                ensureLsList(); // Panggil auto-render untuk LS
+                ensureLsList(); 
+                ensureMcList(); // Panggil auto-render untuk MC
             });
             obs.observe(document.body, { childList: true, subtree: true });
             ensureAdjList();
             ensureHcList();
             ensureLcList();
-            ensureLsList(); // Panggil saat inisialisasi
+            ensureLsList(); 
+            ensureMcList(); // Panggil saat inisialisasi
         })();
         
         console.log('Configuration V3 (Inventory Control) loaded successfully');
