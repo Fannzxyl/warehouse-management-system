@@ -117,7 +117,6 @@
         window._itemBalanceUploadValues = ['Yes', 'No'];
         window._systemValue1Values = ['Yes', 'No'];
 
-        // --- STATE & LOCAL STORAGE ---
         // Penyatuan data untuk Adjustment Type
         let adjustmentTypes = JSON.parse(localStorage.getItem('adjustmentTypes')) || [
              { id: 'ADJ000', identifier: '000-Adj empties', recordType: 'ADJTYPE', description: '000-Adj empties (provisi by GOLD)', inactive: false, systemCreated: true, class: 'adjustment', qtyMin: -9999999, qtyMax: 0.00, rfInitiation: 'item_location', createWork: true, workCreationMaster: 'PUTAWAY', allowFrozenLocations: false, includeInInterfaceUploads: false, authorizedUsers: ['Administrator'], userDefined: {} },
@@ -195,6 +194,36 @@
             { id: 'MC0011', identifier: 'GRASS', recordType: 'MOVEMNTCLS', description: 'PROD RAS RETURN SUPPLIER', systemValue1: 'No', systemCreated: true, inactive: false },
         ];
 
+        // Tambahkan data dummy untuk Inventory Control Values dan Item Class
+        let inventoryControlValues = JSON.parse(localStorage.getItem('inventoryControlValues')) || [
+            { id: 'icv_10', key: 10, description: 'Whether inventory is being tracked by default', systemValue: 'Y', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_40', key: 40, description: 'Default inventory status for adjustments', systemValue: 'Available', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_50', key: 50, description: 'Allow Duplicate Serial Numbers?', systemValue: 'N', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_70', key: 70, description: 'Write Location UM overrides on item UM Change', systemValue: 'N', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_110', key: 110, description: 'Should item be validated throughout system?', systemValue: 'Y', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_130', key: 130, description: 'Inventory status for frozen lots', systemValue: 'Held', valueRequired: true, systemCreated: true, userDefined: {} },
+            { id: 'icv_160', key: 160, description: 'Adj Type For Status Change during Transfer', systemValue: 'Status Change', valueRequired: true, systemCreated: true, userDefined: {} }
+        ];
+
+        let itemClasses = JSON.parse(localStorage.getItem('itemClasses')) || [
+            { id: 'ic_1', identifier: 'GENERAL', recordType: 'ITEMCLASS', description: 'GENERAL', storageTemplate: 'PC-IPCK-PCK-PLT', inactive: false, systemCreated: false },
+            { id: 'ic_2', identifier: 'FRESH', recordType: 'ITEMCLASS', description: 'Fresh Products', storageTemplate: 'FR-STOR-REF-PLT', inactive: false, systemCreated: false },
+            { id: 'ic_3', identifier: 'FROZEN', recordType: 'ITEMCLASS', description: 'Frozen Goods', storageTemplate: 'FZ-STOR-FRZ-PLT', inactive: true, systemCreated: true }
+        ];
+
+        // Data dummy untuk dropdown Storage Template
+        window._storageTemplates = ['PC-IPCK-PCK-PLT', 'FR-STOR-REF-PLT', 'FZ-STOR-FRZ-PLT', 'DRY-STOR-GEN-PLT'];
+
+        let storageTemplates = JSON.parse(localStorage.getItem('storageTemplates')) || [
+            { id: 'st_1', identifier: '*Default', description: 'Default Storage Template', inactive: false, systemCreated: true, detailRecords: [{ sequence: 1, um: 'PLT', treatAsFullPercent: 100, groupDuringCheckIn: true }] },
+            { id: 'st_2', identifier: 'KG', description: 'Kilogram', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'KG', treatAsFullPercent: 100, groupDuringCheckIn: false }] },
+            { id: 'st_3', identifier: 'PC', description: 'Piece', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'PC', treatAsFullPercent: 100, groupDuringCheckIn: true }] },
+            { id: 'st_4', identifier: 'PC-IPCK', description: 'Piece-InnerPack', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'PC', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 2, um: 'IPCK', treatAsFullPercent: 100, groupDuringCheckIn: true }] },
+            { id: 'st_5', identifier: 'PC-PCK', description: 'Piece-Pack', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'PC', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 2, um: 'PCK', treatAsFullPercent: 100, groupDuringCheckIn: true }] },
+            { id: 'st_6', identifier: 'PC-PCK-PLT', description: 'Piece-Pack-Pallet', inactive: false, systemCreated: false, detailRecords: [{ sequence: 1, um: 'PC', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 2, um: 'PCK', treatAsFullPercent: 100, groupDuringCheckIn: true }, { sequence: 3, um: 'PLT', treatAsFullPercent: 100, groupDuringCheckIn: false }] },
+        ];
+
+        window._ums = ['PLT', 'KG', 'PC', 'IPCK', 'PCK'];
 
         // --- SAVE HELPERS ---
         function saveAdjustmentTypes() { 
@@ -211,6 +240,16 @@
         }
         function saveMovementClasses() {
             localStorage.setItem('movementClasses', JSON.stringify(movementClasses));
+        }
+        function saveInventoryControlValues() {
+            localStorage.setItem('inventoryControlValues', JSON.stringify(inventoryControlValues));
+        }
+        function saveItemClasses() {
+            localStorage.setItem('itemClasses', JSON.stringify(itemClasses));
+        }
+
+        function saveStorageTemplates() {
+            localStorage.setItem('storageTemplates', JSON.stringify(storageTemplates));
         }
         
         let currentAdjUsers = [];
@@ -418,42 +457,88 @@
             return isValid;
         }
 
+        // Fungsi validasi baru untuk Inventory Control Values
+        function validateICVForm() {
+            const key = document.getElementById('icv-key');
+            const submitBtn = document.getElementById('icv-submit-button');
+            let isValid = true;
+            if (!key.value.trim()) {
+                isValid = false;
+            }
+            const keyError = document.getElementById('icv-key-error');
+            if (keyError) {
+                if (!isValid) {
+                    keyError.textContent = "Key is required.";
+                    keyError.classList.remove('hidden');
+                } else {
+                    keyError.classList.add('hidden');
+                }
+            }
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
+
+        // Fungsi validasi baru untuk Item Class
+        function validateItemClassForm() {
+            const identifier = document.getElementById('ic-identifier');
+            const submitBtn = document.getElementById('ic-submit-button');
+            
+            let isValid = true;
+            if (!identifier.value.trim()) {
+                isValid = false;
+            }
+            const identifierError = document.getElementById('ic-identifier-error');
+            if (identifierError) {
+                if (!isValid) {
+                    identifierError.textContent = "Identifier is required.";
+                    identifierError.classList.remove('hidden');
+                } else {
+                    identifierError.classList.add('hidden');
+                }
+            }
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
 
         // --- INVENTORY CONTROL: landing page + daftar anak ---
         const invChildren = [
-            'adjustment-type', 'harmonized-code', 'inventory-control-values', 'inventory-status',
-            'item', 'item-class', 'item-cross-reference', 'item-location-assignment',
-            'item-location-capacity', 'item-template', 'item-unit-of-measure',
-            'location', 'location-class', 'location-status', 'location-template', 'location-type',
-            'lot-template', 'movement-class', 'serial-number-template', 'storage-template',
-            'zone', 'zone-type'
-        ];
+    'adjustment-type', 'harmonized-code', 'inventory-control-values', 'inventory-status',
+    'item', 'item-class', 'item-cross-reference', 'item-location-assignment',
+    'item-location-capacity', 'item-template', 'item-unit-of-measure',
+    'location', 'location-class', 'location-status', 'location-template', 'location-type',
+    'lot-template', 'movement-class', 'serial-number-template', 'storage-template',
+    'zone', 'zone-type'
+];
 
         // judul & deskripsi singkat untuk kartu
         const invMeta = {
-            'adjustment-type': ['Adjustment Type', 'Manage adjustment types for stock transactions.'],
-            'harmonized-code': ['Harmonized Code', 'Classification codes for inventory.'],
-            'inventory-control-values': ['Inventory Control Values', 'Defaults & control flags.'],
-            'inventory-status': ['Inventory Status', 'Available, Damaged, Hold, etc.'],
-            'item': ['Item', 'Master data for items.'],
-            'item-class': ['Item Class', 'Group items for easier control.'],
-            'item-cross-reference': ['Item Cross Reference', 'Alternate/Supplier part numbers.'],
-            'item-location-assignment': ['Item Location Assignment', 'Bind item to locations.'],
-            'item-location-capacity': ['Item Location Capacity', 'Capacity rules per item/location.'],
-            'item-template': ['Item Template', 'Reusable new item templates.'],
-            'item-unit-of-measure': ['Item Unit of Measure', 'UoM list and conversions.'],
-            'location': ['Location', 'Locations master.'],
-            'location-class': ['Location Class', 'Group locations by class.'],
-            'location-status': ['Location Status', 'Usable, Blocked, Audit, etc.'],
-            'location-template': ['Location Template', 'Blueprint to create locations.'],
-            'location-type': ['Location Type', 'Type by size/weight limits.'],
-            'lot-template': ['Lot Template', 'Auto-generate lot pattern.'],
-            'movement-class': ['Movement Class', 'Velocity/ABC movement classes.'],
-            'serial-number-template': ['Serial Number Template', 'Pattern for serials.'],
-            'storage-template': ['Storage Template', 'Storage rule presets.'],
-            'zone': ['Zone', 'Warehouse zones.'],
-            'zone-type': ['Zone Type', 'Types of zones.']
-        };
+    'adjustment-type': ['Adjustment Type', 'Manage adjustment types for stock transactions.'],
+    'harmonized-code': ['Harmonized Code', 'Classification codes for inventory.'],
+    'inventory-control-values': ['Inventory Control Values', 'Defaults & control flags.'],
+    'inventory-status': ['Inventory Status', 'Available, Damaged, Hold, etc.'],
+    'item': ['Item', 'Master data for items.'],
+    'item-class': ['Item Class', 'Group items for easier control.'],
+    'item-cross-reference': ['Item Cross Reference', 'Alternate/Supplier part numbers.'],
+    'item-location-assignment': ['Item Location Assignment', 'Bind item to locations.'],
+    'item-location-capacity': ['Item Location Capacity', 'Capacity rules per item/location.'],
+    'item-template': ['Item Template', 'Reusable new item templates.'],
+    'item-unit-of-measure': ['Item Unit of Measure', 'UoM list and conversions.'],
+    'location': ['Location', 'Locations master.'],
+    'location-class': ['Location Class', 'Group locations by class.'],
+    'location-status': ['Location Status', 'Usable, Blocked, Audit, etc.'],
+    'location-template': ['Location Template', 'Blueprint to create locations.'],
+    'location-type': ['Location Type', 'Type by size/weight limits.'],
+    'lot-template': ['Lot Template', 'Auto-generate lot pattern.'],
+    'movement-class': ['Movement Class', 'Velocity/ABC movement classes.'],
+    'serial-number-template': ['Serial Number Template', 'Pattern for serials.'],
+    'storage-template': ['Storage Template', 'Storage rule presets.'],
+    'zone': ['Zone', 'Warehouse zones.'],
+    'zone-type': ['Zone Type', 'Types of zones.']
+};
 
         // Halaman landing page untuk Inventory Control
         window.contentData['inventory-control'] = {
@@ -903,11 +988,216 @@
                 </div>
             `
         };
+
+        window.contentData['inventory-control-values'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2>
+                <p class="text-gray-600">Manage system-wide inventory control settings and defaults.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="btn btn-primary" onclick="showICVForm('create')">
+                        Create New Value
+                    </button>
+                    <input type="text" id="icv-search" placeholder="Search by description..."
+                            class="input max-w-xs" oninput="filterICVList(this.value)">
+                </div>
+                <div id="icv-list-container" class="mt-4 overflow-x-auto">
+                    </div>
+
+                <div id="icv-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b">
+                            <h3 id="icv-form-title" class="text-lg font-semibold">Create New Value</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeICVForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="icv-form" onsubmit="handleICVSubmit(event)">
+                                <div role="tablist" id="icv-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                                    <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
+                                    <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
+                                </div>
+
+                                <div id="pane-gen" role="tabpanel" data-pane="gen" class="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <label for="icv-key" class="block text-sm mb-1">Key <span class="text-red-500">*</span></label>
+                                        <input id="icv-key" name="key" type="number" required class="input" placeholder="e.g. 160">
+                                        <p id="icv-key-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="icv-description" class="block text-sm mb-1">Description <span class="text-red-500">*</span></label>
+                                        <input id="icv-description" name="description" required class="input" placeholder="Description of the control value">
+                                    </div>
+                                    <div>
+                                        <label for="icv-systemValue" class="block text-sm mb-1">System value</label>
+                                        <input id="icv-systemValue" name="systemValue" class="input" placeholder="e.g. Status Change">
+                                    </div>
+                                    <div class="flex items-end pb-2">
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="icv-valueRequired" name="valueRequired" type="checkbox"> Value required
+                                        </label>
+                                    </div>
+                                     <div class="md:col-span-2">
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="icv-systemCreated" name="systemCreated" type="checkbox"> System created
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
+                                    ${Array.from({length: 8}, (_, i) => `
+                                    <div>
+                                        <label for="icv-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                        <input id="icv-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                                    </div>
+                                    `).join('')}
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeICVForm()">Cancel</button>
+                            <button id="icv-submit-button" type="submit" form="icv-form" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        window.contentData['item-class'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Item Class</h2>
+                <p class="text-gray-600">Group items into different classes for easier management and reporting.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="btn btn-primary" onclick="showItemClassForm('create')">
+                        Create New Item Class
+                    </button>
+                    <input type="text" id="item-class-search" placeholder="Search by identifier..."
+                            class="input max-w-xs" oninput="filterItemClassList(this.value)">
+                </div>
+                <div id="item-class-list-container" class="mt-4 overflow-x-auto">
+                    </div>
+
+                <div id="item-class-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(600px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b">
+                            <h3 id="item-class-form-title" class="text-lg font-semibold">Create New Item Class</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeItemClassForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="item-class-form" onsubmit="handleItemClassSubmit(event)">
+                                <div class="grid gap-4">
+                                     <div>
+                                        <label for="ic-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                                        <input id="ic-identifier" name="identifier" required class="input" placeholder="e.g. GENERAL">
+                                        <p id="ic-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div>
+                                        <label for="ic-recordType" class="block text-sm mb-1">Record type</label>
+                                        <input id="ic-recordType" name="recordType" class="input bg-gray-100" value="ITEMCLASS" readonly>
+                                    </div>
+                                    <div>
+                                        <label for="ic-description" class="block text-sm mb-1">Description</label>
+                                        <input id="ic-description" name="description" class="input" placeholder="Description of the item class">
+                                    </div>
+                                    <fieldset class="border p-4 rounded-lg">
+                                        <legend class="text-sm font-medium px-2">System defined values</legend>
+                                        <label for="ic-storageTemplate" class="block text-sm mb-1">Storage Template</label>
+                                        <select id="ic-storageTemplate" name="storageTemplate" class="select">
+                                            <option value="">-- Select Template --</option>
+                                            ${window._storageTemplates.map(t => `<option value="${t}">${t}</option>`).join('')}
+                                        </select>
+                                    </fieldset>
+                                     <div class="flex items-center gap-4 mt-2">
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="ic-inactive" name="inactive" type="checkbox"> Inactive
+                                        </label>
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="ic-systemCreated" name="systemCreated" type="checkbox"> System created
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeItemClassForm()">Cancel</button>
+                            <button id="ic-submit-button" type="submit" form="item-class-form" class="btn btn-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        window.contentData['storage-template'] = {
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Storage Template</h2>
+        <p class="text-gray-600">Define storage templates to standardize how items are stored.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="btn btn-primary" onclick="showStorageTemplateForm('create')">
+                Create New Storage Template
+            </button>
+            <input type="text" id="st-search" placeholder="Search template..."
+                    class="input max-w-xs" oninput="filterStorageTemplateList(this.value)">
+        </div>
+        <div id="st-list-container" class="mt-4 overflow-x-auto">
+        </div>
         
-        window.contentData['inventory-control-values'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2><p class="text-gray-600">Configure inventory control values and defaults.</p>` };
+        <!-- Modal Storage Template -->
+        <div id="st-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(900px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                <div class="px-6 pt-5 pb-3 border-b relative">
+                    <h3 id="st-form-title" class="text-lg font-semibold">Create New Storage Template</h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeStorageTemplateForm()" aria-label="Close">✕</button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <form id="st-form" onsubmit="handleStorageTemplateSubmit(event)">
+                        <div role="tablist" id="st-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                            <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
+                            <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
+                        </div>
+                        <div id="pane-gen" role="tabpanel" data-pane="gen" class="grid gap-4 md:grid-cols-2">
+                            <div class="md:col-span-2">
+                                <label for="st-identifier" class="block text-sm mb-1">Storage template <span class="text-red-500">*</span></label>
+                                <input id="st-identifier" name="identifier" required class="input" placeholder="e.g. PC-IPCK-PCK-PLT">
+                                <p id="st-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="st-description" class="block text-sm mb-1">Description</label>
+                                <input id="st-description" name="description" class="input" placeholder="Description of the template">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="flex items-center gap-2 text-sm mt-2">
+                                    <input id="st-inactive" name="inactive" type="checkbox"> Inactive
+                                </label>
+                                <label class="flex items-center gap-2 text-sm mt-2">
+                                    <input id="st-systemCreated" name="systemCreated" type="checkbox"> System created
+                                </label>
+                            </div>
+                            <div class="md:col-span-2 mt-4">
+                                <h4 class="text-base font-semibold mb-2">Detail records</h4>
+                                <div id="st-detail-records-list" class="space-y-3 p-4 border border-gray-200 rounded-lg">
+                                </div>
+                                <button type="button" class="btn mt-3" onclick="addStorageTemplateDetailRecord()">Add Detail</button>
+                            </div>
+                        </div>
+
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
+                            ${Array.from({length: 8}, (_, i) => `
+                            <div>
+                                <label for="st-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                <input id="st-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                            </div>
+                            `).join('')}
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end gap-3">
+                    <button type="button" class="btn" onclick="closeStorageTemplateForm()">Cancel</button>
+                    <button id="st-submit-button" type="submit" form="st-form" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    `
+};
+
         window.contentData['inventory-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Status</h2><p class="text-gray-600">Manage different inventory statuses (e.g., Available, Damaged).</p>` };
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
-        window.contentData['item-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Class</h2><p class="text-gray-600">Group items into classes for easier management.</p>` };
+    
         window.contentData['item-cross-reference'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Cross Reference</h2><p class="text-gray-600">Manage cross-references for items (e.g., different part numbers).</p>` };
         window.contentData['item-location-assignment'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Location Assignment</h2><p class="text-gray-600">Assign specific items to warehouse locations.</p>` };
         window.contentData['item-location-capacity'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Location Capacity</h2><p class="text-gray-600">Define capacity rules for items in specific locations.</p>` };
@@ -918,7 +1208,6 @@
         window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
         window.contentData['lot-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Lot Template</h2><p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>` };
         window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Pattern for serials.</p>` };
-        window.contentData['storage-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Storage Template</h2><p class="text-gray-600">Storage rule presets.</p>` };
         window.contentData['zone'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone</h2><p class="text-gray-600">Manage all zones in the warehouse.</p>` };
         window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Types of zones.</p>` };
 
@@ -931,10 +1220,13 @@
             window.searchItems.push({ id: key, title: invMeta[key][0], category: 'Inventory Control', lastUpdated: 'Latest' });
             window.allMenus.push({ name: invMeta[key][0], category: 'Inventory Control' });
         });
+        window.parentMapping['storage-template'] = 'inventory-control';
         
         // Daftarkan key root juga
         window.searchItems.push({ id: 'inventory-control', title: 'Inventory Control', category: 'Configurations', lastUpdated: 'Latest' });
         window.allMenus.push({ name: 'Inventory Control', category: 'Configurations' });
+        window.searchItems.push({ id: 'storage-template', title: 'Storage Template', category: 'Inventory Control', lastUpdated: 'Latest' });
+window.allMenus.push({ name: 'Storage Template', category: 'Inventory Control' });
         
         // --- RENDER LIST FUNCTIONS ---
         window.renderAdjustmentTypeList = function(filter = '') {
@@ -982,9 +1274,58 @@
             container.innerHTML = tableHtml;
         };
 
+        window.renderStorageTemplateList = function(filter = '') {
+    const container = document.getElementById('st-list-container');
+    if (!container) return;
+    const filteredData = storageTemplates.filter(st => st.identifier.toLowerCase().includes(filter.toLowerCase()) || st.description.toLowerCase().includes(filter.toLowerCase()));
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">Storage template</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">System created</th>
+                    <th class="py-3 px-6 text-left">Active</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+    if (filteredData.length === 0) {
+        tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No storage templates found.</td></tr>`;
+    } else {
+        filteredData.forEach(st => {
+            tableHtml += `
+                <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                    <td class="py-3 px-6 text-left whitespace-nowrap">${st.identifier}</td>
+                    <td class="py-3 px-6 text-left">${st.description}</td>
+                    <td class="py-3 px-6 text-left">${st.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-left">${!st.inactive ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showStorageTemplateForm('edit', '${st.id}')" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+                            <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteStorageTemplate('${st.id}')" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    tableHtml += `</tbody></table>`;
+    container.innerHTML = tableHtml;
+};
+
         window.filterAdjustmentTypeList = function(value) {
             renderAdjustmentTypeList(value);
         };
+
+        window.filterStorageTemplateList = function(value) {
+    renderStorageTemplateList(value);
+};
 
         window.renderHarmonizedCodeList = function(filter = '') {
             const container = document.getElementById('hc-list-container');
@@ -1135,15 +1476,6 @@
             container.innerHTML = tableHtml;
         };
 
-        window.filterLocationClassList = function(value) {
-            renderLocationClassList(value);
-        };
-        
-        // Fungsi filter baru untuk Location Status
-        window.filterLocationStatusList = function(value) {
-            renderLocationStatusList(value);
-        };
-
         // Fungsi render list baru untuk Movement Class
         window.renderMovementClassList = function(filter = '') {
             const container = document.getElementById('mc-list-container');
@@ -1192,9 +1524,124 @@
             container.innerHTML = tableHtml;
         };
 
+        // Fungsi render list baru untuk Inventory Control Values
+        window.renderICVList = function(filter = '') {
+            const container = document.getElementById('icv-list-container');
+            if (!container) return;
+            const filteredData = inventoryControlValues.filter(icv => icv.description.toLowerCase().includes(filter.toLowerCase()));
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Key</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">System Value</th>
+                            <th class="py-3 px-6 text-left">System Created</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No inventory control values found.</td></tr>`;
+            } else {
+                filteredData.forEach(icv => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${icv.key}</td>
+                            <td class="py-3 px-6 text-left">${icv.description}</td>
+                            <td class="py-3 px-6 text-left">${icv.systemValue}</td>
+                            <td class="py-3 px-6 text-left">${icv.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showICVForm('edit', '${icv.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteICV('${icv.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        // Ganti fungsi renderItemClassList yang lama dengan yang ini
+window.renderItemClassList = function(filter = '') {
+    const container = document.getElementById('item-class-list-container');
+    if (!container) return;
+
+    const lowerCaseFilter = filter.toLowerCase();
+
+    // FIX: Tambahkan pengecekan untuk memastikan properti ada sebelum memanggil toLowerCase()
+    const filteredItemClasses = itemClasses.filter(item => {
+        // Pengecekan ini mencegah error jika salah satu properti (cth: description) tidak ada (undefined)
+        const identifierMatch = item && item.identifier && item.identifier.toLowerCase().includes(lowerCaseFilter);
+        const descriptionMatch = item && item.description && item.description.toLowerCase().includes(lowerCaseFilter);
+        return identifierMatch || descriptionMatch;
+    });
+
+    let tableHtml = `
+        <table class="min-w-full bg-white card">
+            <thead>
+                <tr class="border-b border-gray-200">
+                    <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Identifier</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 text-sm">`;
+
+    if (filteredItemClasses.length === 0) {
+        tableHtml += `<tr><td colspan="3" class="py-4 px-4 text-center text-gray-500">No item classes found.</td></tr>`;
+    } else {
+        filteredItemClasses.forEach(item => {
+            tableHtml += `
+                <tr class="border-b border-gray-200 hover:bg-indigo-50/50">
+                    <td class="py-3 px-4 whitespace-nowrap">${item.identifier}</td>
+                    <td class="py-3 px-4">${item.description || '<em class="text-gray-400">No description</em>'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 mr-2 text-gray-500 hover:text-indigo-600 transition-colors" onclick="showItemClassForm('edit', '${item.id}')" title="Edit">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="w-6 h-6 text-gray-500 hover:text-red-600 transition-colors" onclick="deleteItemClass('${item.id}')" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+        });
+    }
+
+    tableHtml += `</tbody></table>`;
+    container.innerHTML = tableHtml;
+};
+
+        window.filterLocationClassList = function(value) {
+            renderLocationClassList(value);
+        };
+        
+        // Fungsi filter baru untuk Location Status
+        window.filterLocationStatusList = function(value) {
+            renderLocationStatusList(value);
+        };
+
         // Fungsi filter baru untuk Movement Class
         window.filterMovementClassList = function(value) {
             renderMovementClassList(value);
+        };
+        
+        window.filterICVList = function(value) {
+            renderICVList(value);
+        };
+
+        window.filterItemClassList = function(value) {
+            renderItemClassList(value);
         };
 
 
@@ -1664,6 +2111,148 @@
             document.getElementById('mc-identifier').focus();
         };
 
+        window.showICVForm = function(mode, id = null) {
+            const modal = document.getElementById('icv-form-modal');
+            const form = document.getElementById('icv-form');
+            const title = document.getElementById('icv-form-title');
+            const submitButton = document.getElementById('icv-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset validation state
+            document.querySelectorAll('[id$="-error"]').forEach(el => el.classList.add('hidden'));
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Value';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('icv-key').removeAttribute('readonly');
+                document.getElementById('icv-key').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                document.getElementById('icv-systemCreated').checked = false;
+                document.getElementById('icv-systemCreated').disabled = false;
+                // Atur tab ke "General" secara default
+                activateTab('gen', modal);
+            } else {
+                title.textContent = 'Edit Value';
+                if (submitButton) submitButton.textContent = 'Update';
+                const item = inventoryControlValues.find(icv => icv.id === id);
+                if (item) {
+                    document.getElementById('icv-key').value = item.key;
+                    document.getElementById('icv-description').value = item.description;
+                    document.getElementById('icv-systemValue').value = item.systemValue;
+                    document.getElementById('icv-valueRequired').checked = item.valueRequired;
+                    document.getElementById('icv-systemCreated').checked = item.systemCreated;
+                    
+                    // Isi User Defined data
+                    if (item.userDefined) {
+                        for (let i = 1; i <= 8; i++) {
+                            const udfEl = document.getElementById(`icv-udf${i}`);
+                            if (udfEl) {
+                                udfEl.value = item.userDefined[`udf${i}`] || '';
+                            }
+                        }
+                    }
+
+                    if (item.systemCreated) {
+                        document.getElementById('icv-key').setAttribute('readonly', true);
+                        document.getElementById('icv-key').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('icv-systemCreated').disabled = true;
+                    } else {
+                        document.getElementById('icv-key').removeAttribute('readonly');
+                        document.getElementById('icv-key').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('icv-systemCreated').disabled = false;
+                    }
+                    // Atur tab ke "General" secara default
+                    activateTab('gen', modal);
+                }
+            }
+            
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            modal.onclick = (e) => {
+                if (e.target.id === 'icv-form-modal') closeICVForm();
+            };
+
+            // Event listener untuk tabs di modal ICV
+            const tabList = document.getElementById('icv-tab-list');
+            if (tabList) {
+                tabList.onclick = (e) => {
+                    if (e.target.role === 'tab') {
+                        activateTab(e.target.dataset.tab, modal);
+                    }
+                };
+            }
+            document.getElementById('icv-key').focus();
+        };
+
+
+        // Fungsi show form baru untuk Item Class
+        window.showItemClassForm = function(mode, id = null) {
+            const modal = document.getElementById('item-class-form-modal');
+            const form = document.getElementById('item-class-form');
+            const title = document.getElementById('item-class-form-title');
+            const submitButton = document.getElementById('ic-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Reset validation state
+            document.querySelectorAll('[id$="-error"]').forEach(el => el.classList.add('hidden'));
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Item Class';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('ic-identifier').removeAttribute('readonly');
+                document.getElementById('ic-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                document.getElementById('ic-systemCreated').checked = false;
+                document.getElementById('ic-systemCreated').disabled = false;
+                document.getElementById('ic-recordType').value = 'ITEMCLASS';
+            } else {
+                title.textContent = 'Edit Item Class';
+                if (submitButton) submitButton.textContent = 'Update';
+                const item = itemClasses.find(ic => ic.id === id);
+                if (item) {
+                    document.getElementById('ic-identifier').value = item.identifier;
+                    document.getElementById('ic-recordType').value = item.recordType;
+                    document.getElementById('ic-description').value = item.description;
+                    document.getElementById('ic-storageTemplate').value = item.storageTemplate;
+                    document.getElementById('ic-inactive').checked = item.inactive;
+                    document.getElementById('ic-systemCreated').checked = item.systemCreated;
+
+                    if (item.systemCreated) {
+                         document.getElementById('ic-identifier').setAttribute('readonly', true);
+                         document.getElementById('ic-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
+                }
+            }
+            
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            modal.onclick = (e) => {
+                if (e.target.id === 'item-class-form-modal') closeItemClassForm();
+            };
+
+            validateItemClassForm();
+            document.getElementById('ic-identifier').focus();
+        };
 
 
         window.closeAdjustmentTypeForm = function() {
@@ -1740,6 +2329,42 @@
         // Fungsi close form baru untuk Movement Class
         window.closeMovementClassForm = function() {
             const modal = document.getElementById('mc-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+        
+        // Fungsi close form baru untuk Inventory Control Values
+        window.closeICVForm = function() {
+            const modal = document.getElementById('icv-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+
+        // Fungsi close form baru untuk Item Class
+        window.closeItemClassForm = function() {
+            const modal = document.getElementById('item-class-form-modal');
             const modalContent = modal.querySelector('.modal-content');
             if (modalContent) {
                 modalContent.classList.remove('scale-100', 'opacity-100');
@@ -1981,7 +2606,124 @@
             window.renderMovementClassList();
             await window.showCustomAlert('Success', msg);
         };
+        
+        // Fungsi handle submit baru untuk Inventory Control Values
+        window.handleICVSubmit = async function(event) {
+            event.preventDefault();
+            if (!validateICVForm()) return;
 
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            
+            const newICV = {
+                key: parseInt(form['key'].value, 10),
+                description: form['description'].value,
+                systemValue: form['systemValue'].value,
+                valueRequired: form['valueRequired'].checked,
+                systemCreated: form['systemCreated'].checked,
+                userDefined: {}
+            };
+
+            // Ambil nilai UDFs
+            for (let i = 1; i <= 8; i++) {
+                const udfEl = document.getElementById(`icv-udf${i}`);
+                if (udfEl) {
+                    newICV.userDefined[`udf${i}`] = udfEl.value;
+                }
+            }
+
+            let msg = '';
+            if (mode === 'create') {
+                // FIX: Cek dulu apa 'key' nya udah ada, biar gak duplikat
+                const keyExists = inventoryControlValues.some(icv => icv.key === newICV.key);
+                if (keyExists) {
+                    await window.showCustomAlert('Error', `Key "${newICV.key}" sudah ada. Tolong pakai key lain.`);
+                    return; // Hentikan proses
+                }
+
+                // FIX: Cara bikin ID-nya salah. Harusnya pakai 'key' dari form, bukan dihitung dari ID yg ada.
+                // Ini yang bikin error 'replace of undefined'.
+                newICV.id = 'icv_' + newICV.key;
+                
+                inventoryControlValues.push(newICV);
+                msg = 'Inventory Control Value created successfully!';
+            } else {
+                const index = inventoryControlValues.findIndex(icv => icv.id === id);
+                if (index !== -1) {
+                    // FIX: Pastikan ID yang lama tetap dipakai waktu update.
+                    const oldId = inventoryControlValues[index].id;
+                    inventoryControlValues[index] = { ...inventoryControlValues[index], ...newICV, id: oldId };
+                    msg = 'Inventory Control Value updated successfully!';
+                } else {
+                    await window.showCustomAlert('Error', 'Data tidak ditemukan untuk di-update.');
+                    return;
+                }
+            }
+            saveInventoryControlValues();
+            closeICVForm();
+            window.renderICVList();
+            await window.showCustomAlert('Success', msg);
+        };
+        
+        // Ganti fungsi handleItemClassSubmit yang lama dengan yang ini
+window.handleItemClassSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateItemClassForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+
+    const newItemClass = {
+        // FIX: Nama input disesuaikan dari 'identifier' menjadi 'ic-identifier'
+        identifier: form['ic-identifier'].value,
+        // FIX: Nama input disesuaikan dari 'description' menjadi 'ic-description'
+        description: form['ic-description'].value || '',
+        // FIX: Nama input disesuaikan dari 'inactive' menjadi 'ic-inactive'
+        inactive: form['ic-inactive'] ? form['ic-inactive'].checked : false,
+        userDefined: {}
+    };
+
+    for (let i = 1; i <= 8; i++) {
+        const udfEl = document.getElementById(`ic-udf${i}`);
+        if (udfEl) {
+            newItemClass.userDefined[`udf${i}`] = udfEl.value;
+        }
+    }
+
+    let msg = '';
+    if (mode === 'create') {
+        const identifierExists = itemClasses.some(ic => 
+            ic && ic.identifier && ic.identifier.toLowerCase() === newItemClass.identifier.toLowerCase()
+        );
+        if (identifierExists) {
+            await window.showCustomAlert('Error', `Identifier "${newItemClass.identifier}" already exists.`);
+            return;
+        }
+        const maxId = itemClasses.reduce((max, item) => {
+            if (item && item.id && typeof item.id === 'string') {
+                const num = parseInt(item.id.replace('ic_', ''), 10);
+                return Math.max(max, isNaN(num) ? 0 : num);
+            }
+            return max;
+        }, 0);
+        newItemClass.id = 'ic_' + String(maxId + 1);
+        itemClasses.push(newItemClass);
+        msg = 'Item Class created successfully!';
+    } else {
+        const index = itemClasses.findIndex(ic => ic.id === id);
+        if (index !== -1) {
+            const oldId = itemClasses[index].id;
+            itemClasses[index] = { ...itemClasses[index], ...newItemClass, id: oldId };
+            msg = 'Item Class updated successfully!';
+        }
+    }
+    saveItemClasses();
+    closeItemClassForm();
+    window.renderItemClassList();
+    await window.showCustomAlert('Success', msg);
+};
 
         window.deleteAdjustmentType = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this adjustment type?');
@@ -2035,6 +2777,36 @@
                 await window.showCustomAlert('Deleted', 'Movement Class deleted successfully!');
             }
         };
+        
+        // Fungsi delete baru untuk Inventory Control Values
+        window.deleteICV = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this inventory control value?');
+            if (confirmed) {
+                const initialLength = inventoryControlValues.length;
+                inventoryControlValues = inventoryControlValues.filter(icv => icv.id !== id);
+                
+                // Cek apa beneran ada yg kehapus
+                if (inventoryControlValues.length < initialLength) {
+                    saveInventoryControlValues();
+                    window.renderICVList();
+                    await window.showCustomAlert('Deleted', 'Inventory Control Value deleted successfully!');
+                } else {
+                    await window.showCustomAlert('Error', 'Could not delete the item. It might not exist.');
+                }
+            }
+        };
+
+        // Fungsi delete baru untuk Item Class
+        window.deleteItemClass = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this item class?');
+            if (confirmed) {
+                itemClasses = itemClasses.filter(ic => ic.id !== id);
+                saveItemClasses();
+                window.renderItemClassList();
+                await window.showCustomAlert('Deleted', 'Item Class deleted successfully!');
+            }
+        };
+
 
         // --- EVENT LISTENERS ---
         // Listen for ESC key press on the whole document to close the modal
@@ -2044,6 +2816,8 @@
             const lcModal = document.getElementById('lc-form-modal');
             const lsModal = document.getElementById('ls-form-modal');
             const mcModal = document.getElementById('mc-form-modal');
+            const icvModal = document.getElementById('icv-form-modal');
+            const icModal = document.getElementById('item-class-form-modal');
             const overlay = document.getElementById('custom-modal-overlay');
 
             if (e.key === 'Escape') {
@@ -2062,29 +2836,43 @@
                 if (mcModal && !mcModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
                     closeMovementClassForm();
                 }
+                if (icvModal && !icvModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeICVForm();
+                }
+                if (icModal && !icModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeItemClassForm();
+                }
             }
         });
 
         // General input validation listeners
-        document.addEventListener('input', (e) => {
-            if (e.target && ['adj-type-identifier', 'adj-type-qtyMin', 'adj-type-qtyMax'].includes(e.target.id)) {
-                validateAdjustmentTypeForm();
-            }
-            if (e.target && e.target.id === 'hc-identifier') {
-                validateHarmonizedCodeForm();
-            }
-            if (e.target && e.target.id === 'lc-identifier') {
-                validateLocationClassForm();
-            }
-            // Tambahkan listener validasi untuk Location Status
-            if (e.target && e.target.id === 'ls-identifier') {
-                validateLocationStatusForm();
-            }
-            // Tambahkan listener validasi untuk Movement Class
-            if (e.target && e.target.id === 'mc-identifier') {
-                validateMovementClassForm();
-            }
-        });
+document.addEventListener('input', (e) => {
+    if (e.target && ['adj-type-identifier', 'adj-type-qtyMin', 'adj-type-qtyMax'].includes(e.target.id)) {
+        validateAdjustmentTypeForm();
+    }
+    if (e.target && e.target.id === 'hc-identifier') {
+        validateHarmonizedCodeForm();
+    }
+    if (e.target && e.target.id === 'lc-identifier') {
+        validateLocationClassForm();
+    }
+    if (e.target && e.target.id === 'ls-identifier') {
+        validateLocationStatusForm();
+    }
+    if (e.target && e.target.id === 'mc-identifier') {
+        validateMovementClassForm();
+    }
+    if (e.target && e.target.id === 'icv-key') {
+        validateICVForm();
+    }
+    if (e.target && e.target.id === 'ic-identifier') {
+        validateItemClassForm();
+    }
+    // FIX: Tambahkan baris ini untuk Storage Template
+    if (e.target && e.target.id === 'st-identifier') {
+        validateStorageTemplateForm();
+    }
+});
         
         // Event delegation for tabs on Movement Class modal
         const mcModal = document.getElementById('mc-form-modal');
@@ -2143,64 +2931,326 @@
             }
         }
 
+        window.showStorageTemplateForm = function(mode, id = null) {
+    const modal = document.getElementById('st-form-modal');
+    const form = document.getElementById('st-form');
+    const title = document.getElementById('st-form-title');
+    const submitButton = document.getElementById('st-submit-button');
 
+    form.reset();
+    form.dataset.mode = mode;
+    form.dataset.id = id;
+
+    document.querySelectorAll('[id$="-error"]').forEach(el => el.classList.add('hidden'));
+    activateTab('gen', modal);
+
+    if (mode === 'create') {
+        title.textContent = 'Create New Storage Template';
+        if (submitButton) submitButton.textContent = 'Save';
+        document.getElementById('st-identifier').removeAttribute('readonly');
+        document.getElementById('st-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+        document.getElementById('st-systemCreated').checked = false;
+        document.getElementById('st-systemCreated').disabled = false;
+        renderStorageTemplateDetails([]);
+    } else {
+        title.textContent = 'Edit Storage Template';
+        if (submitButton) submitButton.textContent = 'Update';
+        const item = storageTemplates.find(st => st.id === id);
+        if (item) {
+            document.getElementById('st-identifier').value = item.identifier;
+            document.getElementById('st-description').value = item.description;
+            document.getElementById('st-inactive').checked = item.inactive;
+            document.getElementById('st-systemCreated').checked = item.systemCreated;
+            renderStorageTemplateDetails(item.detailRecords);
+
+            if (item.systemCreated) {
+                document.getElementById('st-identifier').setAttribute('readonly', true);
+                document.getElementById('st-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                document.getElementById('st-systemCreated').disabled = true;
+            } else {
+                document.getElementById('st-identifier').removeAttribute('readonly');
+                document.getElementById('st-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                document.getElementById('st-systemCreated').disabled = false;
+            }
+        }
+    }
+
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+    setTimeout(() => {
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.classList.add('scale-100', 'opacity-100');
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modal._untrap = trapFocus(modalContent);
+        }
+    }, 10);
+    modal.onclick = (e) => {
+        if (e.target.id === 'st-form-modal') closeStorageTemplateForm();
+    };
+
+    const tabList = document.getElementById('st-tab-list');
+    if (tabList) {
+        tabList.onclick = (e) => {
+            if (e.target.role === 'tab') {
+                activateTab(e.target.dataset.tab, modal);
+            }
+        };
+    }
+    validateStorageTemplateForm();
+    document.getElementById('st-identifier').focus();
+};
+
+window.closeStorageTemplateForm = function() {
+    const modal = document.getElementById('st-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        if (modal._untrap) {
+            modal._untrap();
+            delete modal._untrap;
+        }
+    }, 300);
+};
+
+window.handleStorageTemplateSubmit = async function(event) {
+    event.preventDefault();
+    if (!validateStorageTemplateForm()) return;
+
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+
+    const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item, index) => {
+        return {
+            sequence: index + 1,
+            um: item.querySelector('[name="detail-um"]').value,
+            treatAsFullPercent: parseInt(item.querySelector('[name="detail-treatAsFullPercent"]').value, 10),
+            groupDuringCheckIn: item.querySelector('[name="detail-groupDuringCheckIn"]').checked,
+        };
+    });
+
+    const newTemplate = {
+        identifier: form['identifier'].value,
+        description: form['description'].value,
+        inactive: form['inactive'].checked,
+        systemCreated: form['systemCreated'].checked,
+        detailRecords: details,
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        const identifierExists = storageTemplates.some(st => st.identifier === newTemplate.identifier);
+        if (identifierExists) {
+            await window.showCustomAlert('Error', `Storage template "${newTemplate.identifier}" sudah ada.`);
+            return;
+        }
+        const maxId = storageTemplates.reduce((max, item) => {
+            const num = parseInt(item.id.replace('st_', ''), 10);
+            return Math.max(max, isNaN(num) ? 0 : num);
+        }, 0);
+        newTemplate.id = 'st_' + String(maxId + 1);
+
+        storageTemplates.push(newTemplate);
+        msg = 'Storage Template created successfully!';
+    } else {
+        const index = storageTemplates.findIndex(st => st.id === id);
+        if (index !== -1) {
+            storageTemplates[index] = { ...storageTemplates[index], ...newTemplate };
+            msg = 'Storage Template updated successfully!';
+        }
+    }
+    saveStorageTemplates();
+    closeStorageTemplateForm();
+    window.renderStorageTemplateList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteStorageTemplate = async function(id) {
+    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this storage template?');
+    if (confirmed) {
+        storageTemplates = storageTemplates.filter(st => st.id !== id);
+        saveStorageTemplates();
+        window.renderStorageTemplateList();
+        await window.showCustomAlert('Deleted', 'Storage Template deleted successfully!');
+    }
+};
+
+function validateStorageTemplateForm() {
+    const identifier = document.getElementById('st-identifier');
+    const submitBtn = document.getElementById('st-submit-button');
+    let isValid = true;
+    
+    if (!identifier.value.trim()) {
+        isValid = false;
+    }
+    
+    const identifierError = document.getElementById('st-identifier-error');
+    if (identifierError) {
+        if (!isValid) {
+            identifierError.textContent = "Storage template is required.";
+            identifierError.classList.remove('hidden');
+        } else {
+            identifierError.classList.add('hidden');
+        }
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = !isValid;
+    }
+    return isValid;
+}
+
+window.renderStorageTemplateDetails = function(records) {
+    const container = document.getElementById('st-detail-records-list');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    if (records.length === 0) {
+        records.push({ sequence: 1, um: '', treatAsFullPercent: 100, groupDuringCheckIn: false });
+    }
+
+    records.forEach(record => {
+        const div = document.createElement('div');
+        div.className = 'detail-record-item p-3 border border-gray-200 rounded-md bg-gray-50 relative';
+        div.innerHTML = `
+            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700" onclick="removeStorageTemplateDetailRecord(this)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label for="detail-um-${record.sequence}" class="block text-sm mb-1">UM:</label>
+                    <select id="detail-um-${record.sequence}" name="detail-um" class="select">
+                        <option value="">-- Select UM --</option>
+                        ${window._ums.map(um => `<option value="${um}" ${record.um === um ? 'selected' : ''}>${um}</option>`).join('')}
+                    </select>
+                </div>
+                <div>
+                    <label for="detail-treatAsFullPercent-${record.sequence}" class="block text-sm mb-1">Treat as full percent:</label>
+                    <input id="detail-treatAsFullPercent-${record.sequence}" name="detail-treatAsFullPercent" type="number" value="${record.treatAsFullPercent}" class="input">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input id="detail-groupDuringCheckIn-${record.sequence}" name="detail-groupDuringCheckIn" type="checkbox" ${record.groupDuringCheckIn ? 'checked' : ''}> Group during check in
+                    </label>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+};
+
+window.addStorageTemplateDetailRecord = function() {
+    const container = document.getElementById('st-detail-records-list');
+    const newRecord = { sequence: container.children.length + 1, um: '', treatAsFullPercent: 100, groupDuringCheckIn: false };
+    renderStorageTemplateDetails([newRecord], true); // Append mode
+};
+
+window.removeStorageTemplateDetailRecord = function(button) {
+    const recordItem = button.closest('.detail-record-item');
+    if (recordItem) {
+        recordItem.remove();
+    }
+};
+        
         // ======================================
         // AUTO-RENDER on MOUNT
         // ======================================
         (function autoRenderV3() {
-            const ensureAdjList = () => {
-                const c = document.getElementById('adjustment-type-list-container');
-                if (c && !c.dataset.bound) {
-                    window.renderAdjustmentTypeList();
-                    c.dataset.bound = '1'; // tandai sudah dirender
-                }
-            };
-            const ensureHcList = () => {
-                const c = document.getElementById('hc-list-container');
-                if (c && !c.dataset.bound) {
-                    window.renderHarmonizedCodeList();
-                    c.dataset.bound = '1';
-                }
-            };
-            const ensureLcList = () => {
-                const c = document.getElementById('lc-list-container');
-                if (c && !c.dataset.bound) {
-                    window.renderLocationClassList();
-                    c.dataset.bound = '1';
-                }
-            };
-            // Tambahkan auto-render untuk Location Status
-            const ensureLsList = () => {
-                const c = document.getElementById('ls-list-container');
-                if (c && !c.dataset.bound) {
-                    window.renderLocationStatusList();
-                    c.dataset.bound = '1';
-                }
-            };
-            // Tambahkan auto-render untuk Movement Class
-            const ensureMcList = () => {
-                const c = document.getElementById('mc-list-container');
-                if (c && !c.dataset.bound) {
-                    window.renderMovementClassList();
-                    c.dataset.bound = '1';
-                }
-            };
-            
-            // cek awal & setiap ada perubahan DOM
-            const obs = new MutationObserver((mutations) => {
-                ensureAdjList();
-                ensureHcList();
-                ensureLcList();
-                ensureLsList(); 
-                ensureMcList(); // Panggil auto-render untuk MC
-            });
-            obs.observe(document.body, { childList: true, subtree: true });
-            ensureAdjList();
-            ensureHcList();
-            ensureLcList();
-            ensureLsList(); 
-            ensureMcList(); // Panggil saat inisialisasi
-        })();
+    const ensureAdjList = () => {
+        const c = document.getElementById('adjustment-type-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderAdjustmentTypeList();
+            c.dataset.bound = '1';
+        }
+    };
+    const ensureHcList = () => {
+        const c = document.getElementById('hc-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderHarmonizedCodeList();
+            c.dataset.bound = '1';
+        }
+    };
+    const ensureLcList = () => {
+        const c = document.getElementById('lc-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderLocationClassList();
+            c.dataset.bound = '1';
+        }
+    };
+    const ensureLsList = () => {
+        const c = document.getElementById('ls-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderLocationStatusList();
+            c.dataset.bound = '1';
+        }
+    };
+    const ensureMcList = () => {
+        const c = document.getElementById('mc-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderMovementClassList();
+            c.dataset.bound = '1';
+        }
+    };
+    // Tambahkan auto-render untuk Inventory Control Values
+    const ensureICVList = () => {
+        const c = document.getElementById('icv-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderICVList();
+            c.dataset.bound = '1';
+        }
+    };
+    // Tambahkan auto-render untuk Item Class
+    const ensureItemClassList = () => {
+        const c = document.getElementById('item-class-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderItemClassList();
+            c.dataset.bound = '1';
+        }
+    };
+    
+    // Tambahkan auto-render untuk Storage Template
+    const ensureStList = () => {
+        const c = document.getElementById('st-list-container');
+        if (c && !c.dataset.bound) {
+            window.renderStorageTemplateList();
+            c.dataset.bound = '1';
+        }
+    };
+    
+    // cek awal & setiap ada perubahan DOM
+    const obs = new MutationObserver((mutations) => {
+        ensureAdjList();
+        ensureHcList();
+        ensureLcList();
+        ensureLsList(); 
+        ensureMcList();
+        ensureICVList(); 
+        ensureItemClassList();
+        ensureStList(); 
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+
+    // Panggil auto-render saat inisialisasi
+    ensureAdjList();
+    ensureHcList();
+    ensureLcList();
+    ensureLsList(); 
+    ensureMcList(); 
+    ensureICVList();
+    ensureItemClassList();
+    ensureStList();
+
+    console.log('Configuration V3 (Inventory Control) loaded successfully');
+})();
+
         
         console.log('Configuration V3 (Inventory Control) loaded successfully');
     });
