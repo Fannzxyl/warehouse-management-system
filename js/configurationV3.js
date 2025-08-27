@@ -462,7 +462,7 @@
         window.contentData['location'] = { full: `<h2 class="text-xl font-semibold mb-4">Location</h2><p class="text-gray-600">Manage all storage locations in the warehouse.</p>` };
         window.contentData['location-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Class</h2><p class="text-gray-600">Categorize locations for logical grouping and rules.</p>` };
         window.contentData['location-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Status</h2><p class="text-gray-600">Define statuses for warehouse locations (e.g., Available, Damaged).</p>` };
-        window.contentData['location-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Template</h2><p class="text-gray-600">Create templates for locations to standardize properties.</p>` };
+        window.contentData['location-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Template</h2><p class="text-gray-600">Blueprint to create locations.</p>` };
         window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
         window.contentData['lot-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Lot Template</h2><p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>` };
         window.contentData['movement-class'] = { full: `<h2 class="text-xl font-semibold mb-4">Movement Class</h2><p class="text-gray-600">Categorize movements for tracking and reporting purposes.</p>` };
@@ -566,6 +566,11 @@
                     modal._untrap = trapFocus(modalContent);
                 }
             }, 10);
+            
+            // Backdrop click handler
+            modal.onclick = (e) => {
+                if (e.target.id === 'adjustment-type-form-modal') closeAdjustmentTypeForm();
+            };
             
             // Event delegation for tabs
             const tabList = document.getElementById('adj-type-tab-list');
@@ -746,6 +751,7 @@
                 }
             };
 
+            let msg = '';
             if (mode === 'create') {
                 // Cari ID tertinggi yang ada, lalu tambah 1
                 const maxId = adjustmentTypes.reduce((max, item) => {
@@ -755,17 +761,21 @@
                 newType.id = 'ADJ' + String(maxId + 1).padStart(3, '0');
                 
                 adjustmentTypes.push(newType);
-                await window.showCustomAlert('Success', 'Adjustment Type created successfully!');
+                msg = 'Adjustment Type created successfully!';
             } else {
                 const index = adjustmentTypes.findIndex(at => at.id === id);
                 if (index !== -1) {
                     adjustmentTypes[index] = { ...adjustmentTypes[index], ...newType };
-                    await window.showCustomAlert('Success', 'Adjustment Type updated successfully!');
+                    msg = 'Adjustment Type updated successfully!';
                 }
             }
             saveAdjustmentTypes();
+            // TUTUP modal dulu agar alert tidak tertutup oleh z-index modal form
             closeAdjustmentTypeForm();
+            // Render list dulu supaya user melihat efeknya setelah OK
             window.renderAdjustmentTypeList();
+            // Baru tampilkan alert
+            await window.showCustomAlert('Success', msg);
         };
 
         window.deleteAdjustmentType = async function(id) {
@@ -800,14 +810,17 @@
         // AUTO-RENDER on MOUNT
         // ======================================
         (function autoRenderV3() {
-            const obs = new MutationObserver(() => {
-                const c1 = document.getElementById('adjustment-type-list-container');
-                if (c1) {
+            const ensureAdjList = () => {
+                const c = document.getElementById('adjustment-type-list-container');
+                if (c && !c.dataset.bound) {
                     window.renderAdjustmentTypeList();
-                    obs.disconnect(); // Disconnect after rendering the first time
+                    c.dataset.bound = '1'; // tandai sudah dirender
                 }
-            });
+            };
+            // cek awal & setiap ada perubahan DOM
+            const obs = new MutationObserver(ensureAdjList);
             obs.observe(document.body, { childList: true, subtree: true });
+            ensureAdjList();
         })();
         
         console.log('Configuration V3 (Inventory Control) loaded successfully');
