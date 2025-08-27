@@ -103,6 +103,16 @@
              { id: 'ADJ031', identifier: 'Item Master Correction', recordType: 'ADJTYPE', description: 'Adjustment untuk perbaikan Item master', inactive: false, systemCreated: false, class: 'adjustment', qtyMin: -9999999, qtyMax: 0.00, rfInitiation: 'item_location', createWork: false, workCreationMaster: '', allowFrozenLocations: false, includeInInterfaceUploads: false, authorizedUsers: [], userDefined: {} },
         ];
         
+        let harmonizedCodes = JSON.parse(localStorage.getItem('harmonizedCodes')) || [
+            { id: 'HC000', identifier: '1234.56.7890', recordType: 'HARMONIZED', description: 'Dummy Harmonized Code 1', inactive: false, systemCreated: true },
+            { id: 'HC001', identifier: '9876.54.3210', recordType: 'HARMONIZED', description: 'Dummy Harmonized Code 2', inactive: false, systemCreated: false },
+            { id: 'HC002', identifier: '1122.33.4455', recordType: 'HARMONIZED', description: 'Dummy Harmonized Code 3', inactive: true, systemCreated: false }
+        ];
+
+        function saveHarmonizedCodes() {
+            localStorage.setItem('harmonizedCodes', JSON.stringify(harmonizedCodes));
+        }
+        
         let currentAdjUsers = [];
         let adjTypeFormValidation = {};
         
@@ -204,6 +214,31 @@
                 }
             }
 
+            if (submitBtn) {
+                submitBtn.disabled = !isValid;
+            }
+            return isValid;
+        }
+
+        function validateHarmonizedCodeForm() {
+            const identifier = document.getElementById('hc-identifier');
+            const submitBtn = document.getElementById('hc-submit-button');
+            
+            let isValid = true;
+            if (!identifier.value.trim()) {
+                isValid = false;
+            }
+            
+            const identifierError = document.getElementById('hc-identifier-error');
+            if (identifierError) {
+                if (!isValid) {
+                    identifierError.textContent = "Identifier is required.";
+                    identifierError.classList.remove('hidden');
+                } else {
+                    identifierError.classList.add('hidden');
+                }
+            }
+            
             if (submitBtn) {
                 submitBtn.disabled = !isValid;
             }
@@ -448,8 +483,63 @@
                 </div>
             `,
         };
+        // Konten untuk Harmonized Code
+        window.contentData['harmonized-code'] = {
+            full: `
+                <h2 class="text-xl font-semibold mb-4">Harmonized Code</h2>
+                <p class="text-gray-600">Manage harmonized codes for inventory classification.</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showHarmonizedCodeForm('create')">
+                        Create New Harmonized Code
+                    </button>
+                    <input type="text" id="hc-search" placeholder="Search harmonized code..."
+                            class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterHarmonizedCodeList(this.value)">
+                </div>
+                <div id="hc-list-container" class="mt-4 overflow-x-auto">
+                    <!-- Table will be rendered here -->
+                </div>
+
+                <!-- Modal Harmonized Code -->
+                <div id="hc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30" aria-modal="true" role="dialog">
+                    <div class="modal-content w-[min(1100px,95vw)] max-w-3xl bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                        <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
+                            <h3 id="hc-form-title" class="text-lg font-semibold text-wise-dark-gray">Create New Harmonized Code</h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeHarmonizedCodeForm()" aria-label="Close">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="hc-form" onsubmit="handleHarmonizedCodeSubmit(event)">
+                                <div class="grid gap-4">
+                                    <div>
+                                        <label for="hc-identifier" class="block text-sm mb-1">Identifier <span class="text-red-500">*</span></label>
+                                        <input id="hc-identifier" name="identifier" required class="input" placeholder="e.g. 1234.56.7890">
+                                        <p id="hc-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                    </div>
+                                    <div>
+                                        <label for="hc-recordType" class="block text-sm mb-1">Record Type</label>
+                                        <input id="hc-recordType" name="recordType" class="input bg-gray-100 text-wise-gray cursor-not-allowed" value="HARMONIZED" readonly>
+                                    </div>
+                                    <div>
+                                        <label for="hc-description" class="block text-sm mb-1">Description</label>
+                                        <input id="hc-description" name="description" class="input" placeholder="Description">
+                                    </div>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="hc-inactive" name="inactive" type="checkbox"> Inactive
+                                    </label>
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input id="hc-systemCreated" name="systemCreated" type="checkbox"> System created
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+                            <button type="button" class="btn" onclick="closeHarmonizedCodeForm()">Cancel</button>
+                            <button id="hc-submit-button" type="submit" form="hc-form" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
         // Tambahkan konten untuk semua sub-menu lainnya...
-        window.contentData['harmonized-code'] = { full: `<h2 class="text-xl font-semibold mb-4">Harmonized Code</h2><p class="text-gray-600">Manage harmonized codes for inventory classification.</p>` };
         window.contentData['inventory-control-values'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2><p class="text-gray-600">Configure inventory control values and defaults.</p>` };
         window.contentData['inventory-status'] = { full: `<h2 class="text-xl font-semibold mb-4">Inventory Status</h2><p class="text-gray-600">Manage different inventory statuses (e.g., Available, Damaged).</p>` };
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
@@ -532,6 +622,55 @@
 
         window.filterAdjustmentTypeList = function(value) {
             renderAdjustmentTypeList(value);
+        };
+
+        window.renderHarmonizedCodeList = function(filter = '') {
+            const container = document.getElementById('hc-list-container');
+            if (!container) return;
+            const filteredData = harmonizedCodes.filter(hc => hc.identifier.toLowerCase().includes(filter.toLowerCase()) || hc.description.toLowerCase().includes(filter.toLowerCase()));
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Identifier</th>
+                            <th class="py-3 px-6 text-left">Description</th>
+                            <th class="py-3 px-6 text-left">Inactive</th>
+                            <th class="py-3 px-6 text-left">System Created</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No harmonized codes found.</td></tr>`;
+            } else {
+                filteredData.forEach(hc => {
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${hc.identifier}</td>
+                            <td class="py-3 px-6 text-left">${hc.description}</td>
+                            <td class="py-3 px-6 text-left">${hc.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${hc.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showHarmonizedCodeForm('edit', '${hc.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteHarmonizedCode('${hc.id}')" title="Delete">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        }
+
+        window.filterHarmonizedCodeList = function(value) {
+            renderHarmonizedCodeList(value);
         };
 
         window.showAdjustmentTypeForm = function(mode, id = null) {
@@ -696,6 +835,66 @@
             document.getElementById('adj-type-identifier').focus();
         };
 
+        window.showHarmonizedCodeForm = function(mode, id = null) {
+            const modal = document.getElementById('hc-form-modal');
+            const form = document.getElementById('hc-form');
+            const title = document.getElementById('hc-form-title');
+            const submitButton = document.getElementById('hc-submit-button');
+
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+
+            // Set default values
+            document.getElementById('hc-recordType').value = 'HARMONIZED';
+            document.getElementById('hc-inactive').checked = false;
+            document.getElementById('hc-systemCreated').checked = false;
+            
+            // Handle edit mode
+            if (mode === 'create') {
+                title.textContent = 'Create New Harmonized Code';
+                if (submitButton) submitButton.textContent = 'Save';
+                document.getElementById('hc-identifier').removeAttribute('readonly');
+                document.getElementById('hc-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+
+            } else {
+                title.textContent = 'Edit Harmonized Code';
+                if (submitButton) submitButton.textContent = 'Update';
+                const code = harmonizedCodes.find(hc => hc.id === id);
+                if (code) {
+                    document.getElementById('hc-identifier').value = code.identifier;
+                    document.getElementById('hc-description').value = code.description;
+                    document.getElementById('hc-inactive').checked = code.inactive;
+                    document.getElementById('hc-systemCreated').checked = code.systemCreated;
+                    if (code.systemCreated) {
+                         document.getElementById('hc-identifier').setAttribute('readonly', true);
+                         document.getElementById('hc-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    }
+                }
+            }
+            
+            // Modal visibility
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modal._untrap = trapFocus(modalContent);
+                }
+            }, 10);
+            
+            // Backdrop click handler
+            modal.onclick = (e) => {
+                if (e.target.id === 'hc-form-modal') closeHarmonizedCodeForm();
+            };
+
+            // Panggil validasi saat modal dibuka
+            validateHarmonizedCodeForm();
+            document.getElementById('hc-identifier').focus();
+        };
+
         window.closeAdjustmentTypeForm = function() {
             const modal = document.getElementById('adjustment-type-form-modal');
             const modalContent = modal.querySelector('.modal-content');
@@ -713,6 +912,24 @@
                 }
             }, 300); // match transition duration
         };
+
+        window.closeHarmonizedCodeForm = function() {
+            const modal = document.getElementById('hc-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                if (modal._untrap) {
+                    modal._untrap();
+                    delete modal._untrap;
+                }
+            }, 300);
+        };
+
 
         window.handleAdjustmentTypeSubmit = async function(event) {
             event.preventDefault();
@@ -777,6 +994,46 @@
             // Baru tampilkan alert
             await window.showCustomAlert('Success', msg);
         };
+        
+        window.handleHarmonizedCodeSubmit = async function(event) {
+            event.preventDefault();
+            if (!validateHarmonizedCodeForm()) return;
+
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            
+            const newCode = {
+                identifier: form['identifier'].value,
+                recordType: form['recordType'].value,
+                description: form['description'].value,
+                inactive: form['inactive'].checked,
+                systemCreated: form['systemCreated'].checked,
+            };
+
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = harmonizedCodes.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('HC', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newCode.id = 'HC' + String(maxId + 1).padStart(3, '0');
+                
+                harmonizedCodes.push(newCode);
+                msg = 'Harmonized Code created successfully!';
+            } else {
+                const index = harmonizedCodes.findIndex(hc => hc.id === id);
+                if (index !== -1) {
+                    harmonizedCodes[index] = { ...harmonizedCodes[index], ...newCode };
+                    msg = 'Harmonized Code updated successfully!';
+                }
+            }
+            saveHarmonizedCodes();
+            closeHarmonizedCodeForm();
+            window.renderHarmonizedCodeList();
+            await window.showCustomAlert('Success', msg);
+        };
+
 
         window.deleteAdjustmentType = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this adjustment type?');
@@ -787,15 +1044,33 @@
                 await window.showCustomAlert('Deleted', 'Adjustment Type deleted successfully!');
             }
         };
+
+        window.deleteHarmonizedCode = async function(id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this harmonized code?');
+            if (confirmed) {
+                harmonizedCodes = harmonizedCodes.filter(hc => hc.id !== id);
+                saveHarmonizedCodes();
+                window.renderHarmonizedCodeList();
+                await window.showCustomAlert('Deleted', 'Harmonized Code deleted successfully!');
+            }
+        };
         
         // --- EVENT LISTENERS ---
         // Listen for ESC key press on the whole document to close the modal
         document.addEventListener('keydown', (e) => {
-            const modal = document.getElementById('adjustment-type-form-modal');
+            const adjModal = document.getElementById('adjustment-type-form-modal');
+            const hcModal = document.getElementById('hc-form-modal');
             const overlay = document.getElementById('custom-modal-overlay');
-            // Cek null-safe untuk overlay
-            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
-                closeAdjustmentTypeForm();
+
+            if (e.key === 'Escape') {
+                // Check adjModal first
+                if (adjModal && !adjModal.classList.contains('hidden') && !(overlay && overlay.classList.contains('flex'))) {
+                    closeAdjustmentTypeForm();
+                }
+                // Then check hcModal
+                if (hcModal && !hcModal.classList.contains('hidden')) {
+                    closeHarmonizedCodeForm();
+                }
             }
         });
 
@@ -803,6 +1078,9 @@
         document.addEventListener('input', (e) => {
             if (e.target && ['adj-type-identifier', 'adj-type-qtyMin', 'adj-type-qtyMax'].includes(e.target.id)) {
                 validateAdjustmentTypeForm();
+            }
+            if (e.target && e.target.id === 'hc-identifier') {
+                validateHarmonizedCodeForm();
             }
         });
 
@@ -817,10 +1095,21 @@
                     c.dataset.bound = '1'; // tandai sudah dirender
                 }
             };
+            const ensureHcList = () => {
+                const c = document.getElementById('hc-list-container');
+                if (c && !c.dataset.bound) {
+                    window.renderHarmonizedCodeList();
+                    c.dataset.bound = '1';
+                }
+            };
             // cek awal & setiap ada perubahan DOM
-            const obs = new MutationObserver(ensureAdjList);
+            const obs = new MutationObserver((mutations) => {
+                ensureAdjList();
+                ensureHcList();
+            });
             obs.observe(document.body, { childList: true, subtree: true });
             ensureAdjList();
+            ensureHcList();
         })();
         
         console.log('Configuration V3 (Inventory Control) loaded successfully');
