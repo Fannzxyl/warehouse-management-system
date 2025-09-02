@@ -3264,6 +3264,8 @@ document.addEventListener('input', (e) => {
         validateICVForm();
     } else if (id === 'ic-identifier') {
         validateItemClassForm();
+    } else if (id === 'st-identifier') { 
+    validateStorageTemplateForm();
     } else if (id === 'is-identifier') {
         validateInventoryStatusForm();
     } else if (id === 'lt-identifier') {
@@ -3578,13 +3580,13 @@ function validateStorageTemplateForm() {
     
     const identifierError = document.getElementById('st-identifier-error');
     if (identifierError) {
-        if (!isValid) {
-            // identifierError.textContent = "Storage template is required.";
-            identifierError.classList.remove('hidden');
-        } else {
-            identifierError.classList.add('hidden');
-        }
+    if (!isValid) {
+        identifierError.textContent = "Storage template is required.";
+        identifierError.classList.remove('hidden');
+    } else {
+        identifierError.classList.add('hidden');
     }
+}
     
     if (submitBtn) {
         submitBtn.disabled = !isValid;
