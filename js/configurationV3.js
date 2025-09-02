@@ -1108,12 +1108,10 @@ function saveZones() {
                                         <label for="icv-systemValue" class="block text-sm mb-1">System value</label>
                                         <input id="icv-systemValue" name="systemValue" class="input" placeholder="e.g. Status Change">
                                     </div>
-                                    <div class="flex items-end pb-2">
+                                    <div class="md:col-span-2 flex items-center gap-4 mt-2">
                                         <label class="flex items-center gap-2 text-sm">
                                             <input id="icv-valueRequired" name="valueRequired" type="checkbox"> Value required
                                         </label>
-                                    </div>
-                                     <div class="md:col-span-2">
                                         <label class="flex items-center gap-2 text-sm">
                                             <input id="icv-systemCreated" name="systemCreated" type="checkbox"> System created
                                         </label>
@@ -1360,7 +1358,7 @@ window.contentData['location-template'] = {
                         <div id="pane-gen" role="tabpanel" data-pane="gen">
                             <div>
                                 <label for="lt-identifier" class="block text-sm mb-1">Location template <span class="text-red-500">*</span></label>
-                                <input id="ls-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
+                                <input id="lt-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
                                 <p id="lt-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
                             </div>
                             <div class="flex items-center gap-4 mt-4">
@@ -1588,7 +1586,7 @@ window.contentData['zone'] = {
 };
 window.contentData['zone-type'] = {
     full: `
-        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone Type</h2>
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone Type</h2>
         <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
         <div class="flex justify-between items-center mb-4">
             <button class="btn btn-primary" onclick="showZoneTypeForm('create')">
@@ -1598,8 +1596,45 @@ window.contentData['zone-type'] = {
         </div>
         <div id="zone-type-list-container" class="overflow-x-auto">
             </div>
+
+        <div id="zone-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                <h3 id="zone-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                    <form id="zone-type-form" onsubmit="handleZoneTypeSubmit(event)">
+                        <div class="mb-4">
+                            <label for="zone-type-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
+                            <input type="text" id="zone-type-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                        </div>
+                        <div class="mb-4">
+                            <label for="zone-type-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
+                            <input type="text" id="zone-type-record-type" name="recordType" value="ZONETYPE" readonly class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-gray-100 text-wise-gray">
+                        </div>
+                        <div class="mb-4">
+                            <label for="zone-type-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
+                            <input type="text" id="zone-type-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                        </div>
+                        <div class="flex items-center space-x-4">
+                           <label class="inline-flex items-center">
+                               <input type="checkbox" id="zone-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                               <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                           </label>
+                           <label class="inline-flex items-center">
+                               <input type="checkbox" id="zone-type-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border">
+                               <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
+                           </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                    <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray" onclick="closeZoneTypeForm()">Cancel</button>
+                    <button type="submit" form="zone-type-form" id="zone-type-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 shadow-md">Save</button>
+                </div>
+            </div>
+        </div>
     `
 };
+
 window.contentData['location-type'] = {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location Type</h2>
@@ -2657,7 +2692,6 @@ window.renderItemClassList = function(filter = '') {
                     if (item.systemCreated) {
                         document.getElementById('icv-key').setAttribute('readonly', true);
                         document.getElementById('icv-key').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                        document.getElementById('icv-systemCreated').disabled = true;
                     } else {
                         document.getElementById('icv-key').removeAttribute('readonly');
                         document.getElementById('icv-key').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
@@ -3176,11 +3210,10 @@ window.handleItemClassSubmit = async function(event) {
     const id = form.dataset.id;
 
     const newItemClass = {
-        // FIX: Nama input disesuaikan dari 'identifier' menjadi 'ic-identifier'
-        identifier: form['ic-identifier'].value,
-        // FIX: Nama input disesuaikan dari 'description' menjadi 'ic-description'
-        description: form['ic-description'].value || '',
-        // FIX: Nama input disesuaikan dari 'inactive' menjadi 'ic-inactive'
+        identifier: form['identifier'].value,
+        recordType: form['recordType'].value, // <--- TAMBAH INI
+        description: form['description'].value,
+        storageTemplate: form['storageTemplate'].value, // <--- TAMBAH INI
         inactive: form['ic-inactive'] ? form['ic-inactive'].checked : false,
         userDefined: {}
     };
@@ -3533,30 +3566,24 @@ function validateZoneForm() {
             }
         }
 
-        window.showStorageTemplateForm = function(mode, id = null) {
+window.showStorageTemplateForm = function(mode, id = null) {
     const modal = document.getElementById('st-form-modal');
     const form = document.getElementById('st-form');
     const title = document.getElementById('st-form-title');
-    const submitButton = document.getElementById('st-submit-button');
-
+    
     form.reset();
     form.dataset.mode = mode;
     form.dataset.id = id;
-
-    document.querySelectorAll('[id$="-error"]').forEach(el => el.classList.add('hidden'));
     activateTab('gen', modal);
 
     if (mode === 'create') {
         title.textContent = 'Create New Storage Template';
-        if (submitButton) submitButton.textContent = 'Save';
         document.getElementById('st-identifier').removeAttribute('readonly');
-        document.getElementById('st-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-        document.getElementById('st-systemCreated').checked = false;
+        document.getElementById('st-identifier').classList.remove('bg-gray-100');
         document.getElementById('st-systemCreated').disabled = false;
         renderStorageTemplateDetails([]);
     } else {
         title.textContent = 'Edit Storage Template';
-        if (submitButton) submitButton.textContent = 'Update';
         const item = storageTemplates.find(st => st.id === id);
         if (item) {
             document.getElementById('st-identifier').value = item.identifier;
@@ -3564,44 +3591,72 @@ function validateZoneForm() {
             document.getElementById('st-inactive').checked = item.inactive;
             document.getElementById('st-systemCreated').checked = item.systemCreated;
             renderStorageTemplateDetails(item.detailRecords);
+            
+            // Perbaikan UDF Load
+            if (item.userDefined) {
+                for(let i = 1; i <= 8; i++) {
+                    const udfInput = document.getElementById(`st-udf${i}`);
+                    if (udfInput) udfInput.value = item.userDefined[`udf${i}`] || '';
+                }
+            }
 
+            // Perbaikan System Created
             if (item.systemCreated) {
                 document.getElementById('st-identifier').setAttribute('readonly', true);
-                document.getElementById('st-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                document.getElementById('st-systemCreated').disabled = true;
+                document.getElementById('st-identifier').classList.add('bg-gray-100');
             } else {
                 document.getElementById('st-identifier').removeAttribute('readonly');
-                document.getElementById('st-identifier').classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                document.getElementById('st-systemCreated').disabled = false;
+                document.getElementById('st-identifier').classList.remove('bg-gray-100');
             }
+            document.getElementById('st-systemCreated').disabled = false; // <-- FIX DI SINI
         }
     }
-
     modal.classList.remove('hidden');
-    document.body.classList.add('modal-open');
     setTimeout(() => {
-        const modalContent = modal.querySelector('.modal-content');
-        if (modalContent) {
-            modalContent.classList.add('scale-100', 'opacity-100');
-            modalContent.classList.remove('scale-95', 'opacity-0');
-            modal._untrap = trapFocus(modalContent);
-        }
+        modal.querySelector('.modal-content').classList.add('scale-100', 'opacity-100');
     }, 10);
-    modal.onclick = (e) => {
-        if (e.target.id === 'st-form-modal') closeStorageTemplateForm();
+};
+
+// GANTI JUGA SELURUH FUNGSI INI
+window.handleStorageTemplateSubmit = async function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form.dataset.id;
+
+    const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item) => ({
+        um: item.querySelector('[name="detail-um"]').value,
+        treatAsFullPercent: parseInt(item.querySelector('[name="detail-treatAsFullPercent"]').value, 10),
+        groupDuringCheckIn: item.querySelector('[name="detail-groupDuringCheckIn"]').checked,
+    }));
+    
+    // Perbaikan UDF Save
+    const userDefined = {};
+    for(let i = 1; i <= 8; i++) { userDefined[`udf${i}`] = form[`udf${i}`].value; }
+
+    const newTemplate = {
+        identifier: form['identifier'].value,
+        description: form['description'].value,
+        inactive: form['inactive'].checked,
+        systemCreated: form['systemCreated'].checked,
+        detailRecords: details,
+        userDefined, // <-- FIX DI SINI
     };
 
-    const tabList = document.getElementById('st-tab-list');
-    if (tabList) {
-        tabList.onclick = (e) => {
-            if (e.target.role === 'tab') {
-                activateTab(e.target.dataset.tab, modal);
-            }
-        };
+    if (mode === 'create') {
+        newTemplate.id = 'st_' + Date.now();
+        storageTemplates.push(newTemplate);
+    } else {
+        const index = storageTemplates.findIndex(st => st.id === id);
+        if (index !== -1) {
+            storageTemplates[index] = { ...storageTemplates[index], ...newTemplate };
+        }
     }
-    validateStorageTemplateForm();
-    document.getElementById('st-identifier').focus();
+    saveStorageTemplates();
+    closeStorageTemplateForm();
+    renderStorageTemplateList();
 };
+
 
 window.closeStorageTemplateForm = function() {
     const modal = document.getElementById('st-form-modal');
@@ -4025,6 +4080,15 @@ function renderLocationTemplateFields(fields = []) {
     });
 }
 
+const tabList = document.getElementById('lt-tab-list');
+if (tabList) {
+    tabList.onclick = (e) => {
+        if (e.target.role === 'tab') {
+            activateTab(e.target.dataset.tab, modal);
+        }
+    };
+}
+
 window.showLocationTemplateForm = function(mode, id = null) {
     const modal = document.getElementById('lt-form-modal');
     const form = document.getElementById('lt-form');
@@ -4041,7 +4105,7 @@ window.showLocationTemplateForm = function(mode, id = null) {
     
     if (mode === 'create') {
         title.textContent = 'Create New Location Template';
-        renderLocationTemplateFields([]); // Render field kosong
+        renderLocationTemplateFields([]);
     } else {
         title.textContent = 'Edit Location Template';
         const template = locationTemplates.find(lt => lt.id === id);
@@ -4067,17 +4131,16 @@ window.showLocationTemplateForm = function(mode, id = null) {
         modalContent.classList.add('scale-100', 'opacity-100');
         modal._untrap = trapFocus(modalContent);
     }, 10);
-    validateLocationTemplateForm();
-};
+    const tabList = document.getElementById('lt-tab-list');
+    if (tabList) {
+        tabList.onclick = (e) => {
+            if (e.target.role === 'tab') {
+                activateTab(e.target.dataset.tab, modal);
+            }
+        };
+    }
 
-window.closeLocationTemplateForm = function() {
-    const modal = document.getElementById('lt-form-modal');
-    const modalContent = modal.querySelector('.modal-content');
-    modalContent.classList.remove('scale-100', 'opacity-100');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        if (modal._untrap) modal._untrap();
-    }, 300);
+    validateLocationTemplateForm();
 };
 
 window.handleLocationTemplateSubmit = async function(event) {
@@ -4128,6 +4191,25 @@ window.handleLocationTemplateSubmit = async function(event) {
     await window.showCustomAlert('Success', msg);
 };
 
+window.closeLocationTemplateForm = function() {
+    const modal = document.getElementById('lt-form-modal');
+    if (!modal) return;
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        if (modal._untrap) {
+            modal._untrap();
+            delete modal._untrap;
+        }
+    }, 300);
+};
+
+
 window.deleteLocationTemplate = async function(id) {
     const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this template?');
     if (confirmed) {
@@ -4137,10 +4219,6 @@ window.deleteLocationTemplate = async function(id) {
         await window.showCustomAlert('Deleted', 'Location Template deleted successfully!');
     }
 };
-
-// Ganti semua fungsi lot template yang lama dengan blok kode ini
-
-// Ganti semua fungsi lot template yang lama dengan blok kode revisi ini
 
 // --- State (tetap sama)
 let currentPatternFields = [];
