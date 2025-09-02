@@ -1360,7 +1360,7 @@ window.contentData['location-template'] = {
                         <div id="pane-gen" role="tabpanel" data-pane="gen">
                             <div>
                                 <label for="lt-identifier" class="block text-sm mb-1">Location template <span class="text-red-500">*</span></label>
-                                <input id="lt-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
+                                <input id="ls-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
                                 <p id="lt-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
                             </div>
                             <div class="flex items-center gap-4 mt-4">
@@ -1586,6 +1586,123 @@ window.contentData['zone'] = {
         </div>
     `
 };
+window.contentData['zone-type'] = {
+    full: `
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone Type</h2>
+        <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
+        <div class="flex justify-between items-center mb-4">
+            <button class="btn btn-primary" onclick="showZoneTypeForm('create')">
+                Create New Zone Type
+            </button>
+            <input type="text" id="zone-type-search" placeholder="Search zone type..." class="input max-w-xs" oninput="filterZoneTypeList(this.value)">
+        </div>
+        <div id="zone-type-list-container" class="overflow-x-auto">
+            </div>
+    `
+};
+window.contentData['location-type'] = {
+    full: `
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location Type</h2>
+        <p class="text-wise-gray mb-4">Configure storage location types based on dimensions and weight.</p>
+        <div class="flex justify-between items-center mb-4">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
+                Create New Location Type
+            </button>
+            <input type="text" id="location-type-search" placeholder="Search location type..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
+        </div>
+        <div id="location-type-list-container" class="overflow-x-auto">
+            </div>
+
+        <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
+                <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                <div class="flex-1 overflow-y-auto pr-4 -mr-4">
+                    <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
+                        <div class="mb-4">
+                            <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
+                            <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-wise-border p-4 rounded-md">
+                                <div>
+                                    <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
+                                    <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                    <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
+                                    <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
+                                    <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
+                                    <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
+                                    <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-wise-border p-4 rounded-md">
+                                <div>
+                                    <label for="lt-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
+                                    <input type="text" id="lt-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
+                                    <input type="text" id="lt-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
+                                    <input type="text" id="lt-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
+                                    <input type="text" id="lt-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
+                                    <input type="text" id="lt-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
+                                    <input type="text" id="lt-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                                <div>
+                                    <label for="lt-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
+                                    <input type="text" id="lt-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
+                    <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
+                    <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
+                </div>
+            </div>
+        </div>
+    `
+};
         window.contentData['item'] = { full: `<h2 class="text-xl font-semibold mb-4">Item</h2><p class="text-gray-600">Manage all items in the inventory.</p>` };
         window.contentData['item-cross-reference'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Cross Reference</h2><p class="text-gray-600">Manage cross-references for items (e.g., different part numbers).</p>` };
         window.contentData['item-location-assignment'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Location Assignment</h2><p class="text-gray-600">Assign specific items to warehouse locations.</p>` };
@@ -1593,10 +1710,7 @@ window.contentData['zone'] = {
         window.contentData['item-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Template</h2><p class="text-gray-600">Create templates for new items to standardize properties.</p>` };
         window.contentData['item-unit-of-measure'] = { full: `<h2 class="text-xl font-semibold mb-4">Item Unit of Measure</h2><p class="text-gray-600">Manage different units of measure for items.</p>` };
         window.contentData['location'] = { full: `<h2 class="text-xl font-semibold mb-4">Location</h2><p class="text-gray-600">Manage all storage locations in the warehouse.</p>` };
-        window.contentData['location-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Location Type</h2><p class="text-gray-600">Configure storage location types based on dimensions and weight.</p>` };
         window.contentData['serial-number-template'] = { full: `<h2 class="text-xl font-semibold mb-4">Serial Number Template</h2><p class="text-gray-600">Pattern for serials.</p>` };
-        window.contentData['zone-type'] = { full: `<h2 class="text-xl font-semibold mb-4">Zone Type</h2><p class="text-gray-600">Types of zones.</p>` };
-
 
         // Mapping parent→children & registrasi ke pencarian/menu global
         window.parentMapping['inventory-control'] = 'configuration'; // Parent dari Inventory Control adalah Configuration

@@ -72,7 +72,7 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="up-user" class="block text-sm font-medium text-wise-dark-gray">User:</label>
-                                                <input type="text" id="up-user" name="user" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                                <input type="text" id="up-user" name="user" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                                             </div>
                                             <div>
                                                 <label for="up-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
@@ -398,8 +398,7 @@
 
                     <div id="allocation-rule-list-container" class="overflow-x-auto"></div>
 
-                    <!-- MODAL -->
-                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity50 hidden items-center justify-center z-50 p-4">
+                    <div id="allocation-rule-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl flex flex-col max-h-[90vh]">
                             <h3 id="allocation-rule-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
@@ -420,35 +419,19 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="allocation-rule-inactive" name="inactive"
-                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-
-                                    <!-- Tabs -->
-                                    <div class="flex space-x-2 mb-2 border-b">
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-detail-records">Detail Records</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="ar-user-defined">User Defined Data</button>
-                                    </div>
-
-                                    <div id="ar-detail-records" class="tab-content">
-                                        <div class="mb-4">
-                                            <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
-                                            <div id="allocation-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray">
-                                                <p id="allocation-detail-records-placeholder" class="text-wise-gray text-sm">Input Allocation Rule Name and Description first to enable detail records.</p>
-                                                <div id="allocation-detail-records-list" class="space-y-2"></div>
-                                                <button type="button" id="add-allocation-detail-record-btn"
-                                                    class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform"
-                                                    onclick="addAllocationDetailRecord()" disabled>Add Detail Record</button>
-                                            </div>
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">Detail Records</h4>
+                                        <div id="allocation-rule-detail-records-container" class="space-y-3 p-4 border border-wise-border rounded-md bg-wise-light-gray">
+                                            <p id="allocation-detail-records-placeholder" class="text-wise-gray text-sm">Input Allocation Rule Name and Description first to enable detail records.</p>
+                                            <div id="allocation-detail-records-list" class="space-y-2"></div>
+                                            <button type="button" id="add-allocation-detail-record-btn"
+                                                class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-sm active-press transform"
+                                                onclick="addAllocationDetailRecord()" disabled>Add Detail Record</button>
                                         </div>
                                     </div>
 
-                                    <div id="ar-user-defined" class="tab-content hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="mb-4">
+                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-wise-border p-4 rounded-md">
                                             ${Array.from({ length: 8 }, (_, i) => `
                                             <div>
                                                 <label for="ar-udf${i + 1}" class="block text-sm font-medium text-wise-dark-gray">User defined field ${i + 1}:</label>
@@ -457,6 +440,14 @@
                                             </div>
                                             `).join('')}
                                         </div>
+                                    </div>
+
+                                    <div class="mt-6">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" id="allocation-rule-inactive" name="inactive"
+                                                class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
+                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
+                                        </label>
                                     </div>
                                 </form>
                             </div>
@@ -1010,6 +1001,103 @@
         // =========================
         // Search registry & menus
         // =========================
+        window.activateUserProfileTab = function(tabId) {
+            const modal = document.getElementById('user-profile-form-modal');
+            if (!modal) return;
+
+            const tabButtons = modal.querySelectorAll('.tab-button');
+            const tabContents = modal.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                if (button.dataset.tab === tabId) {
+                    button.classList.add('text-wise-primary', 'border-wise-primary');
+                    button.classList.remove('text-wise-gray', 'border-transparent');
+                } else {
+                    button.classList.remove('text-wise-primary', 'border-wise-primary');
+                    button.classList.add('text-wise-gray', 'border-transparent');
+                }
+            });
+
+            tabContents.forEach(content => {
+                if (content.id === tabId) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        };
+
+        window.handleUserProfileSubmit = async function (event) {
+            event.preventDefault(); 
+            const form = event.target;
+            const userField = form['user'];
+            if (!userField.value.trim()) {
+                await window.showCustomAlert('Input Wajib', 'Field "User" di tab General nggak boleh kosong, ya.');
+                activateUserProfileTab('up-general');
+                userField.focus();
+                return;
+            }
+
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+
+            const newProfileData = {
+                user: form['user'].value,
+                description: form['description'].value,
+                defaultWarehouse: form['defaultWarehouse'].value,
+                emailAddress: form['emailAddress'].value,
+                department: form['department'].value,
+                shift: form['shift'].value,
+                rfPassword: form['rfPassword'].value,
+                uncollectedPassword: form['uncollectedPassword'].value,
+                securityGroup: form['securityGroup'].value,
+                payrollId: form['payrollId'].value,
+                wageRate: form['wageRate'].value,
+                hireDate: form['hireDate'].value,
+                cycleCounting: form['cycleCounting'].value,
+                shipping: form['shipping'].value,
+                packing: form['packing'].value,
+                workOrder: form['workOrder'].value,
+                receiving: form['receiving'].value,
+                reportDirectory: form['reportDirectory'].value,
+                myLinkDirectory: form['myLinkDirectory'].value,
+                desktopTemplate: form['desktopTemplate'].value,
+                excelExportDirectory: form['excelExportDirectory'].value,
+                companyAccessType: form.querySelector('input[name="companyAccessType"]:checked')?.value || 'All',
+                companyAccess: Array.from(form.querySelectorAll('input[name="companyAccess"]:checked')).map(cb => cb.value),
+                warehouseAccessType: form.querySelector('input[name="warehouseAccessType"]:checked')?.value || 'All',
+                warehouseAccess: Array.from(form.querySelectorAll('input[name="warehouseAccess"]:checked')).map(cb => cb.value),
+                workProfileAccessType: form.querySelector('input[name="workProfileAccessType"]:checked')?.value || 'All',
+                workProfileAccess: Array.from(form.querySelectorAll('input[name="workProfileAccess"]:checked')).map(cb => cb.value),
+                adjustmentTypeAccessType: form.querySelector('input[name="adjustmentTypeAccessType"]:checked')?.value || 'All',
+                adjustmentTypeAccess: Array.from(form.querySelectorAll('input[name="adjustmentTypeAccess"]:checked')).map(cb => cb.value),
+            };
+            
+            // ambil data dari user defined fields
+            for (let i = 1; i <= 8; i++) {
+                if(form[`udf${i}`]) {
+                newProfileData[`udf${i}`] = form[`udf${i}`].value;
+                }
+            }
+
+            if (mode === 'create') {
+                newProfileData.id = 'UP' + String(Date.now()).slice(-5);
+                if(window.userProfiles) window.userProfiles.push(newProfileData); 
+                await window.showCustomAlert('Sukses', 'User profile created successfully!');
+            } else {
+                const index = window.userProfiles.findIndex(up => up.id === id);
+                if (index !== -1) {
+                    window.userProfiles[index] = { ...window.userProfiles[index], ...newProfileData };
+                    await window.showCustomAlert('Sukses', 'User profile berhasil diupdate!');
+                }
+            }
+            if(window.saveUserProfiles) {
+            window.saveUserProfiles();
+            }
+
+            closeUserProfileForm();
+            renderUserProfileList();
+        };
         window.searchItems.push(
             { id: 'allocation-rule', title: 'Allocation Rule', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'allocation-strategies', title: 'Allocation Strategies', category: 'Configuration', lastUpdated: 'Latest' },

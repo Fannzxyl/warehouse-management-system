@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style type="text/tailwindcss">
         @layer base {
@@ -24,7 +23,6 @@
         }
         
         @layer utilities {
-            /* Custom Scrollbar Styles */
             ::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
@@ -45,13 +43,11 @@
                 background: rgba(156, 163, 175, 0.7); 
             }
             
-            /* Firefox scrollbar */
             html {
                 scrollbar-width: thin;
                 scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
             }
 
-            /* Smooth transitions for all elements */
             .transition-all-smooth {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
@@ -60,20 +56,18 @@
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
-            /* Backdrop blur effects */
             .backdrop-blur-glass {
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
-                background: rgba(255, 255, 255, 0.85); /* White with opacity */
+                background: rgba(255, 255, 255, 0.85);
             }
             
             .backdrop-blur-overlay {
                 backdrop-filter: blur(8px);
                 -webkit-backdrop-filter: blur(8px);
-                background: rgba(0, 0, 0, 0.1); /* Black with opacity */
+                background: rgba(0, 0, 0, 0.1);
             }
 
-            /* Sidebar animations */
             .sidebar-slide-in {
                 animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
@@ -104,7 +98,6 @@
                 }
             }
 
-            /* Hover effects */
             .hover-lift:hover {
                 transform: translateY(-1px);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -114,21 +107,18 @@
                 transform: scale(1.02);
             }
 
-            /* Button press effect */
             .active-press:active {
                 transform: scale(0.98);
             }
 
-            /* Gradient backgrounds */
             .gradient-primary {
-                background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%); /* wise-blue-500 to wise-indigo-500 */
+                background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
             }
             
             .gradient-secondary {
-                background: linear-gradient(135deg, #8B5CF6 0%, #F5576C 100%); /* wise-secondary to a red/pink */
+                background: linear-gradient(135deg, #8B5CF6 0%, #F5576C 100%);
             }
 
-            /* Card shadows */
             .shadow-card {
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
             }
@@ -137,7 +127,6 @@
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05);
             }
 
-            /* Loading skeleton */
             .skeleton {
                 background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
                 background-size: 200% 100%;
@@ -149,7 +138,6 @@
                 100% { background-position: -200% 0; }
             }
 
-            /* Mobile-first responsive utilities */
             @media (max-width: 768px) {
                 .mobile-full-width {
                     width: 100vw;
@@ -173,12 +161,12 @@
                             'border': '#E5E7EB',
                             'pink': '#FEE2E2',
                             'brown': '#991B1B',
-                            'primary': '#3B82F6',   // Blue
-                            'secondary': '#8B5CF6', // Purple
-                            'success': '#10B981',   // Emerald
-                            'warning': '#F59E0B',   // Yellow/Orange
-                            'error': '#EF4444',     // Red
-                            'info': '#06B6D4',      // Cyan
+                            'primary': '#3B82F6',
+                            'secondary': '#8B5CF6',
+                            'success': '#10B981',
+                            'warning': '#F59E0B',
+                            'error': '#EF4444',
+                            'info': '#06B6D4',
                         }
                     },
                     animation: {
@@ -204,16 +192,15 @@
             }
         }
     </script>
-    <!-- Global custom styles from Allocation Location Selection Editor -->
     <style>
         :root{
             --ring: rgba(99,102,241,.35);
             --b:#e5e7eb;
         }
         .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:16px; box-shadow:var(--shadow,0 6px 24px rgba(15,23,42,.06));}
-        .input,.select{ height:40px; border:1px solid var(--b); border-radius:10px; padding:0 .75rem; width:100%; background:#fff; font-size: 0.875rem; /* text-sm */ }
+        .input,.select{ height:40px; border:1px solid var(--b); border-radius:10px; padding:0 .75rem; width:100%; background:#fff; font-size: 0.875rem; }
         .input:focus,.select:focus{ outline:none; box-shadow:0 0 0 4px var(--ring); border-color:#a5b4fc;}
-        .btn{ height:40px; border-radius:10px; padding:0 .9rem; border:1px solid var(--b); background:#fff; color:#111827; font-size: 0.875rem; /* text-sm */ }
+        .btn{ height:40px; border-radius:10px; padding:0 .9rem; border:1px solid var(--b); background:#fff; color:#111827; font-size: 0.875rem; }
         .btn:hover{ background:#f9fafb }
         .btn-primary{ background:#6366f1; color:#fff; border-color:#6366f1 }
         .btn-primary:hover{ background:#4f46e5; border-color:#4f46e5 }
@@ -221,24 +208,23 @@
         .btn-ghost:hover{ background:#f3f4f6 }
         .segmented{ display:inline-flex; border:1px solid var(--b); border-radius:10px; padding:2px; background:#fff }
         .segmented input{ position:absolute; opacity:0; pointer-events:none }
-        .segmented label{ padding:.45rem .9rem; border-radius:8px; color:#374151; cursor:pointer; user-select:none; font-size: 0.875rem; /* text-sm */ }
+        .segmented label{ padding:.45rem .9rem; border-radius:8px; color:#374151; cursor:pointer; user-select:none; font-size: 0.875rem; }
         .segmented input:checked + label{ background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe }
-        .tab{ color:#6b7280; font-size: 0.875rem; /* text-sm */ }
+        .tab{ color:#6b7280; font-size: 0.875rem; }
         .tab-active{ color:#111827; border-bottom:2px solid #6366f1 }
-        .list-row{ cursor:pointer; border-radius:8px; padding:0.75rem; /* p-3 */ transition: background-color 0.15s ease-in-out; }
-        .list-row.selected{ background:#e0e7ff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); } /* Subtle shadow on selected */
-        .list-row:hover{ background:#f3f4f6; } /* Hover for non-selected */
+        .list-row{ cursor:pointer; border-radius:8px; padding:0.75rem; transition: background-color 0.15s ease-in-out; }
+        .list-row.selected{ background:#e0e7ff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .list-row:hover{ background:#f3f4f6; }
         .mono{ font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace }
         .scroll-slim::-webkit-scrollbar{ height:8px; width:8px }
         .scroll-slim::-webkit-scrollbar-thumb{ background:#d4d4d8; border-radius:8px }
         .scroll-slim::-webkit-scrollbar-track{ background:#f4f4f5 }
 
-        /* Custom styles for the toggle switch (from previous iterations, ensure consistency) */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 38px; /* Adjusted width */
-            height: 22px; /* Adjusted height */
+            width: 38px;
+            height: 22px;
         }
 
         .toggle-switch input {
@@ -256,14 +242,14 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 22px; /* Half of height for rounded effect */
+            border-radius: 22px;
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 18px; /* Slightly smaller than slider height */
-            width: 18px; /* Equal to height for circle */
+            height: 18px;
+            width: 18px;
             left: 2px;
             bottom: 2px;
             background-color: white;
@@ -272,7 +258,7 @@
         }
 
         input:checked + .toggle-slider {
-            background-color: #3b82f6; /* wise-primary */
+            background-color: #3b82f6;
         }
 
         input:focus + .toggle-slider {
@@ -280,10 +266,9 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(16px); /* (width - height) */
+            transform: translateX(16px);
         }
 
-        /* Custom styles for the radio buttons to match the Figma design */
         input[type="radio"].custom-radio {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -291,17 +276,17 @@
             display: inline-block;
             width: 16px;
             height: 16px;
-            border: 1px solid #d1d5db; /* gray-300 */
+            border: 1px solid #d1d5db;
             border-radius: 50%;
             position: relative;
             cursor: pointer;
             outline: none;
             vertical-align: middle;
-            flex-shrink: 0; /* Prevent shrinking in flex container */
+            flex-shrink: 0;
         }
 
         input[type="radio"].custom-radio:checked {
-            background-color: #3b82f6; /* wise-primary (blue-500) */
+            background-color: #3b82f6;
             border-color: #3b82f6;
         }
 
@@ -320,7 +305,6 @@
     </style>
 </head>
 <body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
-    <!-- Header -->
     <header class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
         <div class="flex items-center justify-between w-full gap-6">
             <div class="flex justify-start items-center gap-4">
@@ -397,15 +381,12 @@
         </div>
     </header>
 
-    <!-- Mobile Sidebar Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-25 hidden md:hidden transition-all-smooth" onclick="closeSidebar()" aria-label="Close sidebar"></div>
 
     <div class="flex flex-1 pt-20 md:pt-24">
-        <!-- Sidebar -->
         <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
             <div class="pt-20 md:pt-24 p-6">
                 <div class="space-y-2">
-                    <!-- Configuration Section -->
                     <div class="sidebar-section">
                         <div id="configuration"
                              class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
@@ -426,12 +407,6 @@
                         <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="configuration">
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button" aria-label="Select Warehouse">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-zone')" tabindex="0" role="button" aria-label="Select Zone">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Zone</span>
-                            </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-location-type')" tabindex="0" role="button" aria-label="Select Location Type">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Type</span>
                             </div>
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-strategies')" tabindex="0" role="button" aria-label="Select Locating Strategies">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Strategies</span>
@@ -470,7 +445,6 @@
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Rule Assignment Criteria</span>
                             </div>
                             
-                            <!-- Sub-folder Inventory Control di dalam Configuration -->
                             <div id="inventory-control"
                                 class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
                                 onclick="toggleChildren('inventory-control'); selectCategory('inventory-control')"
@@ -562,13 +536,10 @@
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth" role="main">
             <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
-                <!-- Content will be loaded here by JavaScript -->
             </div>
 
-            <!-- Custom Alert/Confirm Modal -->
             <div id="custom-modal-overlay" class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title" aria-describedby="custom-modal-message">
                 <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
                     <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
@@ -580,7 +551,6 @@
                 </div>
             </div>
 
-            <!-- Search Overlay -->
             <div id="search-overlay" class="hidden fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Search overlay">
                 <div class="bg-white rounded-xl border border-wise-border shadow-lg w-full max-w-3xl h-5/6 flex flex-col animate-slide-up">
                     <div class="flex items-center bg-white rounded-t-xl border-b border-wise-border overflow-hidden p-4">
@@ -631,15 +601,11 @@
             </div>
         </main>
 
-        <!-- Pastikan configuration.js dimuat terlebih dahulu -->
         <script src="./js/configuration.js"></script>
-        <!-- Lalu, muat configurationV2.js setelahnya -->
         <script src="./js/configurationV2.js"></script>
-        <!-- Lalu, muat configurationV3.js setelahnya -->
         <script src="./js/configurationV3.js"></script>
         <script>
-            // Mengubah default load dari 'configuration' menjadi 'inventory-control'
-            window.addEventListener('load', () => selectCategory('inventory-control'));
+            window.addEventListener('load', () => selectCategory('configuration'));
         </script>
     </body>
 </html>

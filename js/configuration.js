@@ -12,14 +12,12 @@
         const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
         const sidebar = document.getElementById('sidebar');
 
-        // Elements for custom modal (alert/confirm)
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModalTitle = document.getElementById('custom-modal-title');
         const customModalMessage = document.getElementById('custom-modal-message');
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
-        const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn'); // Perbaikan di sini
+        const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        // Function to display custom alert
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
@@ -39,11 +37,10 @@
             });
         };
 
-        // Function to display custom confirm
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
             customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden'); // Show cancel button for confirms
+            customModalCancelBtn.classList.remove('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -68,33 +65,17 @@
             });
         };
 
-        // Dummy data for dashboard content and sub-categories
-        // EXPOSED GLOBALLY
         window.contentData = {
             configuration: {
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">System Configuration</h2>
-                    <p class="text-wise-gray mb-4">Here you can manage various configurations for the WISE system. Select a sub-category from the sidebar to manage Warehouse, Zone, or Location Type.</p>
+                    <p class="text-wise-gray mb-4">Here you can manage various configurations for the WISE system. Select a sub-category from the sidebar to manage Warehouse, Zone Type, or Location Type.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Warehouse Management</h3>
                             <p class="text-wise-gray text-sm mt-1">Manage warehouse details, including addresses and authorized users.</p>
                             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-warehouse')">
                                 Manage Warehouses
-                            </button>
-                        </div>
-                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Zone Management</h3>
-                            <p class="text-wise-gray mb-4">Define and manage various zones within the warehouse.</p>
-                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-zone')">
-                                Manage Zones
-                            </button>
-                        </div>
-                        <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
-                            <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Location Type Management</h3>
-                            <p class="text-wise-gray text-sm mt-1">Configure storage location types based on dimensions and weight.</p>
-                            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('configuration-location-type')">
-                                Manage Location Types
                             </button>
                         </div>
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
@@ -433,162 +414,6 @@
                     </div>
                 `,
             },
-            'configuration-zone': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone</h2>
-                    <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
-                            Create New Zone
-                        </button>
-                        <input type="text" id="zone-search" placeholder="Search zone..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterZoneList(this.value)">
-                    </div>
-                    <div id="zone-list-container" class="overflow-x-auto">
-                        </div>
-
-                    <div id="zone-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
-                            <h3 id="zone-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="zone-form" onsubmit="handleZoneSubmit(event)">
-                                    <div class="mb-4">
-                                        <label for="zone-identifier" class="block text-sm font-medium text-wise-dark-gray">Identifier:</label>
-                                        <input type="text" id="zone-identifier" name="identifier" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="zone-record-type" class="block text-sm font-medium text-wise-dark-gray">Record type:</label>
-                                        <input type="text" id="zone-record-type" name="recordType" placeholder="ZONETYPE" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="zone-description" class="block text-sm font-medium text-wise-dark-gray">Description:</label>
-                                        <input type="text" id="zone-description" name="description" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="zone-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="zone-system-created" name="systemCreated" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">System created</span>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeZoneForm()">Cancel</button>
-                                <button type="submit" form="zone-form" id="zone-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
-            'configuration-location-type': {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Location Type</h2>
-                    <p class="text-wise-gray mb-4">Configure storage location types based on dimensions and weight.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTypeForm('create')">
-                            Create New Location Type
-                        </button>
-                        <input type="text" id="location-type-search" placeholder="Search location type..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterLocationTypeList(this.value)">
-                    </div>
-                    <div id="location-type-list-container" class="overflow-x-auto">
-                        </div>
-
-                    <div id="location-type-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity50 hidden items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg flex flex-col max-h-[90vh]">
-                            <h3 id="location-type-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                            <div class="flex-1 overflow-y-auto pr-4 -mr-4">
-                                <form id="location-type-form" onsubmit="handleLocationTypeSubmit(event)">
-                                    <div class="mb-4">
-                                        <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
-                                        <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                    </div>
-                                    <div class="flex space-x-2 mb-2">
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="general-location">General</button>
-                                        <button type="button" class="tab-button px-4 py-2 text-sm font-medium rounded-t-md border-b-2 border-transparent text-wise-gray hover:text-wise-primary hover:border-wise-primary transition-all-smooth" data-tab="user-defined-data-location">User Defined Data</button>
-                                    </div>
-                                    <div id="general-location" class="tab-content border border-wise-border p-4 rounded-b-md">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
-                                                <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                                <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
-                                                <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
-                                                <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
-                                                <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                            <div>
-                                                <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                                <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="user-defined-data-location" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
-                                        <h4 class="font-semibold text-wise-dark-gray mb-2">User defined data</h4>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div>
-                                                <label for="lt-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
-                                                <input type="text" id="lt-user-defined-field1" name="userDefinedField1" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field2" class="block text-sm font-medium text-wise-dark-gray">User defined field 2:</label>
-                                                <input type="text" id="lt-user-defined-field2" name="userDefinedField2" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field3" class="block text-sm font-medium text-wise-dark-gray">User defined field 3:</label>
-                                                <input type="text" id="lt-user-defined-field3" name="userDefinedField3" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field4" class="block text-sm font-medium text-wise-dark-gray">User defined field 4:</label>
-                                                <input type="text" id="lt-user-defined-field4" name="userDefinedField4" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field5" class="block text-sm font-medium text-wise-dark-gray">User defined field 5:</label>
-                                                <input type="text" id="lt-user-defined-field5" name="userDefinedField5" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field6" class="block text-sm font-medium text-wise-dark-gray">User defined field 6:</label>
-                                                <input type="text" id="lt-user-defined-field6" name="userDefinedField6" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                            <div>
-                                                <label for="lt-user-defined-field7" class="block text-sm font-medium text-wise-dark-gray">User defined field 7:</label>
-                                                <input type="text" id="lt-user-defined-field7" name="userDefinedField7" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
-                                                </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 mt-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
-                                            <span class="ml-2 text-sm text-wise-dark-gray">Inactive</span>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
-                                <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeLocationTypeForm()">Cancel</button>
-                                <button type="submit" form="location-type-form" id="location-type-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-            },
             'article a': {
                 detail: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Article A Details</h2>
@@ -766,8 +591,7 @@
                                                      </label>
                                             </div>
                                             <div id="security-group-user-checkbox-list" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-wise-light-gray">
-                                                <!-- User checkboxes will be rendered here -->
-                                            </div>
+                                                </div>
                                         </div>
 
                                         <div id="user-defined-data-tab" class="tab-content border border-wise-border p-4 rounded-b-md hidden">
@@ -825,7 +649,6 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Permission</h2>
                     <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
                     
-                    <!-- Action and Search Buttons -->
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityPermissionForm('create')">
                             Create New Permission
@@ -833,19 +656,15 @@
                         <input type="text" id="security-permission-search" placeholder="Search permission..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full max-w-xs" oninput="renderSecurityPermissionList(this.value)">
                     </div>
 
-                    <!-- Container for Table -->
                     <div id="security-permission-list-container" class="overflow-x-auto">
-                        <!-- Table will be rendered by JavaScript here -->
                     </div>
 
-                    <!-- Form Modal for Create/Edit -->
                     <div id="security-permission-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl flex flex-col max-h-[90vh]">
                             <h3 id="security-permission-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="security-permission-form" onsubmit="handleSecurityPermissionSubmit(event)">
-                                    <!-- Name & Description Inputs -->
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                         <div>
                                             <label for="sp-name" class="block text-sm font-medium text-wise-dark-gray">Security permission:</label>
@@ -857,10 +676,8 @@
                                         </div>
                                     </div>
 
-                                    <!-- KEYWORD: MENU CHECKBOX SECTION -->
                                     <h4 class="font-semibold text-wise-dark-gray mb-2">Menus</h4>
                                     <div class="border border-wise-border rounded-md p-4">
-                                        <!-- Filter Radio Buttons -->
                                         <div id="sp-menu-filter" class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3 pb-3 border-b border-wise-border">
                                             <span class="text-sm font-medium text-wise-dark-gray">Filter by:</span>
                                             <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="All" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)" checked><span class="ml-2">All</span></label>
@@ -868,13 +685,10 @@
                                             <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Gadgets" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Gadgets</span></label>
                                             <label class="flex items-center text-sm"><input type="radio" name="menuFilter" value="Processing" class="form-radio h-4 w-4 text-wise-primary" onchange="renderMenuCheckboxes(getCurrentSelectedMenus(), this.value)"><span class="ml-2">Processing</span></label>
                                         </div>
-                                        <!-- Checkbox List Container -->
                                         <div id="sp-menu-checkbox-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-2 max-h-60 overflow-y-auto">
-                                            <!-- Menu checkboxes will be rendered by JavaScript -->
                                         </div>
                                     </div>
                                     
-                                    <!-- Inactive Checkbox -->
                                     <div class="mt-4">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" id="sp-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
@@ -884,7 +698,6 @@
                                 </form>
                             </div>
 
-                            <!-- OK and Cancel Buttons -->
                             <div class="mt-4 pt-4 border-t border-wise-border flex justify-end space-x-3">
                                 <button type="button" class="px-4 py-2 border border-wise-border rounded-md text-wise-dark-gray hover:bg-wise-light-gray transition-colors duration-200" onclick="closeSecurityPermissionForm()">Cancel</button>
                                 <button type="submit" form="security-permission-form" id="security-permission-submit-button" class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md">OK</button>
@@ -904,16 +717,13 @@
                         <input type="text" id="user-profile-search" placeholder="Search user profile..." class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray" oninput="filterUserProfileList(this.value)">
                     </div>
                     <div id="user-profile-list-container" class="overflow-x-auto">
-                        <!-- User profile list table will be rendered here -->
                     </div>
                     
-                    <!-- User Profile Form Modal -->
                     <div id="user-profile-form-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 p-4">
                         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl flex flex-col max-h-[90vh]">
                             <h3 id="user-profile-form-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
                             <div class="flex-1 overflow-y-auto pr-4 -mr-4">
                                 <form id="user-profile-form" onsubmit="handleUserProfileSubmit(event)">
-                                    <!-- Tab Buttons -->
                                     <div class="flex space-x-2 mb-2 border-b">
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-general">General</button>
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-printers">Printers</button>
@@ -921,7 +731,6 @@
                                         <button type="button" class="tab-button px-4 py-2 text-sm font-medium" data-tab="up-user-defined">User Defined Data</button>
                                     </div>
 
-                                    <!-- General Tab -->
                                     <div id="up-general" class="tab-content">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
@@ -957,7 +766,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Printers Tab -->
                                     <div id="up-printers" class="tab-content hidden">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
@@ -971,7 +779,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Locating Tab -->
                                     <div id="up-locating" class="tab-content hidden">
                                         <div class="space-y-3">
                                             <label class="flex items-center">
@@ -993,7 +800,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- User Defined Data Tab -->
                                     <div id="up-user-defined" class="tab-content hidden">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             ${Array.from({ length: 8 }, (_, i) => `
@@ -1016,208 +822,161 @@
             },
         };
 
+        window.handleSearch = function(query) {
+            const searchOverlay = document.getElementById('search-overlay');
+            const overlaySearchInput = document.getElementById('overlay-search-input');
+            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
 
-/**
- * Menangani input pencarian dari header atau overlay.
- * @param {string} query - Kata kunci pencarian.
- */
-window.handleSearch = function(query) {
-    const searchOverlay = document.getElementById('search-overlay');
-    const overlaySearchInput = document.getElementById('overlay-search-input');
-    const searchHistoryDropdown = document.getElementById('search-history-dropdown');
+            if (query.length > 0) {
+                searchOverlay.classList.remove('hidden');
+                overlaySearchInput.value = query;
+                performSearch(query, 'overlay');
+                searchHistoryDropdown.classList.add('hidden');
+            } else {
+                searchOverlay.classList.add('hidden');
+                selectCategory(currentCategory);
+                showSearchHistory();
+            }
+        };
 
-    if (query.length > 0) {
-        // Tampilkan overlay pencarian jika ada query
-        searchOverlay.classList.remove('hidden');
-        overlaySearchInput.value = query;    
-        performSearch(query, 'overlay');    
-        searchHistoryDropdown.classList.add('hidden');
-    } else {
-        // Sembunyikan overlay pencarian jika query kosong
-        searchOverlay.classList.add('hidden');
-        selectCategory(currentCategory);    
-        showSearchHistory();    
-    }
-};
+        window.performSearch = function(query, source) {
+            const resultsPanel = document.getElementById('overlay-search-results-list-panel');
+            const detailPanel = document.getElementById('overlay-detail-content-panel');
+            const filtersContainer = document.getElementById('overlay-search-filters');
 
-/**
- * Melakukan pencarian dan menampilkan hasilnya.
- * @param {string} query - Kata kunci pencarian.
- * @param {string} source - Sumber pencarian ('overlay' atau lainnya).
- */
-window.performSearch = function(query, source) {
-    const resultsPanel = document.getElementById('overlay-search-results-list-panel');
-    const detailPanel = document.getElementById('overlay-detail-content-panel');
-    const filtersContainer = document.getElementById('overlay-search-filters');
+            if (query.length > 0) {
+                let filteredResults = searchItems.filter(item =>
+                    item.title.toLowerCase().includes(query.toLowerCase()) ||
+                    item.category.toLowerCase().includes(query.toLowerCase())
+                );
 
-    if (query.length > 0) {
-        let filteredResults = searchItems.filter(item =>
-            item.title.toLowerCase().includes(query.toLowerCase()) ||
-            item.category.toLowerCase().includes(query.toLowerCase())
-        );
+                resultsPanel.innerHTML = '';
+                if (filteredResults.length > 0) {
+                    filteredResults.forEach(item => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'py-2 px-3 bg-wise-light-gray rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
+                        resultItem.innerHTML = `
+                            <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
+                            <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+                        `;
+                        resultItem.onmouseenter = () => showPreview(item.id);
+                        resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
+                        resultsPanel.appendChild(resultItem);
+                    });
+                } else {
+                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                }
+                if (detailPanel) {
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
+                }
+            } else {
+                resultsPanel.innerHTML = '';
+                if (detailPanel) {
+                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
+                }
+            }
+        };
 
-        resultsPanel.innerHTML = '';
-        if (filteredResults.length > 0) {
-            filteredResults.forEach(item => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'py-2 px-3 bg-wise-light-gray rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
-                resultItem.innerHTML = `
-                    <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                    <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
+        window.showPreview = function(id) {
+            const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
+            const content = contentData[id];
+
+            if (content && (content.detail || content.full)) {
+                overlayDetailContentPanel.innerHTML = `
+                    ${content.detail || content.full}    
+                    <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
+                        Tampilkan Halaman
+                    </button>
                 `;
-                resultItem.onmouseenter = () => showPreview(item.id);
-                resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
-                resultsPanel.appendChild(resultItem);
-            });
-        } else {
-            resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+            } else {
+                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
+            }
+        };
+
+
+        window.selectSearchResult = function(id, title, query) {
+            addSearchHistory(query);
+            displayContentInMainDashboard(id);
+        };
+
+        window.displayContentInMainDashboard = function(id) {
+            selectCategory(id);
+            closeSearchOverlay();
+        };
+
+        window.closeSearchOverlay = function() {
+            document.getElementById('search-overlay').classList.add('hidden');
+            document.getElementById('search-input').value = '';
+            document.getElementById('overlay-search-input').value = '';
+            activeFilters = [];
+            document.getElementById('search-history-dropdown').classList.add('hidden');
+        };
+
+        window.removeOverlayFilter = function(filterName) {
+            activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
+
+            const filterButton = document.getElementById(`overlay-filter-${filterName}`);
+            if (filterButton) {
+                filterButton.classList.add('hidden');
+            }
+            const query = document.getElementById('overlay-search-input').value;
+            performSearch(query, 'overlay');
+        };
+
+        window.removeAllOverlayFilters = function() {
+            activeFilters = [];
+
+            const filterContainer = document.getElementById('overlay-search-filters');
+            if (filterContainer) {
+                const filterButtons = filterContainer.querySelectorAll('span[id^="overlay-filter-"]');
+                filterButtons.forEach(button => button.classList.add('hidden'));
+            }
+
+            const query = document.getElementById('overlay-search-input').value;
+            performSearch(query, 'overlay');
+        };
+
+        function addSearchHistory(query) {
+            if (query && !searchHistory.includes(query)) {
+                searchHistory.unshift(query);
+                searchHistory = searchHistory.slice(0, 5);
+                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+            }
         }
-        if (detailPanel) {
-            detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
-        }
-    } else {
-        resultsPanel.innerHTML = '';
-        if (detailPanel) {
-            detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
-        }
-    }
-};
 
-window.showPreview = function(id) {
-    const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
-    const content = contentData[id];
+        window.showSearchHistory = function() {
+            const historyDropdown = document.getElementById('search-history-dropdown');
+            const historyContent = document.getElementById('search-history-content');
 
-    // Cek apakah ada konten full atau detail di contentData
-    if (content && (content.detail || content.full)) {
-        // Tampilkan konten ASLI dari fiturnya, LALU tambahkan tombol "Tampilkan Halaman"
-        overlayDetailContentPanel.innerHTML = `
-            ${content.detail || content.full}    
-            <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                Tampilkan Halaman
-            </button>
-        `;
-    } else {
-        // Kalau konten nggak ketemu, baru munculin pesan ini
-        overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
-    }
-};
+            historyContent.innerHTML = '';
 
+            if (searchHistory.length > 0) {
+                searchHistory.forEach((item, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-wise-light-gray rounded-md';
+                    historyItem.innerHTML = `
+                        <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
+                        <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
+                    `;
+                    historyContent.appendChild(historyItem);
+                });
+                const clearAllButton = document.createElement('div');
+                clearAllButton.className = 'text-right pt-2 pb-1 px-3';
+                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">clear All Search History</button>`;
+                historyContent.appendChild(clearAllButton);
+                historyDropdown.classList.remove('hidden');
+            } else {
+                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+                historyDropdown.classList.remove('hidden');
+            }
+        };
 
-window.selectSearchResult = function(id, title, query) {
-    addSearchHistory(query); // Fungsi ini harusnya udah ada buat nambahin riwayat
-    displayContentInMainDashboard(id);
-};
-
-window.displayContentInMainDashboard = function(id) {
-    selectCategory(id); // Memilih kategori yang sesuai di sidebar
-    closeSearchOverlay(); // Menutup overlay pencarian
-};
-
-/**
- * Menutup overlay pencarian.
- */
-window.closeSearchOverlay = function() {
-    document.getElementById('search-overlay').classList.add('hidden');
-    document.getElementById('search-input').value = '';
-    document.getElementById('overlay-search-input').value = '';
-    activeFilters = [];
-    document.getElementById('search-history-dropdown').classList.add('hidden');
-};
-
-/**
- * Menghapus filter dari overlay pencarian.
- * @param {string} filterName - Nama filter yang akan dihapus (cth: 'articles').
- */
-window.removeOverlayFilter = function(filterName) {
-    // Hapus filter dari array activeFilters
-    activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
-
-    // Sembunyikan tombol filter yang dihapus
-    const filterButton = document.getElementById(`overlay-filter-${filterName}`);
-    if (filterButton) {
-        filterButton.classList.add('hidden');
-    }
-
-    // Jalankan ulang pencarian dengan filter yang sudah diperbarui
-    const query = document.getElementById('overlay-search-input').value;
-    performSearch(query, 'overlay');
-};
-
-/**
- * Menghapus semua filter aktif dari overlay pencarian.
- */
-window.removeAllOverlayFilters = function() {
-    // Kosongkan array filter
-    activeFilters = [];
-
-    // Sembunyikan semua tombol filter
-    const filterContainer = document.getElementById('overlay-search-filters');
-    if (filterContainer) {
-        const filterButtons = filterContainer.querySelectorAll('span[id^="overlay-filter-"]');
-        filterButtons.forEach(button => button.classList.add('hidden'));
-    }
-
-    // Jalankan ulang pencarian tanpa filter
-    const query = document.getElementById('overlay-search-input').value;
-    performSearch(query, 'overlay');
-};
-
-/**
- * Menambahkan query pencarian ke riwayat.
- * @param {string} query - Kata kunci pencarian.
- */
-function addSearchHistory(query) {
-    if (query && !searchHistory.includes(query)) {
-        searchHistory.unshift(query);
-        searchHistory = searchHistory.slice(0, 5);
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-    }
-}
-
-/**
- * Menampilkan riwayat pencarian di dropdown.
- */
-window.showSearchHistory = function() {
-    const historyDropdown = document.getElementById('search-history-dropdown');
-    const historyContent = document.getElementById('search-history-content');
-
-    historyContent.innerHTML = '';
-
-    if (searchHistory.length > 0) {
-        searchHistory.forEach((item, index) => {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-wise-light-gray rounded-md';
-            historyItem.innerHTML = `
-                <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
-                <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
-            `;
-            historyContent.appendChild(historyItem);
-        });
-        const clearAllButton = document.createElement('div');
-        clearAllButton.className = 'text-right pt-2 pb-1 px-3';
-        clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">clear All Search History</button>`;
-        historyContent.appendChild(clearAllButton);
-        historyDropdown.classList.remove('hidden');
-    } else {
-        historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
-        historyDropdown.classList.remove('hidden');
-    }
-};
-
-        /**
-         * Menerapkan query dari riwayat pencarian.
-         * @param {string} query - Kata kunci dari riwayat.
-         */
         window.applySearchHistory = function(query) {
             document.getElementById('search-input').value = query;
             handleSearch(query);
             document.getElementById('search-history-dropdown').classList.add('hidden');
         };
 
-        /**
-         * Menghapus item dari riwayat pencarian.
-         * @param {number} index - Indeks item yang akan dihapus.
-         */
         window.removeSearchHistory = function(index) {
             event.stopPropagation();
             searchHistory.splice(index, 1);
@@ -1225,9 +984,6 @@ window.showSearchHistory = function() {
             showSearchHistory();
         };
 
-        /**
-         * Menghapus semua riwayat pencarian.
-         */
         window.clearAllSearchHistory = function() {
             event.stopPropagation();
             searchHistory = [];
@@ -1235,17 +991,12 @@ window.showSearchHistory = function() {
             showSearchHistory();
         };
 
-        // Dummy data for search results
         let currentCategory = 'configuration';
         let activeFilters = [];
         let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
-        // Data dummy untuk hasil pencarian
-        // EXPOSED GLOBALLY
         window.searchItems = [
-            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'configuration-zone', title: 'Zone Configuration', category: 'Configuration', lastUpdated: 'Latest' },
-            { id: 'configuration-location-type', title: 'Location Type Configuration', category: 'Configuration', lastUpdated: 'Latest' },
+            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' }, 
             { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'configuration-user-profile', title: 'User Profile Management', category: 'Configuration', lastUpdated: 'Latest' },
@@ -1253,20 +1004,15 @@ window.showSearchHistory = function() {
             { id: 'security-permission', title: 'Security Permission Management', category: 'System Management', lastUpdated: 'Just now' },
         ];
 
-        // Pemetaan untuk navigasi sidebar saat hasil pencarian diklik
-        // EXPOSED GLOBALLY
         window.parentMapping = {
             'configuration-warehouse': 'configuration',
-            'configuration-zone': 'configuration',
-            'configuration-location-type': 'configuration',
             'locating-strategies': 'configuration',
             'locating-rule': 'configuration',
             'configuration-user-profile': 'configuration',
-            'security-group': 'configuration',  // Ganti 'system' jika ID parent-nya beda
-            'security-permission': 'configuration', // Ganti 'system' jika ID parent-nya beda
+            'security-group': 'configuration',
+            'security-permission': 'configuration',
         };
 
-        // EXPOSED GLOBALLY
         window.getCurrentSelectedMenus = function() {
             const container = document.getElementById('sp-menu-checkbox-list');
             if (!container) return [];
@@ -1274,51 +1020,43 @@ window.showSearchHistory = function() {
             return Array.from(checkedInputs).map(input => input.value);
         }
 
-        // --- FUNGSI UNTUK MENYIMPAN DATA KE LOCALSTORAGE ---
         function saveWarehouses() { localStorage.setItem('warehouses', JSON.stringify(warehouses)); }
-        function saveZones() { localStorage.setItem('zones', JSON.stringify(zones)); }
+        function saveZoneTypes() { localStorage.setItem('zoneTypes', JSON.stringify(zoneTypes)); }
         function saveLocationTypes() { localStorage.setItem('locationTypes', JSON.stringify(locationTypes)); }
         function saveLocatingStrategies() { localStorage.setItem('locatingStrategies', JSON.stringify(locatingStrategies)); }
         function saveLocatingRules() { localStorage.setItem('locatingRules', JSON.stringify(locatingRules)); }
-        function saveUserProfiles() { localStorage.setItem('userProfiles', JSON.stringify(userProfiles)); }
+        window.saveUserProfiles = function() { localStorage.setItem('userProfiles', JSON.stringify(window.userProfiles)); }
         function saveSecurityGroups() { localStorage.setItem('securityGroups', JSON.stringify(securityGroups)); }
         function saveSecurityPermissions() { localStorage.setItem('securityPermissions', JSON.stringify(securityPermissions)); }
 
-        // Dummy data for warehouses (for configuration-warehouse)
         let warehouses = [
             { id: 'WH001', warehouse: 'Main Warehouse', description: 'Central storage facility', inactive: false, address1: '123 Warehouse St', address2: '', address3: '', city: 'Bandung', state: 'West Java', postalCode: '40001', country: 'Indonesia', faxNumber: '123-456-7890', attentionTo: 'Warehouse Manager', phoneNumber: '08123456789', emailAddress: 'main@warehouse.com', uccEanNumber: '1234567890123', sameAsWarehouseAddressReturn: false, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '/mnt/slotting', defaultLocationForUnslottedItems: 'UNSLOTTED', renderedDocumentPdfFileDirectory: '/reports/pdf', userDefinedField1: 'UDF1_WH001', userDefinedField2: 'UDF2_WH001', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '' },
             { id: 'WH002', warehouse: 'East Distribution Center', description: 'Handles eastern region distribution', inactive: true, address1: '456 Distribution Ave', address2: '', address3: '', city: 'Surabaya', state: 'East Java', postalCode: '60001', country: 'Indonesia', faxNumber: '098-765-4321', attentionTo: 'Distribution Manager', phoneNumber: '08198765432', emailAddress: 'east@distribution.com', uccEanNumber: '9876543210987', sameAsWarehouseAddressReturn: true, returnName: '', returnAddress1: '', returnAddress2: '', returnAddress3: '', returnCity: '', returnState: '', returnPostalCode: '', returnCountry: '', returnFaxNumber: '', returnAttentionTo: '', returnPhoneNumber: '', returnEmailAddress: '', returnUccEanNumber: '', slottingMoveFileDirectory: '', defaultLocationForUnslottedItems: '', renderedDocumentPdfFileDirectory: '', userDefinedField1: 'UDF1_WH002', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '', userDefinedField8: '' },
         ];
 
-        // Dummy data for zones (for configuration-zone)
-        // EXPOSED GLOBALLY
-        window.zones = [
-            { id: 'ZONE001', identifier: 'ZONE_A', recordType: 'ZONETYPE', description: 'Picking Zone A', inactive: false, systemCreated: true },
-            { id: 'ZONE002', identifier: 'ZONE_B', recordType: 'ZONETYPE', description: 'Storage Zone B', inactive: false, systemCreated: false },
-            { id: 'ZONE003', identifier: 'ZONE_C', recordType: 'ZONETYPE', description: 'Receiving Zone C', inactive: true, systemCreated: false },
+        window.zoneTypes = [
+            { id: 'ZT001', identifier: 'ZONE_A', recordType: 'ZONETYPE', description: 'Picking Zone A', inactive: false, systemCreated: true },
+            { id: 'ZT002', identifier: 'ZONE_B', recordType: 'ZONETYPE', description: 'Storage Zone B', inactive: false, systemCreated: false },
+            { id: 'ZT003', identifier: 'ZONE_C', recordType: 'ZONETYPE', description: 'Receiving Zone C', inactive: true, systemCreated: false },
         ];
 
-        // Dummy data for location types (for configuration-location-type)
         window.locationTypes = [
             { id: 'LT001', locationType: 'PALLET', length: 120, lengthUM: 'Centimeters', width: 100, height: 150, maximumWeight: 1000, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'PALLET_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
             { id: 'LT002', locationType: 'SHELF', length: 60, lengthUM: 'Centimeters', width: 40, height: 30, maximumWeight: 50, weightUM: 'Kilograms', inactive: false, userDefinedField1: 'SHELF_UDF1', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
         ];
 
-        // Dummy data for locating strategies (for locating-strategies)
         window.locatingStrategies = [
             { id: 'LS001', identifier: 'FIFO', recordType: 'LOCSTRAT', description: 'First-In, First-Out', inactive: false, systemCreated: true },
             { id: 'LS002', identifier: 'LIFO', recordType: 'LOCSTRAT', description: 'Last-In, First-Out', inactive: false, systemCreated: false },
             { id: 'LS003', identifier: 'CLOSEST', recordType: 'LOCSTRAT', description: 'Closest Location', inactive: true, systemCreated: false },
         ];
 
-        // Dummy data for locating rules (for locating-rule)
         let locatingRules = [
             { id: 'LR001', ruleName: 'Standard Putaway', description: 'Default rule for new items', delayedLocating: false, inactive: false, detailRecords: [] },
             { id: 'LR002', ruleName: 'Bulk Storage', description: 'Rule for large volume items', delayedLocating: true, inactive: false, detailRecords: [] },
         ];
 
-        // Dummy data for user profiles (for configuration-user-profile)
-        let userProfiles = [
+        window.userProfiles = [
             { 
                 id: 'UP001', 
                 user: 'admin', 
@@ -1356,31 +1094,22 @@ window.showSearchHistory = function() {
             },
         ];
 
-        // Dummy data for security groups (for security-group)
         let securityGroups = [
             { id: 'SG001', groupName: 'Administrators', description: 'Full system access', inactive: false, users: ['admin'], userDefinedField1: 'SG_UDF1_Admin', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
             { id: 'SG002', groupName: 'Warehouse Staff', description: 'Access to warehouse operations', inactive: false, users: ['picker1'], userDefinedField1: 'SG_UDF1_Warehouse', userDefinedField2: '', userDefinedField3: '', userDefinedField4: '', userDefinedField5: '', userDefinedField6: '', userDefinedField7: '' },
         ];
 
-        // Dummy data for security permissions (for security-permission)
         let securityPermissions = [
             { id: 'SP001', spName: 'Admin_Permissions', spDescription: 'All administrative menus', inactive: false, menus: ['Configuration', 'System Management', 'Gadgets', 'Processing'] },
             { id: 'SP002', spName: 'Picker_Permissions', spDescription: 'Picking and locating menus', inactive: false, menus: ['Picking Menu', 'Locating'] },
         ];
 
-        // Dummy data for all available menus (for security-permission)
-        // EXPOSED GLOBALLY
         window.allMenus = [
-            // Configurations Data
             { name: 'Warehouse', category: 'Configurations' },
-            { name: 'Zone', category: 'Configurations' },
+            { name: 'Zone Type', category: 'Configurations' },
             { name: 'User Profile', category: 'Configurations' },
-
-            // Gadgets Data
             { name: 'Dashboard', category: 'Gadgets' },
             { name: 'Work Insight', category: 'Gadgets' },
-
-            // Processing Data
             { name: 'Receiving', category: 'Processing' },
             { name: 'Shipping', category: 'Processing' },
         ];
@@ -1400,7 +1129,6 @@ window.showSearchHistory = function() {
 
         window.defaultStandardOptions = ['Default', 'Standard'];
 
-        // Fungsi untuk expand/collapse sub-menu sidebar
         window.toggleChildren = function(parentId) {
             const childrenContainer = document.getElementById(parentId + '-children');
             const parentElement = document.getElementById(parentId);
@@ -1414,84 +1142,75 @@ window.showSearchHistory = function() {
             }
         };
 
-        // Function to render content based on category
         window.selectCategory = function(category) {
-    // Hapus kelas aktif dari semua item sidebar
-    document.querySelectorAll('.sidebar-item').forEach(item => {
-        item.classList.remove('bg-wise-light-gray', 'font-semibold');
-    });
-    document.querySelectorAll('.sidebar-child').forEach(item => {
-        item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-        item.classList.add('text-wise-gray');
-    });
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-wise-light-gray', 'font-semibold');
+            });
+            document.querySelectorAll('.sidebar-child').forEach(item => {
+                item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+                item.classList.add('text-wise-gray');
+            });
 
-    const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
-    if (childElement) {
-        childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-        childElement.classList.remove('text-wise-gray');
+            const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
+            if (childElement) {
+                childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+                childElement.classList.remove('text-wise-gray');
 
-        const parentId = parentMapping[category];
-        if (parentId) {
-            const parentElement = document.getElementById(parentId);
-            const parentChildrenContainer = document.getElementById(parentId + '-children');
-            const parentArrow = document.getElementById(parentId + '-arrow');
+                const parentId = parentMapping[category];
+                if (parentId) {
+                    const parentElement = document.getElementById(parentId);
+                    const parentChildrenContainer = document.getElementById(parentId + '-children');
+                    const parentArrow = document.getElementById(parentId + '-arrow');
 
-            if (parentElement) {
-                parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
+                    if (parentElement) {
+                        parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
+                    }
+                    if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
+                        toggleChildren(parentId);
+                    }
+                }
+            } else {
+                const mainElement = document.getElementById(category);
+                if(mainElement) {
+                    mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
+                }
             }
-            if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
-                toggleChildren(parentId); // Gunakan fungsi toggleChildren yang sudah ada
+
+            currentCategory = category;
+            const content = contentData[category];
+            if (content && content.full) {
+                mainContent.innerHTML = content.full;
+            } else {
+                mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
             }
-        }
-    } else {
-        const mainElement = document.getElementById(category);
-        if(mainElement) {
-            mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
-        }
-    }
 
-    currentCategory = category;
-    const content = contentData[category];
-    if (content && content.full) {
-        mainContent.innerHTML = content.full;
-    } else {
-        mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
-    }
+            if (category === 'configuration-warehouse') renderWarehouseList();
+            // else if (category === 'configuration-zone-type') renderZoneTypeList();
+            else if (category === 'location-type') renderLocationTypeList();
+            else if (category === 'locating-strategies') renderLocatingStrategyList();
+            else if (category === 'locating-rule') renderLocatingRuleList();
+            else if (category === 'configuration-user-profile') renderUserProfileList();
+            else if (category === 'security-group') renderSecurityGroupList();
+            else if (category === 'security-permission') renderSecurityPermissionList();
+            else if (category === 'allocation-rule') renderAllocationRuleList();
+            else if (category === 'allocation-strategies') renderAllocationStrategyList();
+            else if (category === 'allocation-rule') renderAllocationRuleList();
+            else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
+            else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
+            else if (category === 'allocation-rule-assignment-criteria') renderARACList(); 
+            else if (category === 'zone-type') renderZoneTypeList()
 
-    // Panggil fungsi render yang sesuai setelah konten dimuat
-    if (category === 'configuration-warehouse') renderWarehouseList();
-    else if (category === 'configuration-zone') renderZoneList();
-    else if (category === 'configuration-location-type') renderLocationTypeList();
-    else if (category === 'locating-strategies') renderLocatingStrategyList();
-    else if (category === 'locating-rule') renderLocatingRuleList();
-    else if (category === 'configuration-user-profile') renderUserProfileList();
-    else if (category === 'security-group') renderSecurityGroupList();
-    else if (category === 'security-permission') renderSecurityPermissionList();
-    else if (category === 'allocation-rule') renderAllocationRuleList();
-    else if (category === 'allocation-strategies') renderAllocationStrategyList();
-    else if (category === 'allocation-rule') renderAllocationRuleList();
-    else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
-    else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
-    else if (category === 'allocation-rule-assignment-criteria') renderARACList(); 
+            if (window.innerWidth < 768) {
+                closeSidebar();
+            }
+        };
 
-
-    // Tutup sidebar di mobile setelah memilih
-    if (window.innerWidth < 768) {
-        closeSidebar();
-    }
-};
-
-        // Function to toggle sidebar visibility
         window.toggleSidebar = function() {
             sidebar.classList.toggle('-translate-x-full');
             sidebar.classList.toggle('translate-x-0');
             mainContent.classList.toggle('md:ml-64');
         };
 
-        // Initial content load
-        // selectCategory('configuration'); // Pindahkan panggilan ini ke configurationV2.js
-
-        // Universal Tab Switching Logic
         window.setupTabSwitching = function(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
@@ -1499,7 +1218,6 @@ window.showSearchHistory = function() {
             const tabButtons = modal.querySelectorAll('.tab-button');
             const tabContents = modal.querySelectorAll('.tab-content');
 
-            // Function to activate a tab
             const activateTab = (tabName) => {
                 tabButtons.forEach(button => {
                     if (button.dataset.tab === tabName) {
@@ -1520,23 +1238,17 @@ window.showSearchHistory = function() {
                 });
             };
 
-            // Add click listeners to tab buttons
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     activateTab(button.dataset.tab);
                 });
             });
 
-            // Activate the first tab by default when the modal is shown
-            // This needs to be called when the modal is actually opened,
-            // not just when setupTabSwitching is called.
-            // For now, we'll activate the first tab immediately.
             if (tabButtons.length > 0) {
                 activateTab(tabButtons[0].dataset.tab);
             }
         };
 
-        // --- Warehouse Management Functions ---
         window.renderWarehouseList = function(filter = '') {
             const container = document.getElementById('warehouse-list-container');
             if (!container) return;
@@ -1608,14 +1320,12 @@ window.showSearchHistory = function() {
             const title = document.getElementById('warehouse-form-title');
             const submitButton = document.getElementById('warehouse-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset tab to default (Warehouse Address)
-            setupTabSwitching('warehouse-form-modal'); // Re-run setup to ensure first tab is active
+            setupTabSwitching('warehouse-form-modal');
 
-            // Reset all input fields to default styling
             form.querySelectorAll('input, select').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
@@ -1625,8 +1335,8 @@ window.showSearchHistory = function() {
                 title.textContent = 'Create New Warehouse';
                 submitButton.textContent = 'Save';
                 document.getElementById('same-as-warehouse-address-return').checked = false;
-                toggleReturnAddressFields(); // Ensure return address fields are visible for new creation by default
-            } else { // edit mode
+                toggleReturnAddressFields();
+            } else {
                 title.textContent = 'Edit Warehouse';
                 submitButton.textContent = 'Update';
                 const warehouse = warehouses.find(wh => wh.id === id);
@@ -1659,7 +1369,7 @@ window.showSearchHistory = function() {
                     document.getElementById('user-defined-field8').value = warehouse.userDefinedField8;
 
                     document.getElementById('same-as-warehouse-address-return').checked = warehouse.sameAsWarehouseAddressReturn;
-                    toggleReturnAddressFields(); // Adjust fields based on checkbox state
+                    toggleReturnAddressFields();
 
                     document.getElementById('return-name').value = warehouse.returnName;
                     document.getElementById('return-address1').value = warehouse.returnAddress1;
@@ -1669,13 +1379,12 @@ window.showSearchHistory = function() {
                     document.getElementById('return-state').value = warehouse.returnState;
                     document.getElementById('return-postal-code').value = warehouse.postalCode;
                     document.getElementById('return-country').value = warehouse.country;
-                    document.getElementById('return-fax-number').value = warehouse.faxNumber;
-                    document.getElementById('return-attention-to').value = warehouse.attentionTo;
-                    document.getElementById('return-phone-number').value = warehouse.phoneNumber;
-                    document.getElementById('return-email-address').value = warehouse.emailAddress;
-                    document.getElementById('return-ucc-ean-number').value = warehouse.uccEanNumber;
+                    document.getElementById('return-fax-number').value = warehouse.returnFaxNumber;
+                    document.getElementById('return-attention-to').value = warehouse.returnAttentionTo;
+                    document.getElementById('return-phone-number').value = warehouse.returnPhoneNumber;
+                    document.getElementById('return-email-address').value = warehouse.returnEmailAddress;
+                    document.getElementById('return-ucc-ean-number').value = warehouse.returnUccEanNumber;
 
-                    // Populate authorized users
                     renderUserCheckboxes(warehouse.users);
                 }
             }
@@ -1736,8 +1445,6 @@ window.showSearchHistory = function() {
                 userDefinedField7: form['userDefinedField7'].value,
                 userDefinedField8: form['userDefinedField8'].value,
 
-                
-                // Get selected authorized users
                 users: Array.from(form.querySelectorAll('#user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value)
             };
 
@@ -1752,7 +1459,7 @@ window.showSearchHistory = function() {
                     await showCustomAlert('Success', 'Warehouse updated successfully!');
                 }
             }
-            saveWarehouses();    
+            saveWarehouses();
             closeWarehouseForm();
             renderWarehouseList();
         };
@@ -1767,7 +1474,6 @@ window.showSearchHistory = function() {
             }
         };
 
-        // Dummy user data for authorized users
         const allUsers = [
             { id: 'user1', name: 'John Doe' },
             { id: 'user2', name: 'Jane Smith' },
@@ -1808,7 +1514,6 @@ window.showSearchHistory = function() {
             const fields = returnAddressFields.querySelectorAll('input, select');
 
             if (sameAsCheckbox.checked) {
-                // Copy values from warehouse address fields
                 document.getElementById('return-name').value = document.getElementById('attention-to').value;
                 document.getElementById('return-address1').value = document.getElementById('address1').value;
                 document.getElementById('return-address2').value = document.getElementById('address2').value;
@@ -1832,7 +1537,6 @@ window.showSearchHistory = function() {
                     field.removeAttribute('readonly');
                     field.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 });
-                // Clear return address fields if not same as warehouse
                 document.getElementById('return-name').value = '';
                 document.getElementById('return-address1').value = '';
                 document.getElementById('return-address2').value = '';
@@ -1850,14 +1554,13 @@ window.showSearchHistory = function() {
         };
 
 
-        // --- Zone Management Functions ---
-        window.renderZoneList = function(filter = '') {
-            const container = document.getElementById('zone-list-container');
+        window.renderZoneTypeList = function(filter = '') {
+            const container = document.getElementById('zone-type-list-container');
             if (!container) return;
 
-            const filteredZones = zones.filter(zone =>
-                zone.identifier.toLowerCase().includes(filter.toLowerCase()) ||
-                zone.description.toLowerCase().includes(filter.toLowerCase())
+            const filteredZoneTypes = zoneTypes.filter(zoneType =>
+                zoneType.identifier.toLowerCase().includes(filter.toLowerCase()) ||
+                zoneType.description.toLowerCase().includes(filter.toLowerCase())
             );
 
             let tableHtml = `
@@ -1875,29 +1578,29 @@ window.showSearchHistory = function() {
                     <tbody class="text-wise-gray text-sm font-light">
             `;
 
-            if (filteredZones.length === 0) {
+            if (filteredZoneTypes.length === 0) {
                 tableHtml += `
                     <tr>
-                        <td colspan="6" class="py-3 px-6 text-center">No zones found.</td>
+                        <td colspan="6" class="py-3 px-6 text-center">No zone types found.</td>
                     </tr>
                 `;
             } else {
-                filteredZones.forEach(zone => {
+                filteredZoneTypes.forEach(zoneType => {
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${zone.identifier}</td>
-                            <td class="py-3 px-6 text-left">${zone.recordType}</td>
-                            <td class="py-3 px-6 text-left">${zone.description}</td>
-                            <td class="py-3 px-6 text-left">${zone.inactive ? 'Yes' : 'No'}</td>
-                            <td class="py-3 px-6 text-left">${zone.systemCreated ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${zoneType.identifier}</td>
+                            <td class="py-3 px-6 text-left">${zoneType.recordType}</td>
+                            <td class="py-3 px-6 text-left">${zoneType.description}</td>
+                            <td class="py-3 px-6 text-left">${zoneType.inactive ? 'Yes' : 'No'}</td>
+                            <td class="py-3 px-6 text-left">${zoneType.systemCreated ? 'Yes' : 'No'}</td>
                             <td class="py-3 px-6 text-center">
                                 <div class="flex item-center justify-center">
-                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showZoneForm('edit', '${zone.id}')" title="Edit">
+                                    <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showZoneTypeForm('edit', '${zoneType.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                         </svg>
                                     </button>
-                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteZone('${zone.id}')" title="Delete">
+                                    <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteZoneType('${zoneType.id}')" title="Delete">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
@@ -1916,49 +1619,47 @@ window.showSearchHistory = function() {
             container.innerHTML = tableHtml;
         };
 
-        window.filterZoneList = function(value) {
-            renderZoneList(value);
+        window.filterZoneTypeList = function(value) {
+            renderZoneTypeList(value);
         };
 
-        window.showZoneForm = function(mode, id = null) {
-            const modal = document.getElementById('zone-form-modal');
-            const form = document.getElementById('zone-form');
-            const title = document.getElementById('zone-form-title');
-            const submitButton = document.getElementById('zone-submit-button');
+        window.showZoneTypeForm = function(mode, id = null) {
+            const modal = document.getElementById('zone-type-form-modal');
+            const form = document.getElementById('zone-type-form');
+            const title = document.getElementById('zone-type-form-title');
+            const submitButton = document.getElementById('zone-type-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset all input fields to default styling
             form.querySelectorAll('input').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
             });
 
             if (mode === 'create') {
-                title.textContent = 'Create New Zone';
+                title.textContent = 'Create New Zone Type';
                 submitButton.textContent = 'Save';
-                document.getElementById('zone-record-type').value = 'ZONETYPE'; // Default value for new zone
-                document.getElementById('zone-record-type').setAttribute('readonly', true);
-                document.getElementById('zone-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-            } else { // edit mode
-                title.textContent = 'Edit Zone';
+                document.getElementById('zone-type-record-type').value = 'ZONETYPE';
+                document.getElementById('zone-type-record-type').setAttribute('readonly', true);
+                document.getElementById('zone-type-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+            } else {
+                title.textContent = 'Edit Zone Type';
                 submitButton.textContent = 'Update';
-                const zone = zones.find(z => z.id === id);
-                if (zone) {
-                    document.getElementById('zone-identifier').value = zone.identifier;
-                    document.getElementById('zone-record-type').value = zone.recordType;
-                    document.getElementById('zone-description').value = zone.description;
-                    document.getElementById('zone-inactive').checked = zone.inactive;
-                    document.getElementById('zone-system-created').checked = zone.systemCreated;
+                const zoneType = zoneTypes.find(z => z.id === id);
+                if (zoneType) {
+                    document.getElementById('zone-type-identifier').value = zoneType.identifier;
+                    document.getElementById('zone-type-record-type').value = zoneType.recordType;
+                    document.getElementById('zone-type-description').value = zoneType.description;
+                    document.getElementById('zone-type-inactive').checked = zoneType.inactive;
+                    document.getElementById('zone-type-system-created').checked = zoneType.systemCreated;
 
-                    // Make identifier and recordType readonly for system-created zones
-                    if (zone.systemCreated) {
-                        document.getElementById('zone-identifier').setAttribute('readonly', true);
-                        document.getElementById('zone-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
-                        document.getElementById('zone-record-type').setAttribute('readonly', true);
-                        document.getElementById('zone-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                    if (zoneType.systemCreated) {
+                        document.getElementById('zone-type-identifier').setAttribute('readonly', true);
+                        document.getElementById('zone-type-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
+                        document.getElementById('zone-type-record-type').setAttribute('readonly', true);
+                        document.getElementById('zone-type-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                     }
                 }
             }
@@ -1966,52 +1667,51 @@ window.showSearchHistory = function() {
             modal.classList.add('flex');
         };
 
-        window.closeZoneForm = function() {
-            document.getElementById('zone-form-modal').classList.add('hidden');
-            document.getElementById('zone-form-modal').classList.remove('flex');
+        window.closeZoneTypeForm = function() {
+            document.getElementById('zone-type-form-modal').classList.add('hidden');
+            document.getElementById('zone-type-form-modal').classList.remove('flex');
         };
 
-        window.handleZoneSubmit = async function(event) {
+        window.handleZoneTypeSubmit = async function(event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
             const id = form.dataset.id;
 
-            const newZone = {
+            const newZoneType = {
                 identifier: form['identifier'].value,
                 recordType: form['recordType'].value,
                 description: form['description'].value,
-                inactive: form['zone-inactive'].checked,
-                systemCreated: form['zone-system-created'].checked,
+                inactive: form['zone-type-inactive'].checked,
+                systemCreated: form['zone-type-system-created'].checked,
             };
 
             if (mode === 'create') {
-                newZone.id = 'ZONE' + String(zones.length + 1).padStart(3, '0');
-                zones.push(newZone);
-                await showCustomAlert('Success', 'Zone created successfully!');
+                newZoneType.id = 'ZT' + String(zoneTypes.length + 1).padStart(3, '0');
+                zoneTypes.push(newZoneType);
+                await showCustomAlert('Success', 'Zone Type created successfully!');
             } else {
-                const index = zones.findIndex(z => z.id === id);
+                const index = zoneTypes.findIndex(z => z.id === id);
                 if (index !== -1) {
-                    zones[index] = { ...zones[index], ...newZone };
-                    await showCustomAlert('Success', 'Zone updated successfully!');
+                    zoneTypes[index] = { ...zoneTypes[index], ...newZoneType };
+                    await showCustomAlert('Success', 'Zone Type updated successfully!');
                 }
             }
-            saveZones();
-            closeZoneForm();
-            renderZoneList();
+            saveZoneTypes();
+            closeZoneTypeForm();
+            renderZoneTypeList();
         };
 
-        window.deleteZone = async function(id) {
-            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this zone?');
+        window.deleteZoneType = async function(id) {
+            const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this zone type?');
             if (confirmed) {
-                zones = zones.filter(zone => zone.id !== id);
-                saveZones();
-                renderZoneList();
-                await showCustomAlert('Deleted', 'Zone deleted successfully!');
+                zoneTypes = zoneTypes.filter(zoneType => zoneType.id !== id);
+                saveZoneTypes();
+                renderZoneTypeList();
+                await showCustomAlert('Deleted', 'Zone Type deleted successfully!');
             }
         };
 
-        // --- Location Type Management Functions ---
         window.renderLocationTypeList = function(filter = '') {
             const container = document.getElementById('location-type-list-container');
             if (!container) return;
@@ -2089,14 +1789,12 @@ window.showSearchHistory = function() {
             const title = document.getElementById('location-type-form-title');
             const submitButton = document.getElementById('location-type-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset tab to default (General)
             setupTabSwitching('location-type-form-modal');
 
-            // Reset all input fields to default styling
             form.querySelectorAll('input').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
@@ -2105,7 +1803,7 @@ window.showSearchHistory = function() {
             if (mode === 'create') {
                 title.textContent = 'Create New Location Type';
                 submitButton.textContent = 'Save';
-            } else { // edit mode
+            } else {
                 title.textContent = 'Edit Location Type';
                 submitButton.textContent = 'Update';
                 const locationType = locationTypes.find(lt => lt.id === id);
@@ -2186,7 +1884,6 @@ window.showSearchHistory = function() {
             }
         };
 
-        // --- Locating Strategy Management Functions ---
         window.renderLocatingStrategyList = function(filter = '') {
             const container = document.getElementById('locating-strategy-list-container');
             if (!container) return;
@@ -2262,11 +1959,10 @@ window.showSearchHistory = function() {
             const title = document.getElementById('locating-strategy-form-title');
             const submitButton = document.getElementById('locating-strategy-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset all input fields to default styling
             form.querySelectorAll('input').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
@@ -2279,8 +1975,7 @@ window.showSearchHistory = function() {
                 document.getElementById('locating-strategy-record-type').setAttribute('readonly', true);
                 document.getElementById('locating-strategy-record-type').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 document.getElementById('locating-strategy-system-created').checked = false;
-                // document.getElementById('locating-strategy-system-created').setAttribute('disabled', true); 
-            } else { // edit mode
+            } else {
                 title.textContent = 'Edit Locating Strategy';
                 submitButton.textContent = 'Update';
                 const strategy = locatingStrategies.find(ls => ls.id === id);
@@ -2291,7 +1986,6 @@ window.showSearchHistory = function() {
                     document.getElementById('locating-strategy-inactive').checked = strategy.inactive;
                     document.getElementById('locating-strategy-system-created').checked = strategy.systemCreated;
 
-                    // Make identifier and recordType readonly for system-created strategies
                     if (strategy.systemCreated) {
                         document.getElementById('locating-strategy-identifier').setAttribute('readonly', true);
                         document.getElementById('locating-strategy-identifier').classList.add('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
@@ -2350,7 +2044,6 @@ window.showSearchHistory = function() {
             }
         };
 
-        // --- Locating Rule Management Functions ---
         window.renderLocatingRuleList = function(filter = '') {
             const container = document.getElementById('locating-rule-list-container');
             if (!container) return;
@@ -2424,19 +2117,18 @@ window.showSearchHistory = function() {
             const title = document.getElementById('locating-rule-form-title');
             const submitButton = document.getElementById('locating-rule-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
             if (mode === 'create') {
                 title.textContent = 'Create New Locating Rule';
                 submitButton.textContent = 'Save';
-                // Initially disable detail records section for new rules
                 document.getElementById('locating-rule-detail-records-container').classList.add('bg-wise-light-gray', 'cursor-not-allowed');
                 document.getElementById('detail-records-placeholder').classList.remove('hidden');
                 document.getElementById('detail-records-list').innerHTML = '';
                 document.getElementById('add-detail-record-btn').setAttribute('disabled', true);
-            } else { // edit mode
+            } else {
                 title.textContent = 'Edit Locating Rule';
                 submitButton.textContent = 'Update';
                 const rule = locatingRules.find(lr => lr.id === id);
@@ -2446,7 +2138,6 @@ window.showSearchHistory = function() {
                     document.getElementById('locating-rule-delayed-locating').checked = rule.delayedLocating;
                     document.getElementById('locating-rule-inactive').checked = rule.inactive;
 
-                    // Enable detail records section and populate
                     document.getElementById('locating-rule-detail-records-container').classList.remove('bg-wise-light-gray', 'cursor-not-allowed');
                     document.getElementById('detail-records-placeholder').classList.add('hidden');
                     document.getElementById('add-detail-record-btn').removeAttribute('disabled');
@@ -2473,7 +2164,7 @@ window.showSearchHistory = function() {
                     sequence: parseInt(item.querySelector('[name="detail-sequence"]').value),
                     locatingStrategy: item.querySelector('[name="detail-locating-strategy"]').value,
                     locationType: item.querySelector('[name="detail-location-type"]').value,
-                    zone: item.querySelector('[name="detail-zone"]').value,
+                    zoneType: item.querySelector('[name="detail-zone-type"]').value,
                     inactive: item.querySelector('[name="detail-inactive"]').checked,
                 };
             });
@@ -2527,7 +2218,7 @@ window.showSearchHistory = function() {
                 detailRecordsContainer.classList.add('bg-wise-light-gray', 'cursor-not-allowed');
                 detailRecordsPlaceholder.classList.remove('hidden');
                 addDetailRecordBtn.setAttribute('disabled', true);
-                document.getElementById('detail-records-list').innerHTML = ''; // Clear existing records if disabled
+                document.getElementById('detail-records-list').innerHTML = '';
             }
         };
 
@@ -2563,10 +2254,10 @@ window.showSearchHistory = function() {
                         </select>
                     </div>
                     <div>
-                        <label for="detail-zone-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Zone:</label>
-                        <select id="detail-zone-${newIndex}" name="detail-zone" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                        <label for="detail-zone-type-${newIndex}" class="block text-sm font-medium text-wise-dark-gray">Zone Type:</label>
+                        <select id="detail-zone-type-${newIndex}" name="detail-zone-type" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                             <option value="">--Select--</option>
-                            ${zones.map(z => `<option value="${z.identifier}" ${record.zone === z.identifier ? 'selected' : ''}>${z.identifier}</option>`).join('')}
+                            ${zoneTypes.map(z => `<option value="${z.identifier}" ${record.zoneType === z.identifier ? 'selected' : ''}>${z.identifier}</option>`).join('')}
                         </select>
                     </div>
                     <div class="col-span-full">
@@ -2583,7 +2274,7 @@ window.showSearchHistory = function() {
         window.renderDetailRecords = function(records) {
             const detailRecordsList = document.getElementById('detail-records-list');
             detailRecordsList.innerHTML = '';
-            records.sort((a, b) => a.sequence - b.sequence); // Urutkan berdasarkan sequence
+            records.sort((a, b) => a.sequence - b.sequence);
             records.forEach(record => addDetailRecord(record));
         };
 
@@ -2594,19 +2285,12 @@ window.showSearchHistory = function() {
             }
         };
 
-        /**
-         * Mengganti input teks 'up-default-warehouse' menjadi dropdown (<select>)
-         * dan mengisinya dengan data dari window.allWarehouses.
-         * @param {string} selectedValue - ID warehouse yang harus dipilih secara default.
-         */
         function replaceWarehouseInputWithDropdown(selectedValue = '') {
             const originalInput = document.getElementById('up-default-warehouse');
             if (!originalInput) {
-                console.warn('Element with id "up-default-warehouse" not found for replacement.');
                 return;
             }
 
-            // Kalo udah jadi dropdown, cukup update value-nya, jangan bikin ulang.
             if (originalInput.tagName === 'SELECT') {
                 originalInput.value = selectedValue;
                 return;
@@ -2617,7 +2301,6 @@ window.showSearchHistory = function() {
             selectDropdown.name = originalInput.name;
             selectDropdown.className = originalInput.className;
 
-            // Opsi default
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Pilih Warehouse';
@@ -2630,14 +2313,11 @@ window.showSearchHistory = function() {
                 selectDropdown.appendChild(option);
             });
 
-            // Set value yang terpilih (buat mode edit)
             selectDropdown.value = selectedValue;
 
-            // Ganti input teks yang lama dengan dropdown yang baru
             originalInput.parentNode.replaceChild(selectDropdown, originalInput);
         }
 
-        // --- User Profile Management Functions ---
         window.renderUserProfileList = function(filter = '') {
             const container = document.getElementById('user-profile-list-container');
             if (!container) return;
@@ -2714,57 +2394,62 @@ window.showSearchHistory = function() {
             form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
-
-            setupTabSwitching('user-profile-form-modal');
-
+            window.setupTabSwitching('user-profile-form-modal');
             form.querySelectorAll('input, select').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
                 input.removeAttribute('disabled');
             });
 
-            const userProfile = mode === 'edit' ? userProfiles.find(up => up.id === id) : null;
-            replaceWarehouseInputWithDropdown(userProfile ? userProfile.defaultWarehouse : '');
+            const userProfile = mode === 'edit' ? window.userProfiles.find(up => up.id === id) : null;
+
             if (mode === 'create') {
                 title.textContent = 'Create New User Profile';
                 submitButton.textContent = 'Save';
-            } else { 
+                form.querySelectorAll('input[name$="AccessType"][value="All"]').forEach(radio => radio.checked = true);
+            } else {
                 title.textContent = 'Edit User Profile';
                 submitButton.textContent = 'Update';
-                
                 if (userProfile) {
-                    // -- TAB: General --
-                    document.getElementById('up-user').value = userProfile.user || '';
-                    document.getElementById('up-description').value = userProfile.description || '';
-                    // (Nilai dropdown warehouse sudah di-set oleh fungsi replaceWarehouseInputWithDropdown di atas)
-                    document.getElementById('up-email-address').value = userProfile.emailAddress || '';
-                    document.getElementById('up-department').value = userProfile.department || '';
-                    document.getElementById('up-shift').value = userProfile.shift || '';
-                    document.getElementById('up-rf-password').value = userProfile.rfPassword || '';
-                    document.getElementById('up-uncollected-password').value = userProfile.uncollectedPassword || '';
-                    document.getElementById('up-security-group').value = userProfile.securityGroup || '';
-                    document.getElementById('up-payroll-id').value = userProfile.payrollId || '';
-                    document.getElementById('up-wage-rate').value = userProfile.wageRate || '';
-                    document.getElementById('up-hire-date').value = userProfile.hireDate || '';
+                    form['user'].value = userProfile.user || '';
+                    form['description'].value = userProfile.description || '';
+                    form['defaultWarehouse'].value = userProfile.defaultWarehouse || '';
+                    form['emailAddress'].value = userProfile.emailAddress || '';
+                    form['department'].value = userProfile.department || '';
+                    form['shift'].value = userProfile.shift || '';
+                    form['rfPassword'].value = userProfile.rfPassword || '';
+                    form['uncollectedPassword'].value = userProfile.uncollectedPassword || '';
+                    form['securityGroup'].value = userProfile.securityGroup || '';
+                    form['payrollId'].value = userProfile.payrollId || '';
+                    form['wageRate'].value = userProfile.wageRate || '';
+                    form['hireDate'].value = userProfile.hireDate || '';
+                    form['cycleCounting'].value = userProfile.cycleCounting || 'Default';
+                    form['shipping'].value = userProfile.shipping || 'Default';
+                    form['packing'].value = userProfile.packing || 'Default';
+                    form['workOrder'].value = userProfile.workOrder || 'Default';
+                    form['receiving'].value = userProfile.receiving || 'Standard';
+                    form['reportDirectory'].value = userProfile.reportDirectory || '';
+                    form['myLinkDirectory'].value = userProfile.myLinkDirectory || '';
+                    form['desktopTemplate'].value = userProfile.desktopTemplate || 'Adminisitrasi';
+                    form['excelExportDirectory'].value = userProfile.excelExportDirectory || '';
+                    const setAccessControls = (profile, accessName) => {
+                        const type = profile[`${accessName}AccessType`] || 'All';
+                        const radio = form.querySelector(`input[name="${accessName}AccessType"][value="${type}"]`);
+                        if (radio) radio.checked = true;
 
-                    // -- TAB: Preferences --
-                    document.getElementById('up-pref-cycle-counting').value = userProfile.cycleCounting || 'Default';
-                    document.getElementById('up-pref-shipping').value = userProfile.shipping || 'Default';
-                    document.getElementById('up-pref-packing').value = userProfile.packing || 'Default';
-                    document.getElementById('up-pref-work-order').value = userProfile.workOrder || 'Default';
-                    document.getElementById('up-pref-receiving').value = userProfile.receiving || 'Standard';
-                    document.getElementById('up-pref-report-dir').value = userProfile.reportDirectory || '';
-                    document.getElementById('up-pref-my-link-dir').value = userProfile.myLinkDirectory || '';
-                    document.getElementById('up-pref-desktop-template').value = userProfile.desktopTemplate || 'Adminisitrasi';
-                    document.getElementById('up-pref-excel-dir').value = userProfile.excelExportDirectory || '';
-                    
-                    // Mengisi UDF (User Defined Fields)
-                    for (let i = 1; i <= 8; i++) {
-                        const udfInput = document.getElementById(`up-udf${i}`);
-                        if (udfInput) {
-                            udfInput.value = userProfile[`udf${i}`] || '';
+                        const accessList = profile[`${accessName}Access`] || [];
+                        if (Array.isArray(accessList)) {
+                            accessList.forEach(id => {
+                                const checkbox = form.querySelector(`input[name="${accessName}Access"][value="${id}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            });
                         }
-                    }
+                    };
+                    
+                    setAccessControls(userProfile, 'company');
+                    setAccessControls(userProfile, 'warehouse');
+                    setAccessControls(userProfile, 'workProfile');
+                    setAccessControls(userProfile, 'adjustmentType');
                 }
             }
             modal.classList.remove('hidden');
@@ -2777,69 +2462,66 @@ window.showSearchHistory = function() {
         };
 
         window.handleUserProfileSubmit = async function(event) {
-    event.preventDefault();
-    const form = event.target;
-    const mode = form.dataset.mode;
-    const id = form.dataset.id;
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
-    // Ambil semua nilai dari form BARU
-    const newUserProfile = {
-        // TAB: General
-        user: form['user'].value,
-        description: form['description'].value,
-        defaultWarehouse: form['defaultWarehouse'].value,
-        emailAddress: form['emailAddress'].value, // DITAMBAH
-        department: form['department'].value, // DITAMBAH
-        shift: form['shift'].value,
-        rfPassword: form['rfPassword'].value, // DITAMBAH
-        uncollectedPassword: form['uncollectedPassword'].value, // DITAMBAH
-        securityGroup: form['securityGroup'].value, // DITAMBAH
-        payrollId: form['payrollId'].value, // DITAMBAH
-        wageRate: form['wageRate'].value, // DITAMBAH
-        hireDate: form['hireDate'].value, // DITAMBAH
+            const newUserProfile = {
+                user: form['user'].value,
+                description: form['description'].value,
+                defaultWarehouse: form['defaultWarehouse'].value,
+                emailAddress: form['emailAddress'].value,
+                department: form['department'].value,
+                shift: form['shift'].value,
+                rfPassword: form['rfPassword'].value,
+                uncollectedPassword: form['uncollectedPassword'].value,
+                securityGroup: form['securityGroup'].value,
+                payrollId: form['payrollId'].value,
+                wageRate: form['wageRate'].value,
+                hireDate: form['hireDate'].value,
 
-        // TAB: Preferences
-        cycleCounting: form['cycleCounting'].value, // DITAMBAH
-        shipping: form['shipping'].value, // DITAMBAH
-        packing: form['packing'].value, // DITAMBAH
-        workOrder: form['workOrder'].value, // DITAMBAH
-        receiving: form['receiving'].value, // DITAMBAH
-        reportDirectory: form['reportDirectory'].value, // DITAMBAH
-        myLinkDirectory: form['myLinkDirectory'].value, // DITAMBAH
-        desktopTemplate: form['desktopTemplate'].value, // DITAMBAH
-        excelExportDirectory: form['excelExportDirectory'].value, // DITAMBAH
+                cycleCounting: form['cycleCounting'].value,
+                shipping: form['shipping'].value,
+                packing: form['packing'].value,
+                workOrder: form['workOrder'].value,
+                receiving: form['receiving'].value,
+                reportDirectory: form['reportDirectory'].value,
+                myLinkDirectory: form['myLinkDirectory'].value,
+                desktopTemplate: form['desktopTemplate'].value,
+                excelExportDirectory: form['excelExportDirectory'].value,
+                companyAccess: Array.from(form.querySelectorAll('input[name="companyAccess"]:checked')).map(cb => cb.value),
+                warehouseAccessType: form.querySelector('input[name="warehouseAccessType"]:checked')?.value || 'All',
+                warehouseAccess: Array.from(form.querySelectorAll('input[name="warehouseAccess"]:checked')).map(cb => cb.value),
+                workProfileAccessType: form.querySelector('input[name="workProfileAccessType"]:checked')?.value || 'All',
+                workProfileAccess: Array.from(form.querySelectorAll('input[name="workProfileAccess"]:checked')).map(cb => cb.value),
+                adjustmentTypeAccessType: form.querySelector('input[name="adjustmentTypeAccessType"]:checked')?.value || 'All',
+                adjustmentTypeAccess: Array.from(form.querySelectorAll('input[name="adjustmentTypeAccess"]:checked')).map(cb => cb.value),
+            };
+            
+            for (let i = 1; i <= 8; i++) {
+                newUserProfile[`udf${i}`] = form[`udf${i}`]?.value || '';
+            }
 
-        // FIELD LAMA YANG DIHAPUS DARI OBJEK INI:
-        // menu, language, defaultLabelPrinter, defaultReportPrinter,
-        // locateEmptyLpn, locateEmptyItem, locateLpnStaging, locateItemStaging
-    };
-    
-    // Ambil nilai UDFs (User Defined Fields)
-    for (let i = 1; i <= 8; i++) {
-        newUserProfile[`udf${i}`] = form[`udf${i}`]?.value || '';
-    }
+            if (mode === 'create') {
+                newUserProfile.id = 'UP' + String(userProfiles.length + 1).padStart(3, '0');
+                userProfiles.push(newUserProfile);
+                await showCustomAlert('Success', 'User Profile created successfully!');
+            } else {
+                const index = userProfiles.findIndex(up => up.id === id);
+                if (index !== -1) {
+                    userProfiles[index] = { ...userProfiles[index], ...newUserProfile };
+                    await showCustomAlert('Success', 'User Profile updated successfully!');
+                }
+            }
+            
+            if(window.saveUserProfiles) {
+               window.saveUserProfiles();
+            }
 
-    if (mode === 'create') {
-        newUserProfile.id = 'UP' + String(userProfiles.length + 1).padStart(3, '0');
-        userProfiles.push(newUserProfile);
-        await showCustomAlert('Success', 'User Profile created successfully!');
-    } else {
-        const index = userProfiles.findIndex(up => up.id === id);
-        if (index !== -1) {
-            // Gabungkan data lama dengan data baru
-            userProfiles[index] = { ...userProfiles[index], ...newUserProfile };
-            await showCustomAlert('Success', 'User Profile updated successfully!');
-        }
-    }
-    
-    // Pastikan fungsi saveUserProfiles ada di scope global
-    if(window.saveUserProfiles) {
-       window.saveUserProfiles();
-    }
-
-    closeUserProfileForm();
-    renderUserProfileList();
-};
+            closeUserProfileForm();
+            renderUserProfileList();
+        };
 
         window.deleteUserProfile = async function(id) {
             const confirmed = await showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this user profile?');
@@ -2851,15 +2533,10 @@ window.showSearchHistory = function() {
             }
         };
 
-        /**
-         * Menerima input dari search bar dan memfilter daftar Security Group.
-         * @param {string} value - Kata kunci pencarian.
-         */
         window.filterSecurityGroupList = function(value) {
             renderSecurityGroupList(value);
         };
 
-        // --- Security Group Management Functions ---
         window.renderSecurityGroupList = function(filter = '') {
             const container = document.getElementById('security-group-list-container');
             if (!container) return;
@@ -2921,7 +2598,6 @@ window.showSearchHistory = function() {
             container.innerHTML = tableHtml;
         };
 
-        // --- Security Permission Management Functions ---
         window.renderSecurityPermissionList = function(filter = '') {
             const container = document.getElementById('security-permission-list-container');
             if (!container) return;
@@ -2989,14 +2665,12 @@ window.showSearchHistory = function() {
             const title = document.getElementById('security-group-form-title');
             const submitButton = document.getElementById('security-group-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset tab to default (Group users)
             setupTabSwitching('security-group-form-modal');
 
-            // Reset all input fields to default styling
             form.querySelectorAll('input, select').forEach(input => {
                 input.classList.remove('bg-gray-100', 'text-wise-gray', 'cursor-not-allowed');
                 input.removeAttribute('readonly');
@@ -3005,8 +2679,8 @@ window.showSearchHistory = function() {
             if (mode === 'create') {
                 title.textContent = 'Create New Security Group';
                 submitButton.textContent = 'Save';
-                renderSecurityGroupUserCheckboxes([]); // Render all users unchecked for new group
-            } else { // edit mode
+                renderSecurityGroupUserCheckboxes([]);
+            } else {
                 title.textContent = 'Edit Security Group';
                 submitButton.textContent = 'Update';
                 const securityGroup = securityGroups.find(sg => sg.id === id);
@@ -3014,8 +2688,8 @@ window.showSearchHistory = function() {
                     document.getElementById('security-group-name').value = securityGroup.groupName;
                     document.getElementById('security-group-description').value = securityGroup.description;
                     document.getElementById('security-group-inactive').checked = securityGroup.inactive;
-                    renderSecurityGroupUserCheckboxes(securityGroup.users); // Render users with selected ones checked
-                    for (let i = 1; i <= 7; i++) { // UDFs 1-7
+                    renderSecurityGroupUserCheckboxes(securityGroup.users);
+                    for (let i = 1; i <= 7; i++) {
                         document.getElementById(`sg-user-defined-field${i}`).value = securityGroup[`userDefinedField${i}`] || '';
                     }
                 }
@@ -3041,7 +2715,7 @@ window.showSearchHistory = function() {
                 inactive: form['security-group-inactive'].checked,
                 users: Array.from(form.querySelectorAll('#security-group-user-checkbox-list input[type="checkbox"]:checked')).map(cb => cb.value),
             };
-            for (let i = 1; i <= 7; i++) { // UDFs 1-7
+            for (let i = 1; i <= 7; i++) {
                 newSecurityGroup[`userDefinedField${i}`] = form[`sg-user-defined-field${i}`].value;
             }
 
@@ -3111,28 +2785,25 @@ window.showSearchHistory = function() {
             });
         };
 
-        // --- Security Permission Management Functions ---
         window.showSecurityPermissionForm = function(mode, id = null) {
             const modal = document.getElementById('security-permission-form-modal');
             const form = document.getElementById('security-permission-form');
             const title = document.getElementById('security-permission-form-title');
             const submitButton = document.getElementById('security-permission-submit-button');
 
-            form.reset(); // Clear form fields
+            form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Reset tab to default (Group users)
             setupTabSwitching('security-permission-form-modal');
-            // Ensure the 'All' filter is selected by default when opening the form
             document.querySelector('#sp-menu-filter input[value="All"]').checked = true;
 
 
             if (mode === 'create') {
                 title.textContent = 'Create New Security Permission';
                 submitButton.textContent = 'Save';
-                renderMenuCheckboxes([]); // Render all menus unchecked for new permission
-            } else { // edit mode
+                renderMenuCheckboxes([]);
+            } else {
                 title.textContent = 'Edit Security Permission';
                 submitButton.textContent = 'Update';
                 const securityPermission = securityPermissions.find(sp => sp.id === id);
@@ -3140,7 +2811,7 @@ window.showSearchHistory = function() {
                     document.getElementById('sp-name').value = securityPermission.spName;
                     document.getElementById('sp-description').value = securityPermission.spDescription;
                     document.getElementById('sp-inactive').checked = securityPermission.inactive;
-                    renderMenuCheckboxes(securityPermission.menus); // Render menus with selected ones checked
+                    renderMenuCheckboxes(securityPermission.menus);
                 }
             }
             modal.classList.remove('hidden');
@@ -3223,11 +2894,6 @@ window.showSearchHistory = function() {
 
     });
 
-        /**
-         * Mengubah visibilitas input password (text/password).
-         * @param {string} inputId - ID dari elemen input password.
-         * @param {boolean} isChecked - Status checkbox (true jika dicentang).
-         */
         window.togglePasswordVisibility = function(inputId, isChecked) {
             const passwordInput = document.getElementById(inputId);
             if (passwordInput) {
@@ -3235,33 +2901,23 @@ window.showSearchHistory = function() {
             }
         };
 
-        /**
-         * Mengganti visibilitas dropdown pengguna.
-         */
         window.toggleUserDropdown = function() {
             const userDropdown = document.getElementById('user-dropdown');
             userDropdown.classList.toggle('hidden');
         };
 
-        /**
-         * Navigasi ke halaman profil.
-         */
         window.navigateToProfile = function() {
             window.location.href = 'profile.html';    
         };
 
-        /**
-         * Menangani proses logout.
-         */
         window.handleLogout = async function() {
             const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
             if (confirmed) {
                 await showCustomAlert('Logout', 'Anda berhasil logout.');
-                window.location.href = 'login.html'; // Arahkan ke halaman login
+                window.location.href = 'login.html';
             }
         };
 
-        // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
             const userDropdown = document.getElementById('user-dropdown');
