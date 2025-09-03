@@ -1,3 +1,7 @@
+// configurationV4.js
+// Disempurnakan oleh Senior Frontend Engineer
+// Tujuan: Refaktor & implementasi fitur Item Master modul sesuai 19 screenshot referensi.
+
 (function () {
     document.addEventListener('DOMContentLoaded', () => {
         // Memastikan variabel global sudah tersedia
@@ -5,9 +9,23 @@
         if (typeof window.searchItems === 'undefined') window.searchItems = [];
         if (typeof window.parentMapping === 'undefined') window.parentMapping = {};
         if (typeof window.allMenus === 'undefined') window.allMenus = [];
-
+        
         // --- UTILITY FUNCTIONS ---
-        // Reuse global functions from configuration.js and other modules
+        // Helper untuk memformat tanggal dan waktu
+        const formatDate = (date) => {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            const pad = (n) => n < 10 ? `0${n}` : n;
+            const day = pad(d.getDate());
+            const month = pad(d.getMonth() + 1);
+            const year = d.getFullYear();
+            const hours = pad(d.getHours());
+            const minutes = pad(d.getMinutes());
+            const seconds = pad(d.getSeconds());
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`; 
+        };
+        
+        // Debounce function
         const debounce = window.debounce || ((fn, delay) => {
             let timeoutId;
             return (...args) => {
@@ -16,315 +34,1662 @@
             };
         });
 
-        // Mendefinisikan IUoM data model
-        let itemUoms = JSON.parse(localStorage.getItem('itemUoms')) || [];
+        // Custom Alert and Confirm to avoid browser pop-ups
+        function createCustomModal(id, title, message, isConfirm = false, onOk, onCancel) {
+            let modal = document.getElementById(id);
+            if (modal) modal.remove();
+
+            modal = document.createElement('div');
+            modal.id = id;
+            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-auto">
+                    <h3 class="text-lg font-semibold mb-4">${title}</h3>
+                    <p class="text-sm text-gray-600 mb-4">${message}</p>
+                    <div class="flex justify-end gap-2">
+                        ${isConfirm ? `<button id="${id}-cancel" class="px-4 py-2 text-sm rounded-md hover:bg-gray-200">Batal</button>` : ''}
+                        <button id="${id}-ok" class="px-4 py-2 text-sm bg-wise-primary text-white rounded-md hover:bg-blue-600">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById(`${id}-ok`).onclick = () => {
+                modal.remove();
+                if (onOk) onOk();
+            };
+
+            if (isConfirm) {
+                document.getElementById(`${id}-cancel`).onclick = () => {
+                    modal.remove();
+                    if (onCancel) onCancel();
+                };
+            }
+        }
+
+        window.showCustomAlert = (title, message) => {
+            return new Promise(resolve => {
+                const modalId = 'custom-alert-modal';
+                createCustomModal(modalId, title, message, false, resolve);
+            });
+        };
+
+        window.showCustomConfirm = (title, message) => {
+            return new Promise(resolve => {
+                const modalId = 'custom-confirm-modal';
+                createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
+            });
+        };
+
+        const showToast = (message, type = 'success') => {
+            const toastId = 'toast-notification';
+            let toast = document.getElementById(toastId);
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = toastId;
+                toast.className = 'fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 aria-live="polite"';
+                document.body.appendChild(toast);
+            }
+            
+            const colorClass = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            toast.className = `fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 ${colorClass}`;
+            toast.textContent = message;
+            toast.classList.remove('opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3000);
+        };
         
-        // Data dummy untuk UoM, Item, Item Class, dan Company
-        const uoms = ['PC', 'BOX', 'PLT', 'KG', 'LBS'];
-        const itemCodes = ['000000053068_1', '000000053069_1', '000000053070_1', '000000053071_1'];
+        // Helper untuk membuat dropdown panjang yang dapat dicari
+        const makeLongDropdown = (selectId, options, currentValue) => {
+            const selectEl = document.getElementById(selectId);
+            if (!selectEl) return;
+            const selectContainer = document.createElement('div');
+            selectContainer.className = 'relative w-full';
+            
+            const inputId = `${selectId}-input`;
+            const dropdownId = `${selectId}-dropdown`;
+            
+            selectContainer.innerHTML = `
+                <input type="text" id="${inputId}" class="input w-full cursor-pointer focus:ring-2 focus:ring-wise-primary" readonly
+                       placeholder="-- Pilih --" value="${currentValue || ''}" autocomplete="off" aria-haspopup="listbox" aria-expanded="false">
+                <div id="${dropdownId}" class="absolute z-10 hidden bg-white border border-gray-300 rounded-md shadow-lg mt-1 w-full max-h-[280px] overflow-y-auto">
+                    <div class="p-2 border-b border-gray-200">
+                        <input type="text" id="${dropdownId}-filter" class="w-full text-sm p-2 border rounded-md focus:outline-none" placeholder="Cari...">
+                    </div>
+                    <ul role="listbox" id="${dropdownId}-list" class="text-sm"></ul>
+                </div>
+            `;
+            selectEl.parentNode.replaceChild(selectContainer, selectEl);
+            
+            const dropdown = document.getElementById(dropdownId);
+            const input = document.getElementById(inputId);
+            const filterInput = document.getElementById(`${dropdownId}-filter`);
+            const list = document.getElementById(`${dropdownId}-list`);
+            
+            let filteredOptions = options;
+            let activeIndex = -1;
+
+            const renderOptions = (opts) => {
+                list.innerHTML = opts.map((opt, index) => {
+                    const value = typeof opt === 'object' ? opt.value : opt;
+                    const label = typeof opt === 'object' ? opt.label : opt;
+                    return `<li role="option" data-value="${value}" class="p-2 cursor-pointer hover:bg-wise-light-gray" id="${dropdownId}-option-${index}">${label}</li>`;
+                }).join('');
+            };
+
+            input.addEventListener('click', () => {
+                const isHidden = dropdown.classList.contains('hidden');
+                dropdown.classList.toggle('hidden', !isHidden);
+                input.setAttribute('aria-expanded', isHidden);
+                if (isHidden) {
+                    filterInput.focus();
+                }
+                renderOptions(filteredOptions);
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!selectContainer.contains(e.target) && !dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                    input.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            filterInput.addEventListener('input', debounce(() => {
+                const filterText = filterInput.value.toLowerCase();
+                filteredOptions = options.filter(opt => {
+                    const label = typeof opt === 'object' ? opt.label.toLowerCase() : opt.toLowerCase();
+                    return label.includes(filterText);
+                });
+                renderOptions(filteredOptions);
+            }, 200));
+
+            list.addEventListener('click', (e) => {
+                const li = e.target.closest('li');
+                if (li) {
+                    const value = li.dataset.value;
+                    input.value = li.textContent;
+                    input.dataset.value = value;
+                    dropdown.classList.add('hidden');
+                    input.setAttribute('aria-expanded', 'false');
+                    
+                    // Trigger custom change event for reactivity
+                    const event = new Event('change', { bubbles: true });
+                    input.dispatchEvent(event);
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (dropdown.classList.contains('hidden')) {
+                        dropdown.classList.remove('hidden');
+                        input.setAttribute('aria-expanded', 'true');
+                        renderOptions(filteredOptions);
+                        activeIndex = -1;
+                    }
+                    activeIndex = (activeIndex + 1) % list.children.length;
+                    list.children[activeIndex].focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (dropdown.classList.contains('hidden')) return;
+                    activeIndex = (activeIndex - 1 + list.children.length) % list.children.length;
+                    list.children[activeIndex].focus();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (activeIndex !== -1) {
+                        list.children[activeIndex].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.add('hidden');
+                    input.setAttribute('aria-expanded', 'false');
+                    input.focus();
+                }
+            });
+
+            renderOptions(options);
+        };
+        
+        // Helper untuk memvalidasi form
+        const validateItemForm = () => {
+            const form = document.getElementById('item-form');
+            const mode = form.dataset.mode;
+            let isValid = true;
+            let firstInvalidField = null;
+
+            // Clear previous errors
+            form.querySelectorAll('.error-message').forEach(el => el.remove());
+            form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+
+            const showError = (input, message) => {
+                if (!input) return;
+                const errorId = `${input.id}-error`;
+                let errorEl = document.getElementById(errorId);
+                if (!errorEl) {
+                    errorEl = document.createElement('p');
+                    errorEl.id = errorId;
+                    errorEl.className = 'error-message text-red-500 text-xs mt-1';
+                    input.parentNode.appendChild(errorEl);
+                }
+                errorEl.textContent = message;
+                input.setAttribute('aria-invalid', 'true');
+                input.setAttribute('aria-describedby', errorId);
+                if (!firstInvalidField) {
+                    firstInvalidField = input;
+                }
+                isValid = false;
+            };
+
+            const companyInput = form.querySelector('[name="company-input"]');
+            const itemCodeInput = form.querySelector('[name="itemCode"]');
+            const eqValueInput = form.querySelector('[name="eqValue"]');
+            const costInput = form.querySelector('[name="cost"]');
+            const listPriceInput = form.querySelector('[name="listPrice"]');
+            const netPriceInput = form.querySelector('[name="netPrice"]');
+            const shelfLifeInput = form.querySelector('[name="shelfLife"]');
+            const lotControlledCheckbox = form.querySelector('[name="lotControlled"]');
+            const lotTemplateSelect = form.querySelector('[name="lotTemplate-input"]');
+            const lotDaysToExpireInput = form.querySelector('[name="lotDaysToExpire"]');
+            const gs1EnabledCheckbox = form.querySelector('[name="gs1GtinEnabled"]');
+            const gs1TypeRadio = form.querySelector('input[name="gs1Type"]:checked');
+            const computeQtyAsRadio = form.querySelector('input[name="computeQtyAs"]:checked');
+            const inspectionQtyInput = form.querySelector('[name="inspectionQty"]');
+            const serialControlledCheckbox = form.querySelector('[name="serialControlled"]');
+            const serialTemplateSelect = form.querySelector('[name="serialTemplate-input"]');
+
+            // Business Rules
+            if (!companyInput?.value) showError(companyInput, 'Company diperlukan.');
+            if (!itemCodeInput?.value && mode === 'create') showError(itemCodeInput, 'Item Code diperlukan.');
+
+            const numValue = (el) => parseFloat(el?.value) || 0;
+
+            if (numValue(eqValueInput) < 0) showError(eqValueInput, 'EQ Value harus ≥ 0.');
+            if (numValue(costInput) < 0) showError(costInput, 'Cost harus ≥ 0.');
+            if (numValue(listPriceInput) < 0) showError(listPriceInput, 'List price harus ≥ 0.');
+            if (numValue(netPriceInput) < 0) showError(netPriceInput, 'Net price harus ≥ 0.');
+            if (numValue(shelfLifeInput) < 0) showError(shelfLifeInput, 'Shelf life harus ≥ 0.');
+
+            if (lotControlledCheckbox?.checked && !lotTemplateSelect?.value) {
+                showError(lotTemplateSelect, 'Lot template diperlukan.');
+            }
+            
+            if (gs1EnabledCheckbox?.checked && !gs1TypeRadio?.value) {
+                const radioGroup = form.querySelector('input[name="gs1Type"]');
+                showError(radioGroup, 'Pilih satu opsi GS1.');
+            } else if (!gs1EnabledCheckbox?.checked) {
+                form.querySelector('input[name="gs1Type"]').checked = false;
+            }
+
+            if (computeQtyAsRadio?.value === 'PERCENTAGE' && numValue(inspectionQtyInput) > 100) {
+                 showError(inspectionQtyInput, 'Inspection Qty tidak boleh > 100%');
+            }
+            
+            const serialFlags = form.querySelector('[name="serialInbound"]').checked ||
+                                form.querySelector('[name="serialInventory"]').checked ||
+                                form.querySelector('[name="serialOutbound"]').checked;
+            
+            if (serialControlledCheckbox?.checked && !serialTemplateSelect?.value) {
+                 showError(serialTemplateSelect, 'Serial template diperlukan.');
+            } else if (!serialControlledCheckbox?.checked && serialTemplateSelect?.value) {
+                 showError(serialTemplateSelect, 'Kosongkan template karena Serial controlled tidak aktif.');
+            }
+
+
+            if (firstInvalidField) {
+                // Temukan tab yang berisi field pertama yang invalid
+                const tabPane = firstInvalidField.closest('[role="tabpanel"]');
+                if (tabPane) {
+                    const tabId = tabPane.dataset.pane;
+                    document.getElementById('item-tab-list').querySelector(`[data-tab="${tabId}"]`).click();
+                }
+                firstInvalidField.focus();
+            }
+
+            return isValid;
+        };
+        
+        // --- DATA MODELS & SEEDING ---
+        let items = JSON.parse(localStorage.getItem('items')) || [];
+
+        const uoms = ['PC', 'BOX', 'PLT', 'KG', 'LBS', 'M', 'CM', 'IN', 'FT', 'G', 'LB'];
         const itemClasses = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
         const companies = ['DCB', 'DCI', 'DMR'];
-        const movementClasses = ['GRAY', 'YMA', 'YMB', 'YMW', 'YMC', 'YMK', 'YMD', 'YMX', 'YMF'];
+        const inspectionUms = ['PC', 'PCK', 'PCK-PLT'];
+        const lotTemplates = ['Expiry Date', 'Manufacturing Date', 'Packing/Manufacturing Date'];
+        const serialTemplates = ['Standard', 'Custom 1', 'Custom 2'];
+        const shippingBOMOptions = [
+            { value: 'create_work_order', label: 'Create work order for rejected quantity' },
+            { value: 'add_bom_components', label: 'Add BOM components as shipment details' },
+            { value: 'none', label: 'None' },
+        ];
+        
+        const longRuleList = Array.from({ length: 50 }, (_, i) => `RULE-${i + 1}`);
+        const allocationRules = [
+            'A-DCB.COOKFOOD', 'A-DCB.DAILYDAIRY', 'A-DCB.EGGS', 'A-DCB.EXP EMPTIES',
+            'A-DCB.EXPENSE', 'A-DCB.EXT.DRY', 'A-DCB.FASHION', 'A-DCB.FD.PICK',
+            ...Array.from({length: 20}, (_, i) => `A-DCB.RULE${i+1}`),
+        ];
+        const locatingRules = [
+            'L-DAB.FASHION FACE', 'L-DCB.AISLE 31.61', 'L-DCB.AISLE 32.62', 'L-DCB.AISLE 33.63',
+            'L-DCB.AISLE 34.64', 'L-DCB.AISLE 35-39', 'L-DCB.AISLE88 CIGARETTE', 'L-DCB.CFLOW.LT2',
+            ...Array.from({length: 20}, (_, i) => `L-DCB.RULE${i+1}`),
+        ];
 
-        function seedIUoMData() {
-            if (itemUoms.length === 0) {
+        const packingClasses = ['Default Packing Class', 'CFLOWFD', 'CFLOWLT2FACE', 'CFLOWNF', 'CFLOW14', 'CFLOW15'];
+        const storageTemplates = ['PC-PCK', 'PC-PCK-PLT', 'KG', 'PC', 'PLT'];
+        const countryList = [
+            {code: 'ID', name: 'Indonesia'}, {code: 'CN', name: 'China'}, {code: 'US', name: 'United States'}
+        ];
+        const netCostOptions = ['NONE', 'C', 'N'];
+        const categoryList = [
+            'A - LADIES', 'A2 - YOUNG', 'A21 - T-SHIRT', 'A21A03 - LONG T-SHIRT', 'A21A03B', 
+            'PC', 'A1', 'B - MENS', 'B3 - SHIRTS', 'C - CHILDREN', 'D - HOMEWARE'
+        ];
+        
+        // Seeding data
+        function seedItemData() {
+            if (items.length === 0) {
                 const dummyData = [
                     {
-                        id: 'IUOM001',
-                        targetType: 'item',
-                        itemCode: '000000053068_1',
-                        itemClass: '',
+                        id: 'ITM000001',
                         company: 'DCB',
-                        conversionQty: 12.00,
-                        treatAsFullPercent: 100,
-                        epcPackageId: 0,
-                        movementClass: 'GRAY',
-                        treatAsLooseInContainer: false,
-                        length: 1.00, lengthUm: 'CM',
-                        width: 1.00, widthUm: 'CM',
-                        height: 1.00, heightUm: 'CM',
-                        weight: 1.00, weightUm: 'KG',
-                        udf: { udf1:'', udf2:'', udf3:'', udf4:'', udf5:'', udf6:'', udf7:'', udf8:'' },
-                        updatedAt: '25-08-2017 9:00:48 PM'
-                    },
-                    {
-                        id: 'IUOM002',
-                        targetType: 'itemClass',
-                        itemCode: '',
+                        itemCode: '000000002077_1', 
+                        description: '1B RM2003 BO TS SLR01MG LONG T-SHIRT RM2', 
+                        inactive: false,
+                        inventoryTracking: true,
+                        itemTemplate: '',
+                        
+                        inboundShelfLife: '365D', 
+                        promoItem: 'N',
+                        containerType: 'PALLET',
+                        tiHi: '8 x 5',
+                        primarySupplier: 'SUP001',
+                        mfgExpDate: 'Mfg',
+                        shelfLife: 730,
+                        outboundShelfLife: '180D',
+
+                        immediateEligible: true,
+                        immediateLocatingRule: 'L-DAB.FASHION FACE',
+                        inboundQcStatus: 'Active', // Read-only status
+                        
+                        cost: 125000.00000,
+                        listPrice: 150000.00000,
+                        netPrice: 135000.00000,
+                        companyPrefix: '12345',
+                        itemReference: 'ABC-123',
+                        cageCode: 'CAGE-123',
+                        gs1GtinEnabled: true,
+                        gs1Type: '01AI',
+                        eqValue: 1,
+                        division: 'FASHION',
+                        department: 'TSHIRT',
+                        itemColor: 'MG',
+                        itemStyle: 'LONG',
+                        shippingBOM: 'add_bom_components',
+                        
+                        char2a: 'Value A',
+                        char2b: 'Value B',
+                        udf: { 
+                            udf1: 'UDF1', udf2: 'UDF2', udf3: 'UDF3', udf4: 'UDF4', 
+                            udf5: '', udf6: '', udf7: '', udf8: '' 
+                        },
+                        
+                        allocationRule: 'A-DCB.FASHION',
+                        locatingRule: 'L-DAB.FASHION FACE',
+                        nmfcCode: 'NMFC-123',
                         itemClass: 'GENERAL',
-                        company: 'DCI',
-                        conversionQty: 100.00,
-                        treatAsFullPercent: 100,
-                        epcPackageId: 0,
-                        movementClass: 'YMA',
-                        treatAsLooseInContainer: false,
-                        length: 120.00, lengthUm: 'CM',
-                        width: 100.00, widthUm: 'CM',
-                        height: 150.00, heightUm: 'CM',
-                        weight: 500.00, weightUm: 'KG',
-                        udf: { udf1:'', udf2:'', udf3:'', udf4:'', udf5:'', udf6:'', udf7:'', udf8:'' },
-                        updatedAt: '25-08-2017 9:00:48 PM'
+                        packingClass: 'CFLOWLT2FACE',
+                        storageTemplate: 'PC-PCK',
+
+                        catchWeightRequired: false,
+                        lotControlled: true,
+                        lotTemplate: 'Expiry Date',
+                        lotDaysToExpire: 30,
+                        serialControlled: true,
+                        serialInbound: false,
+                        serialInventory: true,
+                        serialOutbound: true,
+                        serialTemplate: 'Standard',
+                        
+                        inboundEligible: true,
+                        computeQtyAs: 'AMOUNT',
+                        inspectionQty: 10.00,
+                        inspectionUm: 'PC',
+                        qcLocatingRule: 'L-DAB.FASHION FACE',
+
+                        webImage: 'http://example.com/image.jpg',
+                        webThumb: 'http://example.com/thumb.jpg',
+                        longDescription: 'Long description for the item goes here.',
+                        availableForWebOrder: true,
+                        
+                        alternateItem: 'ALT-ITEM-1',
+                        substituteItem: 'SUB-ITEM-1',
+                        substituteList: [
+                            { code: 'SUB-A', description: 'Substitute Item A' },
+                            { code: 'SUB-B', description: 'Substitute Item B' },
+                        ],
+                        
+                        preferenceCriterion: true,
+                        harmonizedCode: 'HS-12345',
+                        harmonizedUploaded: true,
+                        countryOfOrigin: 'CN',
+                        netCost: 'C',
+                        countries: [{ code: 'CN', name: 'China' }, { code: 'ID', name: 'Indonesia' }, { code: 'US', name: 'United States' }],
+                        
+                        categories: {
+                            1: 'A - LADIES', 2: 'A2 - YOUNG', 3: 'A21 - T-SHIRT', 4: '', 5: '',
+                            6: '', 7: '', 8: '', 9: '', 10: ''
+                        },
+
+                        updatedAt: Date.now() 
                     },
                 ];
-                itemUoms = dummyData;
-                saveIUoMs();
+                items = dummyData;
+                localStorage.setItem('items', JSON.stringify(items));
             }
         }
         
-        // Init data
-        seedIUoMData();
-
-        function saveIUoMs() {
-            localStorage.setItem('itemUoms', JSON.stringify(itemUoms));
+        function saveItems() {
+            localStorage.setItem('items', JSON.stringify(items));
         }
         
-        // Registrasi modul ke window.contentData
-        window.contentData['item-unit-of-measure'] = {
-            full: `
-                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Unit of Measure</h2>
-                <p class="text-wise-gray mb-4">Mengelola unit of measure (UoM) dan konversi untuk item atau kelas item.</p>
-
-                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                    <div class="flex gap-2">
-                        <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showIUoMForm('create')">
-                            Create New IUoM
-                        </button>
-                        <button class="px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-md hover:bg-gray-300 transition-colors duration-200 shadow-md active-press transform" onclick="exportIUoMToCSV()">
-                            Export CSV
-                        </button>
-                        <label for="import-csv" class="cursor-pointer px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-md hover:bg-gray-300 transition-colors duration-200 shadow-md active-press transform">
-                            Import CSV
-                            <input type="file" id="import-csv" accept=".csv" class="hidden" onchange="importIUoMFromCSV(event)">
-                        </label>
+        // --- MODAL AND UI SETUP ---
+        const createModal = (id) => {
+            const modal = document.createElement('div');
+            modal.id = id;
+            modal.className = 'hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30';
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('role', 'dialog');
+            modal.innerHTML = `
+                <div class="modal-content w-[min(1200px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[90vh] opacity-0 scale-95 transition-all">
+                    <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
+                        <h3 id="${id}-title" class="text-lg font-semibold text-wise-dark-gray"></h3>
+                        <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeModal('${id}')" aria-label="Tutup">✕</button>
                     </div>
-                    <input type="text" id="iuom-search" placeholder="Cari IUoM..."
-                        class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray max-w-sm" oninput="filterIUoMList(this.value)">
+                    <div id="${id}-body" class="p-6 overflow-y-auto"></div>
+                    <div id="${id}-footer" class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3"></div>
                 </div>
-
-                <div id="iuom-list-container" class="overflow-x-auto overflow-y-auto max-h-[70vh]">
-                    <!-- Tabel akan dirender di sini -->
-                </div>
-
-                <!-- Modal IUoM Form -->
-                <div id="iuom-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30" aria-modal="true" role="dialog">
-                    <div class="modal-content w-[min(1200px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[90vh] opacity-0 scale-95 transition-all">
-                        <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
-                            <h3 id="iuom-form-title" class="text-lg font-semibold text-wise-dark-gray">Create New Item Unit of Measure</h3>
-                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeIUoMForm()" aria-label="Tutup">✕</button>
-                        </div>
-                        <div class="p-6 overflow-y-auto">
-                            <form id="iuom-form" onsubmit="handleIUoMSubmit(event)">
-                                <!-- General Info on top of tabs -->
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                                    <div class="md:col-span-1">
-                                        <label for="iuom-company" class="block text-sm mb-1">Company:</label>
-                                        <select id="iuom-company" name="company" class="select">
-                                            <option value="">-- Pilih Perusahaan --</option>
-                                            ${companies.map(c => `<option value="${c}">${c}</option>`).join('')}
-                                        </select>
-                                    </div>
-                                    <div id="iuom-item-code-field" class="md:col-span-2">
-                                        <label for="iuom-item-code" class="block text-sm mb-1">Item:</label>
-                                        <select id="iuom-item-code" name="itemCode" class="select">
-                                            <option value="">-- Pilih Item Code --</option>
-                                            ${itemCodes.map(ic => `<option value="${ic}">${ic}</option>`).join('')}
-                                        </select>
-                                    </div>
-                                    <div id="iuom-item-class-field" class="hidden md:col-span-2">
-                                        <label for="iuom-item-class" class="block text-sm mb-1">Item class:</label>
-                                        <select id="iuom-item-class" name="itemClass" class="select">
-                                            <option value="">-- Pilih Item Class --</option>
-                                            ${itemClasses.map(ic => `<option value="${ic}">${ic}</option>`).join('')}
-                                        </select>
-                                    </div>
-                                    <div class="md:col-span-1">
-                                         <label class="block text-sm mb-1">UM:</label>
-                                         <input type="text" id="iuom-um" name="um" class="input bg-gray-100 cursor-not-allowed" value="PC" readonly>
-                                    </div>
-                                    <div class="md:col-span-4 flex gap-4">
-                                        <fieldset>
-                                            <legend class="text-sm font-medium mb-2">Scope</legend>
-                                            <div class="flex items-center space-x-4">
-                                                <div class="flex items-center">
-                                                    <input type="radio" id="scope-item-radio" name="targetType" value="item" class="custom-radio" onchange="toggleScopeInputs()" checked>
-                                                    <label for="scope-item-radio" class="ml-2 text-sm text-wise-dark-gray">Item</label>
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <input type="radio" id="scope-itemclass-radio" name="targetType" value="itemClass" class="custom-radio" onchange="toggleScopeInputs()">
-                                                    <label for="scope-itemclass-radio" class="ml-2 text-sm text-wise-dark-gray">Item class</label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <div class="flex items-center">
-                                            <label class="flex items-center gap-2 text-sm">
-                                                <input type="checkbox" id="iuom-inactive" name="inactive"> Inactive
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Tabs -->
-                                <div role="tablist" id="iuom-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
-                                    <button type="button" role="tab" data-tab="iuom-gen-tab" class="tab-active">General</button>
-                                    <button type="button" role="tab" data-tab="iuom-dims-tab" class="tab">Dimensions</button>
-                                    <button type="button" role="tab" data-tab="iuom-slot-tab" class="tab">Slotting values</button>
-                                    <button type="button" role="tab" data-tab="iuom-ud-tab" class="tab">User defined data</button>
-                                </div>
-                                <!-- Tab Panes -->
-                                <div id="iuom-gen-tab" role="tabpanel" data-pane="iuom-gen-tab" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="iuom-conversion-qty" class="block text-sm mb-1">Conversion qty:</label>
-                                        <input type="number" step="0.01" id="iuom-conversion-qty" name="conversionQty" class="input" value="1.00">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-treat-as-full" class="block text-sm mb-1">Treat as full percent:</label>
-                                        <div class="relative">
-                                            <input type="number" id="iuom-treat-as-full" name="treatAsFullPercent" class="input pr-8" value="100">
-                                            <span class="absolute right-2 top-1/2 -translate-y-1/2 text-wise-gray">%</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="iuom-epc-package-id" class="block text-sm mb-1">Epc package id:</label>
-                                        <input type="number" id="iuom-epc-package-id" name="epcPackageId" class="input" value="0">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-movement-class" class="block text-sm mb-1">Movement class:</label>
-                                        <select id="iuom-movement-class" name="movementClass" class="select">
-                                            <option value="">-- Select --</option>
-                                            ${movementClasses.map(mc => `<option value="${mc}">${mc}</option>`).join('')}
-                                        </select>
-                                    </div>
-                                    <div class="md:col-span-2">
-                                        <label class="flex items-center gap-2 text-sm">
-                                            <input type="checkbox" id="iuom-loose-in-container" name="treatAsLooseInContainer"> Treat as loose in container creation
-                                        </label>
-                                    </div>
-                                </div>
-                                <div id="iuom-dims-tab" role="tabpanel" data-pane="iuom-dims-tab" class="hidden grid grid-cols-2 gap-4">
-                                     <div>
-                                        <label for="iuom-length" class="block text-sm mb-1">Length:</label>
-                                        <div class="flex">
-                                            <input type="number" step="0.01" id="iuom-length" name="length" class="input rounded-r-none" value="0.00000">
-                                            <select id="iuom-length-um" name="lengthUm" class="select w-24 rounded-l-none">
-                                                <option value="CM">CM</option>
-                                                <option value="M">M</option>
-                                                <option value="IN">IN</option>
-                                                <option value="FT">FT</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="iuom-width" class="block text-sm mb-1">Width:</label>
-                                        <div class="flex">
-                                            <input type="number" step="0.01" id="iuom-width" name="width" class="input rounded-r-none" value="0.00000">
-                                            <select id="iuom-width-um" name="widthUm" class="select w-24 rounded-l-none">
-                                                <option value="CM">CM</option>
-                                                <option value="M">M</option>
-                                                <option value="IN">IN</option>
-                                                <option value="FT">FT</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="iuom-height" class="block text-sm mb-1">Height:</label>
-                                        <div class="flex">
-                                            <input type="number" step="0.01" id="iuom-height" name="height" class="input rounded-r-none" value="0.00000">
-                                            <select id="iuom-height-um" name="heightUm" class="select w-24 rounded-l-none">
-                                                <option value="CM">CM</option>
-                                                <option value="M">M</option>
-                                                <option value="IN">IN</option>
-                                                <option value="FT">FT</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="iuom-weight" class="block text-sm mb-1">Weight:</label>
-                                        <div class="flex">
-                                            <input type="number" step="0.01" id="iuom-weight" name="weight" class="input rounded-r-none" value="0.00000">
-                                            <select id="iuom-weight-um" name="weightUm" class="select w-24 rounded-l-none">
-                                                <option value="KG">KG</option>
-                                                <option value="G">G</option>
-                                                <option value="LB">LB</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="iuom-slot-tab" role="tabpanel" data-pane="iuom-slot-tab" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-                                     <div>
-                                        <label for="iuom-sloting-id" class="block text-sm mb-1">Sloting id:</label>
-                                        <input id="iuom-sloting-id" name="slotingId" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-slotting-pallet-ti" class="block text-sm mb-1">Slotting pallet TI:</label>
-                                        <input id="iuom-slotting-pallet-ti" name="slottingPalletTI" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-slotting-pallet-hi" class="block text-sm mb-1">Slotting pallet HI:</label>
-                                        <input id="iuom-slotting-pallet-hi" name="slottingPalletHI" class="input">
-                                    </div>
-                                </div>
-                                <div id="iuom-ud-tab" role="tabpanel" data-pane="iuom-ud-tab" class="hidden grid gap-3 md:grid-cols-2">
-                                    <div>
-                                        <label for="iuom-udf1" class="block text-sm mb-1">User defined field 1:</label>
-                                        <input id="iuom-udf1" name="udf1" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf2" class="block text-sm mb-1">User defined field 2:</label>
-                                        <input id="iuom-udf2" name="udf2" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf3" class="block text-sm mb-1">User defined field 3:</label>
-                                        <input id="iuom-udf3" name="udf3" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf4" class="block text-sm mb-1">User defined field 4:</label>
-                                        <input id="iuom-udf4" name="udf4" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf5" class="block text-sm mb-1">User defined field 5:</label>
-                                        <input id="iuom-udf5" name="udf5" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf6" class="block text-sm mb-1">User defined field 6:</label>
-                                        <input id="iuom-udf6" name="udf6" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf7" class="block text-sm mb-1">User defined field 7:</label>
-                                        <input id="iuom-udf7" name="udf7" type="text" class="input">
-                                    </div>
-                                    <div>
-                                        <label for="iuom-udf8" class="block text-sm mb-1">User defined field 8:</label>
-                                        <input id="iuom-udf8" name="udf8" type="text" class="input">
-                                    </div>
-                                </div>
-                                <input type="hidden" id="iuom-id" name="id">
-                            </form>
-                        </div>
-                        <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-                            <button type="button" class="btn" onclick="closeIUoMForm()">Cancel</button>
-                            <button id="iuom-submit-button" type="submit" form="iuom-form" class="btn btn-primary">OK</button>
-                        </div>
-                    </div>
-                </div>
-            `
+            `;
+            document.body.appendChild(modal);
+            return modal;
         };
 
-        // Daftarkan ke menu & pencarian global
-        window.searchItems.push({ id: 'item-unit-of-measure', title: 'Item Unit of Measure', category: 'Inventory Control', lastUpdated: 'Latest' });
-        window.allMenus.push({ name: 'Item Unit of Measure', category: 'Inventory Control' });
-        window.parentMapping['item-unit-of-measure'] = 'inventory-control';
+        const showModal = (id) => {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                }
+                modal.querySelector('.modal-content').focus();
+            }, 10);
+            modal.onclick = (e) => {
+                if (e.target.id === id) closeModal(id);
+            };
+        };
 
+        window.closeModal = (id) => {
+            const modal = document.getElementById(id);
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        };
+        
+        // --- ITEM MODAL FUNCTIONS ---
+        createModal('item-form-modal');
+        
+        window.showItemForm = (mode, id = null) => {
+            const modal = document.getElementById('item-form-modal');
+            const title = document.getElementById('item-form-modal-title');
+            const body = document.getElementById('item-form-modal-body');
+            const footer = document.getElementById('item-form-modal-footer');
+            
+            // Render the form HTML inside the modal body
+            body.innerHTML = `
+                <form id="item-form" class="h-full" data-mode="${mode}">
+                    <div role="tablist" id="item-tab-list" class="border-b mb-4 flex flex-wrap gap-4 text-sm font-medium">
+                        <button type="button" role="tab" data-tab="item-gen-tab" class="tab-active">General</button>
+                        <button type="button" role="tab" data-tab="item-char1-tab" class="tab">Item char(1)</button>
+                        <button type="button" role="tab" data-tab="item-char2-tab" class="tab">Item char(2)</button>
+                        <button type="button" role="tab" data-tab="item-handling1-tab" class="tab">Handling(1)</button>
+                        <button type="button" role="tab" data-tab="item-handling2-tab" class="tab">Handling(2)</button>
+                        <button type="button" role="tab" data-tab="item-internet-tab" class="tab">Internet information</button>
+                        <button type="button" role="tab" data-tab="item-subst-tab" class="tab">Alternate/Substitute</button>
+                        <button type="button" role="tab" data-tab="item-int-tab" class="tab">International</button>
+                        <button type="button" role="tab" data-tab="item-cats-tab" class="tab">Categories</button>
+                        <button type="button" role="tab" data-tab="item-udf-tab" class="tab">User defined data</button>
+                    </div>
+                    <div id="item-form-scroll-container" class="max-h-[70vh] overflow-y-auto pr-1">
+                        <div id="item-gen-tab" role="tabpanel" data-pane="item-gen-tab"></div>
+                        <div id="item-char1-tab" role="tabpanel" data-pane="item-char1-tab" class="hidden"></div>
+                        <div id="item-char2-tab" role="tabpanel" data-pane="item-char2-tab" class="hidden"></div>
+                        <div id="item-handling1-tab" role="tabpanel" data-pane="item-handling1-tab" class="hidden"></div>
+                        <div id="item-handling2-tab" role="tabpanel" data-pane="item-handling2-tab" class="hidden"></div>
+                        <div id="item-internet-tab" role="tabpanel" data-pane="item-internet-tab" class="hidden"></div>
+                        <div id="item-subst-tab" role="tabpanel" data-pane="item-subst-tab" class="hidden"></div>
+                        <div id="item-int-tab" role="tabpanel" data-pane="item-int-tab" class="hidden"></div>
+                        <div id="item-cats-tab" role="tabpanel" data-pane="item-cats-tab" class="hidden"></div>
+                        <div id="item-udf-tab" role="tabpanel" data-pane="item-udf-tab" class="hidden"></div>
+                    </div>
+                    <input type="hidden" id="item-id" name="id">
+                </form>
+            `;
+            
+            // Render content per tab
+            renderTabGeneral(mode);
+            renderTabChar1(mode);
+            renderTabChar2(mode);
+            renderTabHandling1(mode);
+            renderTabHandling2(mode);
+            renderTabInternet(mode);
+            renderTabAlternate(mode);
+            renderTabInternational(mode);
+            renderTabCategories(mode);
+            renderTabUdf(mode);
 
-        // --- RENDER & FILTER FUNCTIONS ---
-        window.renderIUoMList = function (filter = '', sortBy = '', sortDir = 'asc') {
-            const container = document.getElementById('iuom-list-container');
+            // Set modal title and footer buttons
+            title.textContent = mode === 'create' ? 'Create New Item' : (mode === 'edit' ? 'Edit Item' : 'View Item');
+            footer.innerHTML = `
+                <button type="button" class="btn" onclick="closeModal('item-form-modal')">Batal</button>
+                ${mode !== 'view' ? `<button type="submit" form="item-form" class="btn btn-primary">Simpan</button>` : ''}
+            `;
+            
+            setupTabSwitching('item-form-modal');
+            
+            let item = {};
+            if (mode !== 'create' && id) {
+                item = items.find(i => i.id === id);
+                if (item) {
+                    fillItemForm(item);
+                }
+            } else {
+                 applyStateFromForm();
+            }
+            
+            // Add event listeners for dynamic states
+            document.getElementById('item-form').addEventListener('change', (e) => {
+                if (e.target.name === 'lotControlled' || e.target.name === 'serialControlled' || e.target.name === 'gs1GtinEnabled' || e.target.name === 'computeQtyAs') {
+                    applyStateFromForm();
+                }
+                // Sinkronisasi Allocation/Locating
+                if (e.target.id === 'item-allocation-rule' || e.target.id === 'item-locating-rule') {
+                     syncAllocationLocating(e.target.id, e.target.value);
+                }
+                const longDropdownInputs = ['item-allocation-rule-long', 'item-locating-rule-long', 'item-qc-locating-rule-long'];
+                if(longDropdownInputs.includes(e.target.id)) {
+                    if (e.target.id === 'item-allocation-rule-long' || e.target.id === 'item-locating-rule-long') {
+                       syncAllocationLocating(e.target.id, e.target.value);
+                    }
+                }
+            });
+            
+            const form = document.getElementById('item-form');
+            if(form) {
+                renderSubstituteTable(item?.substituteList || []);
+                document.getElementById('add-substitute')?.addEventListener('click', addSubstituteItem);
+                document.getElementById('delete-substitute')?.addEventListener('click', deleteSubstituteItem);
+                document.getElementById('up-substitute')?.addEventListener('click', moveSubstituteItemUp);
+                document.getElementById('down-substitute')?.addEventListener('click', moveSubstituteItemDown);
+                document.getElementById('select-all-subs')?.addEventListener('change', (e) => {
+                    document.querySelectorAll('#item-substitute-table .subst-select-row')
+                        .forEach(cb => cb.checked = e.target.checked);
+                });
+            }
+
+            showModal('item-form-modal');
+            
+            // Initialize custom long dropdowns
+            makeLongDropdown('item-company', companies, item.company);
+            makeLongDropdown('item-allocation-rule-long', allocationRules, item.allocationRule);
+            makeLongDropdown('item-locating-rule-long', locatingRules, item.locatingRule);
+            makeLongDropdown('item-packing-class', packingClasses, item.packingClass);
+            makeLongDropdown('item-storage-template', storageTemplates, item.storageTemplate);
+            makeLongDropdown('item-immediate-locating-rule-long', locatingRules, item.immediateLocatingRule);
+            makeLongDropdown('item-qc-locating-rule-long', locatingRules, item.qcLocatingRule);
+            makeLongDropdown('item-lot-template', lotTemplates, item.lotTemplate);
+            makeLongDropdown('item-serial-template', serialTemplates, item.serialTemplate);
+            makeLongDropdown('item-country-origin', countryList.map(c => ({ value: c.code, label: c.name })), item.countryOfOrigin);
+        };
+        
+        // Renderers per tab
+        const renderTabGeneral = (mode) => {
+            const container = document.getElementById('item-gen-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">General</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1">
+                    <label for="item-template" class="block text-sm mb-1">Item template:</label>
+                    <input type="text" id="item-template" name="itemTemplate" class="input bg-gray-100 cursor-not-allowed" value="PC-PCK-PLT" readonly>
+                </div>
+                <div class="md:col-span-1">
+                    <label for="item-company" class="block text-sm mb-1">Company:</label>
+                    <select id="item-company" name="company" class="select" required ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="item-code" class="block text-sm mb-1">Item:</label>
+                    <input type="text" id="item-code" name="itemCode" class="input" required ${mode === 'view' || mode === 'edit' ? 'readonly' : ''}>
+                </div>
+                <div class="md:col-span-4">
+                    <label for="item-description" class="block text-sm mb-1">Description:</label>
+                    <input type="text" id="item-description" name="description" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <div class="md:col-span-4 flex gap-4 mt-2 mb-6">
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox" id="item-inactive" name="inactive" ${mode === 'view' ? 'disabled' : ''}> Inactive
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                    <input type="checkbox" id="item-inventory-tracking" name="inventoryTracking" ${mode === 'view' ? 'disabled' : ''}> Inventory tracking
+                </label>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Logistics Data</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label for="item-inbound-shelf-life" class="block text-sm mb-1">Inbound shelf life:</label>
+                    <input type="text" id="item-inbound-shelf-life" name="inboundShelfLife" class="input" placeholder="e.g., 365D" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-promo-item" class="block text-sm mb-1">Promo item:</label>
+                    <select id="item-promo-item" name="promoItem" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                        <option value="N">N</option>
+                        <option value="Y">Y</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="item-ti-hi" class="block text-sm mb-1">TI x HI:</label>
+                    <input type="text" id="item-ti-hi" name="tiHi" class="input" placeholder="e.g., 0 x 0" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-primary-supplier" class="block text-sm mb-1">Primary supplier:</label>
+                    <input type="text" id="item-primary-supplier" name="primarySupplier" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-mfg-exp-date" class="block text-sm mb-1">Mfg / Exp Date:</label>
+                    <input type="text" id="item-mfg-exp-date" name="mfgExpDate" class="input" placeholder="e.g., Mfg" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-shelf-life" class="block text-sm mb-1">Shelf life:</label>
+                    <input type="number" step="0.00001" id="item-shelf-life" name="shelfLife" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-outbound-shelf-life" class="block text-sm mb-1">Outbound shelf life:</label>
+                    <input type="text" id="item-outbound-shelf-life" name="outboundShelfLife" class="input" placeholder="e.g., 0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                 <div class="md:col-span-1">
+                    <label for="item-container-type" class="block text-sm mb-1">Container Type:</label>
+                    <input type="text" id="item-container-type" name="containerType" class="input" placeholder="e.g., PALLET" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Handling Rules</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                 <div class="md:col-span-2">
+                    <label for="item-allocation-rule-long" class="block text-sm mb-1">Allocation rule:</label>
+                    <select id="item-allocation-rule-long" name="allocationRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="item-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
+                    <select id="item-locating-rule-long" name="locatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Immediate needs</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-immediate-eligible" name="immediateEligible" ${mode === 'view' ? 'disabled' : ''}> Eligible
+                    </label>
+                </div>
+                <div class="md:col-span-3">
+                    <label for="item-immediate-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
+                    <select id="item-immediate-locating-rule-long" name="immediateLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Inbound QC</h4>
+            <div class="flex items-center gap-2 text-sm">
+                Status: <span id="inbound-qc-status" class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-700">Inactive</span>
+            </div>
+            <div class="text-sm text-gray-500 mt-4">
+                Terakhir diperbarui: <span id="item-last-updated-display"></span>
+            </div>
+            `;
+        };
+
+        const renderTabChar1 = (mode) => {
+            const container = document.getElementById('item-char1-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Values</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label for="item-cost" class="block text-sm mb-1">Cost:</label>
+                    <input type="number" step="0.00001" id="item-cost" name="cost" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-list-price" class="block text-sm mb-1">List price:</label>
+                    <input type="number" step="0.00001" id="item-list-price" name="listPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-net-price" class="block text-sm mb-1">Net price:</label>
+                    <input type="number" step="0.00001" id="item-net-price" name="netPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">EPC</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label for="item-company-prefix" class="block text-sm mb-1">Company prefix:</label>
+                    <input type="text" id="item-company-prefix" name="companyPrefix" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-reference" class="block text-sm mb-1">Item reference:</label>
+                    <input type="text" id="item-reference" name="itemReference" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-cage-code" class="block text-sm mb-1">CAGE code:</label>
+                    <input type="text" id="item-cage-code" name="cageCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">GS1</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-gs1-gtin-enabled" name="gs1GtinEnabled" ${mode === 'view' ? 'disabled' : ''}> GTIN enabled
+                    </label>
+                </div>
+                <div class="flex items-center space-x-4 md:col-span-3">
+                   <div class="flex items-center">
+                       <input type="radio" id="gs1-type-01ai" name="gs1Type" value="01AI" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
+                       <label for="gs1-type-01ai" class="ml-2 text-sm text-wise-dark-gray">01 AI</label>
+                   </div>
+                   <div class="flex items-center">
+                       <input type="radio" id="gs1-type-02ai" name="gs1Type" value="02AI" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
+                       <label for="gs1-type-02ai" class="ml-2 text-sm text-wise-dark-gray">02 AI</label>
+                   </div>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Item Characteristics</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label for="item-eq-value" class="block text-sm mb-1">EQ Value:</label>
+                    <input type="number" id="item-eq-value" name="eqValue" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-division" class="block text-sm mb-1">Division:</label>
+                    <input type="text" id="item-division" name="division" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-color" class="block text-sm mb-1">Item color:</label>
+                    <input type="text" id="item-color" name="itemColor" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-department" class="block text-sm mb-1">Department:</label>
+                    <input type="text" id="item-department" name="department" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-style" class="block text-sm mb-1">Item style:</label>
+                    <input type="text" id="item-style" name="itemStyle" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Shipping BOM Action</h4>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                ${shippingBOMOptions.map(option => `
+                    <div class="flex items-center">
+                        <input type="radio" id="shipping-bom-${option.value}" name="shippingBOM" value="${option.value}" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
+                        <label for="shipping-bom-${option.value}" class="ml-2 text-sm text-wise-dark-gray">${option.label}</label>
+                    </div>
+                `).join('')}
+             </div>
+            `;
+        };
+
+        const renderTabChar2 = (mode) => {
+            const container = document.getElementById('item-char2-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">User defined data</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="item-char2a" class="block text-sm mb-1">Char 2A:</label>
+                    <input type="text" id="item-char2a" name="char2a" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-char2b" class="block text-sm mb-1">Char 2B:</label>
+                    <input type="text" id="item-char2b" name="char2b" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${Array.from({ length: 8 }, (_, i) => `
+                     <div>
+                        <label for="item-udf${i + 1}" class="block text-sm mb-1">UDF${i + 1}:</label>
+                        <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                `).join('')}
+            </div>
+            `;
+        };
+
+        const renderTabHandling1 = (mode) => {
+             const container = document.getElementById('item-handling1-tab');
+             container.innerHTML = `
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Handling(1)</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div class="md:col-span-2">
+                        <label for="item-allocation-rule" class="block text-sm mb-1">Allocation Rule:</label>
+                        <select id="item-allocation-rule" name="allocationRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-locating-rule" class="block text-sm mb-1">Locating Rule:</label>
+                        <select id="item-locating-rule" name="locatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-nmfc-code" class="block text-sm mb-1">NMFC code:</label>
+                        <input type="text" id="item-nmfc-code" name="nmfcCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-class" class="block text-sm mb-1">Item class:</label>
+                        <select id="item-class" name="itemClass" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                            <option value="">-- Select --</option>
+                            ${itemClasses.map(c => `<option value="${c}">${c}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-packing-class" class="block text-sm mb-1">Packing class:</label>
+                        <select id="item-packing-class" name="packingClass" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="item-storage-template" class="block text-sm mb-1">Storage template:</label>
+                        <select id="item-storage-template" name="storageTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                     <div class="md:col-span-4 mt-2">
+                        <label class="flex items-center gap-2 text-sm">
+                            <input type="checkbox" id="item-inventory-tracking-h1" name="inventoryTracking" ${mode === 'view' ? 'disabled' : ''}> Inventory Tracking
+                        </label>
+                    </div>
+                </div>
+             `;
+        };
+
+        const renderTabHandling2 = (mode) => {
+            const container = document.getElementById('item-handling2-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Inbound QC</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-inbound-eligible" name="inboundEligible" ${mode === 'view' ? 'disabled' : ''}> Eligible
+                    </label>
+                </div>
+                <div class="md:col-span-1 flex flex-col justify-center">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="radio" id="item-compute-qty-amount" name="computeQtyAs" value="AMOUNT" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
+                        <span class="ml-2">Amount</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm mt-1">
+                        <input type="radio" id="item-compute-qty-percentage" name="computeQtyAs" value="PERCENTAGE" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
+                        <span class="ml-2">Percentage</span>
+                    </label>
+                </div>
+                <div>
+                    <label for="item-inspection-qty" class="block text-sm mb-1">Inspection Qty:</label>
+                    <input type="number" step="0.01" id="item-inspection-qty" name="inspectionQty" class="input" value="0.00" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-inspection-um" class="block text-sm mb-1">UM:</label>
+                    <select id="item-inspection-um" name="inspectionUm" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                        <option value="">-- Pilih --</option>
+                        ${inspectionUms.map(um => `<option value="${um}">${um}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="md:col-span-4">
+                    <label for="item-qc-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
+                    <select id="item-qc-locating-rule-long" name="qcLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div class="md:col-span-4 flex items-center gap-2 text-sm">
+                    <input type="checkbox" id="item-catch-weight-required" name="catchWeightRequired" ${mode === 'view' ? 'disabled' : ''}> Catch Weight Required
+                </div>
+            </div>
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Lot & Serial</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-lot-controlled" name="lotControlled" ${mode === 'view' ? 'disabled' : ''}> Lot controlled
+                    </label>
+                </div>
+                <div class="md:col-span-1">
+                    <label for="item-lot-template" class="block text-sm mb-1">Lot template:</label>
+                    <select id="item-lot-template" name="lotTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div class="md:col-span-1">
+                    <label for="item-lot-days" class="block text-sm mb-1">Days to expire:</label>
+                    <input type="number" id="item-lot-days" name="lotDaysToExpire" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div class="md:col-span-1"></div>
+                <div class="md:col-span-1">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-serial-controlled" name="serialControlled" ${mode === 'view' ? 'disabled' : ''}> Serial controlled
+                    </label>
+                </div>
+                <div class="md:col-span-1">
+                    <label for="item-serial-template" class="block text-sm mb-1">Template:</label>
+                    <select id="item-serial-template" name="serialTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div class="md:col-span-2 grid grid-cols-3 gap-4" id="serial-flags-container">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-serial-inbound" name="serialInbound" ${mode === 'view' ? 'disabled' : ''}> Inbound
+                    </label>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-serial-inventory" name="serialInventory" ${mode === 'view' ? 'disabled' : ''}> Inventory
+                    </label>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-serial-outbound" name="serialOutbound" ${mode === 'view' ? 'disabled' : ''}> Outbound
+                    </label>
+                </div>
+            </div>
+            `;
+        };
+
+        const renderTabInternet = (mode) => {
+             const container = document.getElementById('item-internet-tab');
+             container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Internet Information</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="item-web-image" class="block text-sm mb-1">Web image:</label>
+                    <input type="text" id="item-web-image" name="webImage" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-web-thumb" class="block text-sm mb-1">Web thumbnail:</label>
+                    <input type="text" id="item-web-thumb" name="webThumb" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="item-long-description" class="block text-sm mb-1">Long description:</label>
+                    <textarea id="item-long-description" name="longDescription" class="input" rows="3" ${mode === 'view' ? 'readonly' : ''}></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-available-for-web-order" name="availableForWebOrder" ${mode === 'view' ? 'disabled' : ''}> Available for web order
+                    </label>
+                </div>
+            </div>
+             `;
+        };
+        
+        const renderTabAlternate = (mode) => {
+            const container = document.getElementById('item-subst-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Alternate / Substitute</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="item-alternate" class="block text-sm mb-1">Alternate item:</label>
+                    <input type="text" id="item-alternate" name="alternateItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label for="item-substitute" class="block text-sm mb-1">Substitute item:</label>
+                    <input type="text" id="item-substitute" name="substituteItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+            </div>
+            <!-- Substitute List -->
+            <div class="flex justify-between items-center mb-2">
+                <h5 class="font-medium text-wise-dark-gray">Substitute List</h5>
+                <div class="flex gap-2">
+                    <button type="button" class="btn btn-sm btn-outline" onclick="addSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Tambah</button>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="deleteSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Hapus</button>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="moveSubstituteItemUp()" ${mode === 'view' ? 'disabled' : ''} aria-label="Pindah ke atas">▲</button>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="moveSubstituteItemDown()" ${mode === 'view' ? 'disabled' : ''} aria-label="Pindah ke bawah">▼</button>
+                </div>
+            </div>
+            <div class="border rounded-md max-h-[200px] overflow-y-auto">
+                <table id="item-substitute-table" class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-100 sticky top-0">
+                            <th class="py-2 px-4 text-left w-12"><input type="checkbox" id="select-all-subs"></th>
+                            <th class="py-2 px-4 text-left">Code</th>
+                            <th class="py-2 px-4 text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="substitute-empty-state" class="text-center py-4 text-gray-400 hidden">
+                 <span class="text-3xl">🗃️</span><br>Tidak ada item substitusi.
+            </div>
+            `;
+        };
+        
+        const renderTabInternational = (mode) => {
+            const container = document.getElementById('item-int-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">International</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="md:col-span-2">
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-preference-criterion" name="preferenceCriterion" ${mode === 'view' ? 'disabled' : ''}> Preference Criterion
+                    </label>
+                </div>
+                <div>
+                    <label for="item-harmonized-code" class="block text-sm mb-1">Harmonized code:</label>
+                    <input type="text" id="item-harmonized-code" name="harmonizedCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" id="item-harmonized-uploaded" name="harmonizedUploaded" ${mode === 'view' ? 'disabled' : ''}> Uploaded
+                    </label>
+                </div>
+                <div>
+                    <label for="item-country-origin" class="block text-sm mb-1">Country of origin:</label>
+                    <select id="item-country-origin" name="countryOfOrigin" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                </div>
+                <div>
+                    <label for="item-net-cost" class="block text-sm mb-1">Net cost:</label>
+                    <select id="item-net-cost" name="netCost" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                         ${netCostOptions.map(o => `<option value="${o}">${o}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h5 class="font-medium text-wise-dark-gray mb-2">Countries</h5>
+                <div class="border rounded-md max-h-[150px] overflow-y-auto">
+                    <table id="item-countries-table" class="min-w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 sticky top-0">
+                                <th class="py-2 px-4 text-left">Code</th>
+                                <th class="py-2 px-4 text-left">Name</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                 <div id="countries-empty-state" class="text-center py-4 text-gray-400 hidden">
+                     <span class="text-3xl">🌍</span><br>Tidak ada negara terkait.
+                </div>
+            </div>
+            `;
+        };
+
+        const renderTabCategories = (mode) => {
+            const container = document.getElementById('item-cats-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Categories</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${Array.from({ length: 10 }, (_, i) => `
+                    <div>
+                        <label for="item-cat-${i + 1}" class="block text-sm mb-1">Category ${i + 1}:</label>
+                        <input type="text" id="item-cat-${i + 1}" name="categories[${i + 1}]" class="input" list="category-list" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                `).join('')}
+                <datalist id="category-list">
+                    ${categoryList.map(c => `<option value="${c}">`).join('')}
+                </datalist>
+            </div>
+            `;
+        };
+
+        const renderTabUdf = (mode) => {
+            const container = document.getElementById('item-udf-tab');
+            container.innerHTML = `
+            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">User defined data</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${Array.from({ length: 8 }, (_, i) => `
+                     <div>
+                        <label for="item-udf${i + 1}" class="block text-sm mb-1">UDF${i + 1}:</label>
+                        <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                `).join('')}
+            </div>
+            `;
+        };
+        
+        const syncAllocationLocating = (sourceId, value) => {
+            const rules = sourceId === 'item-allocation-rule-long' ? allocationRules : locatingRules;
+            const targetId = sourceId === 'item-allocation-rule-long' ? 'item-allocation-rule' : 'item-locating-rule';
+            const sourceEl = document.getElementById(sourceId);
+            const targetEl = document.getElementById(targetId);
+            
+            if (targetEl) {
+                 const newOption = `<option value="${value}">${value}</option>`;
+                 if (!rules.includes(value) && value) {
+                     if (!targetEl.querySelector(`option[value="${value}"]`)) {
+                         targetEl.insertAdjacentHTML('beforeend', newOption);
+                     }
+                 }
+                 targetEl.value = value;
+            }
+        };
+
+        const applyStateFromForm = () => {
+             const form = document.getElementById('item-form');
+             if (!form) return;
+             const mode = form.dataset.mode;
+             const isViewMode = mode === 'view';
+
+             // GS1 state
+             const gs1Enabled = form.querySelector('[name="gs1GtinEnabled"]')?.checked;
+             const gs1Radios = form.querySelectorAll('input[name="gs1Type"]');
+             gs1Radios.forEach(radio => {
+                 radio.disabled = isViewMode || !gs1Enabled;
+             });
+
+             // Lot state
+             const lotControlled = form.querySelector('[name="lotControlled"]')?.checked;
+             const lotTemplate = form.querySelector('[name="lotTemplate-input"]');
+             const lotDays = form.querySelector('[name="lotDaysToExpire"]');
+             if (lotTemplate) lotTemplate.disabled = isViewMode || !lotControlled;
+             if (lotDays) lotDays.readOnly = isViewMode || !lotControlled;
+
+             // Serial state
+             const serialControlled = form.querySelector('[name="serialControlled"]')?.checked;
+             const serialTemplate = form.querySelector('[name="serialTemplate-input"]');
+             const serialFlags = form.querySelectorAll('#serial-flags-container input[type="checkbox"]');
+             if (serialTemplate) {
+                 serialTemplate.disabled = isViewMode || !serialControlled;
+                 if (!serialControlled) {
+                     const inputEl = document.getElementById('item-serial-template-input');
+                     if(inputEl) inputEl.value = '';
+                 }
+             }
+             serialFlags.forEach(flag => flag.disabled = isViewMode || !serialControlled);
+             if (!serialControlled) {
+                 serialFlags.forEach(flag => flag.checked = false);
+             }
+
+             // Inbound QC status (read-only)
+             const inboundEligible = form.querySelector('[name="inboundEligible"]')?.checked;
+             const qcStatusEl = document.getElementById('inbound-qc-status');
+             if (qcStatusEl) {
+                 qcStatusEl.textContent = inboundEligible ? 'Aktif' : 'Tidak Aktif';
+                 qcStatusEl.className = `px-2 py-1 rounded-full text-xs font-semibold ${inboundEligible ? 'bg-green-200 text-green-700' : 'bg-gray-200 text-gray-700'}`;
+             }
+
+             // Inbound QC fields
+             const computeQtyAs = form.querySelector('input[name="computeQtyAs"]:checked')?.value;
+             const inspectionQty = form.querySelector('[name="inspectionQty"]');
+             if (inspectionQty) {
+                 if (computeQtyAs === 'PERCENTAGE') {
+                     inspectionQty.placeholder = '0 - 100';
+                 } else {
+                     inspectionQty.placeholder = '';
+                 }
+             }
+        };
+
+        const fillItemForm = (item) => {
+            const form = document.getElementById('item-form');
+            if (!form) return;
+            form['id'].value = item.id;
+            
+            // Text/Checkbox inputs
+            const fields = ['itemTemplate', 'itemCode', 'description', 'inactive', 'inventoryTracking',
+                'inboundShelfLife', 'promoItem', 'containerType', 'tiHi', 'primarySupplier', 'mfgExpDate', 
+                'shelfLife', 'outboundShelfLife', 'immediateEligible', 'inboundEligible', 'catchWeightRequired',
+                'lotControlled', 'lotDaysToExpire', 'serialControlled', 'serialInbound', 'serialInventory', 'serialOutbound',
+                'cost', 'listPrice', 'netPrice', 'companyPrefix', 'itemReference', 'cageCode', 'gs1GtinEnabled',
+                'eqValue', 'division', 'itemColor', 'department', 'itemStyle',
+                'nmfcCode', 'webImage', 'webThumb', 'longDescription', 'availableForWebOrder',
+                'alternateItem', 'substituteItem', 'preferenceCriterion', 'harmonizedCode', 'harmonizedUploaded'];
+
+            fields.forEach(field => {
+                const el = form.querySelector(`[name="${field}"]`);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                         el.checked = !!item[field];
+                    } else if (el.type === 'number') {
+                         el.value = item[field] || 0;
+                    } else {
+                         el.value = item[field] || '';
+                    }
+                }
+            });
+
+            // Radio buttons
+            if (item.computeQtyAs) {
+                const radio = form.querySelector(`input[name="computeQtyAs"][value="${item.computeQtyAs}"]`);
+                if (radio) radio.checked = true;
+            }
+             if (item.gs1Type) {
+                const radio = form.querySelector(`input[name="gs1Type"][value="${item.gs1Type}"]`);
+                if (radio) radio.checked = true;
+            }
+             if (item.shippingBOM) {
+                const radio = form.querySelector(`input[name="shippingBOM"][value="${item.shippingBOM}"]`);
+                if (radio) radio.checked = true;
+            }
+            
+            // Dropdowns (native & long)
+            const nativeSelects = ['itemClass', 'inspectionUm', 'netCost'];
+            nativeSelects.forEach(selId => {
+                const el = document.getElementById(`item-${selId.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
+                if (el) el.value = item[selId] || '';
+            });
+
+            const longDropdowns = ['company', 'allocationRule', 'locatingRule', 'immediateLocatingRule', 'qcLocatingRule', 
+                                   'packingClass', 'storageTemplate', 'lotTemplate', 'serialTemplate', 'countryOfOrigin'];
+            longDropdowns.forEach(field => {
+                const inputEl = document.getElementById(`item-${field.replace(/([A-Z])/g, '-$1').toLowerCase()}-input`);
+                const value = item[field] || '';
+                if (inputEl) {
+                    inputEl.value = value;
+                    inputEl.dataset.value = value;
+                }
+            });
+
+            // UDFs & Categories
+            for (let i = 1; i <= 8; i++) {
+                const udfInput = document.getElementById(`item-udf${i}`);
+                if (udfInput) udfInput.value = item.udf[`udf${i}`] || '';
+            }
+            for (let i = 1; i <= 10; i++) {
+                const catInput = document.getElementById(`item-cat-${i}`);
+                if (catInput) catInput.value = item.categories[i] || '';
+            }
+            
+            // Tables
+            renderSubstituteTable(item.substituteList || []);
+            renderCountriesTable(item.countries || []);
+
+            // UI state
+            applyStateFromForm();
+
+            document.getElementById('item-last-updated-display').textContent = item.updatedAt ? formatDate(item.updatedAt) : 'N/A';
+        };
+
+        window.renderSubstituteTable = (substitutes) => {
+            const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
+            const emptyState = document.getElementById('substitute-empty-state');
+            if (!tbody || !emptyState) return;
+            
+            tbody.innerHTML = '';
+            if (substitutes.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            substitutes.forEach(sub => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-200 hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="py-2 px-4"><input type="checkbox" class="subst-select-row" value="${sub.code}"></td>
+                    <td class="py-2 px-4">${sub.code}</td>
+                    <td class="py-2 px-4">${sub.description}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.addSubstituteItem = async () => {
+            const confirmed = await showCustomConfirm('Tambah Item Substitusi', 'Ini akan membuka form lookup. Tambahkan baris dummy?');
+            if (!confirmed) return;
+            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
+            if (!currentItem) {
+                showToast('Tidak ada item yang aktif untuk ditambahkan substitusi.', 'error');
+                return;
+            }
+            const newItemCode = `SUB_${Math.random().toString(36).substring(2,7).toUpperCase()}`;
+            const newItemDesc = `Substitusi untuk ${currentItem.itemCode}`;
+            currentItem.substituteList = currentItem.substituteList || [];
+            currentItem.substituteList.push({ code: newItemCode, description: newItemDesc });
+            renderSubstituteTable(currentItem.substituteList);
+            saveItems();
+            showToast('Item substitusi dummy berhasil ditambahkan.');
+        };
+
+        window.deleteSubstituteItem = async () => {
+            const confirmed = await showCustomConfirm('Konfirmasi Hapus', 'Hapus item substitusi yang dipilih?');
+            if (!confirmed) return;
+            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
+            if (!currentItem) return;
+            const checked = document.querySelectorAll('#item-substitute-table .subst-select-row:checked');
+            const codes = Array.from(checked).map(cb => cb.value);
+            if (!codes.length) { showToast('Tidak ada item yang dipilih untuk dihapus.', 'error'); return; }
+            currentItem.substituteList = (currentItem.substituteList || []).filter(sub => !codes.includes(sub.code));
+            renderSubstituteTable(currentItem.substituteList);
+            saveItems();
+            showToast(`${codes.length} item substitusi berhasil dihapus.`);
+        };
+        
+        window.moveSubstituteItemUp = () => {
+            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
+            if (!currentItem?.substituteList?.length) return;
+            const checkboxes = Array.from(document.querySelectorAll('#item-substitute-table .subst-select-row'));
+            const checkedCheckboxes = checkboxes.filter(cb => cb.checked);
+            if(checkedCheckboxes.length !== 1) {
+                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+                return;
+            }
+            const selectedIndex = checkboxes.findIndex(cb => cb.checked);
+            if (selectedIndex <= 0) { showToast('Tidak bisa memindahkan baris pertama ke atas.', 'error'); return; }
+            const list = currentItem.substituteList;
+            const [row] = list.splice(selectedIndex, 1);
+            list.splice(selectedIndex - 1, 0, row);
+            renderSubstituteTable(list);
+            saveItems();
+            document.querySelectorAll('#item-substitute-table .subst-select-row')[selectedIndex - 1].checked = true;
+        };
+
+        window.moveSubstituteItemDown = () => {
+            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
+            if (!currentItem?.substituteList?.length) return;
+            const checkboxes = Array.from(document.querySelectorAll('#item-substitute-table .subst-select-row'));
+            const checkedCheckboxes = checkboxes.filter(cb => cb.checked);
+            if(checkedCheckboxes.length !== 1) {
+                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+                return;
+            }
+            const selectedIndex = checkboxes.findIndex(cb => cb.checked);
+            if (selectedIndex === -1 || selectedIndex >= currentItem.substituteList.length - 1) {
+                showToast('Tidak bisa memindahkan baris terakhir ke bawah.', 'error');
+                return;
+            }
+            const list = currentItem.substituteList;
+            const [row] = list.splice(selectedIndex, 1);
+            list.splice(selectedIndex + 1, 0, row);
+            renderSubstituteTable(list);
+            saveItems();
+            document.querySelectorAll('#item-substitute-table .subst-select-row')[selectedIndex + 1].checked = true;
+        };
+
+        window.renderCountriesTable = (countries) => {
+            const tbody = document.getElementById('item-countries-table')?.querySelector('tbody');
+            const emptyState = document.getElementById('countries-empty-state');
+            if (!tbody || !emptyState) return;
+            
+            tbody.innerHTML = '';
+            if (countries.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            countries.forEach(country => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-200 hover:bg-gray-50';
+                tr.innerHTML = `<td class="py-2 px-4">${country.code}</td><td class="py-2 px-4">${country.name}</td>`;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.handleItemSubmit = async (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form['id'].value;
+
+            if (!validateItemForm()) {
+                showToast('Form tidak valid. Silakan perbaiki kesalahan.', 'error');
+                return;
+            }
+            
+            // Get values from custom long dropdowns
+            const company = document.getElementById('item-company-input')?.dataset.value || '';
+            const allocationRule = document.getElementById('item-allocation-rule-long-input')?.dataset.value || '';
+            const locatingRule = document.getElementById('item-locating-rule-long-input')?.dataset.value || '';
+            const immediateLocatingRule = document.getElementById('item-immediate-locating-rule-long-input')?.dataset.value || '';
+            const qcLocatingRule = document.getElementById('item-qc-locating-rule-long-input')?.dataset.value || '';
+            const packingClass = document.getElementById('item-packing-class-input')?.dataset.value || '';
+            const storageTemplate = document.getElementById('item-storage-template-input')?.dataset.value || '';
+            const lotTemplate = document.getElementById('item-lot-template-input')?.dataset.value || '';
+            const serialTemplate = document.getElementById('item-serial-template-input')?.dataset.value || '';
+            const countryOfOrigin = document.getElementById('item-country-origin-input')?.dataset.value || '';
+
+            if (mode === 'create') {
+                const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
+                if (isCodeExist) {
+                    showToast('Item dengan kode dan perusahaan ini sudah ada.', 'error');
+                    return;
+                }
+            }
+            
+            const categories = {};
+            for (let i = 1; i <= 10; i++) {
+                categories[i] = document.getElementById(`item-cat-${i}`).value || '';
+            }
+            
+            const udf = {};
+            for (let i = 1; i <= 8; i++) {
+                udf[`udf${i}`] = document.getElementById(`item-udf${i}`).value || '';
+            }
+            
+            const serialControlled = document.getElementById('item-serial-controlled').checked;
+            
+            const newItem = {
+                id: id, 
+                company: company,
+                itemCode: form['itemCode'].value,
+                description: form['description'].value,
+                inactive: form['inactive'].checked,
+                inventoryTracking: form['inventoryTracking'].checked, 
+                
+                inboundShelfLife: form['inboundShelfLife'].value || '',
+                promoItem: form['promoItem'].value || 'N',
+                containerType: form['containerType'].value || '', 
+                tiHi: form['tiHi'].value || '0 x 0',
+                primarySupplier: form['primarySupplier'].value || '',
+                mfgExpDate: form['mfgExpDate'].value || '',
+                shelfLife: parseFloat(form['shelfLife'].value) || 0,
+                outboundShelfLife: form['outboundShelfLife'].value || '',
+
+                immediateEligible: form['immediateEligible'].checked,
+                immediateLocatingRule: immediateLocatingRule,
+                
+                cost: parseFloat(form['cost'].value) || 0,
+                listPrice: parseFloat(form['listPrice'].value) || 0,
+                netPrice: parseFloat(form['netPrice'].value) || 0,
+                companyPrefix: form['companyPrefix'].value || '',
+                itemReference: document.getElementById('item-reference').value || '',
+                cageCode: form['cageCode'].value || '',
+                gs1GtinEnabled: form['gs1GtinEnabled'].checked,
+                gs1Type: form['gs1GtinEnabled'].checked ? document.querySelector('input[name="gs1Type"]:checked')?.value || '' : '',
+                eqValue: parseInt(form['eqValue'].value) || 0,
+                division: form['division'].value || '',
+                itemColor: document.getElementById('item-color').value || '',
+                department: form['department'].value || '',
+                itemStyle: document.getElementById('item-style').value || '',
+                shippingBOM: document.querySelector('input[name="shippingBOM"]:checked')?.value || 'none',
+                
+                char2a: form['char2a'].value || '',
+                char2b: form['char2b'].value || '',
+                udf: udf,
+                
+                allocationRule: allocationRule,
+                locatingRule: locatingRule,
+                nmfcCode: form['nmfcCode'].value || '',
+                itemClass: document.getElementById('item-class').value || 'GENERAL',
+                packingClass: packingClass,
+                storageTemplate: storageTemplate,
+
+                catchWeightRequired: form['catchWeightRequired'].checked,
+                lotControlled: form['lotControlled'].checked,
+                lotTemplate: form['lotControlled'].checked ? lotTemplate : '',
+                lotDaysToExpire: form['lotControlled'].checked ? parseInt(form['lotDaysToExpire'].value) || 0 : 0,
+                serialControlled: serialControlled,
+                serialInbound: serialControlled ? document.getElementById('item-serial-inbound').checked : false,
+                serialInventory: serialControlled ? document.getElementById('item-serial-inventory').checked : false,
+                serialOutbound: serialControlled ? document.getElementById('item-serial-outbound').checked : false,
+                serialTemplate: serialControlled ? serialTemplate : '',
+                
+                inboundEligible: form['inboundEligible'].checked,
+                computeQtyAs: document.querySelector('input[name="computeQtyAs"]:checked')?.value || 'AMOUNT',
+                inspectionQty: parseFloat(form['inspectionQty'].value) || 0,
+                inspectionUm: form['inspectionUm'].value || 'PC',
+                qcLocatingRule: qcLocatingRule,
+
+                webImage: form['webImage'].value || '',
+                webThumb: form['webThumb'].value || '',
+                longDescription: form['longDescription'].value || '',
+                availableForWebOrder: form['availableForWebOrder'].checked,
+                
+                alternateItem: form['alternateItem'].value || '',
+                substituteItem: form['substituteItem'].value || '',
+                substituteList: [], 
+                
+                preferenceCriterion: form['preferenceCriterion'].checked,
+                harmonizedCode: form['harmonizedCode'].value || '',
+                harmonizedUploaded: form['harmonizedUploaded'].checked,
+                countryOfOrigin: countryOfOrigin,
+                netCost: form['netCost'].value || 'NONE',
+                countries: [], 
+                
+                categories: categories,
+
+                updatedAt: Date.now()
+            };
+
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = items.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('ITM', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
+                items.push(newItem);
+                msg = 'Item berhasil dibuat!';
+            } else {
+                const index = items.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    newItem.substituteList = items[index].substituteList;
+                    newItem.countries = items[index].countries;
+                    Object.assign(items[index], newItem);
+                    msg = 'Item berhasil diperbarui!';
+                }
+            }
+            saveItems();
+            closeModal('item-form-modal');
+            window.renderItemList();
+            showToast(msg);
+        };
+
+        window.deleteItem = async (id) => {
+            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus Item ini?');
+            if (confirmed) {
+                items = items.filter(item => item.id !== id);
+                saveItems();
+                window.renderItemList();
+                showToast('Item berhasil dihapus!');
+            }
+        };
+
+        // --- CSV EXPORT/IMPORT ---
+        window.exportItemsToCSV = () => {
+             const headers = [
+                "id", "company", "itemCode", "description", "inactive", "inventoryTracking",
+                "itemTemplate", "inboundShelfLife", "promoItem", "containerType", "tiHi", "primarySupplier", "mfgExpDate", "shelfLife", "outboundShelfLife",
+                "immediateEligible", "immediateLocatingRule", "inboundQcStatus",
+                "cost", "listPrice", "netPrice", "companyPrefix", "itemReference", "cageCode", "gs1GtinEnabled", "gs1Type",
+                "eqValue", "division", "itemColor", "department", "itemStyle", "shippingBOM",
+                "char2a", "char2b", ...Array.from({ length: 8 }, (_, i) => `udf${i + 1}`),
+                "allocationRule", "locatingRule", "nmfcCode", "itemClass", "packingClass", "storageTemplate",
+                "catchWeightRequired", "lotControlled", "lotTemplate", "lotDaysToExpire",
+                "serialControlled", "serialInbound", "serialInventory", "serialOutbound", "serialTemplate",
+                "inboundEligible", "computeQtyAs", "inspectionQty", "inspectionUm", "qcLocatingRule",
+                "webImage", "webThumb", "longDescription", "availableForWebOrder",
+                "alternateItem", "substituteItem", "substituteList",
+                "preferenceCriterion", "harmonizedCode", "harmonizedUploaded", "countryOfOrigin", "netCost", "countries",
+                ...Array.from({ length: 10 }, (_, i) => `categories${i + 1}`), "updatedAt"
+            ];
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += headers.map(h => `"${h}"`).join(",") + "\r\n";
+
+            items.forEach(item => {
+                const row = headers.map(header => {
+                    let value;
+                    if (header.startsWith('udf')) {
+                        const udfNum = header.replace('udf', '');
+                        value = item.udf?.[`udf${udfNum}`] || '';
+                    } else if (header.startsWith('categories')) {
+                        const catNum = header.replace('categories', '');
+                        value = item.categories?.[catNum] || '';
+                    } else {
+                        value = item[header];
+                    }
+
+                    if (value === null || value === undefined) {
+                        value = '';
+                    } else if (typeof value === 'boolean') {
+                        value = value ? 'true' : 'false';
+                    } else if (typeof value === 'object' && (header === 'substituteList' || header === 'countries')) {
+                        value = JSON.stringify(value).replace(/"/g, '""');
+                    }
+                    return `"${String(value).replace(/"/g, '""')}"`;
+                }).join(",");
+                csvContent += row + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "items.csv");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        };
+
+        window.importItemsFromCSV = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const text = e.target.result;
+                const lines = text.split('\n').filter(l => l.trim() !== '');
+                if (lines.length <= 1) {
+                    showToast('File CSV kosong atau tidak valid.', 'error');
+                    return;
+                }
+
+                const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                const newItems = [];
+                const errors = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
+                    const item = { udf: {}, categories: {}, substituteList: [], countries: [] }; 
+                    let isValid = true;
+                    
+                    if (values.length !== headers.length) {
+                        errors.push(`Baris ${i + 1}: Jumlah kolom tidak cocok.`);
+                        continue;
+                    }
+
+                    headers.forEach((header, index) => {
+                        let value = values[index];
+                        if (header.startsWith('udf')) {
+                            const udfNum = header.replace('udf', '');
+                            item.udf[`udf${udfNum}`] = value;
+                        } else if (header.startsWith('categories')) {
+                            const catNum = header.replace('categories', '');
+                            item.categories[catNum] = value;
+                        } else if (['substituteList', 'countries'].includes(header)) {
+                             try {
+                                item[header] = JSON.parse(value);
+                             } catch (e) {
+                                errors.push(`Baris ${i + 1}: JSON tidak valid untuk ${header}.`);
+                                isValid = false;
+                             }
+                        } else if (['inactive', 'inventoryTracking', 'gs1GtinEnabled', 'availableForWebOrder', 'preferenceCriterion',
+                                    'harmonizedUploaded', 'catchWeightRequired', 'lotControlled', 'serialControlled',
+                                    'serialInbound', 'serialInventory', 'serialOutbound', 'immediateEligible', 'inboundEligible'].includes(header)) {
+                             item[header] = value.toLowerCase() === 'true';
+                        } else if (['cost', 'listPrice', 'netPrice', 'eqValue', 'lotDaysToExpire', 'inspectionQty', 'shelfLife'].includes(header)) {
+                             item[header] = parseFloat(value) || 0;
+                        } else if (header === 'updatedAt') {
+                            // Do nothing, we'll set it to now
+                        }
+                        else {
+                            item[header] = value;
+                        }
+                    });
+
+                    if (!item.itemCode || !item.company) {
+                        isValid = false;
+                        errors.push(`Baris ${i + 1}: Kode Item dan Perusahaan diperlukan.`);
+                    }
+                    
+                    if (isValid) newItems.push(item);
+                }
+
+                if (errors.length > 0) {
+                    await window.showCustomAlert('Error Impor', `Ditemukan ${errors.length} kesalahan:\n${errors.join('\n')}`);
+                }
+
+                if (newItems.length > 0) {
+                    newItems.forEach(newItem => {
+                        const existingIndex = items.findIndex(item => item.itemCode === newItem.itemCode && item.company === newItem.company);
+                        if (existingIndex === -1) {
+                             // Fix ID for new items
+                            const maxId = items.reduce((max, item) => {
+                                const num = parseInt(item.id.replace('ITM', ''), 10);
+                                return Math.max(max, isNaN(num) ? 0 : num);
+                            }, 0);
+                            newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
+                            items.push(newItem);
+                        } else {
+                            Object.assign(items[existingIndex], newItem, { updatedAt: Date.now() });
+                        }
+                    });
+                    saveItems();
+                    window.renderItemList();
+                    showToast(`${newItems.length} data Item berhasil diimpor!`);
+                }
+            };
+            reader.readAsText(file);
+        };
+        
+        // --- ITEM LIST RENDER & FILTER ---
+        window.renderItemList = (filter = '', sortBy = '', sortDir = 'asc') => {
+            const container = document.getElementById('item-list-container');
             if (!container) return;
-
-            let filteredData = itemUoms.filter(iuom => {
-                const searchable = `${iuom.targetType} ${iuom.itemCode} ${iuom.itemClass} ${iuom.company} ${iuom.movementClass}`.toLowerCase();
+            
+            let filteredData = items.filter(item => {
+                const searchable = `${item.itemCode} ${item.company} ${item.description} ${item.itemClass} ${item.nmfcCode} ${item.allocationRule} ${item.locatingRule}`.toLowerCase();
                 return searchable.includes(filter.toLowerCase());
             });
 
-            // Sorting
             if (sortBy) {
                 filteredData.sort((a, b) => {
                     const valA = a[sortBy];
@@ -335,50 +1700,44 @@
                     return sortDir === 'asc' ? compare : -compare;
                 });
             }
-            
-            // Perbaikan untuk pagination. Saat ini hanya menampilkan semua data.
-            const pageSize = 10; // Default page size
-            let paginatedData = filteredData;
-            
+
             let tableHtml = `
                 <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead>
+                    <thead class="sticky top-0 bg-white">
                         <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('targetType')">Target</th>
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('itemCode')">Item / Item class</th>
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('company')">Company</th>
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('conversionQty')">Conversion qty</th>
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('movementClass')">Movement class</th>
-                            <th class="py-3 px-6 text-left">Dimensions</th>
-                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('updatedAt')">Updated</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('itemCode')">Item</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('company')">Company</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('description')">Description</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('itemClass')">Item class</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('inactive')">Active</th>
+                            <th class="py-3 px-6 text-left cursor-pointer" onclick="sortItemList('updatedAt')">Updated</th>
                             <th class="py-3 px-6 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="text-wise-gray text-sm font-light">
             `;
 
-            if (paginatedData.length === 0) {
-                tableHtml += `<tr><td colspan="8" class="py-3 px-6 text-center">Tidak ada data IUoM ditemukan.</td></tr>`;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="7" class="py-3 px-6 text-center text-gray-400">Tidak ada data item.</td></tr>`;
             } else {
-                paginatedData.forEach(iuom => {
-                    const targetIdentifier = iuom.targetType === 'item' ? iuom.itemCode : iuom.itemClass;
-                    const dimensions = `${iuom.length}x${iuom.width}x${iuom.height} (${iuom.lengthUm}), ${iuom.weight} (${iuom.weightUm})`;
-
+                filteredData.forEach(item => { 
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${iuom.targetType}</td>
-                            <td class="py-3 px-6 text-left">${targetIdentifier}</td>
-                            <td class="py-3 px-6 text-left">${iuom.company}</td>
-                            <td class="py-3 px-6 text-left">${iuom.conversionQty}</td>
-                            <td class="py-3 px-6 text-left">${iuom.movementClass}</td>
-                            <td class="py-3 px-6 text-left">${dimensions}</td>
-                            <td class="py-3 px-6 text-left">${iuom.updatedAt}</td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${item.itemCode}</td>
+                            <td class="py-3 px-6 text-left">${item.company}</td>
+                            <td class="py-3 px-6 text-left">${item.description}</td>
+                            <td class="py-3 px-6 text-left">${item.itemClass}</td>
+                            <td class="py-3 px-6 text-left">${item.inactive ? 'Tidak' : 'Ya'}</td>
+                            <td class="py-3 px-6 text-left">${formatDate(item.updatedAt)}</td>
                             <td class="py-3 px-6 text-center">
                                 <div class="flex item-center justify-center">
-                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showIUoMForm('edit', '${iuom.id}')" title="Edit">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemForm('view', '${item.id}')" title="Lihat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemForm('edit', '${item.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
-                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteIUoM('${iuom.id}')" title="Hapus">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItem('${item.id}')" title="Hapus">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                 </div>
@@ -390,34 +1749,33 @@
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
-        
-        let currentSort = { column: '', direction: 'asc' };
-        window.sortIUoMList = function(column) {
-            if (currentSort.column === column) {
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+
+        let currentItemSort = { column: '', direction: 'asc' };
+        window.sortItemList = (column) => {
+            if (currentItemSort.column === column) {
+                currentItemSort.direction = currentItemSort.direction === 'asc' ? 'desc' : 'asc';
             } else {
-                currentSort = { column, direction: 'asc' };
+                currentItemSort = { column, direction: 'asc' };
             }
-            const searchValue = document.getElementById('iuom-search').value;
-            renderIUoMList(searchValue, currentSort.column, currentSort.direction);
+            const searchValue = document.getElementById('item-search').value;
+            renderItemList(searchValue, currentItemSort.column, currentItemSort.direction);
         };
 
-        const filterIUoMListDebounced = debounce(value => renderIUoMList(value, currentSort.column, currentSort.direction), 300);
-        window.filterIUoMList = function (value) {
-            filterIUoMListDebounced(value);
+        const filterItemListDebounced = debounce(value => renderItemList(value, currentItemSort.column, currentItemSort.direction), 300);
+        window.filterItemList = (value) => {
+            filterItemListDebounced(value);
         };
-
-        // Fungsi helper untuk tab switching di modal IUoM
-        function setupIUoMTabSwitching(modalId) {
+        
+        function setupTabSwitching(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
-
             const tabButtons = modal.querySelectorAll('[role="tab"]');
             const tabPanes = modal.querySelectorAll('[role="tabpanel"]');
             
             const activateTab = (tabId) => {
                 tabButtons.forEach(btn => {
                     btn.classList.remove('tab-active');
+                    btn.classList.add('tab');
                 });
                 tabPanes.forEach(pane => pane.classList.add('hidden'));
 
@@ -425,502 +1783,122 @@
                 const activePane = modal.querySelector(`[data-pane="${tabId}"]`);
                 if (activeBtn) {
                     activeBtn.classList.add('tab-active');
+                    activeBtn.classList.remove('tab');
                 }
                 if (activePane) activePane.classList.remove('hidden');
             };
 
             const onClickHandler = (e) => {
-                if (e.target.role === 'tab') {
-                    activateTab(e.target.dataset.tab);
+                const tabId = e.target.dataset.tab;
+                if (tabId) {
+                    activateTab(tabId);
+                }
+            };
+            
+            const onKeyHandler = (e) => {
+                const activeTab = modal.querySelector('.tab-active');
+                if (!activeTab) return;
+                let newIndex;
+                const tabs = Array.from(tabButtons);
+                const currentIndex = tabs.indexOf(activeTab);
+                
+                if (e.key === 'ArrowRight') {
+                    newIndex = (currentIndex + 1) % tabs.length;
+                    tabs[newIndex].focus();
+                    activateTab(tabs[newIndex].dataset.tab);
+                } else if (e.key === 'ArrowLeft') {
+                    newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+                    tabs[newIndex].focus();
+                    activateTab(tabs[newIndex].dataset.tab);
                 }
             };
 
             tabButtons.forEach(btn => {
                 btn.removeEventListener('click', onClickHandler);
+                btn.removeEventListener('keydown', onKeyHandler);
                 btn.addEventListener('click', onClickHandler);
+                btn.addEventListener('keydown', onKeyHandler);
             });
             
-            // Activate first tab by default
             if(tabButtons.length > 0) {
                  activateTab(tabButtons[0].dataset.tab);
             }
         }
-
-
-        // --- MODAL FUNCTIONS ---
-        window.toggleScopeInputs = function () {
-            const scope = document.querySelector('input[name="targetType"]:checked').value;
-            const itemCodeField = document.getElementById('iuom-item-code-field');
-            const itemClassField = document.getElementById('iuom-item-class-field');
-
-            if (scope === 'item') {
-                itemCodeField.classList.remove('hidden');
-                itemClassField.classList.add('hidden');
-            } else {
-                itemCodeField.classList.add('hidden');
-                itemClassField.classList.remove('hidden');
-            }
-        };
-
-        let selectedIUoMDetailRow = null;
-        window.renderIUoMDetailRows = function (details = []) {
-            const container = document.getElementById('iuom-details-grid');
-            if (!container) return;
-
-            container.innerHTML = '';
-            details.forEach((detail, index) => {
-                const row = document.createElement('div');
-                row.className = `iuom-detail-row p-3 border border-gray-200 rounded-md bg-white relative cursor-pointer hover:bg-gray-50 transition-colors ${index === selectedIUoMDetailRow ? 'ring-2 ring-wise-primary' : ''}`;
-                row.dataset.index = index;
-
-                row.onclick = () => {
-                    selectedIUoMDetailRow = index;
-                    renderIUoMDetailRows(getIUoMDetailsFromForm());
-                };
-
-                const detailId = `detail-${index}`; // Use index to prevent duplicate IDs
-                row.innerHTML = `
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
-                            <label for="${detailId}-sequence" class="block text-sm mb-1">Sequence:</label>
-                            <input id="${detailId}-sequence" name="detail-sequence" type="number" value="${detail.sequence}" class="input">
-                        </div>
-                        <div>
-                            <label for="${detailId}-um" class="block text-sm mb-1">Quantity UoM:</label>
-                            <select id="${detailId}-um" name="detail-quantityUM" class="select">
-                                <option value="">-- Pilih UoM --</option>
-                                ${uoms.map(u => `<option value="${u}" ${detail.quantityUM === u ? 'selected' : ''}>${u}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div>
-                            <label for="${detailId}-conversion" class="block text-sm mb-1">Conversion Qty:</label>
-                            <input id="${detailId}-conversion" name="detail-conversionQty" type="number" step="0.01" value="${detail.conversionQty}" class="input">
-                        </div>
-                        <div>
-                            <label for="${detailId}-movclass" class="block text-sm mb-1">Movement Class:</label>
-                            <select id="${detailId}-movclass" name="detail-movementClass" class="select">
-                                <option value="">-- Pilih Class --</option>
-                                ${movementClasses.map(m => `<option value="${m}" ${detail.movementClass === m ? 'selected' : ''}>${m}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                             <div>
-                                <label for="${detailId}-length" class="block text-sm mb-1">Length:</label>
-                                <input id="${detailId}-length" name="detail-length" type="number" step="0.01" value="${detail.length}" class="input">
-                            </div>
-                            <div>
-                                <label for="${detailId}-width" class="block text-sm mb-1">Width:</label>
-                                <input id="${detailId}-width" name="detail-width" type="number" step="0.01" value="${detail.width}" class="input">
-                            </div>
-                            <div>
-                                <label for="${detailId}-height" class="block text-sm mb-1">Height:</label>
-                                <input id="${detailId}-height" name="detail-height" type="number" step="0.01" value="${detail.height}" class="input">
-                            </div>
-                            <div>
-                                <label for="${detailId}-weight" class="block text-sm mb-1">Weight:</label>
-                                <input id="${detailId}-weight" name="detail-weight" type="number" step="0.01" value="${detail.weight}" class="input">
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-        };
-
-        window.addIUoMDetailRow = function () {
-            const currentDetails = getIUoMDetailsFromForm();
-            const newRow = { 
-                sequence: (currentDetails.length > 0 ? Math.max(...currentDetails.map(d => d.sequence)) + 1 : 1),
-                quantityUM: '',
-                conversionQty: 1.00,
-                length: 0.00,
-                width: 0.00,
-                height: 0.00,
-                weight: 0.00,
-                movementClass: '',
-                itemId: ''
-            };
-            currentDetails.push(newRow);
-            renderIUoMDetailRows(currentDetails);
-            selectedIUoMDetailRow = currentDetails.length - 1;
-        };
         
-        window.duplicateIUoMDetailRow = function () {
-            if (selectedIUoMDetailRow === null) {
-                window.showCustomAlert('Error', 'Pilih baris terlebih dahulu untuk diduplikasi.');
-                return;
-            }
-            const currentDetails = getIUoMDetailsFromForm();
-            const originalRow = currentDetails[selectedIUoMDetailRow];
-            if (originalRow) {
-                const newRow = { ...originalRow };
-                newRow.sequence = (currentDetails.length > 0 ? Math.max(...currentDetails.map(d => d.sequence)) + 1 : 1);
-                currentDetails.splice(selectedIUoMDetailRow + 1, 0, newRow);
-                renderIUoMDetailRows(currentDetails);
-            }
+        // --- ROUTING & REGISTRATION ---
+        window.contentData['item'] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item</h2>
+                <p class="text-wise-gray mb-4">Kelola semua item dalam inventaris.</p>
+
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md"
+                            onclick="showItemForm('create')">Buat Item</button>
+                    <button class="px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-md hover:bg-gray-300 transition-colors duration-200 shadow-md active-press transform" onclick="exportItemsToCSV()">
+                        Ekspor CSV
+                    </button>
+                    <label for="import-item-csv" class="cursor-pointer px-4 py-2 bg-gray-200 text-wise-dark-gray rounded-md hover:bg-gray-300 transition-colors duration-200 shadow-md active-press transform">
+                        Impor CSV
+                        <input type="file" id="import-item-csv" accept=".csv" class="hidden" onchange="importItemsFromCSV(event)">
+                    </label>
+                    <input id="item-search" type="text" placeholder="Cari item..." oninput="filterItemList(this.value)"
+                           class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full sm:w-72" />
+                </div>
+
+                <!-- Container untuk tabel item. Scrollbar vertikal + batasi tinggi -->
+                <div id="item-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
+            `
         };
 
-        window.deleteIUoMDetailRow = async function () {
-            if (selectedIUoMDetailRow === null) {
-                window.showCustomAlert('Error', 'Pilih baris terlebih dahulu untuk dihapus.');
-                return;
-            }
-            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus baris ini?');
-            if (confirmed) {
-                const currentDetails = getIUoMDetailsFromForm();
-                currentDetails.splice(selectedIUoMDetailRow, 1);
-                selectedIUoMDetailRow = null;
-                renderIUoMDetailRows(currentDetails);
-            }
-        };
+        // Daftarkan ke menu & pencarian global
+        window.searchItems.push({ id: 'item', title: 'Item', category: 'Inventory Control', lastUpdated: 'Latest' });
+        window.allMenus.push({ name: 'Item', category: 'Inventory Control' });
+        window.parentMapping['item'] = 'inventory-control';
 
-        function getIUoMDetailsFromForm() {
-            const rows = document.querySelectorAll('#iuom-details-grid .iuom-detail-row');
-            return Array.from(rows).map(row => ({
-                sequence: parseFloat(row.querySelector('[name="detail-sequence"]').value),
-                quantityUM: row.querySelector('[name="detail-quantityUM"]').value,
-                conversionQty: parseFloat(row.querySelector('[name="detail-conversionQty"]').value),
-                length: parseFloat(row.querySelector('[name="detail-length"]').value),
-                width: parseFloat(row.querySelector('[name="detail-width"]').value),
-                height: parseFloat(row.querySelector('[name="detail-height"]').value),
-                weight: parseFloat(row.querySelector('[name="detail-weight"]').value),
-                movementClass: row.querySelector('[name="detail-movementClass"]').value,
-            }));
-        }
 
-        window.showIUoMForm = function(mode, id = null) {
-            const modal = document.getElementById('iuom-form-modal');
-            const form = document.getElementById('iuom-form');
-            const title = document.getElementById('iuom-form-title');
-            
-            form.reset();
-            form.dataset.mode = mode;
-            form.dataset.id = id;
-            selectedIUoMDetailRow = null;
-            
-            setupIUoMTabSwitching('iuom-form-modal'); // Gunakan fungsi tab switching lokal
-
-            if (mode === 'create') {
-                title.textContent = 'Create New Item Unit of Measure';
-                document.getElementById('iuom-id').value = '';
-                document.getElementById('scope-item-radio').checked = true;
-                document.getElementById('iuom-inactive').checked = false;
-                toggleScopeInputs();
-                renderIUoMDetailRows([{
-                    sequence: 1, quantityUM: '', conversionQty: 1.00, length: 0.00, width: 0.00, height: 0.00, weight: 0.00, movementClass: '', itemId: ''
-                }]);
-            } else {
-                title.textContent = 'Edit Item Unit of Measure';
-                const iuom = itemUoms.find(i => i.id === id);
-                if (iuom) {
-                    document.getElementById('iuom-id').value = iuom.id;
-                    if (iuom.targetType === 'item') {
-                        document.getElementById('scope-item-radio').checked = true;
-                        document.getElementById('iuom-item-code').value = iuom.itemCode;
-                    } else {
-                        document.getElementById('scope-itemclass-radio').checked = true;
-                        document.getElementById('iuom-item-class').value = iuom.itemClass;
-                    }
-                    document.getElementById('iuom-company').value = iuom.company;
-                    document.getElementById('iuom-inactive').checked = iuom.inactive;
-                    toggleScopeInputs();
-                    
-                    document.getElementById('iuom-conversion-qty').value = iuom.conversionQty;
-                    document.getElementById('iuom-treat-as-full').value = iuom.treatAsFullPercent;
-                    document.getElementById('iuom-epc-package-id').value = iuom.epcPackageId;
-                    document.getElementById('iuom-movement-class').value = iuom.movementClass;
-                    document.getElementById('iuom-loose-in-container').checked = iuom.treatAsLooseInContainer;
-
-                    document.getElementById('iuom-length').value = iuom.length;
-                    document.getElementById('iuom-length-um').value = iuom.lengthUm;
-                    document.getElementById('iuom-width').value = iuom.width;
-                    document.getElementById('iuom-width-um').value = iuom.widthUm;
-                    document.getElementById('iuom-height').value = iuom.height;
-                    document.getElementById('iuom-height-um').value = iuom.heightUm;
-                    document.getElementById('iuom-weight').value = iuom.weight;
-                    document.getElementById('iuom-weight-um').value = iuom.weightUm;
-
-                    // Fill User Defined fields
-                    if (iuom.udf) {
-                        for (let i = 1; i <= 8; i++) {
-                            const udfInput = document.getElementById(`iuom-udf${i}`);
-                            if (udfInput) udfInput.value = iuom.udf[`udf${i}`] || '';
-                        }
-                    }
-
-                    // Since the provided mockups don't have separate detail rows, we'll
-                    // use the top-level fields for the single detail row, but for consistency
-                    // with the old data model, we'll set a default one here.
-                    const detailRow = {
-                        sequence: 1, quantityUM: iuom.quantityUM, conversionQty: iuom.conversionQty, length: iuom.length, width: iuom.width, height: iuom.height, weight: iuom.weight, movementClass: iuom.movementClass
-                    };
-                    renderIUoMDetailRows([detailRow]);
-                }
-            }
-
-            modal.classList.remove('hidden');
-            document.body.classList.add('modal-open');
-            setTimeout(() => {
-                const modalContent = modal.querySelector('.modal-content');
-                if (modalContent) {
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                    modalContent.classList.remove('scale-95', 'opacity-0');
-                    // Fix: Mengomentari baris ini karena window.trapFocus tidak terdefinisi
-                    // modal._untrap = window.trapFocus(modalContent);
-                }
-            }, 10);
-            
-            modal.onclick = (e) => {
-                if (e.target.id === 'iuom-form-modal') closeIUoMForm();
-            };
-        };
-
-        window.closeIUoMForm = function() {
-            const modal = document.getElementById('iuom-form-modal');
-            const modalContent = modal.querySelector('.modal-content');
-            if (modalContent) {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-95', 'opacity-0');
-            }
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.classList.remove('modal-open');
-                if (modal._untrap) {
-                    // Fix: Mengomentari baris ini
-                    // modal._untrap();
-                    delete modal._untrap;
-                }
-            }, 300);
-        };
-
-        window.handleIUoMSubmit = async function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const mode = form.dataset.mode;
-            const id = form.dataset.id;
-            
-            // Validasi form
-            const targetType = document.querySelector('input[name="targetType"]:checked').value;
-            const company = form['company'].value;
-            const itemCode = form['itemCode'].value;
-            const itemClass = form['itemClass'].value;
-            const conversionQty = parseFloat(form['conversionQty'].value);
-            
-            if (!company) {
-                await window.showCustomAlert('Error', 'Company wajib diisi.');
-                return;
-            }
-            if (targetType === 'item' && !itemCode) {
-                await window.showCustomAlert('Error', 'Item Code wajib diisi untuk scope Item.');
-                return;
-            }
-            if (targetType === 'itemClass' && !itemClass) {
-                await window.showCustomAlert('Error', 'Item Class wajib diisi untuk scope Item Class.');
-                return;
-            }
-            if (isNaN(conversionQty) || conversionQty <= 0) {
-                 await window.showCustomAlert('Error', 'Conversion Qty harus lebih besar dari 0.');
-                return;
-            }
-
-            const newIUoM = {
-                targetType: targetType,
-                itemCode: targetType === 'item' ? itemCode : '',
-                itemClass: targetType === 'itemClass' ? itemClass : '',
-                company: company,
-                conversionQty: conversionQty,
-                treatAsFullPercent: parseFloat(form['treatAsFullPercent'].value) || 0,
-                epcPackageId: parseInt(form['epcPackageId'].value) || 0,
-                movementClass: form['movementClass'].value,
-                treatAsLooseInContainer: form['treatAsLooseInContainer'].checked,
-                length: parseFloat(form['length'].value) || 0,
-                lengthUm: form['lengthUm'].value,
-                width: parseFloat(form['width'].value) || 0,
-                widthUm: form['widthUm'].value,
-                height: parseFloat(form['height'].value) || 0,
-                heightUm: form['heightUm'].value,
-                weight: parseFloat(form['weight'].value) || 0,
-                weightUm: form['weightUm'].value,
-                udf: {
-                    udf1: form['udf1']?.value || '',
-                    udf2: form['udf2']?.value || '',
-                    udf3: form['udf3']?.value || '',
-                    udf4: form['udf4']?.value || '',
-                    udf5: form['udf5']?.value || '',
-                    udf6: form['udf6']?.value || '',
-                    udf7: form['udf7']?.value || '',
-                    udf8: form['udf8']?.value || '',
-                },
-                updatedAt: new Date().toISOString().slice(0, 10)
-            };
-
-            let msg = '';
-            if (mode === 'create') {
-                const maxId = itemUoms.reduce((max, item) => {
-                    const num = parseInt(item.id.replace('IUOM', ''), 10);
-                    return Math.max(max, isNaN(num) ? 0 : num);
-                }, 0);
-                newIUoM.id = 'IUOM' + String(maxId + 1).padStart(3, '0');
-                itemUoms.push(newIUoM);
-                msg = 'Item Unit of Measure created successfully!';
-            } else {
-                const index = itemUoms.findIndex(i => i.id === id);
-                if (index !== -1) {
-                    itemUoms[index] = { ...itemUoms[index], ...newIUoM, id: id };
-                    msg = 'Item Unit of Measure updated successfully!';
-                }
-            }
-            saveIUoMs();
-            closeIUoMForm();
-            window.renderIUoMList();
-            await window.showCustomAlert('Success', msg);
-        };
-
-        window.deleteIUoM = async function(id) {
-            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus IUoM ini?');
-            if (confirmed) {
-                itemUoms = itemUoms.filter(iuom => iuom.id !== id);
-                saveIUoMs();
-                window.renderIUoMList();
-                await window.showCustomAlert('Dihapus', 'Item Unit of Measure berhasil dihapus!');
-            }
-        };
-
-        // --- CSV EXPORT/IMPORT ---
-        window.exportIUoMToCSV = function() {
-            const headers = [
-                "id", "targetType", "itemCode", "itemClass", "company", "conversionQty", "treatAsFullPercent",
-                "epcPackageId", "movementClass", "treatAsLooseInContainer",
-                "length", "lengthUm", "width", "widthUm", "height", "heightUm",
-                "weight", "weightUm", "udf1", "udf2", "udf3", "udf4", "udf5", "udf6", "udf7", "udf8", "updatedAt"
-            ];
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += headers.join(",") + "\r\n";
-
-            itemUoms.forEach(iuom => {
-                const row = [
-                    iuom.id,
-                    iuom.targetType,
-                    iuom.itemCode || '',
-                    iuom.itemClass || '',
-                    iuom.company,
-                    iuom.conversionQty,
-                    iuom.treatAsFullPercent,
-                    iuom.epcPackageId,
-                    iuom.movementClass,
-                    iuom.treatAsLooseInContainer,
-                    iuom.length, iuom.lengthUm,
-                    iuom.width, iuom.widthUm,
-                    iuom.height, iuom.heightUm,
-                    iuom.weight, iuom.weightUm,
-                    iuom.udf.udf1 || '', iuom.udf.udf2 || '', iuom.udf.udf3 || '', iuom.udf.udf4 || '',
-                    iuom.udf.udf5 || '', iuom.udf.udf6 || '', iuom.udf.udf7 || '', iuom.udf.udf8 || '',
-                    iuom.updatedAt
-                ].map(field => `"${field}"`).join(",");
-                csvContent += row + "\r\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "item_uoms.csv");
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        };
-
-        window.importIUoMFromCSV = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n').filter(l => l.trim() !== '');
-                if (lines.length <= 1) {
-                    await window.showCustomAlert('Error', 'File CSV kosong atau tidak valid.');
-                    return;
-                }
-
-                const headers = lines[0].split(',').map(h => h.replace(/"/g, ''));
-                const newItems = [];
-                const errors = [];
-                for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, ''));
-                    const item = {};
-                    let isValid = true;
-                    if (values.length !== headers.length) {
-                        errors.push(`Baris ${i + 1}: Jumlah kolom tidak sesuai.`);
-                        continue;
-                    }
-
-                    headers.forEach((header, index) => {
-                        let value = values[index];
-                        if (header === 'conversionQty' && (isNaN(parseFloat(value)) || parseFloat(value) <= 0)) {
-                            isValid = false;
-                            errors.push(`Baris ${i + 1}: ConversionQty harus angka > 0.`);
-                        }
-                        if (header === 'id') item[header] = value;
-                        else if (header === 'targetType') item[header] = value;
-                        else if (header === 'itemCode') item[header] = value;
-                        else if (header === 'itemClass') item[header] = value;
-                        else if (header === 'company') item[header] = value;
-                        else if (header === 'conversionQty') item[header] = parseFloat(value);
-                        else if (header === 'treatAsFullPercent') item[header] = parseInt(value) || 0;
-                        else if (header === 'epcPackageId') item[header] = parseInt(value) || 0;
-                        else if (header === 'movementClass') item[header] = value;
-                        else if (header === 'treatAsLooseInContainer') item[header] = value === 'true';
-                        else if (['length', 'width', 'height', 'weight'].includes(header)) item[header] = parseFloat(value) || 0;
-                        else if (['lengthUm', 'widthUm', 'heightUm', 'weightUm'].includes(header)) item[header] = value;
-                        else if (header.startsWith('udf')) {
-                            item.udf = item.udf || {};
-                            item.udf[header] = value;
-                        }
-                        else item[header] = value;
-                    });
-                    
-                    if(isValid) newItems.push(item);
-                }
-
-                if (errors.length > 0) {
-                    await window.showCustomAlert('Error Impor', `Ditemukan ${errors.length} error:\n${errors.join('\n')}`);
-                }
-
-                if (newItems.length > 0) {
-                    itemUoms = [...itemUoms, ...newItems];
-                    saveIUoMs();
-                    window.renderIUoMList();
-                    await window.showCustomAlert('Sukses', `${newItems.length} data IUoM berhasil diimpor!`);
-                }
-            };
-            reader.readAsText(file);
-        };
-        
-        // Letakkan IUoM di dalam grup "Inventory Control"
         if (window.contentData['inventory-control']) {
             const invChildren = [
-                'adjustment-type', 'harmonized-code', 'inventory-control-values', 'inventory-status',
-                'item', 'item-class', 'item-cross-reference', 'item-location-assignment',
+                'item', 'adjustment-type', 'harmonized-code', 'inventory-control-values', 'inventory-status',
+                'item-class', 'item-cross-reference', 'item-location-assignment',
                 'item-location-capacity', 'item-template', 'item-unit-of-measure',
                 'location', 'location-class', 'location-status', 'location-template', 'location-type',
                 'lot-template', 'movement-class', 'serial-number-template', 'storage-template',
                 'zone', 'zone-type'
-            ];
-            // Fix: Merge dengan window.invMeta yang sudah ada dan pastikan default value jika undefined
+            ].sort(); 
+            
             const invMeta = { 
                 ...(window.invMeta || {}),
-                'item-unit-of-measure': ['Item Unit of Measure', 'UoM list and conversions.'],
+                'item': ['Item', 'Kelola data master item dan atributnya.'], 
+                'item-unit-of-measure': ['Item Unit of Measure', 'Kelola UoM dan konversi untuk item/kelas item.'],
+                'adjustment-type': ['Adjustment Type', 'Tentukan jenis untuk penyesuaian inventaris.'],
+                'harmonized-code': ['Harmonized Code', 'Kelola kode sistem harmonisasi untuk bea cukai.'],
+                'inventory-control-values': ['Inventory Control Values', 'Konfigurasi berbagai parameter kontrol inventaris.'],
+                'inventory-status': ['Inventory Status', 'Tentukan dan kelola status stok inventaris.'],
+                'item-class': ['Item Class', 'Kategorikan item ke dalam kelas untuk manajemen yang lebih baik.'],
+                'item-cross-reference': ['Item Cross Reference', 'Hubungkan item ke kode eksternal atau pengenal item lainnya.'],
+                'item-location-assignment': ['Item Location Assignment', 'Tetapkan item ke lokasi tertentu di gudang.'],
+                'item-location-capacity': ['Item Location Capacity', 'Tentukan kapasitas penyimpanan untuk berbagai lokasi item.'],
+                'item-template': ['Item Template', 'Buat template untuk pembuatan item baru.'],
+                'location': ['Location', 'Kelola lokasi penyimpanan fisik di gudang.'],
+                'location-class': ['Location Class', 'Kategorikan lokasi untuk pengelompokan logis.'],
+                'location-status': ['Location Status', 'Tentukan status untuk lokasi gudang.'],
+                'location-template': ['Location Template', 'Buat template untuk penyiapan lokasi baru.'],
+                'location-type': ['Location Type', 'Tentukan berbagai jenis lokasi penyimpanan.'],
+                'lot-template': ['Lot Template', 'Tentukan template untuk pembuatan dan pelacakan nomor lot.'],
+                'movement-class': ['Movement Class', 'Kategorikan item berdasarkan karakteristik pergerakannya.'],
+                'serial-number-template': ['Serial Number Template', 'Tentukan template untuk pembuatan dan pelacakan nomor seri.'],
+                'storage-template': ['Storage Template', 'Konfigurasi aturan dan template penyimpanan.'],
+                'zone': ['Zone', 'Kelola zona logis di dalam gudang.'],
+                'zone-type': ['Zone Type', 'Tentukan jenis zona dalam tata letak gudang.']
             };
             
-            // Tambahkan IUoM ke daftar anak dan metadata
             window.contentData['inventory-control'].full = `
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
                     Inventory Control
                 </h2>
-                <p class="text-wise-gray mb-6">Select a sub-category to manage inventory controls.</p>
+                <p class="text-wise-gray mb-6">Pilih sub-kategori untuk mengelola kontrol inventaris.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${invChildren.map(k => {
-                        // Fix: Gunakan fallback jika meta tidak terdefinisi
                         const meta = invMeta[k] || [k, ''];
                         return `
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md hover:shadow-lg transition">
@@ -928,35 +1906,61 @@
                             <p class="text-wise-gray text-sm">${meta[1]}</p>
                             <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition"
                                     onclick="selectCategory('${k}')">
-                                Open
+                                Buka
                             </button>
                         </div>
                     `;
                     }).join('')}
                 </div>`;
-            window.parentMapping['item-unit-of-measure'] = 'inventory-control';
+            window.parentMapping['item'] = 'inventory-control';
         }
         
-        // Auto-render saat modul dimuat
-        const autoRenderIUoM = () => {
-            const container = document.getElementById('iuom-list-container');
+        const autoRenderItem = () => {
+            const container = document.getElementById('item-list-container');
             if (container && !container.dataset.bound) {
-                renderIUoMList();
+                seedItemData();
+                renderItemList();
                 container.dataset.bound = '1';
             }
         };
 
-        const observer = new MutationObserver(autoRenderIUoM);
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    autoRenderItem();
+                }
+            });
+        });
         observer.observe(document.body, { childList: true, subtree: true });
+
+        document.addEventListener('content:rendered', (e) => {
+            if (e.detail.key === 'item') {
+                window.renderItemList();
+            }
+        });
         
-        // Panggilan awal untuk memastikan konten default dimuat saat startup
+        const originalSelectCategory = window.selectCategory;
+        window.selectCategory = function(category) {
+            originalSelectCategory(category);
+            document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
+        };
+        
+        // Listen for Esc key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.querySelector('.fixed.inset-0:not(.hidden)');
+                if (modal) {
+                    closeModal(modal.id);
+                }
+            }
+        });
+        
         window.navigateToHome();
 
-        console.log('Configuration V4 (Item Unit of Measure) loaded successfully');
+        console.log('Configuration V4 (Item) loaded successfully');
     });
 })();
 
-// Definisi fungsi global yang harus diakses dari HTML
 window.closeSidebar = function() {
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -977,21 +1981,21 @@ window.selectCategory = function(category) {
     if (window.contentData[category]) {
         if (mainContent) mainContent.innerHTML = window.contentData[category].full;
         
-        // Panggil renderer yang sesuai setelah konten dimuat
-        if (window[`render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`]) {
-            window[`render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`]();
-        } else if (category === 'item-unit-of-measure') {
-            window.renderIUoMList();
+        if (category === 'item') {
+            window.renderItemList();
         } else {
-            console.warn(`Renderer for category '${category}' not found.`);
+            const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
+            if (typeof window[rendererName] === 'function') {
+                window[rendererName]();
+            } else {
+                console.warn(`Renderer for category '${category}' (${rendererName}) not found.`);
+            }
         }
 
-        // Panggilan closeSidebar() pada layar kecil (mobile)
         if (window.innerWidth < 768) {
             window.closeSidebar();
         }
         
-        // Pastikan menu aktif diperbarui
         if (categoryMenu) {
             const menuItems = categoryMenu.querySelectorAll('button');
             menuItems.forEach(item => {
@@ -1016,7 +2020,7 @@ window.navigateToHome = function() {
     const mainContent = document.getElementById('main-content');
     const homeContent = `<div class="p-6">
         <h1 class="text-3xl font-bold mb-4">Welcome to Wise Configuration</h1>
-        <p class="text-gray-700">Select a category from the menu to get started.</p>
+        <p class="text-gray-700">Pilih kategori dari menu untuk memulai.</p>
     </div>`;
     if (mainContent) {
         mainContent.innerHTML = homeContent;
