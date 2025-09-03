@@ -153,7 +153,7 @@
             },
             'configuration-warehouse': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Warehouse </h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse </h2>
                     <p class="text-wise-gray mb-4">Manage existing warehouses or add new ones.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showWarehouseForm('create')">
@@ -437,7 +437,7 @@
             },
             'locating-strategies': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Strategy</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Strategy</h2>
                     <p class="text-wise-gray mb-4">Manage strategies used to place items in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingStrategyForm('create')">
@@ -489,7 +489,7 @@
             },
             'locating-rule': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Locating Rule</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Locating Rule</h2>
                     <p class="text-wise-gray mb-4">Manage rules that determine how items are placed in warehouse locations.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocatingRuleForm('create')">
@@ -549,7 +549,7 @@
             },
             'security-group': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Group</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Group</h2>
                     <p class="text-wise-gray mb-4">Manage security groups and their access levels within the system.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showSecurityGroupForm('create')">
@@ -646,7 +646,7 @@
             },
             'security-permission': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Security Permission</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Security Permission</h2>
                     <p class="text-wise-gray mb-4">Manage security permissions and their access to different menus.</p>
                     
                     <div class="flex justify-between items-center mb-4">
@@ -708,7 +708,7 @@
             },
             'configuration-user-profile': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">User Profile</h2>
                     <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">

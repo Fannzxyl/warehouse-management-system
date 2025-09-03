@@ -39,7 +39,7 @@
         Object.assign(window.contentData, {
             'configuration-user-profile': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - User Profile</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">User Profile</h2>
                     <p class="text-wise-gray mb-4">Manage user profiles, permissions, and other user-specific settings.</p>
                     <div class="flex justify-between items-center mb-4">
                         <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showUserProfileForm('create')">
@@ -386,7 +386,7 @@
             },
             'allocation-rule': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Rule</h2>
                     <p class="text-wise-gray mb-4">Manage rules that determine how items are allocated from warehouse locations.</p>
 
                     <div class="flex justify-between items-center mb-4">
@@ -463,7 +463,7 @@
             },
             'allocation-strategies': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Strategies</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Strategies</h2>
                     <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
 
                     <div class="flex justify-between items-center mb-4">
@@ -534,7 +534,7 @@
             },
             'allocation-rule-assignment': {
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment</h2>
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment</h2>
                     <p class="text-wise-gray mb-4">Set criteria, rule, and priority.</p>
                     
                     <div class="flex justify-between items-center mb-4">
@@ -661,7 +661,7 @@
                 padding-bottom: 12px; /* pb-3 equivalent */
             }
         </style>
-        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Location Selection</h2>
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Location Selection</h2>
         <p class="text-wise-gray mb-4">Manage strategies used to allocate items from warehouse locations.</p>
 
         <div class="flex justify-between items-center mb-4">
@@ -878,7 +878,7 @@
 // Ganti semua isi 'allocation-rule-assignment-criteria' dengan ini
 'allocation-rule-assignment-criteria': {
     full: `
-        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Allocation Rule Assignment Criteria</h2>
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment Criteria</h2>
         <p class="text-wise-gray mb-4">Set criteria, and record type, etc.</p>
         
         <div class="flex justify-between items-center mb-4">
@@ -1088,7 +1088,7 @@
                 const index = window.userProfiles.findIndex(up => up.id === id);
                 if (index !== -1) {
                     window.userProfiles[index] = { ...window.userProfiles[index], ...newProfileData };
-                    await window.showCustomAlert('Sukses', 'User profile berhasil diupdate!');
+                    await window.showCustomAlert('Sukses', 'User profile updated succesfully!');
                 }
             }
             if(window.saveUserProfiles) {
@@ -2203,6 +2203,7 @@ window.deleteARAC = async function (id) {
         }
 
         window.showAllocationLocationSelectionForm = function (mode, id = null) {
+            const modal = document.getElementById('alsModal');
             const form = document.getElementById('allocation-location-selection-form');
             const title = document.getElementById('allocation-location-selection-form-title');
             const submitButton = document.getElementById('allocation-location-selection-submit-button');
@@ -2212,10 +2213,7 @@ window.deleteARAC = async function (id) {
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            // Use the correct ID for tab switching, which is the content container inside alsModal
             window.setupTabSwitching('alsModal'); 
-
-            // Reset current filter and order rules
             currentFilterRules = [];
             currentOrderByRules = [];
             selectedFilterRuleIndex = -1;
@@ -2227,8 +2225,11 @@ window.deleteARAC = async function (id) {
                 document.getElementById('als-recType').value = 'ALLOC SEL';
                 document.getElementById('als-inactive').checked = false;
                 document.getElementById('als-systemCreated').checked = false;
-                for (let i = 1; i <= 8; i++) { const el = document.getElementById(`als-udf${i}`); if (el) el.value = '0.00000'; } // Default UDFs
-                lastUpdatedInfo.textContent = ''; // Clear last updated info for new entry
+                for (let i = 1; i <= 8; i++) { 
+                    const el = form.querySelector(`#als-udf${i}`); 
+                    if (el) el.value = '0.00000'; 
+                }
+                lastUpdatedInfo.textContent = '';
             } else {
                 title.textContent = 'Edit Allocation Location Selection';
                 submitButton.textContent = 'Update';
@@ -2241,174 +2242,163 @@ window.deleteARAC = async function (id) {
                     document.getElementById('als-inactive').checked = selection.inactive;
                     document.getElementById('als-systemCreated').checked = selection.systemCreated;
                     for (let i = 1; i <= 8; i++) {
-                        const el = document.getElementById(`als-udf${i}`);
+                        const el = form.querySelector(`#als-udf${i}`);
                         if (el) el.value = selection[`udf${i}`] || '0.00000';
                     }
-                    currentFilterRules = JSON.parse(JSON.stringify(selection.filterRules || [])); // Deep copy
-                    currentOrderByRules = JSON.parse(JSON.stringify(selection.orderBy || [])); // Deep copy
+                    currentFilterRules = JSON.parse(JSON.stringify(selection.filterRules || [])); 
+                    currentOrderByRules = JSON.parse(JSON.stringify(selection.orderBy || []));
 
-                    // Set last updated info
                     lastUpdatedInfo.textContent = `Last updated ${selection.lastUpdated} — User: ${selection.updatedBy}`;
                 }
             }
 
-            // Attach event listeners for filter/order by controls only once
-            if (!window.alsFormListenersAttached) {
-                document.getElementById('als-btnClearInputs').addEventListener('click', () => {
-                    document.getElementById('als-attr').selectedIndex = 0;
-                    document.getElementById('als-op').selectedIndex = 0;
-                    document.getElementById('als-val').value = '';
-                    document.getElementById('als-logic-and').checked = true;
-                    selectedFilterRuleIndex = -1; // Clear selection on clear inputs
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnAddRule').addEventListener('click', () => {
-                    const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value; // Scope to current tab
-                    const attribute = document.getElementById('als-attr').value;
-                    const op = document.getElementById('als-op').value;
-                    const val = document.getElementById('als-val').value.trim();
-                    if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
+            document.getElementById('als-btnClearInputs').onclick = () => {
+                document.getElementById('als-attr').selectedIndex = 0;
+                document.getElementById('als-op').selectedIndex = 0;
+                document.getElementById('als-val').value = '';
+                document.getElementById('als-logic-and').checked = true;
+                selectedFilterRuleIndex = -1;
+                renderFilterRules();
+            };
+            document.getElementById('als-btnAddRule').onclick = () => {
+                const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value;
+                const attribute = document.getElementById('als-attr').value;
+                const op = document.getElementById('als-op').value;
+                const val = document.getElementById('als-val').value.trim();
+                if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
 
-                    const newRule = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
+                const newRule = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
 
-                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
-                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newRule);
-                        selectedFilterRuleIndex++;
-                    } else {
-                        currentFilterRules.push(newRule);
-                        selectedFilterRuleIndex = currentFilterRules.length - 1;
-                    }
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnUpdateSelectedRule').addEventListener('click', () => {
-                    if (selectedFilterRuleIndex < 0 || currentFilterRules[selectedFilterRuleIndex]?.type !== 'rule') { window.showCustomAlert('Error', 'Select a rule row first to update.'); return; }
-                    const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value; // Scope to current tab
-                    const attribute = document.getElementById('als-attr').value;
-                    const op = document.getElementById('als-op').value;
-                    const val = document.getElementById('als-val').value.trim();
-                    if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
-                    currentFilterRules[selectedFilterRuleIndex] = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnDeleteSelectedRule').addEventListener('click', async () => {
-                    if (selectedFilterRuleIndex < 0) { window.showCustomAlert('Error', 'Select a row first to delete.'); return; }
-                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete selected rule?');
-                    if (!ok) return;
-                    currentFilterRules.splice(selectedFilterRuleIndex, 1);
-                    if (selectedFilterRuleIndex >= currentFilterRules.length) selectedFilterRuleIndex = currentFilterRules.length - 1;
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnDeleteLastRule').addEventListener('click', async () => {
-                    if (currentFilterRules.length === 0) { window.showCustomAlert('Error', 'No rules to delete!'); return; }
-                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the last rule?');
-                    if (!ok) return;
-                    currentFilterRules.pop();
+                if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                    currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newRule);
+                    selectedFilterRuleIndex++;
+                } else {
+                    currentFilterRules.push(newRule);
                     selectedFilterRuleIndex = currentFilterRules.length - 1;
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnLParen').addEventListener('click', () => {
-                    const newParen = { type: 'lparen' };
-                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
-                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
-                        selectedFilterRuleIndex++;
-                    } else {
-                        currentFilterRules.push(newParen);
-                        selectedFilterRuleIndex = currentFilterRules.length - 1;
+                }
+                renderFilterRules();
+            };
+            document.getElementById('als-btnUpdateSelectedRule').onclick = () => {
+                if (selectedFilterRuleIndex < 0 || currentFilterRules[selectedFilterRuleIndex]?.type !== 'rule') { window.showCustomAlert('Error', 'Select a rule row first to update.'); return; }
+                const logic = document.querySelector('#als-filter-data input[name="logic"]:checked').value;
+                const attribute = document.getElementById('als-attr').value;
+                const op = document.getElementById('als-op').value;
+                const val = document.getElementById('als-val').value.trim();
+                if (needsValue(op) && !val) { window.showCustomAlert('Error', 'Please input value for the selected operand.'); return; }
+                currentFilterRules[selectedFilterRuleIndex] = { type: 'rule', logic, attribute, op, value: needsValue(op) ? val : '' };
+                renderFilterRules();
+            };
+            document.getElementById('als-btnDeleteSelectedRule').onclick = async () => {
+                if (selectedFilterRuleIndex < 0) { window.showCustomAlert('Error', 'Select a row first to delete.'); return; }
+                const ok = await window.showCustomConfirm('Confirm Delete', 'Delete selected rule?');
+                if (!ok) return;
+                currentFilterRules.splice(selectedFilterRuleIndex, 1);
+                if (selectedFilterRuleIndex >= currentFilterRules.length) selectedFilterRuleIndex = currentFilterRules.length - 1;
+                renderFilterRules();
+            };
+            document.getElementById('als-btnDeleteLastRule').onclick = async () => {
+                if (currentFilterRules.length === 0) { window.showCustomAlert('Error', 'No rules to delete!'); return; }
+                const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the last rule?');
+                if (!ok) return;
+                currentFilterRules.pop();
+                selectedFilterRuleIndex = currentFilterRules.length - 1;
+                renderFilterRules();
+            };
+            document.getElementById('als-btnLParen').onclick = () => {
+                const newParen = { type: 'lparen' };
+                if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                    currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
+                    selectedFilterRuleIndex++;
+                } else {
+                    currentFilterRules.push(newParen);
+                    selectedFilterRuleIndex = currentFilterRules.length - 1;
+                }
+                renderFilterRules();
+            };
+            document.getElementById('als-btnRParen').onclick = () => {
+                const newParen = { type: 'rparen' };
+                if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
+                    currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
+                    selectedFilterRuleIndex++;
+                } else {
+                    currentFilterRules.push(newParen);
+                    selectedFilterRuleIndex = currentFilterRules.length - 1;
+                }
+                renderFilterRules();
+            };
+            document.getElementById('als-btnDelParen').onclick = async () => {
+                const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the nearest parenthesis?');
+                if (!ok) return;
+                let deleted = false;
+                for (let i = currentFilterRules.length - 1; i >= 0; i--) {
+                    if (currentFilterRules[i].type === 'lparen' || currentFilterRules[i].type === 'rparen') {
+                        currentFilterRules.splice(i, 1);
+                        deleted = true;
+                        break;
                     }
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnRParen').addEventListener('click', () => {
-                    const newParen = { type: 'rparen' };
-                    if (selectedFilterRuleIndex !== -1 && selectedFilterRuleIndex < currentFilterRules.length) {
-                        currentFilterRules.splice(selectedFilterRuleIndex + 1, 0, newParen);
-                        selectedFilterRuleIndex++;
-                    } else {
-                        currentFilterRules.push(newParen);
-                        selectedFilterRuleIndex = currentFilterRules.length - 1;
-                    }
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnDelParen').addEventListener('click', async () => {
-                    const ok = await window.showCustomConfirm('Confirm Delete', 'Delete the nearest parenthesis?');
-                    if (!ok) return;
-                    let deleted = false;
-                    for (let i = currentFilterRules.length - 1; i >= 0; i--) {
-                        if (currentFilterRules[i].type === 'lparen' || currentFilterRules[i].type === 'rparen') {
-                            currentFilterRules.splice(i, 1);
-                            deleted = true;
-                            break;
-                        }
-                    }
-                    if (!deleted) { window.showCustomAlert('Error', 'No parenthesis to delete!'); }
-                    selectedFilterRuleIndex = currentFilterRules.length - 1; renderFilterRules();
-                });
-                document.getElementById('als-btnUpRule').addEventListener('click', () => {
-                    if (selectedFilterRuleIndex <= 0) return;
-                    [currentFilterRules[selectedFilterRuleIndex - 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex - 1]];
-                    selectedFilterRuleIndex--; 
-                    renderFilterRules();
-                });
-                document.getElementById('als-btnDownRule').addEventListener('click', () => {
-                    if (selectedFilterRuleIndex < 0 || selectedFilterRuleIndex >= currentFilterRules.length - 1) return;
-                    [currentFilterRules[selectedFilterRuleIndex + 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex + 1]];
-                    selectedFilterRuleIndex++; 
-                    renderFilterRules();
-                });
-
-                // Order By buttons
-                document.getElementById('als-btnAddSortCriteria').addEventListener('click', () => {
-                    const attribute = document.getElementById('als-obAttribute').value;
-                    const direction = document.querySelector('#als-order-by input[name="order-direction"]:checked').value; // Scope to current tab
-                    if (!attribute) { window.showCustomAlert('Error', 'Please select an attribute!'); return; }
-
-                    const newSortItem = { attribute, direction };
-
-                    if (selectedOrderByRuleIndex !== -1 && selectedOrderByRuleIndex < currentOrderByRules.length) {
-                        currentOrderByRules.splice(selectedOrderByRuleIndex + 1, 0, newSortItem);
-                        selectedOrderByRuleIndex++;
-                    } else {
-                        currentOrderByRules.push(newSortItem);
-                        selectedOrderByRuleIndex = currentOrderByRules.length - 1;
-                    }
-                    renderOrderByRules();
-                });
-                document.getElementById('als-btnDeleteSelectedSortItem').addEventListener('click', () => {
-                    if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length) { window.showCustomAlert('Error', 'Select a sort item first!'); return; }
-                    currentOrderByRules.splice(selectedOrderByRuleIndex, 1);
-                    if (selectedOrderByRuleIndex >= currentOrderByRules.length) selectedOrderByRuleIndex = currentOrderByRules.length - 1;
-                    renderOrderByRules();
-                });
-                document.getElementById('als-btnDeleteLastSortItem').addEventListener('click', () => {
-                    if (currentOrderByRules.length === 0) { window.showCustomAlert('Error', 'No sort items to delete!'); return; }
-                    currentOrderByRules.pop();
-                    selectedOrderByRuleIndex = currentOrderByRules.length - 1;
-                    renderOrderByRules();
-                });
-                document.getElementById('als-btnUpOrder').addEventListener('click', () => {
-                    if (selectedOrderByRuleIndex <= 0) return;
-                    [currentOrderByRules[selectedOrderByRuleIndex - 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex - 1]];
-                    selectedOrderByRuleIndex--;
-                    renderOrderByRules();
-                });
-                document.getElementById('als-btnDownOrder').addEventListener('click', () => {
-                    if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length - 1) return;
-                    [currentOrderByRules[selectedOrderByRuleIndex + 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex + 1]];
+                }
+                if (!deleted) { window.showCustomAlert('Error', 'No parenthesis to delete!'); }
+                selectedFilterRuleIndex = currentFilterRules.length - 1; 
+                renderFilterRules();
+            };
+            document.getElementById('als-btnUpRule').onclick = () => {
+                if (selectedFilterRuleIndex <= 0) return;
+                [currentFilterRules[selectedFilterRuleIndex - 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex - 1]];
+                selectedFilterRuleIndex--; 
+                renderFilterRules();
+            };
+            document.getElementById('als-btnDownRule').onclick = () => {
+                if (selectedFilterRuleIndex < 0 || selectedFilterRuleIndex >= currentFilterRules.length - 1) return;
+                [currentFilterRules[selectedFilterRuleIndex + 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex + 1]];
+                selectedFilterRuleIndex++; 
+                renderFilterRules();
+            };
+            document.getElementById('als-btnAddSortCriteria').onclick = () => {
+                const attribute = document.getElementById('als-obAttribute').value;
+                const direction = document.querySelector('#als-order-by input[name="order-direction"]:checked').value;
+                if (!attribute) { window.showCustomAlert('Error', 'Please select an attribute!'); return; }
+                const newSortItem = { attribute, direction };
+                if (selectedOrderByRuleIndex !== -1 && selectedOrderByRuleIndex < currentOrderByRules.length) {
+                    currentOrderByRules.splice(selectedOrderByRuleIndex + 1, 0, newSortItem);
                     selectedOrderByRuleIndex++;
-                    renderOrderByRules();
-                });
+                } else {
+                    currentOrderByRules.push(newSortItem);
+                    selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                }
+                renderOrderByRules();
+            };
+            document.getElementById('als-btnDeleteSelectedSortItem').onclick = () => {
+                if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length) { window.showCustomAlert('Error', 'Select a sort item first!'); return; }
+                currentOrderByRules.splice(selectedOrderByRuleIndex, 1);
+                if (selectedOrderByRuleIndex >= currentOrderByRules.length) selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                renderOrderByRules();
+            };
+            document.getElementById('als-btnDeleteLastSortItem').onclick = () => {
+                if (currentOrderByRules.length === 0) { window.showCustomAlert('Error', 'No sort items to delete!'); return; }
+                currentOrderByRules.pop();
+                selectedOrderByRuleIndex = currentOrderByRules.length - 1;
+                renderOrderByRules();
+            };
+            document.getElementById('als-btnUpOrder').onclick = () => {
+                if (selectedOrderByRuleIndex <= 0) return;
+                [currentOrderByRules[selectedOrderByRuleIndex - 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex - 1]];
+                selectedOrderByRuleIndex--;
+                renderOrderByRules();
+            };
+            document.getElementById('als-btnDownOrder').onclick = () => {
+                if (selectedOrderByRuleIndex < 0 || selectedOrderByRuleIndex >= currentOrderByRules.length - 1) return;
+                [currentOrderByRules[selectedOrderByRuleIndex + 1], currentOrderByRules[selectedOrderByRuleIndex]] = [currentOrderByRules[selectedOrderByRuleIndex], currentOrderByRules[selectedOrderByRuleIndex + 1]];
+                selectedOrderByRuleIndex++;
+                renderOrderByRules();
+            };
+            document.getElementById('als-tableName').onchange = () => {
+                renderFilterRules();
+                renderOrderByRules();
+            };
 
-                // Add change listener for tableName to re-render rules
-                document.getElementById('als-tableName').addEventListener('change', () => {
-                    renderFilterRules();
-                    renderOrderByRules();
-                });
-
-                window.alsFormListenersAttached = true; // Set the global flag to true
-            }
-
-            openAlsModal(); // Use the new open modal function
-            renderFilterRules(); // Initial render when form is shown
-            renderOrderByRules(); // Initial render when form is shown
+            openAlsModal();
+            renderFilterRules();
+            renderOrderByRules();
         };
 
         window.closeAllocationLocationSelectionForm = function () {
@@ -2450,11 +2440,11 @@ window.deleteARAC = async function (id) {
                 allocationLocationSelections.push(newSelection);
                 await window.showCustomAlert('Success', 'Allocation Location Selection created successfully!');
             } else {
-                const ok = await window.showCustomConfirm(
-                    'Confirm Update',
-                    'Apply changes to this Allocation Location Selection?'
-                );
-                if (!ok) return;
+                // const ok = await window.showCustomConfirm(
+                //     'Confirm Update',
+                //     'Apply changes to this Allocation Location Selection?'
+                // );
+                // if (!ok) return;
 
                 const index = allocationLocationSelections.findIndex(als => als.id === id);
                 if (index !== -1) {

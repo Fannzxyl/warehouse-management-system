@@ -1586,7 +1586,7 @@ window.contentData['zone'] = {
 };
 window.contentData['zone-type'] = {
     full: `
-        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Configuration - Zone Type</h2>
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone Type</h2>
         <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
         <div class="flex justify-between items-center mb-4">
             <button class="btn btn-primary" onclick="showZoneTypeForm('create')">
@@ -3576,6 +3576,15 @@ window.showStorageTemplateForm = function(mode, id = null) {
     form.dataset.id = id;
     activateTab('gen', modal);
 
+    const tabList = document.getElementById('st-tab-list');
+    if (tabList) {
+        tabList.onclick = (e) => {
+            if (e.target.role === 'tab') {
+                activateTab(e.target.dataset.tab, modal);
+            }
+        };
+    }
+
     if (mode === 'create') {
         title.textContent = 'Create New Storage Template';
         document.getElementById('st-identifier').removeAttribute('readonly');
@@ -3591,8 +3600,6 @@ window.showStorageTemplateForm = function(mode, id = null) {
             document.getElementById('st-inactive').checked = item.inactive;
             document.getElementById('st-systemCreated').checked = item.systemCreated;
             renderStorageTemplateDetails(item.detailRecords);
-            
-            // Perbaikan UDF Load
             if (item.userDefined) {
                 for(let i = 1; i <= 8; i++) {
                     const udfInput = document.getElementById(`st-udf${i}`);
@@ -3600,7 +3607,6 @@ window.showStorageTemplateForm = function(mode, id = null) {
                 }
             }
 
-            // Perbaikan System Created
             if (item.systemCreated) {
                 document.getElementById('st-identifier').setAttribute('readonly', true);
                 document.getElementById('st-identifier').classList.add('bg-gray-100');
@@ -3608,31 +3614,40 @@ window.showStorageTemplateForm = function(mode, id = null) {
                 document.getElementById('st-identifier').removeAttribute('readonly');
                 document.getElementById('st-identifier').classList.remove('bg-gray-100');
             }
-            document.getElementById('st-systemCreated').disabled = false; // <-- FIX DI SINI
+            document.getElementById('st-systemCreated').disabled = false;
         }
     }
+    
     modal.classList.remove('hidden');
     setTimeout(() => {
-        modal.querySelector('.modal-content').classList.add('scale-100', 'opacity-100');
+        const modalContent = modal.querySelector('.modal-content');
+        if(modalContent) {
+            modalContent.classList.add('scale-100', 'opacity-100');
+            modal._untrap = trapFocus(modalContent);
+        }
     }, 10);
 };
 
-// GANTI JUGA SELURUH FUNGSI INI
 window.handleStorageTemplateSubmit = async function(event) {
     event.preventDefault();
     const form = event.target;
     const mode = form.dataset.mode;
     const id = form.dataset.id;
 
-    const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item) => ({
+    if (!validateStorageTemplateForm()) return;
+
+    const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item, index) => ({
+        sequence: index + 1,
         um: item.querySelector('[name="detail-um"]').value,
         treatAsFullPercent: parseInt(item.querySelector('[name="detail-treatAsFullPercent"]').value, 10),
         groupDuringCheckIn: item.querySelector('[name="detail-groupDuringCheckIn"]').checked,
     }));
     
-    // Perbaikan UDF Save
     const userDefined = {};
-    for(let i = 1; i <= 8; i++) { userDefined[`udf${i}`] = form[`udf${i}`].value; }
+    for(let i = 1; i <= 8; i++) { 
+        const udfInput = form[`udf${i}`];
+        if (udfInput) userDefined[`udf${i}`] = udfInput.value; 
+    }
 
     const newTemplate = {
         identifier: form['identifier'].value,
@@ -3640,21 +3655,26 @@ window.handleStorageTemplateSubmit = async function(event) {
         inactive: form['inactive'].checked,
         systemCreated: form['systemCreated'].checked,
         detailRecords: details,
-        userDefined, // <-- FIX DI SINI
+        userDefined, 
     };
 
+    let msg = '';
     if (mode === 'create') {
         newTemplate.id = 'st_' + Date.now();
         storageTemplates.push(newTemplate);
+        msg = 'Storage Template created successfully!';
     } else {
         const index = storageTemplates.findIndex(st => st.id === id);
         if (index !== -1) {
             storageTemplates[index] = { ...storageTemplates[index], ...newTemplate };
+            msg = 'Storage Template updated successfully!';
         }
     }
+    
     saveStorageTemplates();
     closeStorageTemplateForm();
     renderStorageTemplateList();
+    await window.showCustomAlert('Success', msg);
 };
 
 
