@@ -1075,7 +1075,7 @@ function saveZones() {
                     <button class="btn btn-primary" onclick="showICVForm('create')">
                         Create New Value
                     </button>
-                    <input type="text" id="icv-search" placeholder="Search by description..."
+                    <input type="text" id="icv-search" placeholder="Search inventory control values ..."
                             class="input max-w-xs" oninput="filterICVList(this.value)">
                 </div>
                 <div id="icv-list-container" class="mt-4 overflow-x-auto">
@@ -1144,7 +1144,7 @@ function saveZones() {
                     <button class="btn btn-primary" onclick="showItemClassForm('create')">
                         Create New Item Class
                     </button>
-                    <input type="text" id="item-class-search" placeholder="Search by identifier..."
+                    <input type="text" id="item-class-search" placeholder="Search item class..."
                             class="input max-w-xs" oninput="filterItemClassList(this.value)">
                 </div>
                 <div id="item-class-list-container" class="mt-4 overflow-x-auto">
@@ -1207,7 +1207,7 @@ function saveZones() {
             <button class="btn btn-primary" onclick="showStorageTemplateForm('create')">
                 Create New Storage Template
             </button>
-            <input type="text" id="st-search" placeholder="Search template..."
+            <input type="text" id="st-search" placeholder="Search storage template..."
                     class="input max-w-xs" oninput="filterStorageTemplateList(this.value)">
         </div>
         <div id="st-list-container" class="mt-4 overflow-x-auto">
@@ -1278,7 +1278,7 @@ window.contentData['inventory-status'] = {
             <button class="btn btn-primary" onclick="showInventoryStatusForm('create')">
                 Create New Status
             </button>
-            <input type="text" id="is-search" placeholder="Search by identifier..."
+            <input type="text" id="is-search" placeholder="Search item status..."
                     class="input max-w-xs" oninput="filterInventoryStatusList(this.value)">
         </div>
         <div id="is-list-container" class="mt-4 overflow-x-auto">
@@ -1333,7 +1333,7 @@ window.contentData['location-template'] = {
             <button class="btn btn-primary" onclick="showLocationTemplateForm('create')">
                 Create New Template
             </button>
-            <input type="text" id="lt-search" placeholder="Search by template..."
+            <input type="text" id="lt-search" placeholder="Search item template..."
                     class="input max-w-xs" oninput="filterLocationTemplateList(this.value)">
         </div>
         <div id="lt-list-container" class="mt-4 overflow-x-auto">
@@ -1405,7 +1405,7 @@ window.contentData['lot-template'] = {
             <button class="btn btn-primary" onclick="showLotTemplateForm('create')">
                 Create New Template
             </button>
-            <input type="text" id="lot-template-search" placeholder="Search by template name..."
+            <input type="text" id="lot-template-search" placeholder="Search lot template..."
                     class="input max-w-xs" oninput="filterLotTemplateList(this.value)">
         </div>
         <div id="lot-template-list-container" class="mt-4 overflow-x-auto">
@@ -1519,7 +1519,7 @@ window.contentData['zone'] = {
             <button class="btn btn-primary" onclick="showZoneForm('create')">
                 Create New Zone
             </button>
-            <input type="text" id="zone-search" placeholder="Search by zone..."
+            <input type="text" id="zone-search" placeholder="Search zone..."
                     class="input max-w-xs" oninput="filterZoneList(this.value)">
         </div>
         <div id="zone-list-container" class="mt-4 overflow-x-auto">

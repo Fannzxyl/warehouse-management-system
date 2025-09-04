@@ -36,50 +36,50 @@
 
         // Custom Alert and Confirm to avoid browser pop-ups
         function createCustomModal(id, title, message, isConfirm = false, onOk, onCancel) {
-            let modal = document.getElementById(id);
-            if (modal) modal.remove();
+    let modal = document.getElementById(id);
+    if (modal) modal.remove();
 
-            modal = document.createElement('div');
-            modal.id = id;
-            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
-            modal.innerHTML = `
-                <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-auto">
-                    <h3 class="text-lg font-semibold mb-4">${title}</h3>
-                    <p class="text-sm text-gray-600 mb-4">${message}</p>
-                    <div class="flex justify-end gap-2">
-                        ${isConfirm ? `<button id="${id}-cancel" class="px-4 py-2 text-sm rounded-md hover:bg-gray-200">Batal</button>` : ''}
-                        <button id="${id}-ok" class="px-4 py-2 text-sm bg-wise-primary text-white rounded-md hover:bg-blue-600">OK</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
+    modal = document.createElement('div');
+    modal.id = id;
+    modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-auto">
+            <h3 class="text-lg font-semibold mb-4">${title}</h3>
+            <p class="text-sm text-gray-600 mb-4">${message}</p>
+            <div class="flex justify-end gap-2">
+                ${isConfirm ? `<button id="${id}-cancel" class="px-4 py-2 text-sm rounded-md hover:bg-gray-200">Batal</button>` : ''}
+                <button id="${id}-ok" class="px-4 py-2 text-sm bg-wise-primary text-white rounded-md hover:bg-blue-600">OK</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
 
-            document.getElementById(`${id}-ok`).onclick = () => {
-                modal.remove();
-                if (onOk) onOk();
-            };
+    document.getElementById(`${id}-ok`).onclick = () => {
+        modal.remove();
+        if (onOk) onOk();
+    };
 
-            if (isConfirm) {
-                document.getElementById(`${id}-cancel`).onclick = () => {
-                    modal.remove();
-                    if (onCancel) onCancel();
-                };
-            }
-        }
-
-        window.showCustomAlert = (title, message) => {
-            return new Promise(resolve => {
-                const modalId = 'custom-alert-modal';
-                createCustomModal(modalId, title, message, false, resolve);
-            });
+    if (isConfirm) {
+        document.getElementById(`${id}-cancel`).onclick = () => {
+            modal.remove();
+            if (onCancel) onCancel();
         };
+    }
+}
 
-        window.showCustomConfirm = (title, message) => {
-            return new Promise(resolve => {
-                const modalId = 'custom-confirm-modal';
-                createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
-            });
-        };
+window.showCustomAlert = (title, message) => {
+    return new Promise(resolve => {
+        const modalId = 'custom-alert-modal';
+        createCustomModal(modalId, title, message, false, resolve);
+    });
+};
+
+window.showCustomConfirm = (title, message) => {
+    return new Promise(resolve => {
+        const modalId = 'custom-confirm-modal';
+        createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
+    });
+};
 
         const showToast = (message, type = 'success') => {
             const toastId = 'toast-notification';
@@ -311,10 +311,21 @@
         
         // --- DATA MODELS & SEEDING ---
         let items = JSON.parse(localStorage.getItem('items')) || [];
-
+        // Data dummy untuk Item Cross Reference
+        let itemCrossReferences = JSON.parse(localStorage.getItem('itemCrossReferences')) || [
+            { id: 'ICR000', item: '000000003072_1', company: 'DCB', crossReferenceItemNumber: '0275375', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR001', item: '000000003073_1', company: 'DCB', crossReferenceItemNumber: '02753362', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR002', item: '000000003083_1', company: 'DCB', crossReferenceItemNumber: '02753380', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR003', item: '000000003083_1', company: 'DCI', crossReferenceItemNumber: '8992030000961', quantityUm: 'PC', gtinEnabled: true, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR004', item: '000000003083_1', company: 'DCS', crossReferenceItemNumber: '02753382', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR005', item: '000000003083_1', company: 'DCJ', crossReferenceItemNumber: '8992030000991', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR006', item: '000000003083_1', company: 'DCK', crossReferenceItemNumber: '02753384', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+            { id: 'ICR007', item: '000000003083_1', company: 'DCM', crossReferenceItemNumber: '8992030000981', quantityUm: 'PC', gtinEnabled: true, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
+        ];
+        
         const uoms = ['PC', 'BOX', 'PLT', 'KG', 'LBS', 'M', 'CM', 'IN', 'FT', 'G', 'LB'];
         const itemClasses = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
-        const companies = ['DCB', 'DCI', 'DMR'];
+        const companies = ['DCB', 'DCI', 'DMR', 'DCS', 'DCJ', 'DCK', 'DCM', 'DCT'];
         const inspectionUms = ['PC', 'PCK', 'PCK-PLT'];
         const lotTemplates = ['Expiry Date', 'Manufacturing Date', 'Packing/Manufacturing Date'];
         const serialTemplates = ['Standard', 'Custom 1', 'Custom 2'];
@@ -453,6 +464,9 @@
         function saveItems() {
             localStorage.setItem('items', JSON.stringify(items));
         }
+        function saveItemCrossReferences() {
+            localStorage.setItem('itemCrossReferences', JSON.stringify(itemCrossReferences));
+        }
         
         // --- MODAL AND UI SETUP ---
         const createModal = (id, sizeClass = 'w-[min(1200px,95vw)]') => {
@@ -491,19 +505,6 @@
             modal.onclick = (e) => {
                 if (e.target.id === id) closeModal(id);
             };
-        };
-
-        window.closeModal = (id) => {
-            const modal = document.getElementById(id);
-            const modalContent = modal.querySelector('.modal-content');
-            if (modalContent) {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-95', 'opacity-0');
-            }
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.classList.remove('modal-open');
-            }, 300);
         };
         
         // --- ITEM MODAL FUNCTIONS ---
@@ -995,16 +996,18 @@
                     <input type="text" id="item-substitute" name="substituteItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
                 </div>
             </div>
-            <!-- Substitute List -->
+            
             <div class="flex justify-between items-center mb-2">
                 <h5 class="font-medium text-wise-dark-gray">Substitute List</h5>
+                
                 <div class="flex gap-2">
-                    <button type="button" class="btn btn-sm btn-outline" onclick="addSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Tambah</button>
-                    <button type="button" class="btn btn-sm btn-outline" onclick="deleteSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Hapus</button>
-                    <button type="button" class="btn btn-sm btn-outline" onclick="moveSubstituteItemUp()" ${mode === 'view' ? 'disabled' : ''} aria-label="Pindah ke atas">▲</button>
-                    <button type="button" class="btn btn-sm btn-outline" onclick="moveSubstituteItemDown()" ${mode === 'view' ? 'disabled' : ''} aria-label="Pindah ke bawah">▼</button>
+                    <button type="button" class="btn btn-sm" onclick="addSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Add</button>
+                    <button type="button" class="btn btn-sm" onclick="deleteSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Delete</button>
+                    <button type="button" class="btn btn-sm" onclick="moveSubstituteItemUp()" ${mode === 'view' ? 'disabled' : ''}>Up</button>
+                    <button type="button" class="btn btn-sm" onclick="moveSubstituteItemDown()" ${mode === 'view' ? 'disabled' : ''}>Down</button>
                 </div>
-            </div>
+                </div>
+            
             <div class="border rounded-md max-h-[200px] overflow-y-auto">
                 <table id="item-substitute-table" class="min-w-full text-sm">
                     <thead>
@@ -1014,11 +1017,12 @@
                             <th class="py-2 px-4 text-left">Description</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        </tbody>
                 </table>
-            </div>
-            <div id="substitute-empty-state" class="text-center py-4 text-gray-400 hidden">
-                 <span class="text-3xl">🗃️</span><br>Tidak ada item substitusi.
+                 <div id="substitute-empty-state" class="text-center py-8 text-gray-400 hidden">
+                    <p>No substitute items added.</p>
+                </div>
             </div>
             `;
         };
@@ -1284,75 +1288,76 @@
         };
 
         window.addSubstituteItem = async () => {
-            const confirmed = await showCustomConfirm('Tambah Item Substitusi', 'Ini akan membuka form lookup. Tambahkan baris dummy?');
+            const confirmed = await showCustomConfirm('Add Substitute Item', 'This will open a lookup form. Add a dummy row for now?');
             if (!confirmed) return;
-            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
-            if (!currentItem) {
-                showToast('Tidak ada item yang aktif untuk ditambahkan substitusi.', 'error');
-                return;
-            }
-            const newItemCode = `SUB_${Math.random().toString(36).substring(2,7).toUpperCase()}`;
-            const newItemDesc = `Substitusi untuk ${currentItem.itemCode}`;
-            currentItem.substituteList = currentItem.substituteList || [];
-            currentItem.substituteList.push({ code: newItemCode, description: newItemDesc });
-            renderSubstituteTable(currentItem.substituteList);
-            saveItems();
-            showToast('Item substitusi dummy berhasil ditambahkan.');
+
+            const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
+            if (!tbody) return;
+
+            const newItemCode = `SUB_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+            const newItemDesc = `New Substitute`;
+            
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-gray-200 hover:bg-gray-50';
+            tr.innerHTML = `
+                <td class="py-2 px-4"><input type="checkbox" class="subst-select-row" value="${newItemCode}"></td>
+                <td class="py-2 px-4">${newItemCode}</td>
+                <td class="py-2 px-4">${newItemDesc}</td>
+            `;
+            tbody.appendChild(tr);
+            showToast('Dummy substitute item added to the list.');
+            document.getElementById('substitute-empty-state').classList.add('hidden');
         };
 
         window.deleteSubstituteItem = async () => {
-            const confirmed = await showCustomConfirm('Konfirmasi Hapus', 'Hapus item substitusi yang dipilih?');
-            if (!confirmed) return;
-            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
-            if (!currentItem) return;
             const checked = document.querySelectorAll('#item-substitute-table .subst-select-row:checked');
-            const codes = Array.from(checked).map(cb => cb.value);
-            if (!codes.length) { showToast('Tidak ada item yang dipilih untuk dihapus.', 'error'); return; }
-            currentItem.substituteList = (currentItem.substituteList || []).filter(sub => !codes.includes(sub.code));
-            renderSubstituteTable(currentItem.substituteList);
-            saveItems();
-            showToast(`${codes.length} item substitusi berhasil dihapus.`);
+            if (!checked.length) {
+                showToast('Please select items to delete from the list.', 'error');
+                return;
+            }
+            
+            const confirmed = await showCustomConfirm('Confirm Deletion', `Delete ${checked.length} selected substitute item(s) from the list?`);
+            if (!confirmed) return;
+
+            checked.forEach(cb => cb.closest('tr').remove());
+            showToast(`${checked.length} substitute item(s) have been deleted from the list.`);
+            
+            const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
+            if(tbody && tbody.rows.length === 0) {
+                document.getElementById('substitute-empty-state').classList.remove('hidden');
+            }
         };
         
         window.moveSubstituteItemUp = () => {
-            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
-            if (!currentItem?.substituteList?.length) return;
-            const checkboxes = Array.from(document.querySelectorAll('#item-substitute-table .subst-select-row'));
-            const checkedCheckboxes = checkboxes.filter(cb => cb.checked);
-            if(checkedCheckboxes.length !== 1) {
-                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+            const checked = document.querySelectorAll('#item-substitute-table .subst-select-row:checked');
+            if (checked.length !== 1) {
+                showToast('Please select only one row to move.', 'error');
                 return;
             }
-            const selectedIndex = checkboxes.findIndex(cb => cb.checked);
-            if (selectedIndex <= 0) { showToast('Tidak bisa memindahkan baris pertama ke atas.', 'error'); return; }
-            const list = currentItem.substituteList;
-            const [row] = list.splice(selectedIndex, 1);
-            list.splice(selectedIndex - 1, 0, row);
-            renderSubstituteTable(list);
-            saveItems();
-            document.querySelectorAll('#item-substitute-table .subst-select-row')[selectedIndex - 1].checked = true;
+            const row = checked[0].closest('tr');
+            const prevRow = row.previousElementSibling;
+            if (prevRow) {
+                prevRow.before(row);
+                showToast('Item moved up.');
+            } else {
+                showToast('Already at the top.', 'info');
+            }
         };
 
         window.moveSubstituteItemDown = () => {
-            const currentItem = items.find(i => i.id === document.getElementById('item-id').value);
-            if (!currentItem?.substituteList?.length) return;
-            const checkboxes = Array.from(document.querySelectorAll('#item-substitute-table .subst-select-row'));
-            const checkedCheckboxes = checkboxes.filter(cb => cb.checked);
-            if(checkedCheckboxes.length !== 1) {
-                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+            const checked = document.querySelectorAll('#item-substitute-table .subst-select-row:checked');
+            if (checked.length !== 1) {
+                showToast('Please select only one row to move.', 'error');
                 return;
             }
-            const selectedIndex = checkboxes.findIndex(cb => cb.checked);
-            if (selectedIndex === -1 || selectedIndex >= currentItem.substituteList.length - 1) {
-                showToast('Tidak bisa memindahkan baris terakhir ke bawah.', 'error');
-                return;
+            const row = checked[0].closest('tr');
+            const nextRow = row.nextElementSibling;
+            if (nextRow) {
+                nextRow.after(row);
+                showToast('Item moved down.');
+            } else {
+                showToast('Already at the bottom.', 'info');
             }
-            const list = currentItem.substituteList;
-            const [row] = list.splice(selectedIndex, 1);
-            list.splice(selectedIndex + 1, 0, row);
-            renderSubstituteTable(list);
-            saveItems();
-            document.querySelectorAll('#item-substitute-table .subst-select-row')[selectedIndex + 1].checked = true;
         };
 
         window.renderCountriesTable = (countries) => {
@@ -1382,7 +1387,7 @@
             const id = form['id'].value;
 
             if (!validateItemForm()) {
-                showToast('Form tidak valid. Silakan perbaiki kesalahan.', 'error');
+                showToast('Form not valid. Please fix the errors.', 'error');
                 return;
             }
             
@@ -1401,7 +1406,7 @@
             if (mode === 'create') {
                 const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
                 if (isCodeExist) {
-                    showToast('Item dengan kode dan perusahaan ini sudah ada.', 'error');
+                    showToast('Item with this code and company already exists.', 'error');
                     return;
                 }
             }
@@ -1487,7 +1492,13 @@
                 
                 alternateItem: form['alternateItem'].value || '',
                 substituteItem: form['substituteItem'].value || '',
-                substituteList: [], 
+                substituteList: Array.from(document.querySelectorAll('#item-substitute-table tbody tr')).map(row => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        code: cells[1].textContent,
+                        description: cells[2].textContent
+                    };
+                }), 
                 
                 preferenceCriterion: form['preferenceCriterion'].checked,
                 harmonizedCode: form['harmonizedCode'].value || '',
@@ -1505,7 +1516,7 @@
             if (mode === 'create') {
                 const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
                 if (isCodeExist) {
-                    showToast('Item dengan kode dan perusahaan ini sudah ada.', 'error');
+                    showToast('Item with this code and company already exists.', 'error');
                     return;
                 }
                 const maxId = items.reduce((max, item) => {
@@ -1514,14 +1525,15 @@
                 }, 0);
                 newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
                 items.push(newItem);
-                msg = 'Item berhasil dibuat!';
+                msg = 'Item created successfully!';
             } else {
                 const index = items.findIndex(i => i.id === id);
                 if (index !== -1) {
-                    newItem.substituteList = items[index].substituteList;
+                    // Keep the old substituteList if the new one is empty (edge case, but safe)
+                    newItem.substituteList = newItem.substituteList.length > 0 ? newItem.substituteList : items[index].substituteList;
                     newItem.countries = items[index].countries;
                     Object.assign(items[index], newItem);
-                    msg = 'Item berhasil diperbarui!';
+                    msg = 'Item updated successfully!';
                 }
             }
             saveItems();
@@ -2629,6 +2641,216 @@
             reader.readAsText(file);
         };
         
+        // --- ITEM CROSS REFERENCE FUNCTIONS ---
+        window.renderItemCrossReferenceList = (filter = '') => {
+            const container = document.getElementById('item-cross-reference-list-container');
+            if (!container) return;
+            
+            let filteredData = itemCrossReferences.filter(icr => {
+                const searchable = `${icr.item} ${icr.company} ${icr.crossReferenceItemNumber} ${icr.quantityUm}`.toLowerCase();
+                return searchable.includes(filter.toLowerCase());
+            });
+
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead class="sticky top-0 bg-white">
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Item</th>
+                            <th class="py-3 px-6 text-left">Company</th>
+                            <th class="py-3 px-6 text-left">Cross reference item number</th>
+                            <th class="py-3 px-6 text-left">Quantity um</th>
+                            <th class="py-3 px-6 text-left">GTIN Enabled</th>
+                            <th class="py-3 px-6 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="6" class="py-3 px-6 text-center text-gray-400">Tidak ada data Item Cross Reference.</td></tr>`;
+            } else {
+                filteredData.forEach(icr => { 
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${icr.item}</td>
+                            <td class="py-3 px-6 text-left">${icr.company}</td>
+                            <td class="py-3 px-6 text-left">${icr.crossReferenceItemNumber}</td>
+                            <td class="py-3 px-6 text-left">${icr.quantityUm}</td>
+                            <td class="py-3 px-6 text-left">${icr.gtinEnabled ? 'Ya' : 'Tidak'}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemCrossReferenceForm('edit', '${icr.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemCrossReference('${icr.id}')" title="Hapus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+
+        const filterItemCrossReferenceListDebounced = debounce(value => renderItemCrossReferenceList(value), 300);
+        window.filterItemCrossReferenceList = (value) => {
+            filterItemCrossReferenceListDebounced(value);
+        };
+
+        createModal('item-cross-reference-form-modal', 'max-w-xl');
+
+        window.showItemCrossReferenceForm = (mode, id = null) => {
+            const modal = document.getElementById('item-cross-reference-form-modal');
+            const titleEl = document.getElementById('item-cross-reference-form-modal-title');
+            const bodyEl = document.getElementById('item-cross-reference-form-modal-body');
+            const footerEl = document.getElementById('item-cross-reference-form-modal-footer');
+            
+            const icr = itemCrossReferences.find(i => i.id === id) || {};
+
+            titleEl.textContent = mode === 'create' ? 'Create New Item Cross Reference' : `Edit Item Cross Reference - Edit existing`;
+            
+            bodyEl.innerHTML = `
+                <form id="item-cross-reference-form" data-mode="${mode}">
+                    <div role="tablist" id="icr-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                        <button type="button" role="tab" data-tab="icr-general" class="tab-active">General</button>
+                        <button type="button" role="tab" data-tab="icr-udf" class="tab">User defined data</button>
+                    </div>
+                    
+                    <div id="icr-general" role="tabpanel" data-pane="icr-general">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="icr-item" class="block text-sm mb-1">Item:</label>
+                                <input type="text" id="icr-item" name="item" class="input" value="${icr.item || ''}" ${mode === 'edit' ? 'readonly' : ''}>
+                            </div>
+                            <div>
+                                <label for="icr-company" class="block text-sm mb-1">Company:</label>
+                                <input type="text" id="icr-company" name="company" class="input" value="${icr.company || ''}" ${mode === 'edit' ? 'readonly' : ''}>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="icr-cross-reference-item-number" class="block text-sm mb-1">Cross reference item number:</label>
+                                <input type="text" id="icr-cross-reference-item-number" name="crossReferenceItemNumber" class="input" value="${icr.crossReferenceItemNumber || ''}">
+                            </div>
+                             <div class="md:col-span-2">
+                                <label for="icr-quantity-um" class="block text-sm mb-1">Quantity unit of measure:</label>
+                                <input type="text" id="icr-quantity-um" name="quantityUm" class="input" value="${icr.quantityUm || ''}">
+                            </div>
+                            <div class="md:col-span-2 flex items-center gap-4">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="checkbox" id="icr-gtin-enabled" name="gtinEnabled" class="h-4 w-4">
+                                    GTIN enabled
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="icr-udf" role="tabpanel" data-pane="icr-udf" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${Array.from({ length: 8 }, (_, i) => `
+                                <div>
+                                    <label for="icr-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label>
+                                    <input id="icr-udf${i + 1}" name="udf${i + 1}" type="text" class="input" value="${icr.userDefined?.[`udf${i + 1}`] || ''}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <input type="hidden" name="id" value="${icr.id || ''}">
+                </form>
+            `;
+
+            footerEl.innerHTML = `
+                <button type="button" class="btn" onclick="closeModal('item-cross-reference-form-modal')">Cancel</button>
+                <button type="submit" form="item-cross-reference-form" class="btn btn-primary">OK</button>
+            `;
+
+            // Fill checkboxes and UDFs
+            const form = document.getElementById('item-cross-reference-form');
+            if (form) {
+                document.getElementById('icr-gtin-enabled').checked = icr.gtinEnabled || false;
+                for (let i = 1; i <= 8; i++) {
+                     const udfEl = document.getElementById(`icr-udf${i}`);
+                     if (udfEl) udfEl.value = icr.userDefined?.[`udf${i}`] || '';
+                }
+            }
+
+            setupTabSwitching('item-cross-reference-form-modal');
+            showModal('item-cross-reference-form-modal');
+        };
+
+        window.handleItemCrossReferenceSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const mode = form.dataset.mode;
+    const id = form['id'].value;
+
+    const now = new Date();
+    const lastUpdatedString = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} AM`;
+    const currentUser = 'ILSSRV';
+
+    const userDefined = {};
+    for (let i = 1; i <= 8; i++) {
+        userDefined[`udf${i}`] = form[`udf${i}`].value;
+    }
+
+    const newICR = {
+        id: id,
+        item: form['item'].value,
+        company: form['company'].value,
+        crossReferenceItemNumber: form['crossReferenceItemNumber'].value,
+        quantityUm: form['quantityUm'].value,
+        gtinEnabled: form['gtinEnabled'].checked,
+        lastUpdated: lastUpdatedString,
+        user: currentUser,
+        userDefined: userDefined,
+    };
+
+    let msg = '';
+    if (mode === 'create') {
+        const maxId = itemCrossReferences.reduce((max, icr) => {
+            const num = parseInt(icr.id.replace('ICR', ''), 10);
+            return Math.max(max, isNaN(num) ? 0 : num);
+        }, 0);
+        newICR.id = 'ICR' + String(maxId + 1).padStart(3, '0');
+        itemCrossReferences.push(newICR);
+        msg = 'Item Cross Reference created successfully!';
+    } else {
+        const index = itemCrossReferences.findIndex(icr => icr.id === id);
+        if (index !== -1) {
+            itemCrossReferences[index] = { ...itemCrossReferences[index], ...newICR };
+            msg = 'Item Cross Reference updated successfully!';
+        }
+    }
+    saveItemCrossReferences();
+    closeModal('item-cross-reference-form-modal');
+    window.renderItemCrossReferenceList();
+    await window.showCustomAlert('Success', msg);
+};
+
+window.deleteItemCrossReference = async (id) => {
+    const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah kamu yakin ingin menghapus Item Cross Reference ini?');
+    if (confirmed) {
+        itemCrossReferences = itemCrossReferences.filter(icr => icr.id !== id);
+        saveItemCrossReferences();
+        window.renderItemCrossReferenceList();
+        await window.showCustomAlert('Deleted', 'Item Cross Reference deleted successfully!');
+    }
+};
+
+window.closeModal = (id) => {
+    const modal = document.getElementById(id);
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+    }, 300);
+};
+
         // --- ROUTING & REGISTRATION ---
         window.contentData['item'] = {
             full: `
@@ -2686,6 +2908,26 @@
             `
         };
 
+        window.contentData['item-cross-reference'] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Cross Reference</h2>
+                <p class="text-wise-gray mb-4">
+                    Kelola referensi silang untuk item (misalnya, nomor bagian yang berbeda).
+                </p>
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <button class="btn btn-primary" onclick="showItemCrossReferenceForm('create')">
+                        Create New Item Cross Reference
+                    </button>
+                    <div class="grow"></div>
+                    <div class="relative">
+                        <input id="item-cross-reference-search" type="text" placeholder="Cari..." oninput="filterItemCrossReferenceList(this.value)"
+                               class="input w-full sm:w-72 pl-10" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                </div>
+                <div id="item-cross-reference-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
+            `
+        };
 
         // Daftarkan ke menu & pencarian global
         window.searchItems.push({ id: 'item', title: 'Item', category: 'Inventory Control', lastUpdated: 'Latest' });
@@ -2694,6 +2936,9 @@
         window.searchItems.push({ id: 'item-unit-of-measure', title: 'Item Unit of Measure', category: 'Inventory Control', lastUpdated: 'Latest' });
         window.allMenus.push({ name: 'Item Unit of Measure', category: 'Inventory Control' });
         window.parentMapping['item-unit-of-measure'] = 'inventory-control';
+        window.searchItems.push({ id: 'item-cross-reference', title: 'Item Cross Reference', category: 'Inventory Control', lastUpdated: 'Latest' });
+        window.allMenus.push({ name: 'Item Cross Reference', category: 'Inventory Control' });
+        window.parentMapping['item-cross-reference'] = 'inventory-control';
 
 
         if (window.contentData['inventory-control']) {
@@ -2710,12 +2955,12 @@
                 ...(window.invMeta || {}),
                 'item': ['Item', 'Kelola data master item dan atributnya.'], 
                 'item-unit-of-measure': ['Item Unit of Measure', 'Kelola UoM dan konversi untuk item/kelas item.'],
+                'item-cross-reference': ['Item Cross Reference', 'Kelola referensi silang untuk item.'],
                 'adjustment-type': ['Adjustment Type', 'Tentukan jenis untuk penyesuaian inventaris.'],
                 'harmonized-code': ['Harmonized Code', 'Kelola kode sistem harmonisasi untuk bea cukai.'],
                 'inventory-control-values': ['Inventory Control Values', 'Konfigurasi berbagai parameter kontrol inventaris.'],
                 'inventory-status': ['Inventory Status', 'Tentukan dan kelola status stok inventaris.'],
                 'item-class': ['Item Class', 'Kategorikan item ke dalam kelas untuk manajemen yang lebih baik.'],
-                'item-cross-reference': ['Item Cross Reference', 'Hubungkan item ke kode eksternal atau pengenal item lainnya.'],
                 'item-location-assignment': ['Item Location Assignment', 'Tetapkan item ke lokasi tertentu di gudang.'],
                 'item-location-capacity': ['Item Location Capacity', 'Tentukan kapasitas penyimpanan untuk berbagai lokasi item.'],
                 'item-template': ['Item Template', 'Buat template untuk pembuatan item baru.'],
@@ -2771,12 +3016,21 @@
                  container.dataset.bound = '1';
              }
         };
+        
+        const autoRenderICR = () => {
+            const container = document.getElementById('item-cross-reference-list-container');
+            if (container && !container.dataset.bound) {
+                renderItemCrossReferenceList();
+                container.dataset.bound = '1';
+            }
+        };
 
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     autoRenderItem();
                     autoRenderIUoM();
+                    autoRenderICR();
                 }
             });
         });
@@ -2787,6 +3041,8 @@
                 window.renderItemList();
             } else if (e.detail.key === 'item-unit-of-measure') {
                 window.renderIUoMList();
+            } else if (e.detail.key === 'item-cross-reference') {
+                window.renderItemCrossReferenceList();
             }
         });
         
@@ -2836,6 +3092,8 @@ window.selectCategory = function(category) {
             window.renderItemList();
         } else if (category === 'item-unit-of-measure') {
             window.renderIUoMList();
+        } else if (category === 'item-cross-reference') {
+            window.renderItemCrossReferenceList();
         } else {
             const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
             if (typeof window[rendererName] === 'function') {
