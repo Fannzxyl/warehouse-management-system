@@ -455,14 +455,14 @@
         }
         
         // --- MODAL AND UI SETUP ---
-        const createModal = (id) => {
+        const createModal = (id, sizeClass = 'w-[min(1200px,95vw)]') => {
             const modal = document.createElement('div');
             modal.id = id;
             modal.className = 'hidden fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-black/30';
             modal.setAttribute('aria-modal', 'true');
             modal.setAttribute('role', 'dialog');
             modal.innerHTML = `
-                <div class="modal-content w-[min(1200px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[90vh] opacity-0 scale-95 transition-all">
+                <div class="modal-content ${sizeClass} bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[90vh] opacity-0 scale-95 transition-all">
                     <div class="px-6 pt-5 pb-3 border-b border-gray-200 relative">
                         <h3 id="${id}-title" class="text-lg font-semibold text-wise-dark-gray"></h3>
                         <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition" onclick="closeModal('${id}')" aria-label="Tutup">✕</button>
@@ -866,7 +866,7 @@
                     <div class="md:col-span-2">
                         <label for="item-storage-template" class="block text-sm mb-1">Storage template:</label>
                         <select id="item-storage-template" name="storageTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                    </div>
+                     </div>
                      <div class="md:col-span-4 mt-2">
                         <label class="flex items-center gap-2 text-sm">
                             <input type="checkbox" id="item-inventory-tracking-h1" name="inventoryTracking" ${mode === 'view' ? 'disabled' : ''}> Inventory Tracking
@@ -1503,6 +1503,11 @@
 
             let msg = '';
             if (mode === 'create') {
+                const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
+                if (isCodeExist) {
+                    showToast('Item dengan kode dan perusahaan ini sudah ada.', 'error');
+                    return;
+                }
                 const maxId = items.reduce((max, item) => {
                     const num = parseInt(item.id.replace('ITM', ''), 10);
                     return Math.max(max, isNaN(num) ? 0 : num);
@@ -1815,15 +1820,814 @@
 
             tabButtons.forEach(btn => {
                 btn.removeEventListener('click', onClickHandler);
-                btn.removeEventListener('keydown', onKeyHandler);
                 btn.addEventListener('click', onClickHandler);
-                btn.addEventListener('keydown', onKeyHandler);
             });
             
             if(tabButtons.length > 0) {
                  activateTab(tabButtons[0].dataset.tab);
             }
         }
+        
+        // --- IUOM FUNCTIONS ---
+        // Helper IUoM
+        const IUOM_STORAGE_KEY = 'iuoms_v4';
+        const IUOM_SEED_UOMS = ['PC', 'PCK', 'PLT', 'KG', 'LT', 'M', 'CM'];
+        const IUOM_SEED_MOVEMENT_CLASSES = ['GRAY', 'WHITE', 'BLACK', 'DEFAULT', 'HEAVY', 'LIGHT'];
+        const IUOM_SEED_ITEM_CLASSES = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
+        
+        const loadIUoMs = () => {
+          try {
+            const data = localStorage.getItem(IUOM_STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+          } catch (e) {
+            console.error("Failed to load IUoMs from localStorage", e);
+            return [];
+          }
+        };
+
+        const saveIUoMs = (arr) => {
+          try {
+            localStorage.setItem(IUOM_STORAGE_KEY, JSON.stringify(arr));
+            window.renderIUoMList();
+          } catch (e) {
+            console.error("Failed to save IUoMs to localStorage", e);
+            showToast('Gagal menyimpan data IUoM.', 'error');
+          }
+        };
+        
+        const nextIUoMId = () => {
+          const iuoms = loadIUoMs();
+          const maxId = iuoms.reduce((max, iuom) => {
+            const num = parseInt(iuom.id.replace('IUOM', ''), 10);
+            return Math.max(max, isNaN(num) ? 0 : num);
+          }, 0);
+          return 'IUOM' + String(maxId + 1).padStart(4, '0');
+        };
+
+        const getCompanies = () => {
+            const items = JSON.parse(localStorage.getItem('items')) || [];
+            return Array.from(new Set(items.map(item => item.company))).filter(Boolean).sort();
+        };
+
+        const getItemCodes = () => {
+            const items = JSON.parse(localStorage.getItem('items')) || [];
+            return items.map(item => item.itemCode).filter(Boolean).sort();
+        };
+
+        const num = (v, d = 0) => {
+          const n = parseFloat(typeof v === 'object' && 'value' in v ? v.value : v);
+          return Number.isFinite(n) ? n : d;
+        };
+        
+        const str = (v) => (typeof v === 'object' && 'value' in v ? v.value : v || '').toString().trim();
+        
+        const nowIsoDate = () => new Date().toISOString();
+
+        // Render IUoM List Page
+        window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') => {
+            const iuoms = loadIUoMs();
+            const container = document.getElementById('iuom-list-container');
+            if (!container) return;
+            
+            // Seeding dummy data if empty
+            if (iuoms.length === 0) {
+                 const seedData = [{
+                    id: 'IUOM0001',
+                    scope: 'ITEM',
+                    company: 'DCB',
+                    itemCode: '000000053068_1',
+                    uom: 'PC',
+                    description: 'Piece',
+                    conversions: [{
+                        seq: 1, quantity: 1, quantityUom: 'PC', conversionQty: 1.00000,
+                        length: 1.00, width: 1.00, height: 1.00, weight: 1.00,
+                        movementClass: 'GRAY'
+                    }],
+                    updatedAt: '2023-09-03T09:18:55Z',
+                    createdAt: '2023-09-03T09:18:55Z'
+                }];
+                saveIUoMs(seedData);
+                return;
+            }
+
+            // Apply search filter
+            let filteredData = iuoms.filter(iuom => {
+                const searchable = `${iuom.scope} ${iuom.company} ${iuom.itemCode || ''} ${iuom.itemClass || ''} ${iuom.uom}`.toLowerCase();
+                return searchable.includes(filter.toLowerCase());
+            });
+
+            // Apply sort
+            if (sortBy) {
+                filteredData.sort((a, b) => {
+                    const valA = a[sortBy];
+                    const valB = b[sortBy];
+                    let compare = 0;
+                    if (valA === undefined || valA === null) compare = 1;
+                    else if (valB === undefined || valB === null) compare = -1;
+                    else if (valA > valB) compare = 1;
+                    else if (valA < valB) compare = -1;
+                    return sortDir === 'asc' ? compare : -compare;
+                });
+            }
+
+            // Render table HTML
+            let tableHtml = `
+                <div class="overflow-x-auto border rounded-lg shadow-md">
+                    <table class="min-w-full bg-white">
+                        <thead class="sticky top-0 bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <tr>
+                                <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('scope')">Scope</th>
+                                <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('itemCode')">Key</th>
+                                <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('company')">Company</th>
+                                <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('uom')">UoM</th>
+                                <th class="py-3 px-6 text-left">Conversions</th>
+                                <th class="py-3 px-6 text-left cursor-pointer" onclick="sortIUoMList('updatedAt')">Updated At</th>
+                                <th class="py-3 px-6 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-wise-gray text-sm font-light">
+                `;
+
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="7" class="py-10 text-center text-gray-400">
+                    Tidak ada records IUoM. Klik "Create New IUoM" untuk menambahkan.
+                    </td></tr>`;
+            } else {
+                filteredData.forEach(iuom => {
+                    const conversionsCount = iuom.conversions?.length || 0;
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${iuom.scope}</td>
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${iuom.itemCode || iuom.itemClass || 'N/A'}</td>
+                            <td class="py-3 px-6 text-left">${iuom.company || 'N/A'}</td>
+                            <td class="py-3 px-6 text-left">${iuom.uom}</td>
+                            <td class="py-3 px-6 text-left">${conversionsCount}</td>
+                            <td class="py-3 px-6 text-left">${formatDate(iuom.updatedAt)}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showIUoMForm('edit', '${iuom.id}')" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteIUoM('${iuom.id}')" title="Hapus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table></div>`;
+            container.innerHTML = tableHtml;
+        };
+
+        let currentIUoMSort = { column: 'updatedAt', direction: 'desc' };
+        window.sortIUoMList = (column) => {
+            if (currentIUoMSort.column === column) {
+                currentIUoMSort.direction = currentIUoMSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentIUoMSort = { column, direction: 'asc' };
+            }
+            const searchValue = document.getElementById('iuom-search').value;
+            renderIUoMList(searchValue, currentIUoMSort.column, currentIUoMSort.direction);
+        };
+        const filterIUoMListDebounced = debounce(value => renderIUoMList(value, currentIUoMSort.column, currentIUoMSort.direction), 300);
+        window.filterIUoMList = (value) => {
+            filterIUoMListDebounced(value);
+        };
+        
+        // Render IUoM Form Modal
+        createModal('iuom-form-modal', 'max-w-5xl');
+        window.showIUoMForm = (mode, id = null) => {
+            const modal = document.getElementById('iuom-form-modal');
+            const titleEl = document.getElementById('iuom-form-modal-title');
+            const bodyEl = document.getElementById('iuom-form-modal-body');
+            const footerEl = document.getElementById('iuom-form-modal-footer');
+            
+            const iuoms = loadIUoMs();
+            const iuom = iuoms.find(i => i.id === id) || {
+                scope: 'ITEM_CLASS',
+                itemClass: '',
+                itemCode: '',
+                company: '',
+                uom: '',
+                description: '',
+                conversions: []
+            };
+
+            titleEl.textContent = mode === 'create' ? 'Create New IUoM' : `Edit IUoM: ${iuom.id}`;
+            
+            bodyEl.innerHTML = `
+                <form id="iuom-form" data-mode="${mode}" class="h-full space-y-6">
+                    <input type="hidden" id="iuom-id" value="${iuom.id || ''}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="radio" name="scope" value="ITEM_CLASS" id="scope-item-class" class="custom-radio" ${iuom.scope === 'ITEM_CLASS' ? 'checked' : ''} onchange="toggleIUoMScope()"> Item Class
+                                </label>
+                                <div id="scope-item-class-fields" class="grow flex items-center space-x-2">
+                                     <label for="iuom-item-class-select" class="text-sm shrink-0">Item Class:</label>
+                                     <select id="iuom-item-class-select" name="itemClass" class="select w-full" required>
+                                         <option value="">-- Select --</option>
+                                         ${IUOM_SEED_ITEM_CLASSES.map(c => `<option value="${c}" ${iuom.itemClass === c ? 'selected' : ''}>${c}</option>`).join('')}
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input type="radio" name="scope" value="ITEM" id="scope-item" class="custom-radio" ${iuom.scope === 'ITEM' ? 'checked' : ''} onchange="toggleIUoMScope()"> Item
+                                </label>
+                                <div id="scope-item-fields" class="grow flex items-center space-x-2">
+                                     <label for="iuom-item-code-input" class="text-sm shrink-0">Item:</label>
+                                     <select id="iuom-item-code-select" name="itemCode" class="select w-full"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 flex flex-col justify-end">
+                            <div class="flex items-center space-x-4">
+                                <label for="iuom-company-select" class="text-sm shrink-0">Company:</label>
+                                <select id="iuom-company-select" name="company" class="select w-full"></select>
+                            </div>
+                             <div class="flex items-center space-x-4">
+                                <label for="iuom-uom-select" class="text-sm shrink-0">UoM:</label>
+                                <select id="iuom-uom-select" name="uom" class="select w-full">
+                                    <option value="">-- Select --</option>
+                                    ${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${iuom.uom === u ? 'selected' : ''}>${u}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <div>
+                                <label for="iuom-description" class="block text-sm mb-1">Description:</label>
+                                <input type="text" id="iuom-description" name="description" class="input w-full" value="${iuom.description || ''}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h5 class="font-medium text-wise-dark-gray">Conversions</h5>
+                            <div class="flex items-center gap-2">
+                                <button type="button" class="btn btn-sm btn-outline flex items-center gap-1" onclick="addConversionRow()">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                     Add Row
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline flex items-center gap-1" onclick="deleteSelectedConversionRows()">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.728-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 11-2 0v6a1 1 0 112 0V8z" clip-rule="evenodd" /></svg>
+                                     Delete
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline flex items-center gap-1" onclick="moveConversionRowUp()">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline flex items-center gap-1" onclick="moveConversionRowDown()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto">
+                            <table class="min-w-full text-sm">
+                                <thead class="sticky top-0 bg-gray-100">
+                                    <tr>
+                                        <th class="py-2 px-4 w-12"><input type="checkbox" id="iuom-select-all-conversions" onchange="toggleAllConversions(this.checked)"></th>
+                                        <th class="py-2 px-4 text-left">Seq</th>
+                                        <th class="py-2 px-4 text-left">Quantity UM</th>
+                                        <th class="py-2 px-4 text-right">Conversion Qty</th>
+                                        <th class="py-2 px-4 text-right">Length</th>
+                                        <th class="py-2 px-4 text-right">Width</th>
+                                        <th class="py-2 px-4 text-right">Height</th>
+                                        <th class="py-2 px-4 text-right">Weight</th>
+                                        <th class="py-2 px-4 text-left">Movement Class</th>
+                                        <th class="py-2 px-4 text-left">To UoM</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="iuom-conversions-body"></tbody>
+                            </table>
+                            <div id="iuom-conversions-empty-state" class="text-center py-8 text-gray-400 hidden">
+                                <span class="text-2xl">📐</span><br>Tidak ada data konversi.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            `;
+            
+            footerEl.innerHTML = `
+                <div class="text-sm text-gray-500 mr-auto flex flex-col justify-center">
+                    <span id="iuom-last-updated-display">Last updated: N/A</span>
+                </div>
+                <button type="button" class="btn" onclick="closeModal('iuom-form-modal')">Batal</button>
+                <button type="submit" form="iuom-form" id="iuom-submit-btn" class="btn btn-primary" disabled>Simpan</button>
+            `;
+
+            // Initialize custom dropdowns
+            makeLongDropdown('iuom-item-code-select', getItemCodes(), iuom.itemCode);
+            makeLongDropdown('iuom-company-select', getCompanies(), iuom.company);
+            makeLongDropdown('iuom-item-class-select', IUOM_SEED_ITEM_CLASSES, iuom.itemClass);
+
+            // Populate form & conversions
+            prefillIUoMForm(iuom);
+            
+            // Setup form validation listener
+            document.getElementById('iuom-form').addEventListener('input', validateIUoMForm);
+            document.getElementById('iuom-form').addEventListener('change', validateIUoMForm);
+            document.getElementById('iuom-form').addEventListener('submit', handleIUoMSubmit);
+
+            // Handle keyboard shortcuts
+            document.addEventListener('keydown', handleIUoMKeyboardShortcuts);
+            
+            // Focus on first field
+            document.getElementById('scope-item-class').focus();
+            
+            showModal('iuom-form-modal');
+        };
+
+        const toggleIUoMScope = () => {
+            const scopeItemClassRadio = document.getElementById('scope-item-class');
+            const scopeItemFields = document.getElementById('scope-item-fields');
+            const scopeItemClassFields = document.getElementById('scope-item-class-fields');
+            const companyField = document.getElementById('iuom-company-select-input');
+            const itemCodeField = document.getElementById('iuom-item-code-select-input');
+            const itemClassField = document.getElementById('iuom-item-class-select-input');
+
+            if (scopeItemClassRadio.checked) {
+                scopeItemFields.classList.add('hidden');
+                scopeItemClassFields.classList.remove('hidden');
+                itemCodeField.disabled = true;
+                companyField.disabled = true;
+                itemClassField.disabled = false;
+            } else {
+                scopeItemClassFields.classList.add('hidden');
+                scopeItemFields.classList.remove('hidden');
+                itemCodeField.disabled = false;
+                companyField.disabled = false;
+                itemClassField.disabled = true;
+            }
+            validateIUoMForm();
+        };
+
+        const prefillIUoMForm = (data) => {
+            const form = document.getElementById('iuom-form');
+            if (!form) return;
+
+            form.querySelector('input[name="scope"][value="' + data.scope + '"]').checked = true;
+            document.getElementById('iuom-id').value = data.id || '';
+            document.getElementById('iuom-description').value = data.description || '';
+            document.getElementById('iuom-uom-select').value = data.uom || '';
+            
+            // Set custom dropdown values
+            const itemClassInput = document.getElementById('iuom-item-class-select-input');
+            const itemCodeInput = document.getElementById('iuom-item-code-select-input');
+            const companyInput = document.getElementById('iuom-company-select-input');
+            if(itemClassInput) itemClassInput.value = data.itemClass || '';
+            if(itemCodeInput) itemCodeInput.value = data.itemCode || '';
+            if(companyInput) companyInput.value = data.company || '';
+
+            toggleIUoMScope();
+            renderIUoMConversionsTable(data.conversions);
+            document.getElementById('iuom-last-updated-display').textContent = `Last updated: ${data.updatedAt ? formatDate(data.updatedAt) : 'N/A'}`;
+        };
+
+
+        const validateIUoMForm = () => {
+            const form = document.getElementById('iuom-form');
+            if (!form) return;
+            const mode = form.dataset.mode;
+            const scope = form.querySelector('input[name="scope"]:checked')?.value;
+            const itemClass = document.getElementById('iuom-item-class-select-input')?.value;
+            const itemCode = document.getElementById('iuom-item-code-select-input')?.value;
+            const company = document.getElementById('iuom-company-select-input')?.value;
+            const uom = document.getElementById('iuom-uom-select')?.value;
+            const conversionsCount = document.getElementById('iuom-conversions-body')?.children.length;
+            const submitBtn = document.getElementById('iuom-submit-btn');
+
+            let isValid = true;
+            
+            form.querySelectorAll('.error-message').forEach(el => el.remove());
+
+            const showError = (id, message) => {
+                const el = document.getElementById(id);
+                if (el && !document.getElementById(id + '-error')) {
+                    const errorEl = document.createElement('p');
+                    errorEl.id = id + '-error';
+                    errorEl.className = 'error-message text-red-500 text-xs mt-1';
+                    errorEl.textContent = message;
+                    el.closest('div').appendChild(errorEl);
+                    isValid = false;
+                }
+            };
+            
+            // Validate main fields
+            if (!scope) showError('scope-item-class-fields', 'Pilih salah satu scope.');
+            if (scope === 'ITEM_CLASS' && !itemClass) showError('iuom-item-class-select-input', 'Item Class wajib diisi.');
+            if (scope === 'ITEM' && !itemCode) showError('iuom-item-code-select-input', 'Item Code wajib diisi.');
+            if (scope === 'ITEM' && !company) showError('iuom-company-select-input', 'Company wajib diisi.');
+            if (!uom) showError('iuom-uom-select', 'UoM wajib diisi.');
+            if (conversionsCount === 0) showError('iuom-conversions-empty-state', 'Minimal satu baris konversi wajib ada.');
+            
+            // Validate conversion rows
+            const conversionRows = document.querySelectorAll('#iuom-conversions-body tr');
+            const conversions = getIUoMConversionsFromForm();
+            conversions.forEach((conv, index) => {
+                const row = conversionRows[index];
+                if (conv.quantity < 0) { showError(`iuom-conversion-qty-${index}`, 'Quantity tidak boleh negatif.'); }
+                if (conv.conversionQty <= 0) { showError(`iuom-conversion-convqty-${index}`, 'Conversion Qty harus > 0.'); }
+                if (!conv.quantityUom) { showError(`iuom-conversion-uom-${index}`, 'UoM wajib diisi.'); }
+                if (conv.length < 0 || conv.width < 0 || conv.height < 0 || conv.weight < 0) {
+                     showError(`iuom-conversion-dim-${index}`, 'Dimensi dan berat tidak boleh negatif.');
+                }
+            });
+
+            submitBtn.disabled = !isValid;
+            return isValid;
+        };
+
+        const renderIUoMConversionsTable = (conversions) => {
+            const tbody = document.getElementById('iuom-conversions-body');
+            const emptyState = document.getElementById('iuom-conversions-empty-state');
+            if (!tbody || !emptyState) return;
+
+            tbody.innerHTML = '';
+            if (conversions.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                conversions.forEach((conv, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="py-2 px-4"><input type="checkbox" class="iuom-conv-select" data-index="${index}"></td>
+                        <td class="py-2 px-4 text-left">${index + 1}</td>
+                        <td class="py-2 px-4 text-left space-y-1">
+                           <div class="flex items-center gap-2">
+                               <input type="number" name="quantity" class="input w-16 text-right" value="${conv.quantity || 1}" id="iuom-conversion-qty-${index}">
+                               <select name="quantityUom" class="select w-24" id="iuom-conversion-uom-${index}">
+                                   <option value="">-- Select --</option>
+                                   ${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${u === conv.quantityUom ? 'selected' : ''}>${u}</option>`).join('')}
+                               </select>
+                           </div>
+                        </td>
+                        <td class="py-2 px-4 text-right space-y-1">
+                           <input type="number" step="0.00001" name="conversionQty" class="input w-24 text-right" value="${conv.conversionQty || 1}" id="iuom-conversion-convqty-${index}">
+                        </td>
+                        <td class="py-2 px-4 text-right space-y-1">
+                            <input type="number" step="0.01" name="length" class="input w-20 text-right" value="${conv.length || 0}" id="iuom-conversion-dim-${index}">
+                        </td>
+                        <td class="py-2 px-4 text-right space-y-1">
+                            <input type="number" step="0.01" name="width" class="input w-20 text-right" value="${conv.width || 0}">
+                        </td>
+                        <td class="py-2 px-4 text-right space-y-1">
+                            <input type="number" step="0.01" name="height" class="input w-20 text-right" value="${conv.height || 0}">
+                        </td>
+                        <td class="py-2 px-4 text-right space-y-1">
+                            <input type="number" step="0.01" name="weight" class="input w-20 text-right" value="${conv.weight || 0}">
+                        </td>
+                        <td class="py-2 px-4 text-left space-y-1">
+                             <select name="movementClass" class="select w-24">
+                                 <option value="">-- Select --</option>
+                                 ${IUOM_SEED_MOVEMENT_CLASSES.map(mc => `<option value="${mc}" ${mc === conv.movementClass ? 'selected' : ''}>${mc}</option>`).join('')}
+                             </select>
+                        </td>
+                        <td class="py-2 px-4 text-left space-y-1">
+                            <select name="toUom" class="select w-24">
+                                <option value="">-- Select --</option>
+                                ${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${u === conv.toUom ? 'selected' : ''}>${u}</option>`).join('')}
+                            </select>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            validateIUoMForm();
+        };
+
+        const getIUoMConversionsFromForm = () => {
+            const conversions = [];
+            document.querySelectorAll('#iuom-conversions-body tr').forEach(row => {
+                const rowData = {
+                    seq: num(row.querySelector('td:nth-child(2)').textContent),
+                    quantity: num(row.querySelector('[name="quantity"]')),
+                    quantityUom: str(row.querySelector('[name="quantityUom"]')),
+                    conversionQty: num(row.querySelector('[name="conversionQty"]')),
+                    length: num(row.querySelector('[name="length"]')),
+                    width: num(row.querySelector('[name="width"]')),
+                    height: num(row.querySelector('[name="height"]')),
+                    weight: num(row.querySelector('[name="weight"]')),
+                    movementClass: str(row.querySelector('[name="movementClass"]')),
+                    toUom: str(row.querySelector('[name="toUom"]'))
+                };
+                conversions.push(rowData);
+            });
+            return conversions;
+        };
+
+        window.addConversionRow = () => {
+            const form = document.getElementById('iuom-form');
+            if (!form) return;
+            const uom = form.querySelector('[name="uom"]')?.value || 'PC';
+            const conversions = getIUoMConversionsFromForm();
+            const newSeq = conversions.length > 0 ? conversions[conversions.length - 1].seq + 1 : 1;
+            const newConversion = {
+                seq: newSeq,
+                quantity: 1,
+                quantityUom: uom,
+                conversionQty: 1,
+                length: 0, width: 0, height: 0, weight: 0,
+                movementClass: 'GRAY'
+            };
+            conversions.push(newConversion);
+            renderIUoMConversionsTable(conversions);
+        };
+
+        window.deleteSelectedConversionRows = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length === 0) {
+                showToast('Pilih setidaknya satu baris untuk dihapus.', 'error');
+                return;
+            }
+            window.showCustomConfirm('Konfirmasi Hapus', `Apakah Anda yakin ingin menghapus ${checkboxes.length} baris konversi?`).then(confirmed => {
+                if (confirmed) {
+                    let currentConversions = getIUoMConversionsFromForm();
+                    const indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index, 10)).sort((a,b) => b-a);
+                    for (const index of indicesToDelete) {
+                        currentConversions.splice(index, 1);
+                    }
+                    // Resequence
+                    currentConversions.forEach((conv, idx) => conv.seq = idx + 1);
+                    renderIUoMConversionsTable(currentConversions);
+                    showToast(`${indicesToDelete.length} baris konversi berhasil dihapus.`);
+                }
+            });
+        };
+        
+        window.moveConversionRowUp = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length !== 1) {
+                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+                return;
+            }
+            let currentConversions = getIUoMConversionsFromForm();
+            const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
+
+            if (selectedIndex === 0) {
+                showToast('Tidak bisa memindahkan baris pertama ke atas.', 'error');
+                return;
+            }
+            const [movedRow] = currentConversions.splice(selectedIndex, 1);
+            currentConversions.splice(selectedIndex - 1, 0, movedRow);
+            // Resequence
+            currentConversions.forEach((conv, idx) => conv.seq = idx + 1);
+            renderIUoMConversionsTable(currentConversions);
+            // Re-select the moved row
+            document.querySelector(`.iuom-conv-select[data-index="${selectedIndex - 1}"]`).checked = true;
+        };
+
+        window.moveConversionRowDown = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length !== 1) {
+                showToast('Pilih tepat satu baris untuk dipindahkan.', 'error');
+                return;
+            }
+            let currentConversions = getIUoMConversionsFromForm();
+            const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
+
+            if (selectedIndex === currentConversions.length - 1) {
+                showToast('Tidak bisa memindahkan baris terakhir ke bawah.', 'error');
+                return;
+            }
+            const [movedRow] = currentConversions.splice(selectedIndex, 1);
+            currentConversions.splice(selectedIndex + 1, 0, movedRow);
+            // Resequence
+            currentConversions.forEach((conv, idx) => conv.seq = idx + 1);
+            renderIUoMConversionsTable(currentConversions);
+            // Re-select the moved row
+            document.querySelector(`.iuom-conv-select[data-index="${selectedIndex + 1}"]`).checked = true;
+        };
+
+        window.toggleAllConversions = (checked) => {
+            document.querySelectorAll('.iuom-conv-select').forEach(cb => cb.checked = checked);
+        };
+        
+        window.handleIUoMSubmit = (event) => {
+            event.preventDefault();
+            if (!validateIUoMForm()) {
+                showToast('Form tidak valid. Silakan perbaiki kesalahan.', 'error');
+                return;
+            }
+            
+            const form = event.target;
+            const mode = form.dataset.mode;
+            let iuoms = loadIUoMs();
+            const id = form['iuom-id'].value;
+            
+            const scope = form.querySelector('input[name="scope"]:checked')?.value;
+            const itemClass = document.getElementById('iuom-item-class-select-input')?.value;
+            const itemCode = document.getElementById('iuom-item-code-select-input')?.value;
+            const company = document.getElementById('iuom-company-select-input')?.value;
+            const uom = document.getElementById('iuom-uom-select')?.value;
+            const description = form.querySelector('[name="description"]')?.value;
+
+            const newIUoM = {
+                id: id,
+                scope: scope,
+                company: scope === 'ITEM' ? company : undefined,
+                itemClass: scope === 'ITEM_CLASS' ? itemClass : undefined,
+                itemCode: scope === 'ITEM' ? itemCode : undefined,
+                uom: uom,
+                description: description,
+                conversions: getIUoMConversionsFromForm(),
+                updatedAt: nowIsoDate(),
+                createdAt: mode === 'create' ? nowIsoDate() : undefined
+            };
+
+            // Check for uniqueness
+            const isUnique = iuoms.every(iuom => {
+                if (iuom.id === newIUoM.id) return true; // allow editing same record
+                const sameScope = iuom.scope === newIUoM.scope;
+                const sameCompany = iuom.company === newIUoM.company;
+                const sameKey = (scope === 'ITEM' && iuom.itemCode === newIUoM.itemCode) ||
+                                (scope === 'ITEM_CLASS' && iuom.itemClass === newIUoM.itemClass);
+                const sameUom = iuom.uom === newIUoM.uom;
+                return !(sameScope && sameCompany && sameKey && sameUom);
+            });
+
+            if (!isUnique) {
+                showToast('IUoM dengan kombinasi Scope, Key, Company, dan UoM ini sudah ada.', 'error');
+                return;
+            }
+
+            if (mode === 'create') {
+                newIUoM.id = nextIUoMId();
+                iuoms.push(newIUoM);
+                showToast('IUoM berhasil dibuat!');
+            } else {
+                const index = iuoms.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    Object.assign(iuoms[index], newIUoM);
+                    showToast('IUoM berhasil diperbarui!');
+                }
+            }
+            
+            saveIUoMs(iuoms);
+            closeModal('iuom-form-modal');
+        };
+        
+        const handleIUoMKeyboardShortcuts = (e) => {
+            const isModalOpen = !document.getElementById('iuom-form-modal')?.classList.contains('hidden');
+            if (isModalOpen) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeModal('iuom-form-modal');
+                } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    document.getElementById('iuom-submit-btn').click();
+                } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('iuom-submit-btn').click();
+                }
+            }
+        };
+
+        window.deleteIUoM = async (id) => {
+            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus Item Unit of Measure ini?');
+            if (confirmed) {
+                let iuoms = loadIUoMs();
+                iuoms = iuoms.filter(iuom => iuom.id !== id);
+                saveIUoMs(iuoms);
+                showToast('IUoM berhasil dihapus!');
+            }
+        };
+
+        window.exportIUoMToCSV = () => {
+            const iuoms = loadIUoMs();
+            const headers = ["id", "scope", "company", "itemCode", "itemClass", "uom", "description", "conversions", "updatedAt", "createdAt"];
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += headers.map(h => `"${h}"`).join(",") + "\r\n";
+
+            iuoms.forEach(iuom => {
+                const row = headers.map(header => {
+                    let value = iuom[header];
+                    if (header === 'conversions') {
+                        value = JSON.stringify(value).replace(/"/g, '""');
+                    }
+                    if (value === null || value === undefined) value = '';
+                    return `"${String(value).replace(/"/g, '""')}"`;
+                }).join(",");
+                csvContent += row + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "iuoms.csv");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        };
+        
+        window.importIUoMFromCSV = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const text = e.target.result;
+                const lines = text.split('\n').filter(l => l.trim() !== '');
+                if (lines.length <= 1) {
+                    showToast('File CSV kosong atau tidak valid.', 'error');
+                    return;
+                }
+
+                const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                let iuoms = loadIUoMs();
+                let importedCount = 0;
+                let updatedCount = 0;
+                let skippedCount = 0;
+                const errors = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
+                    if (values.length !== headers.length) {
+                        errors.push(`Baris ${i + 1}: Jumlah kolom tidak cocok.`);
+                        skippedCount++;
+                        continue;
+                    }
+
+                    const iuom = {};
+                    let isValid = true;
+                    headers.forEach((header, index) => {
+                        let value = values[index];
+                        if (header === 'conversions') {
+                            try {
+                                iuom.conversions = JSON.parse(value);
+                                if (!Array.isArray(iuom.conversions)) iuom.conversions = [];
+                                iuom.conversions = iuom.conversions.map(conv => {
+                                    return {
+                                        seq: num(conv.seq),
+                                        quantity: num(conv.quantity),
+                                        quantityUom: str(conv.quantityUom),
+                                        conversionQty: num(conv.conversionQty),
+                                        length: num(conv.length),
+                                        width: num(conv.width),
+                                        height: num(conv.height),
+                                        weight: num(conv.weight),
+                                        movementClass: str(conv.movementClass),
+                                        toUom: str(conv.toUom)
+                                    };
+                                });
+                            } catch (e) {
+                                errors.push(`Baris ${i + 1}: JSON tidak valid untuk conversions.`);
+                                isValid = false;
+                            }
+                        } else {
+                            iuom[header] = value;
+                        }
+                    });
+
+                    if (!iuom.scope || !iuom.uom) {
+                        isValid = false;
+                        errors.push(`Baris ${i + 1}: Scope dan UoM diperlukan.`);
+                    }
+                    if (iuom.scope === 'ITEM' && !iuom.itemCode) {
+                        isValid = false;
+                        errors.push(`Baris ${i + 1}: Item Code diperlukan untuk scope ITEM.`);
+                    }
+                    if (iuom.scope === 'ITEM_CLASS' && !iuom.itemClass) {
+                        isValid = false;
+                        errors.push(`Baris ${i + 1}: Item Class diperlukan untuk scope ITEM_CLASS.`);
+                    }
+
+                    if (!isValid) {
+                        skippedCount++;
+                        continue;
+                    }
+
+                    const existingIndex = iuoms.findIndex(u => 
+                        u.scope === iuom.scope &&
+                        u.company === iuom.company &&
+                        (u.itemCode === iuom.itemCode || u.itemClass === iuom.itemClass) &&
+                        u.uom === iuom.uom
+                    );
+
+                    if (existingIndex !== -1) {
+                        Object.assign(iuoms[existingIndex], iuom, { updatedAt: nowIsoDate() });
+                        updatedCount++;
+                    } else {
+                        iuom.id = nextIUoMId();
+                        iuom.createdAt = nowIsoDate();
+                        iuoms.push(iuom);
+                        importedCount++;
+                    }
+                }
+
+                saveIUoMs(iuoms);
+                window.renderIUoMList();
+                showToast(`Impor selesai. Ditambahkan: ${importedCount}, Diperbarui: ${updatedCount}, Dilewati: ${skippedCount}.`);
+                if (errors.length > 0) {
+                     await window.showCustomAlert('Error Impor', `Ditemukan ${errors.length} kesalahan:\n${errors.join('\n')}`);
+                }
+            };
+            reader.readAsText(file);
+        };
         
         // --- ROUTING & REGISTRATION ---
         window.contentData['item'] = {
@@ -1849,11 +2653,47 @@
                 <div id="item-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
+        
+        window.contentData['item-unit-of-measure'] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Unit of Measure</h2>
+                <p class="text-wise-gray mb-4">
+                    Mengelola unit pengukuran dan faktor konversi untuk item atau kelas item.
+                </p>
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <button class="btn btn-primary" onclick="showIUoMForm('create')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                        Create New IUoM
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportIUoMToCSV()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        Export CSV
+                    </button>
+                    <label for="import-iuom-csv" class="cursor-pointer btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                        Import CSV
+                        <input type="file" id="import-iuom-csv" accept=".csv" class="hidden" onchange="importIUoMFromCSV(event)">
+                    </label>
+                    <div class="grow"></div>
+                    <div class="relative">
+                        <input id="iuom-search" type="text" placeholder="Search..." oninput="filterIUoMList(this.value)"
+                               class="input w-full sm:w-72 pl-10" />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                </div>
+
+                <div id="iuom-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
+            `
+        };
+
 
         // Daftarkan ke menu & pencarian global
         window.searchItems.push({ id: 'item', title: 'Item', category: 'Inventory Control', lastUpdated: 'Latest' });
         window.allMenus.push({ name: 'Item', category: 'Inventory Control' });
         window.parentMapping['item'] = 'inventory-control';
+        window.searchItems.push({ id: 'item-unit-of-measure', title: 'Item Unit of Measure', category: 'Inventory Control', lastUpdated: 'Latest' });
+        window.allMenus.push({ name: 'Item Unit of Measure', category: 'Inventory Control' });
+        window.parentMapping['item-unit-of-measure'] = 'inventory-control';
 
 
         if (window.contentData['inventory-control']) {
@@ -1924,10 +2764,19 @@
             }
         };
 
+        const autoRenderIUoM = () => {
+             const container = document.getElementById('iuom-list-container');
+             if (container && !container.dataset.bound) {
+                 renderIUoMList();
+                 container.dataset.bound = '1';
+             }
+        };
+
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     autoRenderItem();
+                    autoRenderIUoM();
                 }
             });
         });
@@ -1936,6 +2785,8 @@
         document.addEventListener('content:rendered', (e) => {
             if (e.detail.key === 'item') {
                 window.renderItemList();
+            } else if (e.detail.key === 'item-unit-of-measure') {
+                window.renderIUoMList();
             }
         });
         
@@ -1957,7 +2808,7 @@
         
         window.navigateToHome();
 
-        console.log('Configuration V4 (Item) loaded successfully');
+        console.log('Configuration V4 (Item & IUoM) loaded successfully');
     });
 })();
 
@@ -1983,6 +2834,8 @@ window.selectCategory = function(category) {
         
         if (category === 'item') {
             window.renderItemList();
+        } else if (category === 'item-unit-of-measure') {
+            window.renderIUoMList();
         } else {
             const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
             if (typeof window[rendererName] === 'function') {
