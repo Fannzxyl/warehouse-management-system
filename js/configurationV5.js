@@ -68,28 +68,25 @@
         const it_loadData = () => JSON.parse(localStorage.getItem(IT_STORAGE_KEY)) || it_initialData;
         const it_saveData = (data) => localStorage.setItem(IT_STORAGE_KEY, JSON.stringify(data));
         
-        // =======================================================================
-        // BAGIAN 5: LOCATION (KODE BARU DITAMBAHKAN DI SINI)
-        // =======================================================================
         const LOC_STORAGE_KEY = 'locations_v5';
-        const loc_initialData = [
-            { 
-                id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01', 
-                locatingZone: 'L-DCB.FD.DD.FA...', allocationZone: 'A-DCB.B8.FACE', workZone: 'W-DCB.DRY.FACE',
-                inactive: false,
-                general: { locationClass: 'Inventory Storage', locationSubclass: 'Inventory', locationType: 'DOUBLE.DEEP-FACE', movementClass: '', locationStatus: 'Empty', realTimeReplenishment: false, lastCycleCountDate: null, maxNumberOfLots: 0, allowInTransit: true, multiItem: true, trackLicensePlates: false },
-                work: { verificationMethod: 'Location', checkDigit: '02', generateCheckDigit: false, pickUpDropOff: '', incomingPandD: '', outgoingPandD: '', allowWorkUnitSelection: true, pickingSequence: 29.00, putawaySequence: 0.00, vectorCoordinate: '' },
-                quantityUmList: [
-                    { id: 1, uom: 'Inner Pack', selected: false }, { id: 2, uom: 'Kilogram', selected: false }, { id: 3, uom: 'Pack', selected: false },
-                    { id: 4, uom: 'Pallet', selected: false }, { id: 5, uom: 'Piece', selected: false }
-                ],
-                dock: { dockLocationType: 'Dock area', anchorCriteria: '', selectionPriority: 0, nextDockArea: '', parentDockArea: '', position: '', dockAreaSize: 'Number of rows', numberOfRows: 0 },
-                userDefined: { udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' }
-            }
-        ];
-        const loc_loadData = () => JSON.parse(localStorage.getItem(LOC_STORAGE_KEY)) || loc_initialData;
-        const loc_saveData = (data) => localStorage.setItem(LOC_STORAGE_KEY, JSON.stringify(data));
-        let currentLocationQtyUmList = [];
+const loc_initialData = [
+    { 
+        id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01', 
+        locatingZone: 'L-DCB.FD.DD.FA...', allocationZone: 'A-DCB.B8.FACE', workZone: 'W-DCB.DRY.FACE',
+        inactive: false,
+        general: { locationClass: 'Inventory Storage', locationSubclass: 'Inventory', locationType: 'DOUBLE.DEEP-FACE', movementClass: '', locationStatus: 'Empty', realTimeReplenishment: false, lastCycleCountDate: null, maxNumberOfLots: 0, allowInTransit: true, multiItem: true, trackLicensePlates: false },
+        work: { verificationMethod: 'Location', checkDigit: '02', generateCheckDigit: false, pickUpDropOff: '', incomingPandD: '', outgoingPandD: '', allowWorkUnitSelection: true, pickingSequence: 29.00, putawaySequence: 0.00, vectorCoordinate: '' },
+        quantityUmList: [
+            { id: 1, uom: 'Inner Pack', selected: false }, { id: 2, uom: 'Kilogram', selected: false }, { id: 3, uom: 'Pack', selected: false },
+            { id: 4, uom: 'Pallet', selected: false }, { id: 5, uom: 'Piece', selected: false }
+        ],
+        dock: { dockLocationType: 'Dock area', anchorCriteria: '', selectionPriority: 0, nextDockArea: '', parentDockArea: '', position: '', dockAreaSize: 'Number of rows', numberOfRows: 0 },
+        userDefined: { udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' }
+    }
+];
+const loc_loadData = () => JSON.parse(localStorage.getItem(LOC_STORAGE_KEY)) || loc_initialData;
+const loc_saveData = (data) => localStorage.setItem(LOC_STORAGE_KEY, JSON.stringify(data));
+let currentLocationQtyUmList = [];
 
 
         // --- PENDAFTARAN SEMUA FITUR BARU KE SISTEM ---
@@ -283,133 +280,109 @@
                     </div>
                 `
             },
-            'location': { // Fitur baru didaftarkan di sini
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
-                    <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="btn btn-primary" onclick="showLocationForm('create')">Create New Location</button>
-                        <input type="text" id="loc-search" placeholder="Search by warehouse or location..." class="input max-w-xs" oninput="filterLocationList(this.value)">
-                    </div>
-                    <div id="loc-list-container" class="overflow-x-auto"></div>
-                    <!-- Modal Form untuk Location -->
-                    <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-                        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh]">
-                            <div class="px-6 pt-5 pb-3 border-b flex justify-between items-center"><h3 id="loc-form-title" class="text-lg font-semibold"></h3><button class="text-gray-500 hover:text-gray-800" onclick="closeLocationForm()">✕</button></div>
-                            <div class="p-6 overflow-y-auto"><form id="loc-form" onsubmit="handleLocationSubmit(event)">
-                                <!-- Bagian Atas Form -->
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
-                                    <div>
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div><label for="loc-template" class="block text-sm mb-1">Location template:</label><input type="text" id="loc-template" name="locationTemplate" class="input"></div>
-                                            <div><label for="loc-warehouse" class="block text-sm mb-1">Warehouse:</label><input type="text" id="loc-warehouse" name="warehouse" required class="input"></div>
-                                        </div>
-                                        <div class="grid grid-cols-4 gap-4 mt-4">
-                                            <div><label for="loc-aisle" class="block text-sm mb-1">AISLE</label><input type="text" id="loc-aisle" name="aisle" class="input"></div>
-                                            <div><label for="loc-bay" class="block text-sm mb-1">BAY</label><input type="text" id="loc-bay" name="bay" class="input"></div>
-                                            <div><label for="loc-level" class="block text-sm mb-1">LEVEL</label><input type="text" id="loc-level" name="level" class="input"></div>
-                                            <div><label for="loc-slot" class="block text-sm mb-1">SLOT</label><input type="text" id="loc-slot" name="slot" class="input"></div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="grid grid-cols-1 gap-4">
-                                            <div><label class="block text-sm mb-1">Starting location:</label><input type="text" class="input bg-gray-100" readonly></div>
-                                            <div><label class="block text-sm mb-1">Ending location:</label><input type="text" class="input bg-gray-100" readonly></div>
-                                            <div><label class="block text-sm mb-1">Increment:</label><input type="text" class="input bg-gray-100" readonly></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Tabs -->
-                                <div role="tablist" class="border-b mb-4 flex flex-wrap gap-x-4 text-sm font-medium">
-                                    <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
-                                    <button type="button" role="tab" data-tab="zones" class="tab">Zones</button>
-                                    <button type="button" role="tab" data-tab="work" class="tab">Work</button>
-                                    <button type="button" role="tab" data-tab="qty-um" class="tab">Quantity um list</button>
-                                    <button type="button" role="tab" data-tab="dock" class="tab">Dock</button>
-                                    <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
-                                </div>
+            // file: configurationV5.js
 
-                                <!-- Tab Panels -->
-                                <div id="pane-general" role="tabpanel" data-pane="general">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Storage</legend><div class="space-y-3">
-                                            <div><label for="loc-class" class="block text-sm mb-1">Location class:</label><input type="text" id="loc-class" name="locationClass" class="input"></div>
-                                            <div><label for="loc-subclass" class="block text-sm mb-1">Location subclass:</label><input type="text" id="loc-subclass" name="locationSubclass" class="input"></div>
-                                            <div><label for="loc-type" class="block text-sm mb-1">Location type:</label><input type="text" id="loc-type" name="locationType" class="input"></div>
-                                            <div><label for="loc-movement-class" class="block text-sm mb-1">Movement class:</label><input type="text" id="loc-movement-class" name="movementClass" class="input"></div>
-                                            <div><label for="loc-status" class="block text-sm mb-1">Location status:</label><input type="text" id="loc-status" name="locationStatus" class="input"></div>
-                                            <label class="flex items-center gap-2"><input type="checkbox" id="loc-realtime" name="realTimeReplenishment"> Real time replenishment</label>
-                                            <div><label for="loc-cycle-date" class="block text-sm mb-1">Last cycle count date:</label><input type="text" id="loc-cycle-date" class="input" placeholder="No counts executed" readonly></div>
-                                        </div></fieldset>
-                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Inventory</legend><div class="space-y-3">
-                                            <label class="flex items-center gap-2"><input type="checkbox" id="loc-in-transit" name="allowInTransit"> Allocate in transit</label>
-                                            <label class="flex items-center gap-2"><input type="checkbox" id="loc-multi-item" name="multiItem"> Multi item</label>
-                                            <label class="flex items-center gap-2"><input type="checkbox" id="loc-track-lp" name="trackLicensePlates"> Track license plates</label>
-                                            <div><label for="loc-max-lots" class="block text-sm mb-1">Max number of lots:</label><input type="number" id="loc-max-lots" name="maxNumberOfLots" class="input"></div>
-                                        </div></fieldset>
-                                    </div>
+'location': {
+    full: `
+        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
+        <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
+        <div class="flex justify-between items-center mb-4">
+            <button class="btn btn-primary" onclick="showLocationForm('create')">Create New Location</button>
+            <input type="text" id="loc-search" placeholder="Search by warehouse or location..." class="input max-w-xs" oninput="filterLocationList(this.value)">
+        </div>
+        
+        <div class="border border-wise-border rounded-lg shadow-md overflow-hidden">
+            <div id="loc-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto">
+                </div>
+        </div>
+        <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh]">
+                <div class="px-6 pt-5 pb-3 border-b flex justify-between items-center">
+                    <h3 id="loc-form-title" class="text-lg font-semibold"></h3>
+                    <button class="text-gray-500 hover:text-gray-800" onclick="closeLocationForm()">✕</button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <form id="loc-form" onsubmit="handleLocationSubmit(event)">
+                        
+                        <div class="space-y-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="loc-template" class="block text-sm mb-1">Location template:</label>
+                                    <input type="text" id="loc-template" name="locationTemplate" class="input">
                                 </div>
-                                <div id="pane-zones" role="tabpanel" data-pane="zones" class="hidden"><div class="space-y-3 max-w-md">
-                                    <div><label for="loc-locating-zone" class="block text-sm mb-1">Locating zone:</label><input type="text" id="loc-locating-zone" name="locatingZone" class="input"></div>
-                                    <div><label for="loc-allocation-zone" class="block text-sm mb-1">Allocation zone:</label><input type="text" id="loc-allocation-zone" name="allocationZone" class="input"></div>
-                                    <div><label for="loc-work-zone" class="block text-sm mb-1">Work zone:</label><input type="text" id="loc-work-zone" name="workZone" class="input"></div>
-                                </div></div>
-                                <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div><fieldset class="border p-4 rounded-md h-full"><legend class="px-2 text-sm font-medium">Verification method</legend><div class="flex flex-col space-y-2 mt-2">
-                                        <label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="None"> None</label>
-                                        <label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Check digit"> Check digit</label>
-                                        <label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Location"> Location</label>
-                                    </div></fieldset></div>
-                                    <div><fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Check digit</legend><div class="space-y-3 mt-2">
-                                        <div><label for="loc-check-digit" class="block text-sm mb-1">Check digit:</label><input type="text" id="loc-check-digit" name="checkDigit" class="input"></div>
-                                        <label class="flex items-center gap-2"><input type="checkbox" id="loc-generate-check-digit" name="generateCheckDigit"> Generate check digit</label>
-                                    </div></fieldset></div>
-                                    <div class="md:col-span-2"><fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Pick-up and drop-off</legend><div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                                        <div><label for="loc-pickup-dropoff" class="block text-sm mb-1">Pick-up and drop-off:</label><input type="text" id="loc-pickup-dropoff" name="pickUpDropOff" class="input"></div>
-                                        <div><label for="loc-incoming-pd" class="block text-sm mb-1">Incoming p&d:</label><input type="text" id="loc-incoming-pd" name="incomingPandD" class="input"></div>
-                                        <div><label for="loc-outgoing-pd" class="block text-sm mb-1">Outgoing p&d:</label><input type="text" id="loc-outgoing-pd" name="outgoingPandD" class="input"></div>
-                                    </div><label class="flex items-center gap-2 mt-4"><input type="checkbox" id="loc-allow-work-unit" name="allowWorkUnitSelection"> Allow work unit selection on system-directed work</label></fieldset></div>
-                                    <div class="md:col-span-2"><div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div><label for="loc-picking-seq" class="block text-sm mb-1">Picking sequence:</label><input type="number" step="0.01" id="loc-picking-seq" name="pickingSequence" class="input"></div>
-                                        <div><label for="loc-putaway-seq" class="block text-sm mb-1">Putaway sequence:</label><input type="number" step="0.01" id="loc-putaway-seq" name="putawaySequence" class="input"></div>
-                                        <div><label for="loc-vector" class="block text-sm mb-1">Vector coordinate:</label><input type="text" id="loc-vector" name="vectorCoordinate" class="input"></div>
-                                    </div></div>
-                                </div></div>
-                                <div id="pane-qty-um" role="tabpanel" data-pane="qty-um" class="hidden"><div id="loc-qty-um-list-table" class="space-y-2 max-w-sm"></div></div>
-                                <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock location type</legend><div class="flex flex-col space-y-2 mt-2">
-                                        <label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Dock area"> Dock area</label>
-                                    </div></fieldset>
-                                    <div>
-                                        <div><label for="loc-anchor-criteria" class="block text-sm mb-1">Anchor criteria:</label><input type="text" id="loc-anchor-criteria" name="anchorCriteria" class="input"></div>
-                                        <div class="mt-3"><label for="loc-selection-priority" class="block text-sm mb-1">Selection priority:</label><input type="number" id="loc-selection-priority" name="selectionPriority" class="input"></div>
-                                    </div>
-                                    <div>
-                                        <div><label for="loc-next-dock" class="block text-sm mb-1">Next dock area:</label><input type="text" id="loc-next-dock" name="nextDockArea" class="input"></div>
-                                        <div class="mt-3"><label for="loc-parent-dock" class="block text-sm mb-1">Parent dock area:</label><input type="text" id="loc-parent-dock" name="parentDockArea" class="input"></div>
-                                        <div class="mt-3"><label for="loc-position" class="block text-sm mb-1">Position:</label><input type="text" id="loc-position" name="position" class="input"></div>
-                                    </div>
-                                    <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock area size</legend><div class="space-y-3 mt-2">
-                                        <label class="flex items-center gap-2"><input type="radio" name="dockAreaSize" value="Number of rows"> Number of rows</label>
-                                        <div class="pl-6"><label for="loc-num-rows" class="block text-sm mb-1">Number of rows:</label><input type="number" id="loc-num-rows" name="numberOfRows" class="input max-w-xs"></div>
-                                    </div></fieldset>
-                                </div></div>
-                                <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
-                                </div></div>
-                            <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
-
-                            </form></div> {/* <-- FORM SEKARANG BERAKHIR DI SINI --> */}
-                            <div class="px-6 py-4 border-t flex justify-end items-center">
-                                <div class="flex gap-3"><button type="button" class="btn" onclick="closeLocationForm()">Cancel</button><button type="submit" form="loc-form" class="btn btn-primary">OK</button></div>
+                                <div>
+                                    <label for="loc-warehouse" class="block text-sm mb-1">Warehouse:</label>
+                                    <input type="text" id="loc-warehouse" name="warehouse" required class="input">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label for="loc-aisle" class="block text-sm mb-1">AISLE</label>
+                                    <input type="number" id="loc-aisle" name="aisle" class="input">
+                                </div>
+                                <div>
+                                    <label for="loc-bay" class="block text-sm mb-1">BAY</label>
+                                    <input type="number" id="loc-bay" name="bay" class="input">
+                                </div>
+                                <div>
+                                    <label for="loc-level" class="block text-sm mb-1">LEVEL</label>
+                                    <input type="number" id="loc-level" name="level" class="input">
+                                </div>
+                                <div>
+                                    <label for="loc-slot" class="block text-sm mb-1">SLOT</label>
+                                    <input type="number" id="loc-slot" name="slot" class="input">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `
-            }
-        });
-        
+                        <div role="tablist" class="border-b mb-4 flex flex-wrap gap-x-4 text-sm font-medium">
+                            <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
+                            <button type="button" role="tab" data-tab="zones" class="tab">Zones</button>
+                            <button type="button" role="tab" data-tab="work" class="tab">Work</button>
+                            <button type="button" role="tab" data-tab="qty-um" class="tab">Quantity um list</button>
+                            <button type="button" role="tab" data-tab="dock" class="tab">Dock</button>
+                            <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
+                        </div>
+                        <div id="pane-general" role="tabpanel" data-pane="general">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Storage</legend><div class="space-y-3">
+                                    <div><label for="loc-class" class="block text-sm mb-1">Location class:</label><input type="text" id="loc-class" name="locationClass" class="input"></div>
+                                    <div><label for="loc-subclass" class="block text-sm mb-1">Location subclass:</label><input type="text" id="loc-subclass" name="locationSubclass" class="input"></div>
+                                    <div><label for="loc-type" class="block text-sm mb-1">Location type:</label><input type="text" id="loc-type" name="locationType" class="input"></div>
+                                    <div><label for="loc-movement-class" class="block text-sm mb-1">Movement class:</label><input type="text" id="loc-movement-class" name="movementClass" class="input"></div>
+                                    <div><label for="loc-status" class="block text-sm mb-1">Location status:</label><input type="text" id="loc-status" name="locationStatus" class="input"></div>
+                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-realtime" name="realTimeReplenishment"> Real time replenishment</label>
+                                    <div><label for="loc-cycle-date" class="block text-sm mb-1">Last cycle count date:</label><input type="text" id="loc-cycle-date" class="input" placeholder="No counts executed" readonly></div>
+                                </div></fieldset>
+                                <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Inventory</legend><div class="space-y-3">
+                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-in-transit" name="allowInTransit"> Allocate in transit</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-multi-item" name="multiItem"> Multi item</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-track-lp" name="trackLicensePlates"> Track license plates</label>
+                                    <div><label for="loc-max-lots" class="block text-sm mb-1">Max number of lots:</label><input type="number" id="loc-max-lots" name="maxNumberOfLots" class="input"></div>
+                                </div></fieldset>
+                            </div>
+                        </div>
+                        <div id="pane-zones" role="tabpanel" data-pane="zones" class="hidden"><div class="space-y-3 max-w-md">
+                            <div><label for="loc-locating-zone" class="block text-sm mb-1">Locating zone:</label><input type="text" id="loc-locating-zone" name="locatingZone" class="input"></div>
+                            <div><label for="loc-allocation-zone" class="block text-sm mb-1">Allocation zone:</label><input type="text" id="loc-allocation-zone" name="allocationZone" class="input"></div>
+                            <div><label for="loc-work-zone" class="block text-sm mb-1">Work zone:</label><input type="text" id="loc-work-zone" name="workZone" class="input"></div>
+                        </div></div>
+                        <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"></div>
+                        <div id="pane-qty-um" role="tabpanel" data-pane="qty-um" class="hidden"><div id="loc-qty-um-list-table" class="space-y-2 max-w-sm"></div></div>
+                        <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"></div>
+                        <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
+                        </div></div>
+                        <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
+                    </form>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end items-center">
+                    <div class="flex gap-3"><button type="button" class="btn" onclick="closeLocationForm()">Cancel</button><button type="submit" form="loc-form" class="btn btn-primary">OK</button></div>
+                </div>
+            </div>
+        </div>
+    `
+},
+});  
         // =======================================================================
         // FUNGSI-FUNGSI: SEMUA FITUR
         // =======================================================================
@@ -699,50 +672,56 @@
         // FUNGSI-FUNGSI: LOCATION (KODE BARU DITAMBAHKAN DI SINI)
         // =======================================================================
         window.renderLocationList = function(filter = '') {
-            const container = document.getElementById('loc-list-container');
-            if (!container) return;
-            const locations = loc_loadData();
-            const filteredData = locations.filter(loc => {
-                const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-                const searchable = `${loc.warehouse} ${combinedLocation} ${loc.locationTemplate} ${loc.general?.locationType} ${loc.general?.locationStatus}`.toLowerCase();
-                return searchable.includes(filter.toLowerCase());
-            });
+    const container = document.getElementById('loc-list-container');
+    if (!container) return;
+    const locations = loc_loadData();
+    const filteredData = locations.filter(loc => {
+        const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+        const searchable = `${loc.warehouse} ${combinedLocation} ${loc.locationTemplate} ${loc.general?.locationType} ${loc.general?.locationStatus}`.toLowerCase();
+        return searchable.includes(filter.toLowerCase());
+    });
 
-            let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md"><thead><tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm">
-                <th class="py-3 px-6 text-left">Warehouse</th><th class="py-3 px-6 text-left">Location</th><th class="py-3 px-6 text-left">Location template</th>
-                <th class="py-3 px-6 text-left">Location Type</th><th class="py-3 px-6 text-left">Location Status</th>
-                <th class="py-3 px-6 text-left">Locating zone</th><th class="py-3 px-6 text-left">Allocation zone</th>
-                <th class="py-3 px-6 text-left">Work zone</th><th class="py-3 px-6 text-left">Active</th>
-                <th class="py-3 px-6 text-center">Actions</th>
-                </tr></thead><tbody class="text-wise-gray text-sm font-light">`;
+    // --- AWAL PERUBAHAN ---
+    let tableHtml = `<table class="min-w-full bg-white"><thead>
+        <tr class="bg-wise-light-gray text-wise-dark-gray text-sm"> 
+            <th class="py-2 px-4 text-left font-semibold">Warehouse</th>
+            <th class="py-2 px-4 text-left font-semibold">Location</th>
+            <th class="py-2 px-4 text-left font-semibold">Location template</th>
+            <th class="py-2 px-4 text-left font-semibold">Location Type</th>
+            <th class="py-2 px-4 text-left font-semibold">Location Status</th>
+            <th class="py-2 px-4 text-left font-semibold">Locating zone</th>
+            <th class="py-2 px-4 text-left font-semibold">Allocation zone</th>
+            <th class="py-2 px-4 text-left font-semibold">Work zone</th>
+            <th class="py-2 px-4 text-left font-semibold">Active</th>
+            <th class="py-2 px-4 text-center font-semibold">Actions</th>
+        </tr></thead><tbody class="text-wise-gray text-sm font-light">`;
 
-            if (filteredData.length === 0) {
-                tableHtml += `<tr><td colspan="10" class="py-3 px-6 text-center">No locations found.</td></tr>`;
-            } else {
-                filteredData.forEach(loc => {
-                    const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-                    tableHtml += `<tr class="border-b hover:bg-gray-50">
-                        <td class="py-3 px-6 text-left">${loc.warehouse}</td>
-                        <td class="py-3 px-6 text-left font-semibold text-wise-dark-gray">${combinedLocation}</td>
-                        <td class="py-3 px-6 text-left">${loc.locationTemplate}</td>
-                        <td class="py-3 px-6 text-left">${loc.general?.locationType || ''}</td>
-                        <td class="py-3 px-6 text-left">${loc.general?.locationStatus || ''}</td>
-                        <td class="py-3 px-6 text-left">${loc.locatingZone}</td>
-                        <td class="py-3 px-6 text-left">${loc.allocationZone}</td>
-                        <td class="py-3 px-6 text-left">${loc.workZone}</td>
-                        <td class="py-3 px-6 text-left">${!loc.inactive ? 'Yes' : 'No'}</td>
-                        <td class="py-3 px-6 text-center">
-                            <div class="flex item-center justify-center">
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                            </div>
-                        </td></tr>`;
-                });
-            }
-            tableHtml += `</tbody></table>`;
-            container.innerHTML = tableHtml;
-        };
-
+    if (filteredData.length === 0) {
+        tableHtml += `<tr><td colspan="10" class="py-3 px-4 text-center">No locations found.</td></tr>`;
+    } else {
+        filteredData.forEach(loc => {
+            const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+            tableHtml += `<tr class="border-b hover:bg-gray-50">
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.warehouse}</td>
+                <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap">${combinedLocation}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locationTemplate}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationType || ''}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationStatus || ''}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locatingZone}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.allocationZone}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.workZone}</td>
+                <td class="py-2 px-4 text-left">${!loc.inactive ? 'Yes' : 'No'}</td>
+                <td class="py-2 px-4 text-center">
+                    <div class="flex item-center justify-center">
+                        <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                        <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                    </div>
+                </td></tr>`;
+        });
+    }
+    tableHtml += `</tbody></table>`;
+    container.innerHTML = tableHtml;
+};
         window.filterLocationList = debounce((value) => renderLocationList(value), 300);
 
         function renderLocationQtyUmTable(list) {

@@ -1337,10 +1337,8 @@ window.contentData['location-template'] = {
                     class="input max-w-xs" oninput="filterLocationTemplateList(this.value)">
         </div>
         <div id="lt-list-container" class="mt-4 overflow-x-auto">
-            <!-- Tabel dirender di sini -->
-        </div>
+            </div>
 
-        <!-- Modal untuk Location Template -->
         <div id="lt-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
             <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
                 <div class="px-6 pt-5 pb-3 border-b">
@@ -1354,31 +1352,28 @@ window.contentData['location-template'] = {
                             <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
                         </div>
 
-                        <!-- Tab General -->
                         <div id="pane-gen" role="tabpanel" data-pane="gen">
                             <div>
                                 <label for="lt-identifier" class="block text-sm mb-1">Location template <span class="text-red-500">*</span></label>
                                 <input id="lt-identifier" name="identifier" required class="input" placeholder="e.g. 10A">
                                 <p id="lt-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
                             </div>
-                            <div class="flex items-center gap-4 mt-4">
-                                <div>
-                                    <label for="lt-separator" class="block text-sm mb-1">Separator character</label>
-                                    <input id="lt-separator" name="separator" class="input w-24" maxlength="1">
+                            <div class="mt-4">
+                                <label for="lt-separator" class="block text-sm mb-1">Separator character</label>
+                                <input id="lt-separator" name="separator" class="input" maxlength="1">
+                            </div>
+                            <div id="lt-fields-container" class="mt-4 space-y-2">
                                 </div>
-                                <label class="flex items-center gap-2 text-sm mt-6">
+                            <div class="flex items-center gap-6 mt-4">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input id="lt-inactive" name="inactive" type="checkbox"> Inactive
+                                </label>
+                                <label class="flex items-center gap-2 text-sm">
                                     <input id="lt-useSpaceSeparator" name="useSpaceSeparator" type="checkbox"> Use space as separator
                                 </label>
                             </div>
-                            <div id="lt-fields-container" class="mt-4 space-y-2">
-                                <!-- Fields dirender di sini -->
-                            </div>
-                             <label class="flex items-center gap-2 text-sm mt-4">
-                                <input id="lt-inactive" name="inactive" type="checkbox"> Inactive
-                            </label>
                         </div>
 
-                        <!-- Tab User Defined Data -->
                         <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
                             ${Array.from({length: 8}, (_, i) => `
                             <div>
@@ -4088,8 +4083,8 @@ function renderLocationTemplateFields(fields = []) {
         const fieldHtml = `
             <div class="grid grid-cols-[auto,1fr,auto,1.5fr] gap-2 items-center">
                 <label class="text-sm font-medium">Field ${i + 1}:</label>
-                <input name="field_length_${i}" type="number" class="input w-24" placeholder="Length" value="${field.length || ''}">
-                <select name="field_type_${i}" class="select w-32">
+                <input name="field_length_${i}" type="number" class="input w-35" placeholder="Length" value="${field.length || ''}">
+                <select name="field_type_${i}" class="select w-45">
                     <option value="">-- Tipe --</option>
                     ${window._locationTemplateFieldTypes.map(t => `<option value="${t}" ${field.type === t ? 'selected' : ''}>${t}</option>`).join('')}
                 </select>
