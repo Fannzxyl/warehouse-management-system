@@ -1830,13 +1830,6 @@ window.showCustomConfirm = (title, message) => {
         
         // --- IUOM FUNCTIONS ---
         // Helper IUoM
-        // ... (kode lain di configurationV4.js biarkan saja) ...
-
-// --- IUOM FUNCTIONS ---
-// GANTI SEMUA KODE DI BAWAH INI SAMPAI AKHIR FILE
-// ===================================================================================
-
-// Helper IUoM
 const IUOM_STORAGE_KEY = 'iuoms_v4';
 const IUOM_SEED_UOMS = ['PC', 'PCK', 'PLT', 'KG', 'LT', 'M', 'CM'];
 const IUOM_SEED_MOVEMENT_CLASSES = ['GRAY', 'WHITE', 'BLACK', 'DEFAULT', 'HEAVY', 'LIGHT'];
@@ -2194,13 +2187,16 @@ const renderIUoMConversionsTable = (conversions) => {
 
     tbody.innerHTML = '';
     if (!conversions || conversions.length === 0) {
-        tbody.appendChild(emptyState);
-        emptyState.classList.remove('hidden');
+        // Tampilkan pesan kosong jika tidak ada konversi
+        const emptyRow = document.createElement('tr');
+        emptyRow.id = 'iuom-conversions-empty-state';
+        emptyRow.innerHTML = `<td colspan="10" class="p-8 text-center text-gray-400">No conversions. Click '+ Add Row' to start.</td>`;
+        tbody.appendChild(emptyRow);
     } else {
-        emptyState.classList.add('hidden');
         conversions.forEach((conv, index) => {
             const row = document.createElement('tr');
             row.className = 'border-b border-gray-200 hover:bg-gray-50';
+            row.dataset.index = index;
             row.innerHTML = `
                 <td class="py-2 px-4"><input type="checkbox" class="iuom-conv-select" data-index="${index}"></td>
                 <td class="py-2 px-4 text-left">${index + 1}</td>
@@ -2223,7 +2219,7 @@ const getIUoMConversionsFromForm = () => {
     document.querySelectorAll('#iuom-conversions-body tr').forEach(row => {
         if (row.id === 'iuom-conversions-empty-state') return;
         const rowData = {
-            seq: num(row.querySelector('td:nth-child(2)').textContent),
+            seq: parseInt(row.querySelector('td:nth-child(2)').textContent),
             quantity: num(row.querySelector('[name="quantity"]')),
             quantityUom: str(row.querySelector('[name="quantityUom"]')),
             conversionQty: num(row.querySelector('[name="conversionQty"]')),
@@ -2240,17 +2236,15 @@ const getIUoMConversionsFromForm = () => {
 };
 
 window.addConversionRow = () => {
-    const form = document.getElementById('iuom-form');
-    if (!form) return;
-    const uom = form.querySelector('[name="uom"]')?.value || 'PC';
     const conversions = getIUoMConversionsFromForm();
     const newSeq = conversions.length > 0 ? conversions[conversions.length - 1].seq + 1 : 1;
     const newConversion = {
-        seq: newSeq, quantity: 1, quantityUom: uom, conversionQty: 1,
-        length: 0, width: 0, height: 0, weight: 0, movementClass: 'GRAY'
+        seq: newSeq, quantity: 1, quantityUom: '', conversionQty: 1,
+        length: 0, width: 0, height: 0, weight: 0, movementClass: ''
     };
     conversions.push(newConversion);
     renderIUoMConversionsTable(conversions);
+    showToast('Row added successfully!');
 };
 
 window.deleteSelectedConversionRows = () => {
@@ -2277,7 +2271,7 @@ window.moveConversionRowUp = () => {
         [conversions[selectedIndex - 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex - 1]];
         conversions.forEach((c, i) => c.seq = i + 1);
         renderIUoMConversionsTable(conversions);
-        document.querySelector(`.iuom-conv-select[data-index="${selectedIndex - 1}"]`).checked = true;
+        document.querySelector(`[data-index="${selectedIndex - 1}"]`).checked = true;
     }
 };
 
@@ -2290,7 +2284,7 @@ window.moveConversionRowDown = () => {
         [conversions[selectedIndex + 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex + 1]];
         conversions.forEach((c, i) => c.seq = i + 1);
         renderIUoMConversionsTable(conversions);
-        document.querySelector(`.iuom-conv-select[data-index="${selectedIndex + 1}"]`).checked = true;
+        document.querySelector(`[data-index="${selectedIndex + 1}"]`).checked = true;
     }
 };
 

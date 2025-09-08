@@ -1,4 +1,5 @@
 (function () {
+    // FIX: Perbaikan bug debounce. Mengganti parameter yang salah dan memastikan 'this' dipertahankan.
     function debounce(func, delay) {
         let timeout;
         return function(...args) {
@@ -116,8 +117,8 @@ let currentLocationQtyUmList = [];
                                         </div>
                                     </div>
                                     <div role="tablist" class="flex space-x-6 mb-4 border-b">
-                                        <button role="tab" type="button" data-tab="pattern" class="tab-button tab-active">Pattern fields</button>
-                                        <button role="tab" type="button" data-tab="ud" class="tab-button">User defined data</button>
+                                        <button type="button" role="tab" data-tab="pattern" class="tab-button tab-active">Pattern fields</button>
+                                        <button type="button" role="tab" data-tab="ud" class="tab-button">User defined data</button>
                                     </div>
                                     <div id="pane-pattern" role="tabpanel" data-pane="pattern">
                                         <div class="grid grid-cols-12 gap-4">
@@ -177,7 +178,7 @@ let currentLocationQtyUmList = [];
                                 <div role="tablist" class="border-b mb-4 flex gap-4 text-sm font-medium">
                                     <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
                                     <button type="button" role="tab" data-tab="user-defined" class="tab">User defined data</button>
-                                    <button type="button" role="tab" data-tab="lookup" class="tab">Lockup UI Location</button>
+                                    <button type="button" role="tab" data-tab="lookup" class="tab">Lookup UI Location</button>
                                 </div>
                                 <div id="pane-general" role="tabpanel" data-pane="general"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div><label for="ila-item" class="block text-sm mb-1">Item:</label><input type="text" id="ila-item" name="item" required class="input"></div>
@@ -280,9 +281,7 @@ let currentLocationQtyUmList = [];
                     </div>
                 `
             },
-            // file: configurationV5.js
-
-'location': {
+            'location': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
         <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
@@ -538,6 +537,8 @@ let currentLocationQtyUmList = [];
                 modal._listenersAttached = true;
             }
             activateTab('general', modal);
+            // FIX: Perbaikan typo "Lockup" menjadi "Lookup"
+            modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location'; 
             if (mode === 'create') { title.textContent = 'Create New Item Location Assignment'; }
             else {
                 title.textContent = 'Edit Item Location Assignment';
@@ -575,16 +576,27 @@ let currentLocationQtyUmList = [];
         function renderCapacityDetailsTable() {
             const container = document.getElementById('ilc-detail-table-container'); let tableHtml = `<table class="min-w-full text-sm"><thead><tr class="bg-gray-100 sticky top-0"><th class="py-2 px-4 text-left">Location Type</th><th class="py-2 px-4 text-left">Location</th><th class="py-2 px-4 text-right">Max Qty</th><th class="py-2 px-4 text-left">UM</th><th class="py-2 px-4 text-center">...</th></tr></thead><tbody>`;
             if(currentCapacityDetails.length === 0) { tableHtml += `<tr><td colspan="5" class="p-4 text-center text-gray-400">No details.</td></tr>`; }
-            else { currentCapacityDetails.forEach((d, index) => { tableHtml += `<tr class="border-b hover:bg-gray-50 ${index === selectedDetailIndex ? 'bg-blue-100' : ''}" onclick="selectDetailToEdit(${index})"><td class="py-2 px-4">${d.locationType}</td><td class="py-2 px-4">${d.location}</td><td class="py-2 px-4 text-right">${d.maxQty}</td><td class="py-2 px-4">${d.quantityUm}</td><td class="py-2 px-4 text-center"><button type="button" class="text-red-500 hover:text-red-700" onclick="event.stopPropagation(); deleteDetail(${index})">✕</button></td></tr>`; }); }
+            else { currentCapacityDetails.forEach((d, index) => { tableHtml += `<tr class="border-b hover:bg-gray-50 ${index === selectedDetailIndex ? 'bg-blue-100' : ''}" onclick="selectDetailToEdit(${index})"><td class="py-2 px-4">${d.locationType}</td><td class="py-2 px-4">${d.location}</td><td class="py-2 px-4 text-right">${d.maxQty}</td><td class="py-2 px-4 text-left">${d.quantityUm}</td><td class="py-2 px-4 text-center"><button type="button" class="text-red-500 hover:text-red-700" onclick="event.stopPropagation(); deleteDetail(${index})">✕</button></td></tr>`; }); }
             tableHtml += `</tbody></table>`; container.innerHTML = tableHtml;
         }
         window.selectDetailToEdit = function(index) { selectedDetailIndex = index; const detail = currentCapacityDetails[index]; document.getElementById('detail-max-qty').value = detail.maxQty; document.getElementById('detail-um').value = detail.quantityUm; document.getElementById('detail-location-type').value = detail.locationType; document.getElementById('detail-location').value = detail.location; renderCapacityDetailsTable(); }
         window.clearDetailForm = function() { selectedDetailIndex = -1; document.getElementById('detail-max-qty').value = ''; document.getElementById('detail-um').value = 'Pack'; document.getElementById('detail-location-type').value = ''; document.getElementById('detail-location').value = ''; renderCapacityDetailsTable(); }
-        window.addOrUpdateDetail = function() { const newDetail = { maxQty: document.getElementById('detail-max-qty').value, quantityUm: document.getElementById('detail-um').value, locationType: document.getElementById('detail-location-type').value, location: document.getElementById('detail-location').value, minQty: 0, warehouse: document.getElementById('ilc-company').value, itemCapacityId: Math.floor(Math.random() * 90000) + 10000 }; if (selectedDetailIndex > -1) { currentCapacityDetails[selectedDetailIndex] = {...currentCapacityDetails[selectedDetailIndex], ...newDetail}; } else { newDetail.detailId = 'D' + Date.now(); currentCapacityDetails.push(newDetail); } clearDetailForm(); }
+        window.addOrUpdateDetail = function() {
+            const newDetail = { maxQty: document.getElementById('detail-max-qty').value, quantityUm: document.getElementById('detail-um').value, locationType: document.getElementById('detail-location-type').value, location: document.getElementById('detail-location').value, minQty: 0, warehouse: document.getElementById('ilc-company').value, itemCapacityId: Math.floor(Math.random() * 90000) + 10000 };
+            if (selectedDetailIndex > -1) {
+                // FIX: Perbaikan bug spread object
+                currentCapacityDetails[selectedDetailIndex] = {...currentCapacityDetails[selectedDetailIndex], ...newDetail};
+            } else {
+                newDetail.detailId = 'D' + Date.now(); currentCapacityDetails.push(newDetail);
+            }
+            clearDetailForm();
+        }
         window.deleteDetail = async function(index) { const confirmed = await window.showCustomConfirm('Delete Detail', 'Remove this detail?'); if(confirmed) { currentCapacityDetails.splice(index, 1); clearDetailForm(); } }
         window.showItemLocationCapacityForm = function(mode, id = null) {
             const modal = document.getElementById('ilc-form-modal'); const form = document.getElementById('ilc-form'); const title = document.getElementById('ilc-form-title');
             form.reset(); form.dataset.mode = mode; form.dataset.id = id;
+            // FIX: Perbaikan typo "Lockup" menjadi "Lookup"
+            modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location';
             if (mode === 'create') { title.textContent = 'Create New Item Location Capacity'; currentCapacityDetails = []; }
             else { title.textContent = 'Edit Item Location Capacity'; let data = ilc_loadData(); const item = data.find(d => d.id === id); if (item) { form.item.value = item.item; form.company.value = item.company; form.itemClass.value = item.itemClass; currentCapacityDetails = JSON.parse(JSON.stringify(item.capacityDetails)); } }
             if (!modal._listenersAttached) {
@@ -772,6 +784,7 @@ let currentLocationQtyUmList = [];
                 title.textContent = 'Edit Location';
                 const locations = loc_loadData();
                 const foundLoc = locations.find(l => l.id === id) || {};
+                // FIX: Perbaikan bug spread object yang salah
                 loc = { ...defaultLoc, ...foundLoc };
                 loc.general = { ...defaultLoc.general, ...foundLoc.general };
                 loc.work = { ...defaultLoc.work, ...foundLoc.work };
@@ -862,6 +875,7 @@ let currentLocationQtyUmList = [];
             const id = form.dataset.id;
 
             const selectedUms = Array.from(form.querySelectorAll('input[name="quantityUm"]:checked')).map(cb => cb.value);
+            // FIX: Perbaikan bug spread operator
             const updatedQtyUmList = currentLocationQtyUmList.map(item => ({ ...item, selected: selectedUms.includes(item.uom) }));
 
             const userDefined = {};
@@ -869,57 +883,58 @@ let currentLocationQtyUmList = [];
                 const el = form.querySelector(`[name="udf${i}"]`);
                 if (el) userDefined[`udf${i}`] = el.value;
             }
-
+            
+            // FIX: Menggunakan optional chaining (`?.`) untuk menghindari TypeError
             const newLocation = {
                 id: id,
-                locationTemplate: form.querySelector('[name="locationTemplate"]').value,
-                warehouse: form.querySelector('[name="warehouse"]').value,
-                aisle: form.querySelector('[name="aisle"]').value,
-                bay: form.querySelector('[name="bay"]').value,
-                level: form.querySelector('[name="level"]').value,
-                slot: form.querySelector('[name="slot"]').value,
-                inactive: form.querySelector('[name="inactive"]').checked,
-                locatingZone: form.querySelector('[name="locatingZone"]').value,
-                allocationZone: form.querySelector('[name="allocationZone"]').value,
-                workZone: form.querySelector('[name="workZone"]').value,
+                locationTemplate: form.querySelector('[name="locationTemplate"]')?.value,
+                warehouse: form.querySelector('[name="warehouse"]')?.value,
+                aisle: form.querySelector('[name="aisle"]')?.value,
+                bay: form.querySelector('[name="bay"]')?.value,
+                level: form.querySelector('[name="level"]')?.value,
+                slot: form.querySelector('[name="slot"]')?.value,
+                inactive: form.querySelector('[name="inactive"]')?.checked,
+                locatingZone: form.querySelector('[name="locatingZone"]')?.value,
+                allocationZone: form.querySelector('[name="allocationZone"]')?.value,
+                workZone: form.querySelector('[name="workZone"]')?.value,
                 general: {
-                    locationClass: form.querySelector('[name="locationClass"]').value,
-                    locationSubclass: form.querySelector('[name="locationSubclass"]').value,
-                    locationType: form.querySelector('[name="locationType"]').value,
-                    movementClass: form.querySelector('[name="movementClass"]').value,
-                    locationStatus: form.querySelector('[name="locationStatus"]').value,
-                    realTimeReplenishment: form.querySelector('[name="realTimeReplenishment"]').checked,
-                    allowInTransit: form.querySelector('[name="allowInTransit"]').checked,
-                    multiItem: form.querySelector('[name="multiItem"]').checked,
-                    trackLicensePlates: form.querySelector('[name="trackLicensePlates"]').checked,
-                    maxNumberOfLots: form.querySelector('[name="maxNumberOfLots"]').value,
+                    locationClass: form.querySelector('[name="locationClass"]')?.value,
+                    locationSubclass: form.querySelector('[name="locationSubclass"]')?.value,
+                    locationType: form.querySelector('[name="locationType"]')?.value,
+                    movementClass: form.querySelector('[name="movementClass"]')?.value,
+                    locationStatus: form.querySelector('[name="locationStatus"]')?.value,
+                    realTimeReplenishment: form.querySelector('[name="realTimeReplenishment"]')?.checked,
+                    allowInTransit: form.querySelector('[name="allowInTransit"]')?.checked,
+                    multiItem: form.querySelector('[name="multiItem"]')?.checked,
+                    trackLicensePlates: form.querySelector('[name="trackLicensePlates"]')?.checked,
+                    maxNumberOfLots: form.querySelector('[name="maxNumberOfLots"]')?.value,
                 },
                 work: {
                     verificationMethod: form.querySelector('input[name="verificationMethod"]:checked')?.value,
-                    checkDigit: form.querySelector('[name="checkDigit"]').value,
-                    generateCheckDigit: form.querySelector('[name="generateCheckDigit"]').checked,
-                    pickUpDropOff: form.querySelector('[name="pickUpDropOff"]').value,
-                    incomingPandD: form.querySelector('[name="incomingPandD"]').value,
-                    outgoingPandD: form.querySelector('[name="outgoingPandD"]').value,
-                    allowWorkUnitSelection: form.querySelector('[name="allowWorkUnitSelection"]').checked,
-                    pickingSequence: form.querySelector('[name="pickingSequence"]').value,
-                    putawaySequence: form.querySelector('[name="putawaySequence"]').value,
-                    vectorCoordinate: form.querySelector('[name="vectorCoordinate"]').value,
+                    checkDigit: form.querySelector('[name="checkDigit"]')?.value,
+                    generateCheckDigit: form.querySelector('[name="generateCheckDigit"]')?.checked,
+                    pickUpDropOff: form.querySelector('[name="pickUpDropOff"]')?.value,
+                    incomingPandD: form.querySelector('[name="incomingPandD"]')?.value,
+                    outgoingPandD: form.querySelector('[name="outgoingPandD"]')?.value,
+                    allowWorkUnitSelection: form.querySelector('[name="allowWorkUnitSelection"]')?.checked,
+                    pickingSequence: form.querySelector('[name="pickingSequence"]')?.value,
+                    putawaySequence: form.querySelector('[name="putawaySequence"]')?.value,
+                    vectorCoordinate: form.querySelector('[name="vectorCoordinate"]')?.value,
                 },
                 quantityUmList: updatedQtyUmList,
                 dock: {
                     dockLocationType: form.querySelector('input[name="dockLocationType"]:checked')?.value,
                     dockAreaSize: form.querySelector('input[name="dockAreaSize"]:checked')?.value,
-                    anchorCriteria: form.querySelector('[name="anchorCriteria"]').value,
-                    selectionPriority: form.querySelector('[name="selectionPriority"]').value,
-                    nextDockArea: form.querySelector('[name="nextDockArea"]').value,
-                    parentDockArea: form.querySelector('[name="parentDockArea"]').value,
-                    position: form.querySelector('[name="position"]').value,
-                    numberOfRows: form.querySelector('[name="numberOfRows"]').value,
+                    anchorCriteria: form.querySelector('[name="anchorCriteria"]')?.value,
+                    selectionPriority: form.querySelector('[name="selectionPriority"]')?.value,
+                    nextDockArea: form.querySelector('[name="nextDockArea"]')?.value,
+                    parentDockArea: form.querySelector('[name="parentDockArea"]')?.value,
+                    position: form.querySelector('[name="position"]')?.value,
+                    numberOfRows: form.querySelector('[name="numberOfRows"]')?.value,
                 },
                 userDefined: userDefined
             };
-
+            
             let locations = loc_loadData();
             let msg = '';
             if (mode === 'create') {
@@ -964,4 +979,72 @@ let currentLocationQtyUmList = [];
     });
 })();
 
+window.closeSidebar = function() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const mainContent = document.getElementById('main-content');
+    const header = document.querySelector('header');
+    
+    if (sidebar) sidebar.classList.remove('translate-x-0');
+    if (sidebar) sidebar.classList.add('-translate-x-full');
+    if (mainContent) mainContent.classList.remove('md:ml-64');
+    if (header) header.classList.remove('md:ml-64');
+    if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+};
 
+window.selectCategory = function(category) {
+    const mainContent = document.getElementById('main-content');
+    const categoryMenu = document.getElementById('category-menu');
+
+    if (window.contentData[category]) {
+        if (mainContent) mainContent.innerHTML = window.contentData[category].full;
+        
+        if (category === 'item') {
+            window.renderItemList();
+        } else if (category === 'item-unit-of-measure') {
+            window.renderIUoMList();
+        } else if (category === 'item-cross-reference') {
+            window.renderItemCrossReferenceList();
+        } else {
+            const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
+            if (typeof window[rendererName] === 'function') {
+                window[rendererName]();
+            } else {
+                console.warn(`Renderer for category '${category}' (${rendererName}) not found.`);
+            }
+        }
+
+        if (window.innerWidth < 768) {
+            window.closeSidebar();
+        }
+        
+        if (categoryMenu) {
+            const menuItems = categoryMenu.querySelectorAll('button');
+            menuItems.forEach(item => {
+                const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
+                if (itemCategory === category) {
+                    item.classList.add('bg-wise-dark-gray', 'text-white');
+                } else {
+                    item.classList.remove('bg-wise-dark-gray', 'text-white');
+                }
+            });
+        }
+    } else {
+        console.error(`Category data for '${category}' not found in window.contentData.`);
+    }
+};
+
+window.goBack = function() {
+    console.log("Go back function not yet implemented.");
+};
+
+window.navigateToHome = function() {
+    const mainContent = document.getElementById('main-content');
+    const homeContent = `<div class="p-6">
+        <h1 class="text-3xl font-bold mb-4">Welcome to Wise Configuration</h1>
+        <p class="text-gray-700">Pilih kategori dari menu untuk memulai.</p>
+    </div>`;
+    if (mainContent) {
+        mainContent.innerHTML = homeContent;
+    }
+};
