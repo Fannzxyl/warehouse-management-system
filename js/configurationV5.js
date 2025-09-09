@@ -281,7 +281,7 @@ let currentLocationQtyUmList = [];
                     </div>
                 `
             },
-'location': {
+            'location': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
         <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
@@ -290,10 +290,14 @@ let currentLocationQtyUmList = [];
             <input type="text" id="loc-search" placeholder="Search by warehouse or location..." class="input max-w-xs" oninput="filterLocationList(this.value)">
         </div>
         
-        <div class="border border-wise-border rounded-lg shadow-md overflow-hidden">
-            <div id="loc-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto">
-                </div>
+        <!-- Tabel untuk desktop -->
+        <div id="loc-table-desktop" class="hidden md:block border border-wise-border rounded-lg shadow-md overflow-hidden min-h-0">
+            <div id="loc-list-container-desktop" class="h-[70vh] overflow-auto"></div>
         </div>
+
+        <!-- Card view untuk mobile -->
+        <div id="loc-list-container-mobile" class="md:hidden space-y-4"></div>
+
         <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh]">
                 <div class="px-6 pt-5 pb-3 border-b flex justify-between items-center">
@@ -420,8 +424,14 @@ let currentLocationQtyUmList = [];
         function activateTab(tabName, container) {
             container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active'));
             container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
-            container.querySelector(`[role="tab"][data-tab="${tabName}"]`).classList.add('tab-active');
-            container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`).classList.remove('hidden');
+            const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
+            if (activeTab) {
+                activeTab.classList.add('tab-active');
+            }
+            const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
+            if (activePane) {
+                activePane.classList.remove('hidden');
+            }
         }
 
         // =======================================================================
@@ -626,8 +636,6 @@ let currentLocationQtyUmList = [];
         window.showItemLocationCapacityForm = function(mode, id = null) {
             const modal = document.getElementById('ilc-form-modal'); const form = document.getElementById('ilc-form'); const title = document.getElementById('ilc-form-title');
             form.reset(); form.dataset.mode = mode; form.dataset.id = id;
-            // FIX: Perbaikan typo "Lockup" menjadi "Lookup"
-            modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location';
             if (mode === 'create') { title.textContent = 'Create New Item Location Capacity'; currentCapacityDetails = []; }
             else { title.textContent = 'Edit Item Location Capacity'; let data = ilc_loadData(); const item = data.find(d => d.id === id); if (item) { form.item.value = item.item; form.company.value = item.company; form.itemClass.value = item.itemClass; currentCapacityDetails = JSON.parse(JSON.stringify(item.capacityDetails)); } }
             if (!modal._listenersAttached) {
@@ -663,7 +671,7 @@ let currentLocationQtyUmList = [];
             const filteredData = templates.filter(t => t.itemTemplate.toLowerCase().includes(filter.toLowerCase()));
             let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md"><thead><tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal"><th class="py-3 px-6 text-left">Item Template</th><th class="py-3 px-6 text-left">Separator</th><th class="py-3 px-6 text-left">Field 1 Type</th><th class="py-3 px-6 text-left">Field 1 Length</th><th class="py-3 px-6 text-center">Actions</th></tr></thead><tbody class="text-wise-gray text-sm font-light">`;
             if (filteredData.length === 0) { tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No templates found.</td></tr>`; }
-            else { filteredData.forEach(t => { tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+            else { filteredData.forEach(t => { tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
             tableHtml += `</tbody></table>`; container.innerHTML = tableHtml;
         };
         window.filterItemTemplateList = debounce((value) => renderItemTemplateList(value), 300);
@@ -715,8 +723,9 @@ let currentLocationQtyUmList = [];
         // FUNGSI-FUNGSI: LOCATION (KODE BARU DITAMBAHKAN DI SINI)
         // =======================================================================
         window.renderLocationList = function(filter = '') {
-    const container = document.getElementById('loc-list-container');
-    if (!container) return;
+    const containerDesktop = document.getElementById('loc-list-container-desktop');
+    const containerMobile = document.getElementById('loc-list-container-mobile');
+    if (!containerDesktop || !containerMobile) return;
     const locations = loc_loadData();
     const filteredData = locations.filter(loc => {
         const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
@@ -724,14 +733,14 @@ let currentLocationQtyUmList = [];
         return searchable.includes(filter.toLowerCase());
     });
 
-    // --- AWAL PERUBAHAN ---
-    let tableHtml = `<table class="min-w-full bg-white"><thead>
+    // --- RENDER UNTUK DESKTOP ---
+    let tableHtml = `<table class="min-w-max w-full table-auto bg-white"><thead>
         <tr class="bg-wise-light-gray text-wise-dark-gray text-sm"> 
-            <th class="py-2 px-4 text-left font-semibold">Warehouse</th>
-            <th class="py-2 px-4 text-left font-semibold">Location</th>
-            <th class="py-2 px-4 text-left font-semibold">Location template</th>
-            <th class="py-2 px-4 text-left font-semibold">Location Type</th>
-            <th class="py-2 px-4 text-left font-semibold">Location Status</th>
+            <th class="py-2 px-4 text-left font-semibold sticky left-0 bg-wise-light-gray z-10 whitespace-nowrap">Warehouse</th>
+            <th class="py-2 px-4 text-left font-semibold sticky left-[110px] bg-wise-light-gray z-10 whitespace-nowrap">Location</th>
+            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location template</th>
+            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Type</th>
+            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Status</th>
             <th class="py-2 px-4 text-left font-semibold">Locating zone</th>
             <th class="py-2 px-4 text-left font-semibold">Allocation zone</th>
             <th class="py-2 px-4 text-left font-semibold">Work zone</th>
@@ -745,15 +754,15 @@ let currentLocationQtyUmList = [];
         filteredData.forEach(loc => {
             const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
             tableHtml += `<tr class="border-b hover:bg-gray-50">
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.warehouse}</td>
-                <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap">${combinedLocation}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap sticky left-0 bg-white hover:bg-gray-50 z-10">${loc.warehouse}</td>
+                <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap sticky left-[110px] bg-white hover:bg-gray-50 z-10">${combinedLocation}</td>
                 <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locationTemplate}</td>
                 <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationType || ''}</td>
                 <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationStatus || ''}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locatingZone}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.allocationZone}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.workZone}</td>
-                <td class="py-2 px-4 text-left">${!loc.inactive ? 'Yes' : 'No'}</td>
+                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</td>
+                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</td>
+                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.workZone || ''}">${loc.workZone || ''}</td>
+                <td class="py-2 px-4 text-left whitespace-nowrap">${!loc.inactive ? 'Yes' : 'No'}</td>
                 <td class="py-2 px-4 text-center">
                     <div class="flex item-center justify-center">
                         <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
@@ -763,7 +772,44 @@ let currentLocationQtyUmList = [];
         });
     }
     tableHtml += `</tbody></table>`;
-    container.innerHTML = tableHtml;
+    containerDesktop.innerHTML = tableHtml;
+
+    // --- RENDER UNTUK MOBILE (CARD VIEW) ---
+    let cardHtml = '';
+    if (filteredData.length === 0) {
+        cardHtml = `<div class="p-4 text-center text-gray-400">No locations found.</div>`;
+    } else {
+        filteredData.forEach(loc => {
+            const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+            cardHtml += `
+            <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="font-semibold text-sm text-wise-primary">
+                        ${loc.warehouse}
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="w-6 h-6 p-1 text-wise-gray hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                        </button>
+                        <button class="w-6 h-6 p-1 text-wise-gray hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Hapus">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-xl font-bold text-wise-dark-gray mb-2">${combinedLocation}</div>
+                <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    <div><span class="font-medium">Template:</span> ${loc.locationTemplate}</div>
+                    <div><span class="font-medium">Type:</span> ${loc.general?.locationType || ''}</div>
+                    <div><span class="font-medium">Status:</span> ${loc.general?.locationStatus || ''}</div>
+                    <div><span class="font-medium">Active:</span> ${!loc.inactive ? 'Yes' : 'No'}</div>
+                    <div class="col-span-2"><span class="font-medium">Locating zone:</span> <span class="truncate" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</span></div>
+                    <div class="col-span-2"><span class="font-medium">Allocation zone:</span> <span class="truncate" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</span></div>
+                </div>
+            </div>
+            `;
+        });
+    }
+    containerMobile.innerHTML = cardHtml;
 };
         window.filterLocationList = debounce((value) => renderLocationList(value), 300);
 
@@ -815,7 +861,7 @@ let currentLocationQtyUmList = [];
                 title.textContent = 'Edit Location';
                 const locations = loc_loadData();
                 const foundLoc = locations.find(l => l.id === id) || {};
-                // FIX: Perbaikan bug spread object yang salah
+                // FIX: Perbaikan bug spread operator
                 loc = { ...defaultLoc, ...foundLoc };
                 loc.general = { ...defaultLoc.general, ...foundLoc.general };
                 loc.work = { ...defaultLoc.work, ...foundLoc.work };
