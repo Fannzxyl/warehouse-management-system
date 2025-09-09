@@ -1,4 +1,4 @@
-// configurationV5.js
+// configurationV4.js
 // Disempurnakan oleh Senior Frontend Engineer
 // Tujuan: Refaktor & implementasi fitur Item Master modul sesuai 19 screenshot referensi.
 
@@ -322,6 +322,19 @@ window.showCustomConfirm = (title, message) => {
             { id: 'ICR006', item: '000000003083_1', company: 'DCK', crossReferenceItemNumber: '02753384', quantityUm: 'PC', gtinEnabled: false, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
             { id: 'ICR007', item: '000000003083_1', company: 'DCM', crossReferenceItemNumber: '8992030000981', quantityUm: 'PC', gtinEnabled: true, lastUpdated: '12-03-2020 12:44:49 AM', user: 'ILSSRV', userDefined: {} },
         ];
+
+        let inventoryControlValues = JSON.parse(localStorage.getItem('inventoryControlValues')) || [
+             { id: 10, key: "Whether inventory is being tracked by default", value: "Y", systemValue: "Y", systemCreated: "Yes" },
+             { id: 40, key: "Default inventory status for adjustments", value: "Available", systemValue: "Available", systemCreated: "Yes" },
+             { id: 50, key: "Allow Duplicate Serial Numbers?", value: "N", systemValue: "N", systemCreated: "Yes" },
+             { id: 70, key: "Write Location UM overrides on Item UM Change", value: "N", systemValue: "N", systemCreated: "Yes" },
+             { id: 110, key: "Should item be validated throughout system?", value: "Y", systemValue: "Y", systemCreated: "Yes" },
+             { id: 130, key: "Inventory status for frozen lots", value: "Held", systemValue: "Held", systemCreated: "Yes" }
+        ];
+        
+        function saveInventoryControlValues() {
+            localStorage.setItem('inventoryControlValues', JSON.stringify(inventoryControlValues));
+        }
         
         const uoms = ['PC', 'BOX', 'PLT', 'KG', 'LBS', 'M', 'CM', 'IN', 'FT', 'G', 'LB'];
         const itemClasses = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
@@ -503,6 +516,44 @@ window.showCustomConfirm = (title, message) => {
             }, 10);
         };
         
+        // --- UTILITY FUNCTIONS FOR STANDARD UI ---
+
+        /**
+         * Renders a standard list header with a "Create New" button and a search input.
+         * @param {string} createLabel - Label for the create button.
+         * @param {string} onCreate - The JS function call for the create button.
+         * @param {string} searchId - The ID for the search input.
+         * @param {string} searchPlaceholder - Placeholder text for the search input.
+         * @param {string} onSearch - The JS function call for the search input's oninput event.
+         * @returns {string} The HTML string for the header.
+         */
+        const renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <button class="btn btn-primary" onclick="${onCreate}">${createLabel}</button>
+              <div class="grow"></div>
+              <div class="relative">
+                <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+        `;
+        
+        /**
+         * Renders a standard modal footer with Cancel and OK buttons.
+         * @param {string} cancelOnclick - The JS function call for the cancel button.
+         * @param {string} submitFormId - The ID of the form to be submitted.
+         * @param {string} submitLabel - Label for the submit button (default: 'OK').
+         * @returns {string} The HTML string for the footer.
+         */
+        const renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
+            <div class="px-6 py-4 border-t flex justify-end gap-3">
+                <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
+                <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
+            </div>
+        `;
+
         // --- ITEM MODAL FUNCTIONS ---
         createModal('item-form-modal');
         
@@ -543,81 +594,85 @@ window.showCustomConfirm = (title, message) => {
         </form>
     `;
     
-    footer.innerHTML = `
-        <button type="button" class="btn" onclick="closeModal('item-form-modal')">Cancel</button>
-        <button type="submit" form="item-form" class="btn btn-primary" onclick="handleItemSubmit(event)">Save</button>
-    `;
-            // Render content per tab
-            renderTabGeneral(mode);
-            renderTabChar1(mode);
-            renderTabChar2(mode);
-            renderTabHandling1(mode);
-            renderTabHandling2(mode);
-            renderTabInternet(mode);
-            renderTabAlternate(mode);
-            renderTabInternational(mode);
-            renderTabCategories(mode);
-            renderTabUdf(mode);
+    // Use the new standard footer function
+    footer.innerHTML = renderStandardModalFooter({
+        cancelOnclick: "closeModal('item-form-modal')",
+        submitFormId: "item-form"
+    });
+    
+    // Render content per tab
+    renderTabGeneral(mode);
+    renderTabChar1(mode);
+    renderTabChar2(mode);
+    renderTabHandling1(mode);
+    renderTabHandling2(mode);
+    renderTabInternet(mode);
+    renderTabAlternate(mode);
+    renderTabInternational(mode);
+    renderTabCategories(mode);
+    renderTabUdf(mode);
 
-            // Set modal title and footer buttons
-            title.textContent = mode === 'create' ? 'Create New Item' : (mode === 'edit' ? 'Edit Item' : 'View Item');
-            
-            setupTabSwitching('item-form-modal');
-            
-            let item = {};
-            if (mode !== 'create' && id) {
-                item = items.find(i => i.id === id);
-                if (item) {
-                    fillItemForm(item);
-                }
-            } else {
-                 applyStateFromForm();
+    // Set modal title and footer buttons
+    title.textContent = mode === 'create' ? 'Create New Item' : (mode === 'edit' ? 'Edit Item' : 'View Item');
+    
+    setupTabSwitching('item-form-modal');
+    
+    let item = {};
+    if (mode !== 'create' && id) {
+        item = items.find(i => i.id === id);
+        if (item) {
+            fillItemForm(item);
+        }
+    } else {
+         applyStateFromForm();
+    }
+    
+    // Add event listeners for dynamic states
+    document.getElementById('item-form').addEventListener('change', (e) => {
+        if (e.target.name === 'lotControlled' || e.target.name === 'serialControlled' || e.target.name === 'gs1GtinEnabled' || e.target.name === 'computeQtyAs') {
+            applyStateFromForm();
+        }
+        // Sinkronisasi Allocation/Locating
+        if (e.target.id === 'item-allocation-rule' || e.target.id === 'item-locating-rule') {
+             syncAllocationLocating(e.target.id, e.target.value);
+        }
+        const longDropdownInputs = ['item-allocation-rule-long', 'item-locating-rule-long', 'item-qc-locating-rule-long'];
+        if(longDropdownInputs.includes(e.target.id)) {
+            if (e.target.id === 'item-allocation-rule-long' || e.target.id === 'item-locating-rule-long') {
+               syncAllocationLocating(e.target.id, e.target.value);
             }
-            
-            // Add event listeners for dynamic states
-            document.getElementById('item-form').addEventListener('change', (e) => {
-                if (e.target.name === 'lotControlled' || e.target.name === 'serialControlled' || e.target.name === 'gs1GtinEnabled' || e.target.name === 'computeQtyAs') {
-                    applyStateFromForm();
-                }
-                // Sinkronisasi Allocation/Locating
-                if (e.target.id === 'item-allocation-rule' || e.target.id === 'item-locating-rule') {
-                     syncAllocationLocating(e.target.id, e.target.value);
-                }
-                const longDropdownInputs = ['item-allocation-rule-long', 'item-locating-rule-long', 'item-qc-locating-rule-long'];
-                if(longDropdownInputs.includes(e.target.id)) {
-                    if (e.target.id === 'item-allocation-rule-long' || e.target.id === 'item-locating-rule-long') {
-                       syncAllocationLocating(e.target.id, e.target.value);
-                    }
-                }
-            });
-            
-            const form = document.getElementById('item-form');
-            if(form) {
-                renderSubstituteTable(item?.substituteList || []);
-                document.getElementById('add-substitute')?.addEventListener('click', addSubstituteItem);
-                document.getElementById('delete-substitute')?.addEventListener('click', deleteSubstituteItem);
-                document.getElementById('up-substitute')?.addEventListener('click', moveSubstituteItemUp);
-                document.getElementById('down-substitute')?.addEventListener('click', moveSubstituteItemDown);
-                document.getElementById('select-all-subs')?.addEventListener('change', (e) => {
-                    document.querySelectorAll('#item-substitute-table .subst-select-row')
-                        .forEach(cb => cb.checked = e.target.checked);
-                });
-            }
+        }
+    });
+    
+    const form = document.getElementById('item-form');
+    if(form) {
+        renderSubstituteTable(item?.substituteList || []);
+        document.getElementById('add-substitute')?.addEventListener('click', addSubstituteItem);
+        document.getElementById('delete-substitute')?.addEventListener('click', deleteSubstituteItem);
+        document.getElementById('up-substitute')?.addEventListener('click', moveSubstituteItemUp);
+        document.getElementById('down-substitute')?.addEventListener('click', moveSubstituteItemDown);
+        document.getElementById('select-all-subs')?.addEventListener('change', (e) => {
+            document.querySelectorAll('#item-substitute-table .subst-select-row')
+                .forEach(cb => cb.checked = e.target.checked);
+        });
+        
+        form.addEventListener('submit', handleItemSubmit);
+    }
 
-            showModal('item-form-modal');
-            
-            // Initialize custom long dropdowns
-            makeLongDropdown('item-company', companies, item.company);
-            makeLongDropdown('item-allocation-rule-long', allocationRules, item.allocationRule);
-            makeLongDropdown('item-locating-rule-long', locatingRules, item.locatingRule);
-            makeLongDropdown('item-packing-class', packingClasses, item.packingClass);
-            makeLongDropdown('item-storage-template', storageTemplates, item.storageTemplate);
-            makeLongDropdown('item-immediate-locating-rule-long', locatingRules, item.immediateLocatingRule);
-            makeLongDropdown('item-qc-locating-rule-long', locatingRules, item.qcLocatingRule);
-            makeLongDropdown('item-lot-template', lotTemplates, item.lotTemplate);
-            makeLongDropdown('item-serial-template', serialTemplates, item.serialTemplate);
-            makeLongDropdown('item-country-origin', countryList.map(c => ({ value: c.code, label: c.name })), item.countryOfOrigin);
-        };
+    showModal('item-form-modal');
+    
+    // Initialize custom long dropdowns
+    makeLongDropdown('item-company', companies, item.company);
+    makeLongDropdown('item-allocation-rule-long', allocationRules, item.allocationRule);
+    makeLongDropdown('item-locating-rule-long', locatingRules, item.locatingRule);
+    makeLongDropdown('item-packing-class', packingClasses, item.packingClass);
+    makeLongDropdown('item-storage-template', storageTemplates, item.storageTemplate);
+    makeLongDropdown('item-immediate-locating-rule-long', locatingRules, item.immediateLocatingRule);
+    makeLongDropdown('item-qc-locating-rule-long', locatingRules, item.qcLocatingRule);
+    makeLongDropdown('item-lot-template', lotTemplates, item.lotTemplate);
+    makeLongDropdown('item-serial-template', serialTemplates, item.serialTemplate);
+    makeLongDropdown('item-country-origin', countryList.map(c => ({ value: c.code, label: c.name })), item.countryOfOrigin);
+};
         
         // Renderers per tab
         const renderTabGeneral = (mode) => {
@@ -1953,7 +2008,7 @@ window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') =>
 
     if (filteredData.length === 0) {
         tableHtml += `<tr><td colspan="7" class="py-10 text-center text-gray-400">
-            Tidak ada records IUoM. Klik "Create New IUoM" untuk menambahkan.
+            Tidak ada records IUoM. Klik "Create New item unit of measure" untuk menambahkan.
             </td></tr>`;
     } else {
         filteredData.forEach(iuom => {
@@ -2046,7 +2101,7 @@ window.showIUoMForm = (mode, id = null) => {
                         </div>
                         <div class="grid grid-cols-[auto,1fr] items-center gap-x-4">
                             <label for="iuom-uom-select" class="text-sm text-right">UoM:</label>
-                            <select id="iuom-uom-select" name="uom" class="select w-full"><option value="">-- Pilih --</option>${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${iuom.uom === u ? 'selected' : ''}>${u}</option>`).join('')}</select>
+                            <select id="iuom-uom-select" name="uom" class="select w-full"><option value="">-- Pilih --</option>${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${u === iuom.uom ? 'selected' : ''}>${u}</option>`).join('')}</select>
                         </div>
                         <div class="grid grid-cols-[auto,1fr] items-center gap-x-4">
                             <label for="iuom-description" class="text-sm text-right">Description:</label>
@@ -2087,13 +2142,11 @@ window.showIUoMForm = (mode, id = null) => {
     `;
     // --- AKHIR PERUBAHAN ---
     
-    footerEl.innerHTML = `
-        <div class="text-sm text-gray-500 mr-auto flex flex-col justify-center">
-            <span id="iuom-last-updated-display">Last updated: N/A</span>
-        </div>
-        <button type="button" class="btn" onclick="closeModal('iuom-form-modal')">Batal</button>
-        <button type="submit" form="iuom-form" id="iuom-submit-btn" class="btn btn-primary" disabled>Simpan</button>
-    `;
+    // Use the new standard footer function
+    footerEl.innerHTML = renderStandardModalFooter({
+        cancelOnclick: "closeModal('iuom-form-modal')",
+        submitFormId: "iuom-form"
+    });
 
     // Initialize custom dropdowns
     makeLongDropdown('iuom-item-code-select', getItemCodes(), iuom.itemCode);
@@ -2427,7 +2480,7 @@ window.deleteIUoM = async (id) => {
             titleEl.textContent = mode === 'create' ? 'Create New Item Cross Reference' : `Edit Item Cross Reference - Edit existing`;
             
             bodyEl.innerHTML = `
-                <form id="item-cross-reference-form" data-mode="${mode}" onsubmit="handleItemCrossReferenceSubmit(event)">
+                <form id="item-cross-reference-form" data-mode="${mode}">
                     <div role="tablist" id="icr-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
                         <button type="button" role="tab" data-tab="icr-general" class="tab-active">General</button>
                         <button type="button" role="tab" data-tab="icr-udf" class="tab">User defined data</button>
@@ -2474,10 +2527,11 @@ window.deleteIUoM = async (id) => {
                 </form>
             `;
 
-            footerEl.innerHTML = `
-                <button type="button" class="btn" onclick="closeModal('item-cross-reference-form-modal')">Cancel</button>
-                <button type="submit" form="item-cross-reference-form" class="btn btn-primary">OK</button>
-            `;
+            // Use the new standard footer function
+            footerEl.innerHTML = renderStandardModalFooter({
+                cancelOnclick: "closeModal('item-cross-reference-form-modal')",
+                submitFormId: "item-cross-reference-form"
+            });
 
             // Fill checkboxes and UDFs
             const form = document.getElementById('item-cross-reference-form');
@@ -2487,6 +2541,7 @@ window.deleteIUoM = async (id) => {
                      const udfEl = document.getElementById(`icr-udf${i}`);
                      if (udfEl) udfEl.value = icr.userDefined?.[`udf${i}`] || '';
                 }
+                form.addEventListener('submit', handleItemCrossReferenceSubmit);
             }
 
             setupTabSwitching('item-cross-reference-form-modal');
@@ -2565,19 +2620,169 @@ window.closeModal = (id) => {
     }, 300);
 };
 
+        // --- INVENTORY CONTROL VALUES FUNCTIONS ---
+        createModal('icv-form-modal');
+        
+        window.showInventoryControlValuesForm = (mode, id = null) => {
+            const modal = document.getElementById('icv-form-modal');
+            const titleEl = document.getElementById('icv-form-modal-title');
+            const bodyEl = document.getElementById('icv-form-modal-body');
+            const footerEl = document.getElementById('icv-form-modal-footer');
+            
+            const icv = inventoryControlValues.find(v => v.id === id) || {};
+
+            titleEl.textContent = mode === 'create' ? 'Create New Inventory Control Value' : `Edit Inventory Control Value`;
+
+            bodyEl.innerHTML = `
+                <form id="icv-form" data-mode="${mode}">
+                    <input type="hidden" name="id" value="${icv.id || ''}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="icv-key" class="block text-sm mb-1">Key:</label>
+                            <input type="text" id="icv-key" name="key" class="input" value="${icv.key || ''}">
+                        </div>
+                        <div>
+                            <label for="icv-value" class="block text-sm mb-1">Value:</label>
+                            <input type="text" id="icv-value" name="value" class="input" value="${icv.value || ''}">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="icv-description" class="block text-sm mb-1">Description:</label>
+                            <textarea id="icv-description" name="description" class="input" rows="2">${icv.description || ''}</textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                             <label class="flex items-center gap-2 text-sm">
+                                 <input type="checkbox" id="icv-system-created" name="systemCreated" disabled ${icv.systemCreated === 'Yes' ? 'checked' : ''}>
+                                 System Created
+                             </label>
+                        </div>
+                    </div>
+                </form>
+            `;
+            
+            footerEl.innerHTML = renderStandardModalFooter({
+                cancelOnclick: "closeModal('icv-form-modal')",
+                submitFormId: "icv-form"
+            });
+
+            const form = document.getElementById('icv-form');
+            if (form) {
+                form.addEventListener('submit', handleInventoryControlValuesSubmit);
+            }
+
+            showModal('icv-form-modal');
+        };
+
+        window.handleInventoryControlValuesSubmit = async (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.id.value;
+            
+            const newValue = {
+                id: id,
+                key: form.key.value,
+                value: form.value.value,
+                description: form.description.value,
+                systemCreated: form.systemCreated.checked ? "Yes" : "No"
+            };
+            
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = inventoryControlValues.reduce((max, val) => Math.max(max, val.id), 0);
+                newValue.id = maxId + 1;
+                inventoryControlValues.push(newValue);
+                msg = 'Inventory Control Value created successfully!';
+            } else {
+                const index = inventoryControlValues.findIndex(v => v.id == id);
+                if (index !== -1) {
+                    inventoryControlValues[index] = { ...inventoryControlValues[index], ...newValue };
+                    msg = 'Inventory Control Value updated successfully!';
+                }
+            }
+            saveInventoryControlValues();
+            closeModal('icv-form-modal');
+            window.renderInventoryControlValuesList();
+            await window.showCustomAlert('Success', msg);
+        };
+
+        window.deleteInventoryControlValues = async (id) => {
+            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah kamu yakin ingin menghapus nilai kontrol inventaris ini?');
+            if (confirmed) {
+                inventoryControlValues = inventoryControlValues.filter(v => v.id != id);
+                saveInventoryControlValues();
+                window.renderInventoryControlValuesList();
+                await window.showCustomAlert('Deleted', 'Nilai kontrol inventaris berhasil dihapus!');
+            }
+        };
+
+        window.renderInventoryControlValuesList = (filter = '') => {
+            const container = document.getElementById('icv-list-container');
+            if (!container) return;
+
+            let filteredData = inventoryControlValues.filter(icv => {
+                const searchable = `${icv.key} ${icv.value} ${icv.description} ${icv.systemValue}`.toLowerCase();
+                return searchable.includes(filter.toLowerCase());
+            });
+            
+            let tableHtml = `
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead class="sticky top-0 bg-white">
+                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">KEY</th>
+                            <th class="py-3 px-6 text-left">DESCRIPTION</th>
+                            <th class="py-3 px-6 text-left">SYSTEM VALUE</th>
+                            <th class="py-3 px-6 text-left">SYSTEM CREATED</th>
+                            <th class="py-3 px-6 text-center">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-wise-gray text-sm font-light">
+            `;
+
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center text-gray-400">Tidak ada nilai kontrol inventaris yang ditemukan.</td></tr>`;
+            } else {
+                filteredData.forEach(icv => { 
+                    tableHtml += `
+                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                            <td class="py-3 px-6 text-left whitespace-nowrap">${icv.id}</td>
+                            <td class="py-3 px-6 text-left">${icv.key}</td>
+                            <td class="py-3 px-6 text-left">${icv.systemValue}</td>
+                            <td class="py-3 px-6 text-left">${icv.systemCreated}</td>
+                            <td class="py-3 px-6 text-center">
+                                <div class="flex item-center justify-center">
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showInventoryControlValuesForm('edit', ${icv.id})" title="Edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    </button>
+                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteInventoryControlValues(${icv.id})" title="Hapus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
+        
+        const filterInventoryControlValuesDebounced = debounce(value => window.renderInventoryControlValuesList(value), 300);
+        window.filterInventoryControlValuesList = (value) => {
+             filterInventoryControlValuesDebounced(value);
+        };
+        
         // --- ROUTING & REGISTRATION ---
         window.contentData['item'] = {
             full: `
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item</h2>
                 <p class="text-wise-gray mb-4">Kelola semua item dalam inventaris.</p>
-
-                <div class="flex flex-wrap items-center gap-3 mb-4">
-                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md"
-                            onclick="showItemForm('create')">Buat Item</button>
-                    <input id="item-search" type="text" placeholder="Cari item..." oninput="filterItemList(this.value)"
-                           class="px-3 py-2 border rounded-md bg-white text-wise-dark-gray w-full sm:w-72" />
-                </div>
-
+                ${renderStandardListHeader({
+                    createLabel: "Create New Item",
+                    onCreate: "showItemForm('create')",
+                    searchId: "item-search",
+                    searchPlaceholder: "Search...",
+                    onSearch: "filterItemList"
+                })}
                 <!-- Container untuk tabel item. Scrollbar vertikal + batasi tinggi -->
                 <div id="item-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
@@ -2589,18 +2794,13 @@ window.closeModal = (id) => {
                 <p class="text-wise-gray mb-4">
                     Mengelola unit pengukuran dan faktor konversi untuk item atau kelas item.
                 </p>
-                <div class="flex flex-wrap items-center gap-3 mb-4">
-                    <button class="btn btn-primary" onclick="showIUoMForm('create')">
-                        Create New item unit of measure
-                    </button>
-                    <div class="grow"></div>
-                    <div class="relative">
-                        <input id="iuom-search" type="text" placeholder="Search..." oninput="filterIUoMList(this.value)"
-                               class="input w-full sm:w-72 pl-10" />
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    </div>
-                </div>
-
+                ${renderStandardListHeader({
+                    createLabel: "Create New Item Unit of Measure",
+                    onCreate: "showIUoMForm('create')",
+                    searchId: "iuom-search",
+                    searchPlaceholder: "Search...",
+                    onSearch: "filterIUoMList"
+                })}
                 <div id="iuom-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
@@ -2611,18 +2811,29 @@ window.closeModal = (id) => {
                 <p class="text-wise-gray mb-4">
                     Kelola referensi silang untuk item (misalnya, nomor bagian yang berbeda).
                 </p>
-                <div class="flex flex-wrap items-center gap-3 mb-4">
-                    <button class="btn btn-primary" onclick="showItemCrossReferenceForm('create')">
-                        Create New Item Cross Reference
-                    </button>
-                    <div class="grow"></div>
-                    <div class="relative">
-                        <input id="item-cross-reference-search" type="text" placeholder="Cari..." oninput="filterItemCrossReferenceList(this.value)"
-                               class="input w-full sm:w-72 pl-10" />
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    </div>
-                </div>
+                ${renderStandardListHeader({
+                    createLabel: "Create New Item Cross Reference",
+                    onCreate: "showItemCrossReferenceForm('create')",
+                    searchId: "item-cross-reference-search",
+                    searchPlaceholder: "Search...",
+                    onSearch: "filterItemCrossReferenceList"
+                })}
                 <div id="item-cross-reference-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
+            `
+        };
+
+        window.contentData['inventory-control-values'] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Control Values</h2>
+                <p class="text-wise-gray mb-4">Manage system-wide inventory control settings and defaults.</p>
+                ${renderStandardListHeader({
+                    createLabel: "Create New Value",
+                    onCreate: "showInventoryControlValuesForm('create')",
+                    searchId: "icv-search",
+                    searchPlaceholder: "Search inventory control values...",
+                    onSearch: "filterInventoryControlValuesList"
+                })}
+                <div id="icv-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
 
@@ -2636,6 +2847,9 @@ window.closeModal = (id) => {
         window.searchItems.push({ id: 'item-cross-reference', title: 'Item Cross Reference', category: 'Inventory Control', lastUpdated: 'Latest' });
         window.allMenus.push({ name: 'Item Cross Reference', category: 'Inventory Control' });
         window.parentMapping['item-cross-reference'] = 'inventory-control';
+        window.searchItems.push({ id: 'inventory-control-values', title: 'Inventory Control Values', category: 'Inventory Control', lastUpdated: 'Latest' });
+        window.allMenus.push({ name: 'Inventory Control Values', category: 'Inventory Control' });
+        window.parentMapping['inventory-control-values'] = 'inventory-control';
 
 
         if (window.contentData['inventory-control']) {
@@ -2722,12 +2936,21 @@ window.closeModal = (id) => {
             }
         };
 
+        const autoRenderICV = () => {
+            const container = document.getElementById('icv-list-container');
+            if (container && !container.dataset.bound) {
+                 window.renderInventoryControlValuesList();
+                 container.dataset.bound = '1';
+            }
+        };
+
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     autoRenderItem();
                     autoRenderIUoM();
                     autoRenderICR();
+                    autoRenderICV();
                 }
             });
         });
@@ -2740,6 +2963,8 @@ window.closeModal = (id) => {
                 window.renderIUoMList();
             } else if (e.detail.key === 'item-cross-reference') {
                 window.renderItemCrossReferenceList();
+            } else if (e.detail.key === 'inventory-control-values') {
+                window.renderInventoryControlValuesList();
             }
         });
         

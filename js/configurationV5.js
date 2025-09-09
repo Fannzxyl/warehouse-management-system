@@ -16,7 +16,60 @@
         if (typeof window.allMenus === 'undefined') window.allMenus = [];
 
         // =======================================================================
-        // BAGIAN 1: SERIAL NUMBER TEMPLATE (Kode yang sudah ada)
+        // UTILITY FUNCTIONS FOR STANDARD UI
+        // =======================================================================
+
+        /**
+         * Renders a standard list header with a "Create New" button and a search input.
+         * @param {string} createLabel - Label for the create button.
+         * @param {string} onCreate - The JS function call for the create button.
+         * @param {string} searchId - The ID for the search input.
+         * @param {string} searchPlaceholder - Placeholder text for the search input.
+         * @param {string} onSearch - The JS function call for the search input's oninput event.
+         * @returns {string} The HTML string for the header.
+         */
+        const renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+              <button class="btn btn-primary" onclick="${onCreate}">${createLabel}</button>
+              <div class="grow"></div>
+              <div class="relative">
+                <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+        `;
+        
+        /**
+         * Renders a standard modal footer with Cancel and OK buttons.
+         * @param {string} cancelOnclick - The JS function call for the cancel button.
+         * @param {string} submitFormId - The ID of the form to be submitted.
+         * @param {string} submitLabel - Label for the submit button (default: 'OK').
+         * @returns {string} The HTML string for the footer.
+         */
+        const renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
+            <div class="px-6 py-4 border-t flex justify-end gap-3">
+                <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
+                <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
+            </div>
+        `;
+
+        function activateTab(tabName, container) {
+            container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active'));
+            container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
+            const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
+            if (activeTab) {
+                activeTab.classList.add('tab-active');
+            }
+            const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
+            if (activePane) {
+                activePane.classList.remove('hidden');
+            }
+        }
+        
+        // =======================================================================
+        // BAGIAN 1: SERIAL NUMBER TEMPLATE
         // =======================================================================
         const SNT_STORAGE_KEY = 'serialNumberTemplates_v5';
         const snt_initialData = [
@@ -29,7 +82,7 @@
         let selectedSNT_PatternIndex = -1;
 
         // =======================================================================
-        // BAGIAN 2: ITEM LOCATION ASSIGNMENT (Kode yang sudah ada)
+        // BAGIAN 2: ITEM LOCATION ASSIGNMENT
         // =======================================================================
         const ILA_STORAGE_KEY = 'itemLocationAssignments_v5';
         const ila_initialData = [
@@ -40,7 +93,7 @@
         const ila_saveData = (data) => localStorage.setItem(ILA_STORAGE_KEY, JSON.stringify(data));
 
         // =======================================================================
-        // BAGIAN 3: ITEM LOCATION CAPACITY (Kode yang sudah ada)
+        // BAGIAN 3: ITEM LOCATION CAPACITY
         // =======================================================================
         const ILC_STORAGE_KEY = 'itemLocationCapacities_v5';
         const ilc_initialData = [
@@ -56,7 +109,7 @@
         let selectedDetailIndex = -1;
 
         // =======================================================================
-        // BAGIAN 4: ITEM TEMPLATE (Kode yang sudah ada)
+        // BAGIAN 4: ITEM TEMPLATE
         // =======================================================================
         const IT_STORAGE_KEY = 'itemTemplates_v5';
         const it_initialData = [
@@ -70,24 +123,24 @@
         const it_saveData = (data) => localStorage.setItem(IT_STORAGE_KEY, JSON.stringify(data));
         
         const LOC_STORAGE_KEY = 'locations_v5';
-const loc_initialData = [
-    { 
-        id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01', 
-        locatingZone: 'L-DCB.FD.DD.FA...', allocationZone: 'A-DCB.B8.FACE', workZone: 'W-DCB.DRY.FACE',
-        inactive: false,
-        general: { locationClass: 'Inventory Storage', locationSubclass: 'Inventory', locationType: 'DOUBLE.DEEP-FACE', movementClass: '', locationStatus: 'Empty', realTimeReplenishment: false, lastCycleCountDate: null, maxNumberOfLots: 0, allowInTransit: true, multiItem: true, trackLicensePlates: false },
-        work: { verificationMethod: 'Location', checkDigit: '02', generateCheckDigit: false, pickUpDropOff: '', incomingPandD: '', outgoingPandD: '', allowWorkUnitSelection: true, pickingSequence: 29.00, putawaySequence: 0.00, vectorCoordinate: '' },
-        quantityUmList: [
-            { id: 1, uom: 'Inner Pack', selected: false }, { id: 2, uom: 'Kilogram', selected: false }, { id: 3, uom: 'Pack', selected: false },
-            { id: 4, uom: 'Pallet', selected: false }, { id: 5, uom: 'Piece', selected: false }
-        ],
-        dock: { dockLocationType: 'Dock area', anchorCriteria: '', selectionPriority: 0, nextDockArea: '', parentDockArea: '', position: '', dockAreaSize: 'Number of rows', numberOfRows: 0 },
-        userDefined: { udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' }
-    }
-];
-const loc_loadData = () => JSON.parse(localStorage.getItem(LOC_STORAGE_KEY)) || loc_initialData;
-const loc_saveData = (data) => localStorage.setItem(LOC_STORAGE_KEY, JSON.stringify(data));
-let currentLocationQtyUmList = [];
+        const loc_initialData = [
+            { 
+                id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01', 
+                locatingZone: 'L-DCB.FD.DD.FA...', allocationZone: 'A-DCB.B8.FACE', workZone: 'W-DCB.DRY.FACE',
+                inactive: false,
+                general: { locationClass: 'Inventory Storage', locationSubclass: 'Inventory', locationType: 'DOUBLE.DEEP-FACE', movementClass: '', locationStatus: 'Empty', realTimeReplenishment: false, lastCycleCountDate: null, maxNumberOfLots: 0, allowInTransit: true, multiItem: true, trackLicensePlates: false },
+                work: { verificationMethod: 'Location', checkDigit: '02', generateCheckDigit: false, pickUpDropOff: '', incomingPandD: '', outgoingPandD: '', allowWorkUnitSelection: true, pickingSequence: 29.00, putawaySequence: 0.00, vectorCoordinate: '' },
+                quantityUmList: [
+                    { id: 1, uom: 'Inner Pack', selected: false }, { id: 2, uom: 'Kilogram', selected: false }, { id: 3, uom: 'Pack', selected: false },
+                    { id: 4, uom: 'Pallet', selected: false }, { id: 5, uom: 'Piece', selected: false }
+                ],
+                dock: { dockLocationType: 'Dock area', anchorCriteria: '', selectionPriority: 0, nextDockArea: '', parentDockArea: '', position: '', dockAreaSize: 'Number of rows', numberOfRows: 0 },
+                userDefined: { udf1: '', udf2: '', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '' }
+            }
+        ];
+        const loc_loadData = () => JSON.parse(localStorage.getItem(LOC_STORAGE_KEY)) || loc_initialData;
+        const loc_saveData = (data) => localStorage.setItem(LOC_STORAGE_KEY, JSON.stringify(data));
+        let currentLocationQtyUmList = [];
 
 
         // --- PENDAFTARAN SEMUA FITUR BARU KE SISTEM ---
@@ -96,10 +149,13 @@ let currentLocationQtyUmList = [];
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Serial Number Template</h2>
                     <p class="text-wise-gray mb-4">Manage templates for serial number generation.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="btn btn-primary" onclick="showSerialNumberTemplateForm('create')">Create New Template</button>
-                        <input type="text" id="snt-search" placeholder="Search template name..." class="input max-w-xs" oninput="filterSerialNumberTemplateList(this.value)">
-                    </div>
+                    ${renderStandardListHeader({
+                        createLabel: "Create New Template",
+                        onCreate: "showSerialNumberTemplateForm('create')",
+                        searchId: "snt-search",
+                        searchPlaceholder: "Search template name...",
+                        onSearch: "filterSerialNumberTemplateList"
+                    })}
                     <div id="snt-list-container" class="overflow-x-auto"></div>
                     <div id="snt-form-modal" class="hidden fixed inset-0 z-[60] flex items-start justify-center p-4 md:p-6 bg-black/40 overflow-y-auto">
                         <div class="modal-content w-[min(1000px,95vw)] bg-white rounded-xl shadow-2xl flex flex-col max-h-[95vh] transition-all duration-300 opacity-0 scale-95">
@@ -194,10 +250,13 @@ let currentLocationQtyUmList = [];
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Location Assignment</h2>
                     <p class="text-wise-gray mb-4">Manage item assignments to specific warehouse locations.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="btn btn-primary" onclick="showItemLocationAssignmentForm('create')">Create New Assignment</button>
-                        <input type="text" id="ila-search" placeholder="Search assignment..." class="input max-w-xs" oninput="filterItemLocationAssignmentList(this.value)">
-                    </div>
+                    ${renderStandardListHeader({
+                        createLabel: "Create New Assignment",
+                        onCreate: "showItemLocationAssignmentForm('create')",
+                        searchId: "ila-search",
+                        searchPlaceholder: "Search assignment...",
+                        onSearch: "filterItemLocationAssignmentList"
+                    })}
                     <div id="item-location-assignment-list-container" class="overflow-x-auto"></div>
                     <div id="ila-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
@@ -221,7 +280,10 @@ let currentLocationQtyUmList = [];
                                     <button type="button" class="btn btn-primary w-full" onclick="applyLookupLocation()">Apply to Permanent Location</button>
                                 </div></div>
                             </form></div>
-                            <div class="px-6 py-4 border-t flex justify-end gap-3"><button type="button" class="btn" onclick="closeItemLocationAssignmentForm()">Cancel</button><button id="ila-submit-button" type="submit" form="ila-form" class="btn btn-primary">OK</button></div>
+                            ${renderStandardModalFooter({
+                                cancelOnclick: "closeItemLocationAssignmentForm()",
+                                submitFormId: "ila-form"
+                            })}
                         </div>
                     </div>
                 `
@@ -230,10 +292,13 @@ let currentLocationQtyUmList = [];
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Location Capacity</h2>
                     <p class="text-wise-gray mb-4">Manage item capacity settings for specific locations or location types.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="btn btn-primary" onclick="showItemLocationCapacityForm('create')">Create New</button>
-                        <input type="text" id="ilc-search" placeholder="Search by item or company..." class="input max-w-xs" oninput="filterItemLocationCapacityList(this.value)">
-                    </div>
+                    ${renderStandardListHeader({
+                        createLabel: "Create New",
+                        onCreate: "showItemLocationCapacityForm('create')",
+                        searchId: "ilc-search",
+                        searchPlaceholder: "Search by item or company...",
+                        onSearch: "filterItemLocationCapacityList"
+                    })}
                     <div id="ilc-list-container" class="overflow-x-auto"></div>
                     <div id="ilc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
@@ -260,7 +325,10 @@ let currentLocationQtyUmList = [];
                                 </div>
                                 <div id="pane-user-defined" role="tabpanel" data-pane="user-defined" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${Array.from({ length: 8 }, (_, i) => `<div><label for="ilc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="ilc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}</div></div>
                             </form></div>
-                            <div class="px-6 py-4 border-t flex justify-end gap-3"><button type="button" class="btn" onclick="closeItemLocationCapacityForm()">Cancel</button><button type="submit" form="ilc-form" class="btn btn-primary">OK</button></div>
+                            ${renderStandardModalFooter({
+                                cancelOnclick: "closeItemLocationCapacityForm()",
+                                submitFormId: "ilc-form"
+                            })}
                         </div>
                     </div>
                     <div id="ilc-location-lookup-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/40">
@@ -280,10 +348,13 @@ let currentLocationQtyUmList = [];
                 full: `
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Template</h2>
                     <p class="text-wise-gray mb-4">Manage templates for creating new items.</p>
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="btn btn-primary" onclick="showItemTemplateForm('create')">Create New Template</button>
-                        <input type="text" id="it-search" placeholder="Search by template name..." class="input max-w-xs" oninput="filterItemTemplateList(this.value)">
-                    </div>
+                    ${renderStandardListHeader({
+                        createLabel: "Create New Template",
+                        onCreate: "showItemTemplateForm('create')",
+                        searchId: "it-search",
+                        searchPlaceholder: "Search by template name...",
+                        onSearch: "filterItemTemplateList"
+                    })}
                     <div id="it-list-container" class="overflow-x-auto"></div>
                     <div id="it-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
@@ -304,147 +375,156 @@ let currentLocationQtyUmList = [];
                                 </div>
                                 <div id="pane-user-defined" role="tabpanel" data-pane="user-defined" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${Array.from({ length: 8 }, (_, i) => `<div><label for="it-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="it-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}</div></div>
                             </form></div>
-                            <div class="px-6 py-4 border-t flex justify-end gap-3"><button type="button" class="btn" onclick="closeItemTemplateForm()">Cancel</button><button type="submit" form="it-form" class="btn btn-primary">OK</button></div>
+                            ${renderStandardModalFooter({
+                                cancelOnclick: "closeItemTemplateForm()",
+                                submitFormId: "it-form"
+                            })}
                         </div>
                     </div>
                 `
             },
             'location': {
-    full: `
-        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
-        <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
-        <div class="flex justify-between items-center mb-4">
-            <button class="btn btn-primary" onclick="showLocationForm('create')">Create New Location</button>
-            <input type="text" id="loc-search" placeholder="Search by warehouse or location..." class="input max-w-xs" oninput="filterLocationList(this.value)">
-        </div>
-        
-        <!-- Tabel untuk desktop -->
-        <div id="loc-table-desktop" class="hidden md:block border border-wise-border rounded-lg shadow-md overflow-hidden min-h-0">
-            <div id="loc-list-container-desktop" class="h-[70vh] overflow-auto"></div>
-        </div>
+                full: `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
+                    <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
+                    ${renderStandardListHeader({
+                        createLabel: "Create New Location",
+                        onCreate: "showLocationForm('create')",
+                        searchId: "loc-search",
+                        searchPlaceholder: "Search by warehouse or location...",
+                        onSearch: "filterLocationList"
+                    })}
+                    
+                    <!-- Tabel untuk desktop -->
+                    <div id="loc-table-desktop" class="hidden md:block border border-wise-border rounded-lg shadow-md overflow-hidden min-h-0">
+                        <div id="loc-list-container-desktop" class="h-[70vh] overflow-auto"></div>
+                    </div>
 
-        <!-- Card view untuk mobile -->
-        <div id="loc-list-container-mobile" class="md:hidden space-y-4"></div>
+                    <!-- Card view untuk mobile -->
+                    <div id="loc-list-container-mobile" class="md:hidden space-y-4"></div>
 
-        <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-            <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh]">
-                <div class="px-6 pt-5 pb-3 border-b flex justify-between items-center">
-                    <h3 id="loc-form-title" class="text-lg font-semibold"></h3>
-                    <button class="text-gray-500 hover:text-gray-800" onclick="closeLocationForm()">✕</button>
-                </div>
-                <div class="p-6 overflow-y-auto">
-                    <form id="loc-form" onsubmit="handleLocationSubmit(event)">
-                        
-                        <div class="space-y-4 mb-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="loc-template" class="block text-sm mb-1">Location template:</label>
-                                    <input type="text" id="loc-template" name="locationTemplate" class="input">
-                                </div>
-                                <div>
-                                    <label for="loc-warehouse" class="block text-sm mb-1">Warehouse:</label>
-                                    <input type="text" id="loc-warehouse" name="warehouse" required class="input">
-                                </div>
+                    <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
+                        <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[95vh]">
+                            <div class="px-6 pt-5 pb-3 border-b flex justify-between items-center">
+                                <h3 id="loc-form-title" class="text-lg font-semibold"></h3>
+                                <button class="text-gray-500 hover:text-gray-800" onclick="closeLocationForm()">✕</button>
                             </div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <div>
-                                    <label for="loc-aisle" class="block text-sm mb-1">AISLE</label>
-                                    <input type="number" id="loc-aisle" name="aisle" class="input">
-                                </div>
-                                <div>
-                                    <label for="loc-bay" class="block text-sm mb-1">BAY</label>
-                                    <input type="number" id="loc-bay" name="bay" class="input">
-                                </div>
-                                <div>
-                                    <label for="loc-level" class="block text-sm mb-1">LEVEL</label>
-                                    <input type="number" id="loc-level" name="level" class="input">
-                                </div>
-                                <div>
-                                    <label for="loc-slot" class="block text-sm mb-1">SLOT</label>
-                                    <input type="number" id="loc-slot" name="slot" class="input">
-                                </div>
+                            <div class="p-6 overflow-y-auto">
+                                <form id="loc-form" onsubmit="handleLocationSubmit(event)">
+                                    
+                                    <div class="space-y-4 mb-6">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="loc-template" class="block text-sm mb-1">Location template:</label>
+                                                <input type="text" id="loc-template" name="locationTemplate" class="input">
+                                            </div>
+                                            <div>
+                                                <label for="loc-warehouse" class="block text-sm mb-1">Warehouse:</label>
+                                                <input type="text" id="loc-warehouse" name="warehouse" required class="input">
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            <div>
+                                                <label for="loc-aisle" class="block text-sm mb-1">AISLE</label>
+                                                <input type="number" id="loc-aisle" name="aisle" class="input">
+                                            </div>
+                                            <div>
+                                                <label for="loc-bay" class="block text-sm mb-1">BAY</label>
+                                                <input type="number" id="loc-bay" name="bay" class="input">
+                                            </div>
+                                            <div>
+                                                <label for="loc-level" class="block text-sm mb-1">LEVEL</label>
+                                                <input type="number" id="loc-level" name="level" class="input">
+                                            </div>
+                                            <div>
+                                                <label for="loc-slot" class="block text-sm mb-1">SLOT</label>
+                                                <input type="number" id="loc-slot" name="slot" class="input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tablist" class="border-b mb-4 flex flex-wrap gap-x-4 text-sm font-medium">
+                                        <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
+                                        <button type="button" role="tab" data-tab="zones" class="tab">Zones</button>
+                                        <button type="button" role="tab" data-tab="work" class="tab">Work</button>
+                                        <button type="button" role="tab" data-tab="qty-um" class="tab">Quantity um list</button>
+                                        <button type="button" role="tab" data-tab="dock" class="tab">Dock</button>
+                                        <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
+                                    </div>
+                                    <div id="pane-general" role="tabpanel" data-pane="general">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Storage</legend><div class="space-y-3">
+                                                <div><label for="loc-class" class="block text-sm mb-1">Location class:</label><input type="text" id="loc-class" name="locationClass" class="input"></div>
+                                                <div><label for="loc-subclass" class="block text-sm mb-1">Location subclass:</label><input type="text" id="loc-subclass" name="locationSubclass" class="input"></div>
+                                                <div><label for="loc-type" class="block text-sm mb-1">Location type:</label><input type="text" id="loc-type" name="locationType" class="input"></div>
+                                                <div><label for="loc-movement-class" class="block text-sm mb-1">Movement class:</label><input type="text" id="loc-movement-class" name="movementClass" class="input"></div>
+                                                <div><label for="loc-status" class="block text-sm mb-1">Location status:</label><input type="text" id="loc-status" name="locationStatus" class="input"></div>
+                                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-realtime" name="realTimeReplenishment"> Real time replenishment</label>
+                                                <div><label for="loc-cycle-date" class="block text-sm mb-1">Last cycle count date:</label><input type="text" id="loc-cycle-date" class="input" placeholder="No counts executed" readonly></div>
+                                            </div></fieldset>
+                                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Inventory</legend><div class="space-y-3">
+                                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-in-transit" name="allowInTransit"> Allocate in transit</label>
+                                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-multi-item" name="multiItem"> Multi item</label>
+                                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-track-lp" name="trackLicensePlates"> Track license plates</label>
+                                                <div><label for="loc-max-lots" class="block text-sm mb-1">Max number of lots:</label><input type="number" id="loc-max-lots" name="maxNumberOfLots" class="input"></div>
+                                            </div></fieldset>
+                                        </div>
+                                    </div>
+                                    <div id="pane-zones" role="tabpanel" data-pane="zones" class="hidden"><div class="space-y-3 max-w-md">
+                                        <div><label for="loc-locating-zone" class="block text-sm mb-1">Locating zone:</label><input type="text" id="loc-locating-zone" name="locatingZone" class="input"></div>
+                                        <div><label for="loc-allocation-zone" class="block text-sm mb-1">Allocation zone:</label><input type="text" id="loc-allocation-zone" name="allocationZone" class="input"></div>
+                                        <div><label for="loc-work-zone" class="block text-sm mb-1">Work zone:</label><input type="text" id="loc-work-zone" name="workZone" class="input"></div>
+                                    </div></div>
+                                    
+                                    <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Verification</legend><div class="space-y-3">
+                                            <div><span class="block text-sm font-medium mb-2">Verification method:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Location"> Location</label><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Item"> Item</label></div></div>
+                                            <div><label for="loc-check-digit" class="block text-sm mb-1">Check digit:</label><input type="text" id="loc-check-digit" name="checkDigit" class="input"></div>
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="loc-generate-check-digit" name="generateCheckDigit"> Generate check digit</label>
+                                        </div></fieldset>
+                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Sequence and Coordinates</legend><div class="space-y-3">
+                                            <div><label for="loc-picking-seq" class="block text-sm mb-1">Picking sequence:</label><input type="number" id="loc-picking-seq" name="pickingSequence" class="input"></div>
+                                            <div><label for="loc-putaway-seq" class="block text-sm mb-1">Putaway sequence:</label><input type="number" id="loc-putaway-seq" name="putawaySequence" class="input"></div>
+                                            <div><label for="loc-vector-coord" class="block text-sm mb-1">Vector coordinate:</label><input type="text" id="loc-vector-coord" name="vectorCoordinate" class="input"></div>
+                                        </div></fieldset>
+                                        <fieldset class="border p-4 rounded-md md:col-span-2"><legend class="px-2 text-sm font-medium">Pick and Drop</legend><div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div><label for="loc-pickup-dropoff" class="block text-sm mb-1">Pick up / Drop off:</label><input type="text" id="loc-pickup-dropoff" name="pickUpDropOff" class="input"></div>
+                                            <div><label for="loc-incoming-pd" class="block text-sm mb-1">Incoming P and D:</label><input type="text" id="loc-incoming-pd" name="incomingPandD" class="input"></div>
+                                            <div><label for="loc-outgoing-pd" class="block text-sm mb-1">Outgoing P and D:</label><input type="text" id="loc-outgoing-pd" name="outgoingPandD" class="input"></div>
+                                            <div class="md:col-span-3 pt-2"><label class="flex items-center gap-2"><input type="checkbox" id="loc-allow-work-unit" name="allowWorkUnitSelection"> Allow work unit selection</label></div>
+                                        </div></fieldset>
+                                    </div></div>
+                                    <div id="pane-qty-um" role="tabpanel" data-pane="qty-um" class="hidden"><div id="loc-qty-um-list-table" class="space-y-2 max-w-sm"></div></div>
+                                    <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Attributes</legend><div class="space-y-3">
+                                            <div><span class="block text-sm font-medium mb-2">Dock location type:</span><div class="flex gap-4 flex-wrap"><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Dock area"> Dock area</label><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Staging lane"> Staging lane</label></div></div>
+                                            <div><label for="loc-anchor-criteria" class="block text-sm mb-1">Anchor criteria:</label><input type="text" id="loc-anchor-criteria" name="anchorCriteria" class="input"></div>
+                                            <div><label for="loc-selection-priority" class="block text-sm mb-1">Selection priority:</label><input type="number" id="loc-selection-priority" name="selectionPriority" class="input"></div>
+                                            <div><label for="loc-position" class="block text-sm mb-1">Position:</label><input type="text" id="loc-position" name="position" class="input"></div>
+                                        </div></fieldset>
+                                        <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Hierarchy & Size</legend><div class="space-y-3">
+                                            <div><label for="loc-next-dock" class="block text-sm mb-1">Next dock area:</label><input type="text" id="loc-next-dock" name="nextDockArea" class="input"></div>
+                                            <div><label for="loc-parent-dock" class="block text-sm mb-1">Parent dock area:</label><input type="text" id="loc-parent-dock" name="parentDockArea" class="input"></div>
+                                            <div class="pt-2"><span class="block text-sm font-medium mb-2">Dock area size:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="dockAreaSize" value="Number of rows"> Number of rows</label></div></div>
+                                            <div><label for="loc-num-rows" class="block text-sm mb-1">Number of rows:</label><input type="number" id="loc-num-rows" name="numberOfRows" class="input"></div>
+                                        </div></fieldset>
+                                    </div></div>
+                                    <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
+                                    </div></div>
+                                    <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
+                                </form>
+                            </div>
+                            <div class="px-6 py-4 border-t flex justify-end items-center">
+                                ${renderStandardModalFooter({
+                                    cancelOnclick: "closeLocationForm()",
+                                    submitFormId: "loc-form"
+                                })}
                             </div>
                         </div>
-                        <div role="tablist" class="border-b mb-4 flex flex-wrap gap-x-4 text-sm font-medium">
-                            <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
-                            <button type="button" role="tab" data-tab="zones" class="tab">Zones</button>
-                            <button type="button" role="tab" data-tab="work" class="tab">Work</button>
-                            <button type="button" role="tab" data-tab="qty-um" class="tab">Quantity um list</button>
-                            <button type="button" role="tab" data-tab="dock" class="tab">Dock</button>
-                            <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
-                        </div>
-                        <div id="pane-general" role="tabpanel" data-pane="general">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                                <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Storage</legend><div class="space-y-3">
-                                    <div><label for="loc-class" class="block text-sm mb-1">Location class:</label><input type="text" id="loc-class" name="locationClass" class="input"></div>
-                                    <div><label for="loc-subclass" class="block text-sm mb-1">Location subclass:</label><input type="text" id="loc-subclass" name="locationSubclass" class="input"></div>
-                                    <div><label for="loc-type" class="block text-sm mb-1">Location type:</label><input type="text" id="loc-type" name="locationType" class="input"></div>
-                                    <div><label for="loc-movement-class" class="block text-sm mb-1">Movement class:</label><input type="text" id="loc-movement-class" name="movementClass" class="input"></div>
-                                    <div><label for="loc-status" class="block text-sm mb-1">Location status:</label><input type="text" id="loc-status" name="locationStatus" class="input"></div>
-                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-realtime" name="realTimeReplenishment"> Real time replenishment</label>
-                                    <div><label for="loc-cycle-date" class="block text-sm mb-1">Last cycle count date:</label><input type="text" id="loc-cycle-date" class="input" placeholder="No counts executed" readonly></div>
-                                </div></fieldset>
-                                <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Inventory</legend><div class="space-y-3">
-                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-in-transit" name="allowInTransit"> Allocate in transit</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-multi-item" name="multiItem"> Multi item</label>
-                                    <label class="flex items-center gap-2"><input type="checkbox" id="loc-track-lp" name="trackLicensePlates"> Track license plates</label>
-                                    <div><label for="loc-max-lots" class="block text-sm mb-1">Max number of lots:</label><input type="number" id="loc-max-lots" name="maxNumberOfLots" class="input"></div>
-                                </div></fieldset>
-                            </div>
-                        </div>
-                        <div id="pane-zones" role="tabpanel" data-pane="zones" class="hidden"><div class="space-y-3 max-w-md">
-                            <div><label for="loc-locating-zone" class="block text-sm mb-1">Locating zone:</label><input type="text" id="loc-locating-zone" name="locatingZone" class="input"></div>
-                            <div><label for="loc-allocation-zone" class="block text-sm mb-1">Allocation zone:</label><input type="text" id="loc-allocation-zone" name="allocationZone" class="input"></div>
-                            <div><label for="loc-work-zone" class="block text-sm mb-1">Work zone:</label><input type="text" id="loc-work-zone" name="workZone" class="input"></div>
-                        </div></div>
-                        
-                        <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Verification</legend><div class="space-y-3">
-                                <div><span class="block text-sm font-medium mb-2">Verification method:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Location"> Location</label><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Item"> Item</label></div></div>
-                                <div><label for="loc-check-digit" class="block text-sm mb-1">Check digit:</label><input type="text" id="loc-check-digit" name="checkDigit" class="input"></div>
-                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-generate-check-digit" name="generateCheckDigit"> Generate check digit</label>
-                            </div></fieldset>
-                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Sequence and Coordinates</legend><div class="space-y-3">
-                                <div><label for="loc-picking-seq" class="block text-sm mb-1">Picking sequence:</label><input type="number" id="loc-picking-seq" name="pickingSequence" class="input"></div>
-                                <div><label for="loc-putaway-seq" class="block text-sm mb-1">Putaway sequence:</label><input type="number" id="loc-putaway-seq" name="putawaySequence" class="input"></div>
-                                <div><label for="loc-vector-coord" class="block text-sm mb-1">Vector coordinate:</label><input type="text" id="loc-vector-coord" name="vectorCoordinate" class="input"></div>
-                            </div></fieldset>
-                            <fieldset class="border p-4 rounded-md md:col-span-2"><legend class="px-2 text-sm font-medium">Pick and Drop</legend><div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div><label for="loc-pickup-dropoff" class="block text-sm mb-1">Pick up / Drop off:</label><input type="text" id="loc-pickup-dropoff" name="pickUpDropOff" class="input"></div>
-                                <div><label for="loc-incoming-pd" class="block text-sm mb-1">Incoming P and D:</label><input type="text" id="loc-incoming-pd" name="incomingPandD" class="input"></div>
-                                <div><label for="loc-outgoing-pd" class="block text-sm mb-1">Outgoing P and D:</label><input type="text" id="loc-outgoing-pd" name="outgoingPandD" class="input"></div>
-                                <div class="md:col-span-3 pt-2"><label class="flex items-center gap-2"><input type="checkbox" id="loc-allow-work-unit" name="allowWorkUnitSelection"> Allow work unit selection</label></div>
-                            </div></fieldset>
-                        </div></div>
-                        <div id="pane-qty-um" role="tabpanel" data-pane="qty-um" class="hidden"><div id="loc-qty-um-list-table" class="space-y-2 max-w-sm"></div></div>
-                        <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Attributes</legend><div class="space-y-3">
-                                <div><span class="block text-sm font-medium mb-2">Dock location type:</span><div class="flex gap-4 flex-wrap"><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Dock area"> Dock area</label><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Staging lane"> Staging lane</label></div></div>
-                                <div><label for="loc-anchor-criteria" class="block text-sm mb-1">Anchor criteria:</label><input type="text" id="loc-anchor-criteria" name="anchorCriteria" class="input"></div>
-                                <div><label for="loc-selection-priority" class="block text-sm mb-1">Selection priority:</label><input type="number" id="loc-selection-priority" name="selectionPriority" class="input"></div>
-                                <div><label for="loc-position" class="block text-sm mb-1">Position:</label><input type="text" id="loc-position" name="position" class="input"></div>
-                            </div></fieldset>
-                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Hierarchy & Size</legend><div class="space-y-3">
-                                <div><label for="loc-next-dock" class="block text-sm mb-1">Next dock area:</label><input type="text" id="loc-next-dock" name="nextDockArea" class="input"></div>
-                                <div><label for="loc-parent-dock" class="block text-sm mb-1">Parent dock area:</label><input type="text" id="loc-parent-dock" name="parentDockArea" class="input"></div>
-                                <div class="pt-2"><span class="block text-sm font-medium mb-2">Dock area size:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="dockAreaSize" value="Number of rows"> Number of rows</label></div></div>
-                                <div><label for="loc-num-rows" class="block text-sm mb-1">Number of rows:</label><input type="number" id="loc-num-rows" name="numberOfRows" class="input"></div>
-                            </div></fieldset>
-                        </div></div>
-                        <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
-                        </div></div>
-                        <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
-                    </form>
-                </div>
-                <div class="px-6 py-4 border-t flex justify-end items-center">
-                    <div class="flex gap-3"><button type="button" class="btn" onclick="closeLocationForm()">Cancel</button><button type="submit" form="loc-form" class="btn btn-primary">OK</button></div>
-                </div>
-            </div>
-        </div>
-    `
-},
-});  
+                    </div>
+                `
+            },
+        });  
         // =======================================================================
         // FUNGSI-FUNGSI: SEMUA FITUR
         // =======================================================================
@@ -463,7 +543,7 @@ let currentLocationQtyUmList = [];
         }
 
         // =======================================================================
-        // FUNGSI-FUNGSI: SERIAL NUMBER TEMPLATE (Kode yang sudah ada)
+        // FUNGSI-FUNGSI: SERIAL NUMBER TEMPLATE
         // =======================================================================
         window.renderSerialNumberTemplateList = function(filter = '') {
             const container = document.getElementById('snt-list-container'); if (!container) return;
@@ -548,7 +628,7 @@ let currentLocationQtyUmList = [];
                 title.textContent = 'Create New Serial Number Template';
             } else {
                 title.textContent = 'Edit Serial Number Template';
-                const template = snt_loadData().find(lt => lt.id === id);
+                const template = snt_loadData().find(t => t.id === id);
                 if (template) {
                     form.name.value = template.name;
                     form.description.value = template.description;
@@ -586,28 +666,52 @@ let currentLocationQtyUmList = [];
         };
         window.handleSerialNumberTemplateSubmit = async function(event) {
             event.preventDefault();
-            const form = event.target; const mode = form.dataset.mode; const id = form.dataset.id;
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
             const newTemplate = { name: form.name.value, description: form.description.value, allowDuplicates: form.allowDuplicates.checked, allowRangeEntry: form.allowRangeEntry.checked, inactive: form.inactive.checked, patternFields: currentSNT_PatternFields, userDefined: {} };
             let data = snt_loadData(); let msg = '';
-            if (mode === 'create') { newTemplate.id = 'SNT' + Date.now(); data.push(newTemplate); msg = 'Template created!'; }
-            else { const index = data.findIndex(t => t.id === id); if (index !== -1) data[index] = { ...data[index], ...newTemplate }; msg = 'Template updated!'; }
-            snt_saveData(data); closeSerialNumberTemplateForm(); renderSerialNumberTemplateList(); await window.showCustomAlert('Success', msg);
+            if (mode === 'create') {
+                newTemplate.id = 'SNT' + Date.now();
+                data.push(newTemplate);
+                msg = 'Template created!';
+            }
+            else {
+                const index = data.findIndex(t => t.id === id);
+                if (index !== -1) data[index] = { ...data[index], ...newTemplate };
+                msg = 'Template updated!';
+            }
+            snt_saveData(data);
+            closeSerialNumberTemplateForm();
+            renderSerialNumberTemplateList();
+            await window.showCustomAlert('Success', msg);
         };
         window.deleteSerialNumberTemplate = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this template?');
-            if (confirmed) { let data = snt_loadData(); data = data.filter(t => t.id !== id); snt_saveData(data); renderSerialNumberTemplateList(); await window.showCustomAlert('Deleted', 'Template deleted!'); }
+            if (confirmed) {
+                let data = snt_loadData();
+                data = data.filter(t => t.id !== id);
+                snt_saveData(data);
+                renderSerialNumberTemplateList();
+                await window.showCustomAlert('Deleted', 'Template deleted!');
+            }
         };
 
         // =======================================================================
-        // FUNGSI-FUNGSI: ITEM LOCATION ASSIGNMENT (Kode yang sudah ada)
+        // FUNGSI-FUNGSI: ITEM LOCATION ASSIGNMENT
         // =======================================================================
         window.renderItemLocationAssignmentList = function(filter = '') {
-            const container = document.getElementById('item-location-assignment-list-container'); if (!container) return;
+            const container = document.getElementById('item-location-assignment-list-container');
+            if (!container) return;
             let assignments = ila_loadData();
             const filteredData = assignments.filter(ila => (ila.item || '').toLowerCase().includes(filter.toLowerCase()) || (ila.permanentLocation || '').toLowerCase().includes(filter.toLowerCase()));
             let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md"><thead><tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal"><th class="py-3 px-6 text-left">Item</th><th class="py-3 px-6 text-left">Company</th><th class="py-3 px-6 text-left">Warehouse</th><th class="py-3 px-6 text-left">Permanent Location</th><th class="py-3 px-6 text-center">Actions</th></tr></thead><tbody class="text-wise-gray text-sm font-light">`;
-            if (filteredData.length === 0) { tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No assignments found.</td></tr>`; }
-            else { filteredData.forEach(ila => { tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${ila.item}</td><td class="py-3 px-6 text-left">${ila.company}</td><td class="py-3 px-6 text-left">${ila.warehouse}</td><td class="py-3 px-6 text-left">${ila.permanentLocation}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationAssignmentForm('edit', '${ila.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationAssignment('${ila.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No assignments found.</td></tr>`;
+            }
+            else {
+                filteredData.forEach(ila => {
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${ila.item}</td><td class="py-3 px-6 text-left">${ila.company}</td><td class="py-3 px-6 text-left">${ila.warehouse}</td><td class="py-3 px-6 text-left">${ila.permanentLocation}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationAssignmentForm('edit', '${ila.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationAssignment('${ila.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
@@ -619,8 +723,12 @@ let currentLocationQtyUmList = [];
             else { window.showCustomAlert('Warning', 'Please enter a location.'); }
         };
         window.showItemLocationAssignmentForm = function(mode, id = null) {
-            const modal = document.getElementById('ila-form-modal'); const form = document.getElementById('ila-form'); const title = document.getElementById('ila-form-title');
-            form.reset(); form.dataset.mode = mode; form.dataset.id = id;
+            const modal = document.getElementById('ila-form-modal');
+            const form = document.getElementById('ila-form');
+            const title = document.getElementById('ila-form-title');
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
             if (!modal._listenersAttached) {
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => activateTab(button.dataset.tab, modal) });
                 modal._listenersAttached = true;
@@ -628,103 +736,232 @@ let currentLocationQtyUmList = [];
             activateTab('general', modal);
             // FIX: Perbaikan typo "Lockup" menjadi "Lookup"
             modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location'; 
-            if (mode === 'create') { title.textContent = 'Create New Item Location Assignment'; }
+            if (mode === 'create') {
+                title.textContent = 'Create New Item Location Assignment';
+            }
             else {
                 title.textContent = 'Edit Item Location Assignment';
-                let assignments = ila_loadData(); const data = assignments.find(ila => ila.id === id);
-                if (data) { form.item.value = data.item; form.company.value = data.company; form.quantityUom.value = data.quantityUom; form.warehouse.value = data.warehouse; form.permanentLocation.value = data.permanentLocation; for (let i = 1; i <= 8; i++) { form[`udf${i}`].value = data.userDefined[`udf${i}`] || ''; } }
+                let assignments = ila_loadData();
+                const data = assignments.find(ila => ila.id === id);
+                if (data) {
+                    form.item.value = data.item;
+                    form.company.value = data.company;
+                    form.quantityUom.value = data.quantityUom;
+                    form.warehouse.value = data.warehouse;
+                    form.permanentLocation.value = data.permanentLocation;
+                    for (let i = 1; i <= 8; i++) {
+                        form[`udf${i}`].value = data.userDefined[`udf${i}`] || '';
+                    }
+                }
             }
             modal.classList.remove('hidden');
         };
         window.handleItemLocationAssignmentSubmit = async function(event) {
-            event.preventDefault(); const form = event.target; const mode = form.dataset.mode; const id = form.dataset.id; let assignments = ila_loadData(); const userDefinedData = {};
-            for (let i = 1; i <= 8; i++) { userDefinedData[`udf${i}`] = form[`udf${i}`].value; }
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            let assignments = ila_loadData();
+            const userDefinedData = {};
+            for (let i = 1; i <= 8; i++) {
+                userDefinedData[`udf${i}`] = form[`udf${i}`].value;
+            }
             const formData = { item: form.item.value, company: form.company.value, quantityUom: form.quantityUom.value, warehouse: form.warehouse.value, permanentLocation: form.permanentLocation.value, inactive: false, userDefined: userDefinedData };
             let msg = '';
-            if (mode === 'create') { formData.id = 'ILA' + Date.now(); assignments.push(formData); msg = 'Assignment created!'; }
-            else { const index = assignments.findIndex(ila => ila.id === id); if (index !== -1) { assignments[index] = { ...assignments[index], ...formData }; msg = 'Assignment updated!'; } else { msg = 'Error: Assignment not found.'; } }
-            ila_saveData(assignments); closeItemLocationAssignmentForm(); renderItemLocationAssignmentList(); await window.showCustomAlert('Success', msg);
+            if (mode === 'create') {
+                formData.id = 'ILA' + Date.now();
+                assignments.push(formData);
+                msg = 'Assignment created!';
+            }
+            else {
+                const index = assignments.findIndex(ila => ila.id === id);
+                if (index !== -1) {
+                    assignments[index] = { ...assignments[index], ...formData };
+                    msg = 'Assignment updated!';
+                } else {
+                    msg = 'Error: Assignment not found.';
+                }
+            }
+            ila_saveData(assignments);
+            closeItemLocationAssignmentForm();
+            renderItemLocationAssignmentList();
+            await window.showCustomAlert('Success', msg);
         };
         window.deleteItemLocationAssignment = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure?');
-            if (confirmed) { let assignments = ila_loadData(); assignments = assignments.filter(ila => ila.id !== id); ila_saveData(assignments); renderItemLocationAssignmentList(); await window.showCustomAlert('Deleted', 'Assignment deleted!'); }
+            if (confirmed) {
+                let assignments = ila_loadData();
+                assignments = assignments.filter(ila => ila.id !== id);
+                ila_saveData(assignments);
+                renderItemLocationAssignmentList();
+                await window.showCustomAlert('Deleted', 'Assignment deleted!');
+            }
         };
 
         // =======================================================================
-        // FUNGSI-FUNGSI: ITEM LOCATION CAPACITY (Kode yang sudah ada)
+        // FUNGSI-FUNGSI: ITEM LOCATION CAPACITY
         // =======================================================================
         window.renderItemLocationCapacityList = function(filter = '') {
-            const container = document.getElementById('ilc-list-container'); if (!container) return;
-            let data = ilc_loadData(); const filteredData = data.filter(d => d.item.toLowerCase().includes(filter.toLowerCase()) || d.company.toLowerCase().includes(filter.toLowerCase()));
+            const container = document.getElementById('ilc-list-container');
+            if (!container) return;
+            let data = ilc_loadData();
+            const filteredData = data.filter(d => d.item.toLowerCase().includes(filter.toLowerCase()) || d.company.toLowerCase().includes(filter.toLowerCase()));
             let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md"><thead><tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal"><th class="py-3 px-6 text-left">Item</th><th class="py-3 px-6 text-left">Company</th><th class="py-3 px-6 text-left">Item class</th><th class="py-3 px-6 text-center">Actions</th></tr></thead><tbody class="text-wise-gray text-sm font-light">`;
-            if (filteredData.length === 0) { tableHtml += `<tr><td colspan="4" class="py-3 px-6 text-center">No capacity data found.</td></tr>`; }
-            else { filteredData.forEach(d => { tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${d.item}</td><td class="py-3 px-6 text-left">${d.company}</td><td class="py-3 px-6 text-left">${d.itemClass}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationCapacityForm('edit', '${d.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationCapacity('${d.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
-            tableHtml += `</tbody></table>`; container.innerHTML = tableHtml;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="4" class="py-3 px-6 text-center">No capacity data found.</td></tr>`;
+            }
+            else {
+                filteredData.forEach(d => {
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${d.item}</td><td class="py-3 px-6 text-left">${d.company}</td><td class="py-3 px-6 text-left">${d.itemClass}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationCapacityForm('edit', '${d.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationCapacity('${d.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
         };
         window.filterItemLocationCapacityList = debounce((value) => renderItemLocationCapacityList(value), 300);
         function renderCapacityDetailsTable() {
-            const container = document.getElementById('ilc-detail-table-container'); let tableHtml = `<table class="min-w-full text-sm"><thead><tr class="bg-gray-100 sticky top-0"><th class="py-2 px-4 text-left">Location Type</th><th class="py-2 px-4 text-left">Location</th><th class="py-2 px-4 text-right">Max Qty</th><th class="py-2 px-4 text-left">UM</th><th class="py-2 px-4 text-center">...</th></tr></thead><tbody>`;
-            if(currentCapacityDetails.length === 0) { tableHtml += `<tr><td colspan="5" class="p-4 text-center text-gray-400">No details.</td></tr>`; }
-            else { currentCapacityDetails.forEach((d, index) => { tableHtml += `<tr class="border-b hover:bg-gray-50 ${index === selectedDetailIndex ? 'bg-blue-100' : ''}" onclick="selectDetailToEdit(${index})"><td class="py-2 px-4">${d.locationType}</td><td class="py-2 px-4">${d.location}</td><td class="py-2 px-4 text-right">${d.maxQty}</td><td class="py-2 px-4 text-left">${d.quantityUm}</td><td class="py-2 px-4 text-center"><button type="button" class="text-red-500 hover:text-red-700" onclick="event.stopPropagation(); deleteDetail(${index})">✕</button></td></tr>`; }); }
-            tableHtml += `</tbody></table>`; container.innerHTML = tableHtml;
+            const container = document.getElementById('ilc-detail-table-container');
+            let tableHtml = `<table class="min-w-full text-sm"><thead><tr class="bg-gray-100 sticky top-0"><th class="py-2 px-4 text-left">Location Type</th><th class="py-2 px-4 text-left">Location</th><th class="py-2 px-4 text-right">Max Qty</th><th class="py-2 px-4 text-left">UM</th><th class="py-2 px-4 text-center">...</th></tr></thead><tbody>`;
+            if(currentCapacityDetails.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="p-4 text-center text-gray-400">No details.</td></tr>`;
+            }
+            else {
+                currentCapacityDetails.forEach((d, index) => {
+                    tableHtml += `<tr class="border-b hover:bg-gray-50 ${index === selectedDetailIndex ? 'bg-blue-100' : ''}" onclick="selectDetailToEdit(${index})"><td class="py-2 px-4">${d.locationType}</td><td class="py-2 px-4">${d.location}</td><td class="py-2 px-4 text-right">${d.maxQty}</td><td class="py-2 px-4 text-left">${d.quantityUm}</td><td class="py-2 px-4 text-center"><button type="button" class="text-red-500 hover:text-red-700" onclick="event.stopPropagation(); deleteDetail(${index})">✕</button></td></tr>`;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
         }
-        window.selectDetailToEdit = function(index) { selectedDetailIndex = index; const detail = currentCapacityDetails[index]; document.getElementById('detail-max-qty').value = detail.maxQty; document.getElementById('detail-um').value = detail.quantityUm; document.getElementById('detail-location-type').value = detail.locationType; document.getElementById('detail-location').value = detail.location; renderCapacityDetailsTable(); }
-        window.clearDetailForm = function() { selectedDetailIndex = -1; document.getElementById('detail-max-qty').value = ''; document.getElementById('detail-um').value = 'Pack'; document.getElementById('detail-location-type').value = ''; document.getElementById('detail-location').value = ''; renderCapacityDetailsTable(); }
+        window.selectDetailToEdit = function(index) {
+            selectedDetailIndex = index;
+            const detail = currentCapacityDetails[index];
+            document.getElementById('detail-max-qty').value = detail.maxQty;
+            document.getElementById('detail-um').value = detail.quantityUm;
+            document.getElementById('detail-location-type').value = detail.locationType;
+            document.getElementById('detail-location').value = detail.location;
+            renderCapacityDetailsTable();
+        }
+        window.clearDetailForm = function() {
+            selectedDetailIndex = -1;
+            document.getElementById('detail-max-qty').value = '';
+            document.getElementById('detail-um').value = 'Pack';
+            document.getElementById('detail-location-type').value = '';
+            document.getElementById('detail-location').value = '';
+            renderCapacityDetailsTable();
+        }
         window.addOrUpdateDetail = function() {
             const newDetail = { maxQty: document.getElementById('detail-max-qty').value, quantityUm: document.getElementById('detail-um').value, locationType: document.getElementById('detail-location-type').value, location: document.getElementById('detail-location').value, minQty: 0, warehouse: document.getElementById('ilc-company').value, itemCapacityId: Math.floor(Math.random() * 90000) + 10000 };
             if (selectedDetailIndex > -1) {
                 // FIX: Perbaikan bug spread object
                 currentCapacityDetails[selectedDetailIndex] = {...currentCapacityDetails[selectedDetailIndex], ...newDetail};
             } else {
-                newDetail.detailId = 'D' + Date.now(); currentCapacityDetails.push(newDetail);
+                newDetail.detailId = 'D' + Date.now();
+                currentCapacityDetails.push(newDetail);
             }
             clearDetailForm();
         }
-        window.deleteDetail = async function(index) { const confirmed = await window.showCustomConfirm('Delete Detail', 'Remove this detail?'); if(confirmed) { currentCapacityDetails.splice(index, 1); clearDetailForm(); } }
+        window.deleteDetail = async function(index) {
+            const confirmed = await window.showCustomConfirm('Delete Detail', 'Remove this detail?');
+            if(confirmed) {
+                currentCapacityDetails.splice(index, 1);
+                clearDetailForm();
+            }
+        }
         window.showItemLocationCapacityForm = function(mode, id = null) {
-            const modal = document.getElementById('ilc-form-modal'); const form = document.getElementById('ilc-form'); const title = document.getElementById('ilc-form-title');
-            form.reset(); form.dataset.mode = mode; form.dataset.id = id;
-            if (mode === 'create') { title.textContent = 'Create New Item Location Capacity'; currentCapacityDetails = []; }
-            else { title.textContent = 'Edit Item Location Capacity'; let data = ilc_loadData(); const item = data.find(d => d.id === id); if (item) { form.item.value = item.item; form.company.value = item.company; form.itemClass.value = item.itemClass; currentCapacityDetails = JSON.parse(JSON.stringify(item.capacityDetails)); } }
+            const modal = document.getElementById('ilc-form-modal');
+            const form = document.getElementById('ilc-form');
+            const title = document.getElementById('ilc-form-title');
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+            if (mode === 'create') {
+                title.textContent = 'Create New Item Location Capacity';
+                currentCapacityDetails = [];
+            }
+            else {
+                title.textContent = 'Edit Item Location Capacity';
+                let data = ilc_loadData();
+                const item = data.find(d => d.id === id);
+                if (item) {
+                    form.item.value = item.item;
+                    form.company.value = item.company;
+                    form.itemClass.value = item.itemClass;
+                    currentCapacityDetails = JSON.parse(JSON.stringify(item.capacityDetails));
+                }
+            }
             if (!modal._listenersAttached) {
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => activateTab(button.dataset.tab, modal) });
                 modal._listenersAttached = true;
             }
-            activateTab('general', modal); clearDetailForm(); modal.classList.remove('hidden');
+            activateTab('general', modal);
+            clearDetailForm();
+            modal.classList.remove('hidden');
         };
         window.closeItemLocationCapacityForm = () => document.getElementById('ilc-form-modal').classList.add('hidden');
         window.openIlcLocationLookup = () => document.getElementById('ilc-location-lookup-modal').classList.remove('hidden');
         window.closeIlcLocationLookup = () => document.getElementById('ilc-location-lookup-modal').classList.add('hidden');
-        window.selectIlcLocation = () => { document.getElementById('detail-location').value = `LOC.${document.getElementById('lookup-location').value}`; closeIlcLocationLookup(); };
+        window.selectIlcLocation = () => {
+            document.getElementById('detail-location').value = `LOC.${document.getElementById('lookup-location').value}`;
+            closeIlcLocationLookup();
+        };
         window.handleItemLocationCapacitySubmit = async function(event) {
-            event.preventDefault(); const form = event.target; const mode = form.dataset.mode; const id = form.dataset.id; let data = ilc_loadData();
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            let data = ilc_loadData();
             const formData = { item: form.item.value, company: form.company.value, itemClass: form.itemClass.value, capacityDetails: currentCapacityDetails, userDefined: {} };
-            for(let i = 1; i <= 8; i++) { formData.userDefined[`udf${i}`] = form[`udf${i}`].value; }
+            for(let i = 1; i <= 8; i++) {
+                formData.userDefined[`udf${i}`] = form[`udf${i}`].value;
+            }
             let msg = '';
-            if (mode === 'create') { formData.id = 'ILC' + Date.now(); data.push(formData); msg = 'Capacity created!'; }
-            else { const index = data.findIndex(d => d.id === id); if (index !== -1) data[index] = { ...data[index], ...formData }; msg = 'Capacity updated!'; }
-            ilc_saveData(data); closeItemLocationCapacityForm(); renderItemLocationCapacityList(); await window.showCustomAlert('Success', msg);
+            if (mode === 'create') {
+                formData.id = 'ILC' + Date.now();
+                data.push(formData);
+                msg = 'Capacity created!';
+            }
+            else {
+                const index = data.findIndex(d => d.id === id);
+                if (index !== -1) data[index] = { ...data[index], ...formData };
+                msg = 'Capacity updated!';
+            }
+            ilc_saveData(data);
+            closeItemLocationCapacityForm();
+            renderItemLocationCapacityList();
+            await window.showCustomAlert('Success', msg);
         };
         window.deleteItemLocationCapacity = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this record?');
-            if (confirmed) { let data = ilc_loadData(); data = data.filter(d => d.id !== id); ilc_saveData(data); renderItemLocationCapacityList(); await window.showCustomAlert('Deleted', 'Record deleted!'); }
+            if (confirmed) {
+                let data = ilc_loadData();
+                data = data.filter(d => d.id !== id);
+                ilc_saveData(data);
+                renderItemLocationCapacityList();
+                await window.showCustomAlert('Deleted', 'Record deleted!');
+            }
         };
 
         // =======================================================================
-        // FUNGSI-FUNGSI: ITEM TEMPLATE (Kode yang sudah ada)
+        // FUNGSI-FUNGSI: ITEM TEMPLATE
         // =======================================================================
         window.renderItemTemplateList = function(filter = '') {
-            const container = document.getElementById('it-list-container'); if (!container) return;
+            const container = document.getElementById('it-list-container');
+            if (!container) return;
             let templates = it_loadData();
             const filteredData = templates.filter(t => t.itemTemplate.toLowerCase().includes(filter.toLowerCase()));
             let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md"><thead><tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal"><th class="py-3 px-6 text-left">Item Template</th><th class="py-3 px-6 text-left">Separator</th><th class="py-3 px-6 text-left">Field 1 Type</th><th class="py-3 px-6 text-left">Field 1 Length</th><th class="py-3 px-6 text-center">Actions</th></tr></thead><tbody class="text-wise-gray text-sm font-light">`;
-            if (filteredData.length === 0) { tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No templates found.</td></tr>`; }
-            else { filteredData.forEach(t => { tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
-            tableHtml += `</tbody></table>`; container.innerHTML = tableHtml;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No templates found.</td></tr>`;
+            }
+            else {
+                filteredData.forEach(t => {
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
         };
         window.filterItemTemplateList = debounce((value) => renderItemTemplateList(value), 300);
         function renderTemplateFields(fields = []) {
-            const container = document.getElementById('it-fields-container'); if (!container) return;
+            const container = document.getElementById('it-fields-container');
+            if (!container) return;
             container.innerHTML = '';
             const fieldTypes = ['Alpha', 'Num'];
             const fullFields = Array.from({ length: 5 }, (_, i) => fields[i] || { length: 0, type: '' });
@@ -741,124 +978,173 @@ let currentLocationQtyUmList = [];
             });
         }
         window.showItemTemplateForm = function(mode, id = null) {
-            const modal = document.getElementById('it-form-modal'); const form = document.getElementById('it-form'); const title = document.getElementById('it-form-title');
-            form.reset(); form.dataset.mode = mode; form.dataset.id = id;
-            if (mode === 'create') { title.textContent = 'Create New Item Template'; renderTemplateFields(); }
-            else { title.textContent = 'Edit Item Template'; const template = it_loadData().find(t => t.id === id); if (template) { form.itemTemplate.value = template.itemTemplate; form.separatorCharacter.value = template.separatorCharacter; form.inactive.checked = template.inactive; renderTemplateFields(template.fields); if (template.userDefined) { for(let i = 1; i <= 8; i++) { form[`udf${i}`].value = template.userDefined[`udf${i}`] || ''; } } } }
+            const modal = document.getElementById('it-form-modal');
+            const form = document.getElementById('it-form');
+            const title = document.getElementById('it-form-title');
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+            if (mode === 'create') {
+                title.textContent = 'Create New Item Template';
+                renderTemplateFields();
+            }
+            else {
+                title.textContent = 'Edit Item Template';
+                const template = it_loadData().find(t => t.id === id);
+                if (template) {
+                    form.itemTemplate.value = template.itemTemplate;
+                    form.separatorCharacter.value = template.separatorCharacter;
+                    form.inactive.checked = template.inactive;
+                    renderTemplateFields(template.fields);
+                    if (template.userDefined) {
+                        for(let i = 1; i <= 8; i++) {
+                            form[`udf${i}`].value = template.userDefined[`udf${i}`] || '';
+                        }
+                    }
+                }
+            }
             if (!modal._listenersAttached) {
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => activateTab(button.dataset.tab, modal) });
                 modal._listenersAttached = true;
             }
-            activateTab('general', modal); modal.classList.remove('hidden');
+            activateTab('general', modal);
+            modal.classList.remove('hidden');
         };
         window.closeItemTemplateForm = () => document.getElementById('it-form-modal').classList.add('hidden');
         window.handleItemTemplateSubmit = async function(event) {
-            event.preventDefault(); const form = event.target; const mode = form.dataset.mode; const id = form.dataset.id;
-            const fields = []; for (let i = 0; i < 5; i++) { fields.push({ length: parseInt(form[`field_length_${i}`].value) || 0, type: form[`field_type_${i}`].value }); }
-            const userDefined = {}; for(let i = 1; i <= 8; i++) { userDefined[`udf${i}`] = form[`udf${i}`].value; }
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
+            const fields = [];
+            for (let i = 0; i < 5; i++) {
+                fields.push({ length: parseInt(form[`field_length_${i}`].value) || 0, type: form[`field_type_${i}`].value });
+            }
+            const userDefined = {};
+            for(let i = 1; i <= 8; i++) {
+                userDefined[`udf${i}`] = form[`udf${i}`].value;
+            }
             const formData = { itemTemplate: form.itemTemplate.value, separatorCharacter: form.separatorCharacter.value, inactive: form.inactive.checked, fields, userDefined };
-            let data = it_loadData(); let msg = '';
-            if (mode === 'create') { formData.id = 'IT' + Date.now(); data.push(formData); msg = 'Template created!'; }
-            else { const index = data.findIndex(t => t.id === id); if (index !== -1) data[index] = { ...data[index], ...formData }; msg = 'Template updated!'; }
-            it_saveData(data); closeItemTemplateForm(); renderItemTemplateList(); await window.showCustomAlert('Success', msg);
+            let data = it_loadData();
+            let msg = '';
+            if (mode === 'create') {
+                formData.id = 'IT' + Date.now();
+                data.push(formData);
+                msg = 'Template created!';
+            }
+            else {
+                const index = data.findIndex(t => t.id === id);
+                if (index !== -1) data[index] = { ...data[index], ...formData };
+                msg = 'Template updated!';
+            }
+            it_saveData(data);
+            closeItemTemplateForm();
+            renderItemTemplateList();
+            await window.showCustomAlert('Success', msg);
         };
         window.deleteItemTemplate = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this template?');
-            if (confirmed) { let data = it_loadData(); data = data.filter(t => t.id !== id); it_saveData(data); renderItemTemplateList(); await window.showCustomAlert('Deleted', 'Template deleted!'); }
+            if (confirmed) {
+                let data = it_loadData();
+                data = data.filter(t => t.id !== id);
+                it_saveData(data);
+                renderItemTemplateList();
+                await window.showCustomAlert('Deleted', 'Template deleted!');
+            }
         };
 
         // =======================================================================
-        // FUNGSI-FUNGSI: LOCATION (KODE BARU DITAMBAHKAN DI SINI)
+        // FUNGSI-FUNGSI: LOCATION
         // =======================================================================
         window.renderLocationList = function(filter = '') {
-    const containerDesktop = document.getElementById('loc-list-container-desktop');
-    const containerMobile = document.getElementById('loc-list-container-mobile');
-    if (!containerDesktop || !containerMobile) return;
-    const locations = loc_loadData();
-    const filteredData = locations.filter(loc => {
-        const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-        const searchable = `${loc.warehouse} ${combinedLocation} ${loc.locationTemplate} ${loc.general?.locationType} ${loc.general?.locationStatus}`.toLowerCase();
-        return searchable.includes(filter.toLowerCase());
-    });
+            const containerDesktop = document.getElementById('loc-list-container-desktop');
+            const containerMobile = document.getElementById('loc-list-container-mobile');
+            if (!containerDesktop || !containerMobile) return;
+            const locations = loc_loadData();
+            const filteredData = locations.filter(loc => {
+                const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+                const searchable = `${loc.warehouse} ${combinedLocation} ${loc.locationTemplate} ${loc.general?.locationType} ${loc.general?.locationStatus}`.toLowerCase();
+                return searchable.includes(filter.toLowerCase());
+            });
 
-    // --- RENDER UNTUK DESKTOP ---
-    let tableHtml = `<table class="min-w-max w-full table-auto bg-white"><thead>
-        <tr class="bg-wise-light-gray text-wise-dark-gray text-sm"> 
-            <th class="py-2 px-4 text-left font-semibold sticky left-0 bg-wise-light-gray z-10 whitespace-nowrap">Warehouse</th>
-            <th class="py-2 px-4 text-left font-semibold sticky left-[110px] bg-wise-light-gray z-10 whitespace-nowrap">Location</th>
-            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location template</th>
-            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Type</th>
-            <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Status</th>
-            <th class="py-2 px-4 text-left font-semibold">Locating zone</th>
-            <th class="py-2 px-4 text-left font-semibold">Allocation zone</th>
-            <th class="py-2 px-4 text-left font-semibold">Work zone</th>
-            <th class="py-2 px-4 text-left font-semibold">Active</th>
-            <th class="py-2 px-4 text-center font-semibold">Actions</th>
-        </tr></thead><tbody class="text-wise-gray text-sm font-light">`;
+            // --- RENDER UNTUK DESKTOP ---
+            let tableHtml = `<table class="min-w-max w-full table-auto bg-white"><thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray text-sm"> 
+                    <th class="py-2 px-4 text-left font-semibold sticky left-0 bg-wise-light-gray z-10 whitespace-nowrap">Warehouse</th>
+                    <th class="py-2 px-4 text-left font-semibold sticky left-[110px] bg-wise-light-gray z-10 whitespace-nowrap">Location</th>
+                    <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location template</th>
+                    <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Type</th>
+                    <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Status</th>
+                    <th class="py-2 px-4 text-left font-semibold">Locating zone</th>
+                    <th class="py-2 px-4 text-left font-semibold">Allocation zone</th>
+                    <th class="py-2 px-4 text-left font-semibold">Work zone</th>
+                    <th class="py-2 px-4 text-left font-semibold">Active</th>
+                    <th class="py-2 px-4 text-center font-semibold">Actions</th>
+                </tr></thead><tbody class="text-wise-gray text-sm font-light">`;
 
-    if (filteredData.length === 0) {
-        tableHtml += `<tr><td colspan="10" class="py-3 px-4 text-center">No locations found.</td></tr>`;
-    } else {
-        filteredData.forEach(loc => {
-            const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-            tableHtml += `<tr class="border-b hover:bg-gray-50">
-                <td class="py-2 px-4 text-left whitespace-nowrap sticky left-0 bg-white hover:bg-gray-50 z-10">${loc.warehouse}</td>
-                <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap sticky left-[110px] bg-white hover:bg-gray-50 z-10">${combinedLocation}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locationTemplate}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationType || ''}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationStatus || ''}</td>
-                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</td>
-                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</td>
-                <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.workZone || ''}">${loc.workZone || ''}</td>
-                <td class="py-2 px-4 text-left whitespace-nowrap">${!loc.inactive ? 'Yes' : 'No'}</td>
-                <td class="py-2 px-4 text-center">
-                    <div class="flex item-center justify-center">
-                        <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
-                        <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                    </div>
-                </td></tr>`;
-        });
-    }
-    tableHtml += `</tbody></table>`;
-    containerDesktop.innerHTML = tableHtml;
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="10" class="py-3 px-4 text-center">No locations found.</td></tr>`;
+            } else {
+                filteredData.forEach(loc => {
+                    const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+                    tableHtml += `<tr class="border-b hover:bg-gray-50">
+                        <td class="py-2 px-4 text-left whitespace-nowrap sticky left-0 bg-white hover:bg-gray-50 z-10">${loc.warehouse}</td>
+                        <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap sticky left-[110px] bg-white hover:bg-gray-50 z-10">${combinedLocation}</td>
+                        <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locationTemplate}</td>
+                        <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationType || ''}</td>
+                        <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationStatus || ''}</td>
+                        <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</td>
+                        <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</td>
+                        <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.workZone || ''}">${loc.workZone || ''}</td>
+                        <td class="py-2 px-4 text-left whitespace-nowrap">${!loc.inactive ? 'Yes' : 'No'}</td>
+                        <td class="py-2 px-4 text-center">
+                            <div class="flex item-center justify-center">
+                                <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </td></tr>`;
+                });
+            }
+            tableHtml += `</tbody></table>`;
+            containerDesktop.innerHTML = tableHtml;
 
-    // --- RENDER UNTUK MOBILE (CARD VIEW) ---
-    let cardHtml = '';
-    if (filteredData.length === 0) {
-        cardHtml = `<div class="p-4 text-center text-gray-400">No locations found.</div>`;
-    } else {
-        filteredData.forEach(loc => {
-            const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-            cardHtml += `
-            <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                <div class="flex justify-between items-center mb-2">
-                    <div class="font-semibold text-sm text-wise-primary">
-                        ${loc.warehouse}
+            // --- RENDER UNTUK MOBILE (CARD VIEW) ---
+            let cardHtml = '';
+            if (filteredData.length === 0) {
+                cardHtml = `<div class="p-4 text-center text-gray-400">No locations found.</div>`;
+            } else {
+                filteredData.forEach(loc => {
+                    const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+                    cardHtml += `
+                    <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="font-semibold text-sm text-wise-primary">
+                                ${loc.warehouse}
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="w-6 h-6 p-1 text-wise-gray hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                </button>
+                                <button class="w-6 h-6 p-1 text-wise-gray hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Hapus">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-xl font-bold text-wise-dark-gray mb-2">${combinedLocation}</div>
+                        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div><span class="font-medium">Template:</span> ${loc.locationTemplate}</div>
+                            <div><span class="font-medium">Type:</span> ${loc.general?.locationType || ''}</div>
+                            <div><span class="font-medium">Status:</span> ${loc.general?.locationStatus || ''}</div>
+                            <div><span class="font-medium">Active:</span> ${!loc.inactive ? 'Yes' : 'No'}</div>
+                            <div class="col-span-2"><span class="font-medium">Locating zone:</span> <span class="truncate" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</span></div>
+                            <div class="col-span-2"><span class="font-medium">Allocation zone:</span> <span class="truncate" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</span></div>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button class="w-6 h-6 p-1 text-wise-gray hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                        </button>
-                        <button class="w-6 h-6 p-1 text-wise-gray hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Hapus">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="text-xl font-bold text-wise-dark-gray mb-2">${combinedLocation}</div>
-                <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
-                    <div><span class="font-medium">Template:</span> ${loc.locationTemplate}</div>
-                    <div><span class="font-medium">Type:</span> ${loc.general?.locationType || ''}</div>
-                    <div><span class="font-medium">Status:</span> ${loc.general?.locationStatus || ''}</div>
-                    <div><span class="font-medium">Active:</span> ${!loc.inactive ? 'Yes' : 'No'}</div>
-                    <div class="col-span-2"><span class="font-medium">Locating zone:</span> <span class="truncate" title="${loc.locatingZone || ''}">${loc.locatingZone || ''}</span></div>
-                    <div class="col-span-2"><span class="font-medium">Allocation zone:</span> <span class="truncate" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</span></div>
-                </div>
-            </div>
-            `;
-        });
-    }
-    containerMobile.innerHTML = cardHtml;
-};
+                    `;
+                });
+            }
+            containerMobile.innerHTML = cardHtml;
+        };
         window.filterLocationList = debounce((value) => renderLocationList(value), 300);
 
         function renderLocationQtyUmTable(list) {
@@ -1094,11 +1380,21 @@ let currentLocationQtyUmList = [];
         // --- PEMICU (TRIGGER) UNTUK RENDER ---
         document.addEventListener('content:rendered', (e) => {
             const key = e.detail.key;
-            if (key === 'serial-number-template') { renderSerialNumberTemplateList(); }
-            else if (key === 'item-location-assignment') { renderItemLocationAssignmentList(); }
-            else if (key === 'item-location-capacity') { renderItemLocationCapacityList(); }
-            else if (key === 'item-template') { renderItemTemplateList(); }
-            else if (key === 'location') { renderLocationList(); } // Pemicu untuk fitur baru
+            if (key === 'serial-number-template') {
+                renderSerialNumberTemplateList();
+            }
+            else if (key === 'item-location-assignment') {
+                renderItemLocationAssignmentList();
+            }
+            else if (key === 'item-location-capacity') {
+                renderItemLocationCapacityList();
+            }
+            else if (key === 'item-template') {
+                renderItemTemplateList();
+            }
+            else if (key === 'location') {
+                renderLocationList();
+            } // Pemicu untuk fitur baru
         });
         
     });
