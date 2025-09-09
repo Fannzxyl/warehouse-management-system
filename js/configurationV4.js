@@ -1,4 +1,4 @@
-// configurationV4.js
+// configurationV5.js
 // Disempurnakan oleh Senior Frontend Engineer
 // Tujuan: Refaktor & implementasi fitur Item Master modul sesuai 19 screenshot referensi.
 
@@ -907,6 +907,7 @@ window.showCustomConfirm = (title, message) => {
                 </div>
                 <div class="md:col-span-4 flex items-center gap-2 text-sm">
                     <input type="checkbox" id="item-catch-weight-required" name="catchWeightRequired" ${mode === 'view' ? 'disabled' : ''}> Catch Weight Required
+                </label>
                 </div>
             </div>
             <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Lot & Serial</h4>
@@ -2426,7 +2427,7 @@ window.deleteIUoM = async (id) => {
             titleEl.textContent = mode === 'create' ? 'Create New Item Cross Reference' : `Edit Item Cross Reference - Edit existing`;
             
             bodyEl.innerHTML = `
-                <form id="item-cross-reference-form" data-mode="${mode}">
+                <form id="item-cross-reference-form" data-mode="${mode}" onsubmit="handleItemCrossReferenceSubmit(event)">
                     <div role="tablist" id="icr-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
                         <button type="button" role="tab" data-tab="icr-general" class="tab-active">General</button>
                         <button type="button" role="tab" data-tab="icr-udf" class="tab">User defined data</button>
