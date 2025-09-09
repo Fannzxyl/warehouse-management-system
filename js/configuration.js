@@ -1143,6 +1143,20 @@
         };
 
         window.selectCategory = function(category) {
+            const bodyEl = document.body;
+            const mainEl = document.querySelector('main');
+
+            // Mengatur ulang style body dan main ke default setiap kali fungsi dipanggil.
+            bodyEl.classList.add('overflow-x-hidden');
+            if (mainEl) mainEl.classList.remove('min-w-0');
+
+            // Menerapkan style khusus HANYA untuk halaman 'location' agar scrollbar bisa muncul.
+            if (category === 'location') {
+                bodyEl.classList.remove('overflow-x-hidden');
+                if (mainEl) mainEl.classList.add('min-w-0');
+            }
+
+            // Menghapus status aktif dari semua item sidebar untuk reset.
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('bg-wise-light-gray', 'font-semibold');
             });
@@ -1151,17 +1165,18 @@
                 item.classList.add('text-wise-gray');
             });
 
+            // Memberikan style aktif pada item sidebar yang sedang dipilih.
             const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
             if (childElement) {
                 childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
                 childElement.classList.remove('text-wise-gray');
 
+                // Jika yang dipilih adalah sub-menu, buka menu parent-nya.
                 const parentId = parentMapping[category];
                 if (parentId) {
                     const parentElement = document.getElementById(parentId);
                     const parentChildrenContainer = document.getElementById(parentId + '-children');
-                    const parentArrow = document.getElementById(parentId + '-arrow');
-
+                    
                     if (parentElement) {
                         parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
                     }
@@ -1170,22 +1185,25 @@
                     }
                 }
             } else {
+                // Jika yang dipilih adalah menu utama.
                 const mainElement = document.getElementById(category);
                 if(mainElement) {
                     mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
                 }
             }
 
+            // Menyimpan kategori yang sedang aktif dan menampilkan kontennya.
             currentCategory = category;
             const content = contentData[category];
+            const mainContent = document.getElementById('default-content-area');
             if (content && content.full) {
                 mainContent.innerHTML = content.full;
             } else {
                 mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
             }
 
+            // Memanggil fungsi render yang spesifik untuk setiap halaman.
             if (category === 'configuration-warehouse') renderWarehouseList();
-            // else if (category === 'configuration-zone-type') renderZoneTypeList();
             else if (category === 'location-type') renderLocationTypeList();
             else if (category === 'locating-strategies') renderLocatingStrategyList();
             else if (category === 'locating-rule') renderLocatingRuleList();
@@ -1194,12 +1212,16 @@
             else if (category === 'security-permission') renderSecurityPermissionList();
             else if (category === 'allocation-rule') renderAllocationRuleList();
             else if (category === 'allocation-strategies') renderAllocationStrategyList();
-            else if (category === 'allocation-rule') renderAllocationRuleList();
             else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
             else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
-            else if (category === 'allocation-rule-assignment-criteria') renderARACList(); 
-            else if (category === 'zone-type') renderZoneTypeList()
+            else if (category === 'allocation-rule-assignment-criteria') renderARACList();
+            else if (category === 'zone-type') renderZoneTypeList();
+            else if (category === 'location') renderLocationList();
 
+            // Memberi tahu script lain bahwa konten telah berubah.
+            document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
+
+            // Menutup sidebar di tampilan mobile setelah memilih kategori.
             if (window.innerWidth < 768) {
                 closeSidebar();
             }

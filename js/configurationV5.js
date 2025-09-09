@@ -101,47 +101,73 @@ let currentLocationQtyUmList = [];
                         <input type="text" id="snt-search" placeholder="Search template name..." class="input max-w-xs" oninput="filterSerialNumberTemplateList(this.value)">
                     </div>
                     <div id="snt-list-container" class="overflow-x-auto"></div>
-                    <!-- Modal Serial Number Template -->
                     <div id="snt-form-modal" class="hidden fixed inset-0 z-[60] flex items-start justify-center p-4 md:p-6 bg-black/40 overflow-y-auto">
                         <div class="modal-content w-[min(1000px,95vw)] bg-white rounded-xl shadow-2xl flex flex-col max-h-[95vh] transition-all duration-300 opacity-0 scale-95">
-                            <div class="sticky top-0 z-10 px-6 pt-5 pb-3 border-b bg-white rounded-t-xl flex-shrink-0">
+                            
+                            <div class="sticky top-0 z-10 px-6 pt-5 pb-3 border-b border-gray-200 bg-white rounded-t-xl flex-shrink-0">
                                 <h3 id="snt-form-title" class="text-lg font-semibold text-wise-dark-gray"></h3>
                                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeSerialNumberTemplateForm()" aria-label="Close">✕</button>
                             </div>
+                            
                             <div class="px-6 py-5 flex-grow overflow-y-auto">
                                 <form id="snt-form" onsubmit="handleSerialNumberTemplateSubmit(event)">
-                                    <div class="p-5 border-b -mx-6 -mt-5 mb-4 bg-gray-50/50">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div><label for="snt-name" class="block text-sm mb-1 font-medium">Template name: <span class="text-red-500">*</span></label><input id="snt-name" name="name" required class="input"></div>
-                                            <div><label for="snt-description" class="block text-sm mb-1 font-medium">Description</label><input id="snt-description" name="description" class="input"></div>
-                                        </div>
+                                    <div class="p-5 border-b border-gray-100 -mx-6 -mt-5 mb-4 bg-gray-50/50">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label for="snt-name" class="block text-sm mb-1 font-medium">Template name: <span class="text-red-500">*</span></label>
+                                                <input id="snt-name" name="name" required class="input">
+                                            </div>
+                                            <div>
+                                                <label for="snt-description" class="block text-sm mb-1 font-medium">Description</label>
+                                                <input id="snt-description" name="description" class="input">
+                                            </div>
                                     </div>
-                                    <div role="tablist" class="flex space-x-6 mb-4 border-b">
+                                    </div>
+
+                                    <div role="tablist" class="flex space-x-6 mb-4 border-b border-wise-border">
                                         <button type="button" role="tab" data-tab="pattern" class="tab-button tab-active">Pattern fields</button>
                                         <button type="button" role="tab" data-tab="ud" class="tab-button">User defined data</button>
                                     </div>
+
                                     <div id="pane-pattern" role="tabpanel" data-pane="pattern">
+                                        <h3 class="text-sm font-semibold text-wise-dark-gray mb-3">Field criteria</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+                                        <div class="md:col-span-4">
+                                                <label for="snt-pattern-type" class="block text-sm font-medium text-wise-dark-gray mb-1">Type</label>
+                                                <select id="snt-pattern-type" class="select"><option>Alpha</option><option>Alphanumeric</option><option>Numeric</option><option>Constant</option></select>
+                                        </div>
+                                        <div class="md:col-span-3">
+                                                <label for="snt-pattern-length" class="block text-sm font-medium text-wise-dark-gray mb-1">Length</label>
+                                                <input id="snt-pattern-length" type="number" class="input">
+                                        </div>
+                                        <div class="md:col-span-5">
+                                                <label for="snt-pattern-value" class="block text-sm font-medium text-wise-dark-gray mb-1">Value</label>
+                                                <input id="snt-pattern-value" type="text" class="input">
+                                        </div>
+                                        </div>
+
                                         <div class="grid grid-cols-12 gap-4">
-                                            <div class="col-span-12 lg:col-span-8">
-                                                <div class="border rounded-lg h-full flex flex-col"><div class="flex items-center justify-between px-3 py-2 border-b bg-gray-50/70 rounded-t-lg">
-                                                    <span class="text-xs uppercase tracking-wider text-wise-gray">Current Pattern</span>
-                                                </div><div id="snt-patterns-list" class="p-2 flex-1 overflow-auto min-h-[150px] font-mono text-sm"></div></div>
+                                            <div class="col-span-12 lg:col-span-2 flex flex-col gap-2">
+                                                <button type="button" class="btn btn-primary" id="snt-btn-add">Add</button>
+                                                <button type="button" class="btn btn-primary" id="snt-btn-update">Update</button>
+                                                <button type="button" class="btn btn-primary" id="snt-btn-clear">Clear</button>
                                             </div>
-                                            <div class="col-span-12 lg:col-span-4 flex flex-col gap-2">
+                                            <div class="col-span-12 lg:col-span-7">
+                                                <div class="border rounded-lg h-full flex flex-col">
+                                                    <div class="flex items-center justify-between px-3 py-2 border-b bg-gray-50/70 rounded-t-lg">
+                                                        <span class="text-xs uppercase tracking-wider text-wise-gray">Current Pattern</span>
+                                                    </div>
+                                                    <div id="snt-patterns-list" class="p-2 flex-1 overflow-auto min-h-[120px] font-mono text-sm">
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-span-12 lg:col-span-3 flex flex-col gap-2">
                                                 <button type="button" id="snt-btn-up" class="btn btn-primary">↑ Up</button>
                                                 <button type="button" id="snt-btn-down" class="btn btn-primary">↓ Down</button>
                                                 <div class="h-2"></div>
-                                                <button type="button" id="snt-btn-remove" class="btn btn-primary">Remove</button>
+                                                <button type="button" id="snt-btn-remove" class="btn btn-primary">Remove selected</button>
                                                 <button type="button" id="snt-btn-advanced" class="btn btn-primary" onclick="alert('Advanced settings not implemented yet.')">Advanced</button>
                                             </div>
-                                        </div>
-                                        <div class="mt-4 p-4 border rounded-lg bg-gray-50">
-                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                <div><label for="snt-pattern-type" class="block text-sm font-medium mb-1">Type</label><select id="snt-pattern-type" class="select"><option>Alpha</option><option>Alphanumeric</option><option>Numeric</option><option>Constant</option></select></div>
-                                                <div><label for="snt-pattern-length" class="block text-sm font-medium mb-1">Length</label><input id="snt-pattern-length" type="number" class="input"></div>
-                                                <div><label for="snt-pattern-value" class="block text-sm font-medium mb-1">Value</label><input id="snt-pattern-value" type="text" class="input"></div>
-                                            </div>
-                                            <div class="mt-3 flex gap-2"><button type="button" id="snt-btn-add" class="btn btn-primary">Add</button><button type="button" id="snt-btn-clear" class="btn">Clear</button></div>
                                         </div>
                                         <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
                                             <label class="flex items-center gap-2 text-sm"><input id="snt-allow-duplicates" name="allowDuplicates" type="checkbox"> Allow duplicates</label>
@@ -149,12 +175,14 @@ let currentLocationQtyUmList = [];
                                             <label class="flex items-center gap-2 text-sm"><input id="snt-inactive" name="inactive" type="checkbox"> Inactive</label>
                                         </div>
                                     </div>
+
                                     <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
                                         ${Array.from({length: 8}, (_, i) => `<div><label for="snt-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label><input id="snt-udf${i+1}" name="udf${i+1}" type="text" class="input"></div>`).join('')}
                                     </div>
                                 </form>
                             </div>
-                            <div class="sticky bottom-0 z-10 px-6 py-3 border-t flex justify-end gap-3 bg-white rounded-b-xl flex-shrink-0">
+                            
+                            <div class="sticky bottom-0 z-10 px-6 py-3 border-t border-gray-200 flex justify-end gap-3 bg-white rounded-b-xl flex-shrink-0">
                                 <button type="button" class="btn" onclick="closeSerialNumberTemplateForm()">Cancel</button>
                                 <button id="snt-submit-button" type="submit" form="snt-form" class="btn btn-primary">OK</button>
                             </div>
@@ -481,6 +509,17 @@ let currentLocationQtyUmList = [];
             selectedSNT_PatternIndex = currentSNT_PatternFields.length - 1;
             renderSNT_Patterns();
         }
+        function updateSNT_Pattern() {
+            if (selectedSNT_PatternIndex < 0) {
+                window.showCustomAlert('Info', 'Please select a field to update.');
+                return;
+            }
+            const type = document.getElementById('snt-pattern-type').value;
+            const length = document.getElementById('snt-pattern-length').value;
+            const value = document.getElementById('snt-pattern-value').value;
+            currentSNT_PatternFields[selectedSNT_PatternIndex] = { type, length: length || null, value: value || null };
+            renderSNT_Patterns();
+        }
         function removeSNT_Pattern() {
             if (selectedSNT_PatternIndex < 0) { window.showCustomAlert('Info', 'Please select a field to remove.'); return; }
             currentSNT_PatternFields.splice(selectedSNT_PatternIndex, 1);
@@ -499,10 +538,16 @@ let currentLocationQtyUmList = [];
             const modal = document.getElementById('snt-form-modal');
             const form = document.getElementById('snt-form');
             const title = document.getElementById('snt-form-title');
-            form.reset(); form.dataset.mode = mode; form.dataset.id = id;
-            currentSNT_PatternFields = []; selectedSNT_PatternIndex = -1;
-            if (mode === 'create') { title.textContent = 'Create New Serial Number Template'; }
-            else { title.textContent = 'Edit Serial Number Template';
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
+            currentSNT_PatternFields = [];
+            selectedSNT_PatternIndex = -1;
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Serial Number Template';
+            } else {
+                title.textContent = 'Edit Serial Number Template';
                 const template = snt_loadData().find(lt => lt.id === id);
                 if (template) {
                     form.name.value = template.name;
@@ -521,11 +566,14 @@ let currentLocationQtyUmList = [];
                 modalContent.classList.remove('opacity-0', 'scale-95');
                 if (!modal._listenersAttached) {
                     document.getElementById('snt-btn-add').onclick = addSNT_Pattern;
+                    document.getElementById('snt-btn-update').onclick = updateSNT_Pattern; // Tombol update
                     document.getElementById('snt-btn-clear').onclick = clearSNT_PatternInputs;
                     document.getElementById('snt-btn-remove').onclick = removeSNT_Pattern;
                     document.getElementById('snt-btn-up').onclick = () => moveSNT_Pattern('up');
                     document.getElementById('snt-btn-down').onclick = () => moveSNT_Pattern('down');
-                    modal.querySelector('[role="tablist"]').onclick = (e) => { if (e.target.role === 'tab') activateTab(e.target.dataset.tab, modal); };
+                    modal.querySelector('[role="tablist"]').onclick = (e) => {
+                        if (e.target.role === 'tab') activateTab(e.target.dataset.tab, modal);
+                    };
                     modal._listenersAttached = true;
                 }
             }, 10);
@@ -1070,46 +1118,85 @@ window.closeSidebar = function() {
 };
 
 window.selectCategory = function(category) {
-    const mainContent = document.getElementById('main-content');
-    const categoryMenu = document.getElementById('category-menu');
+            const bodyEl = document.body;
+            const mainEl = document.querySelector('main');
 
-    if (window.contentData[category]) {
-        if (mainContent) mainContent.innerHTML = window.contentData[category].full;
-        
-        if (category === 'item') {
-            window.renderItemList();
-        } else if (category === 'item-unit-of-measure') {
-            window.renderIUoMList();
-        } else if (category === 'item-cross-reference') {
-            window.renderItemCrossReferenceList();
-        } else {
-            const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
-            if (typeof window[rendererName] === 'function') {
-                window[rendererName]();
-            } else {
-                console.warn(`Renderer for category '${category}' (${rendererName}) not found.`);
+            // Mengatur ulang style body dan main ke default setiap kali fungsi dipanggil.
+            bodyEl.classList.add('overflow-x-hidden');
+            if (mainEl) mainEl.classList.remove('min-w-0');
+
+            // Menerapkan style khusus HANYA untuk halaman 'location' agar scrollbar bisa muncul.
+            if (category === 'location') {
+                bodyEl.classList.remove('overflow-x-hidden');
+                if (mainEl) mainEl.classList.add('min-w-0');
             }
-        }
 
-        if (window.innerWidth < 768) {
-            window.closeSidebar();
-        }
-        
-        if (categoryMenu) {
-            const menuItems = categoryMenu.querySelectorAll('button');
-            menuItems.forEach(item => {
-                const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
-                if (itemCategory === category) {
-                    item.classList.add('bg-wise-dark-gray', 'text-white');
-                } else {
-                    item.classList.remove('bg-wise-dark-gray', 'text-white');
-                }
+            // Menghapus status aktif dari semua item sidebar untuk reset.
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('bg-wise-light-gray', 'font-semibold');
             });
-        }
-    } else {
-        console.error(`Category data for '${category}' not found in window.contentData.`);
-    }
-};
+            document.querySelectorAll('.sidebar-child').forEach(item => {
+                item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+                item.classList.add('text-wise-gray');
+            });
+
+            // Memberikan style aktif pada item sidebar yang sedang dipilih.
+            const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
+            if (childElement) {
+                childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+                childElement.classList.remove('text-wise-gray');
+
+                // Jika yang dipilih adalah sub-menu, buka menu parent-nya.
+                const parentId = parentMapping[category];
+                if (parentId) {
+                    const parentElement = document.getElementById(parentId);
+                    const parentChildrenContainer = document.getElementById(parentId + '-children');
+                    
+                    if (parentElement) {
+                        parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
+                    }
+                    if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
+                        toggleChildren(parentId);
+                    }
+                }
+            } else {
+                // Jika yang dipilih adalah menu utama.
+                const mainElement = document.getElementById(category);
+                if(mainElement) {
+                    mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
+                }
+            }
+
+            // Menyimpan kategori yang sedang aktif dan menampilkan kontennya.
+            currentCategory = category;
+            const content = contentData[category];
+            const mainContent = document.getElementById('default-content-area');
+            if (content && content.full) {
+                mainContent.innerHTML = content.full;
+            } else {
+                mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
+            }
+
+            // Memanggil fungsi render yang spesifik untuk setiap halaman.
+            if (category === 'configuration-warehouse') renderWarehouseList();
+            else if (category === 'location-type') renderLocationTypeList();
+            else if (category === 'locating-strategies') renderLocatingStrategyList();
+            else if (category === 'locating-rule') renderLocatingRuleList();
+            else if (category === 'configuration-user-profile') renderUserProfileList();
+            else if (category === 'security-group') renderSecurityGroupList();
+            else if (category === 'security-permission') renderSecurityPermissionList();
+            else if (category === 'allocation-rule') renderAllocationRuleList();
+            else if (category === 'allocation-strategies') renderAllocationStrategyList();
+            else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
+            else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
+            else if (category === 'allocation-rule-assignment-criteria') renderARACList();
+            else if (category === 'zone-type') renderZoneTypeList();
+            else if (category === 'location') renderLocationList();
+            document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
+            if (window.innerWidth < 768) {
+                closeSidebar();
+            }
+        };
 
 window.goBack = function() {
     console.log("Go back function not yet implemented.");
