@@ -281,7 +281,7 @@ let currentLocationQtyUmList = [];
                     </div>
                 `
             },
-            'location': {
+'location': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
         <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
@@ -365,9 +365,40 @@ let currentLocationQtyUmList = [];
                             <div><label for="loc-allocation-zone" class="block text-sm mb-1">Allocation zone:</label><input type="text" id="loc-allocation-zone" name="allocationZone" class="input"></div>
                             <div><label for="loc-work-zone" class="block text-sm mb-1">Work zone:</label><input type="text" id="loc-work-zone" name="workZone" class="input"></div>
                         </div></div>
-                        <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"></div>
+                        
+                        <div id="pane-work" role="tabpanel" data-pane="work" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Verification</legend><div class="space-y-3">
+                                <div><span class="block text-sm font-medium mb-2">Verification method:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Location"> Location</label><label class="flex items-center gap-2"><input type="radio" name="verificationMethod" value="Item"> Item</label></div></div>
+                                <div><label for="loc-check-digit" class="block text-sm mb-1">Check digit:</label><input type="text" id="loc-check-digit" name="checkDigit" class="input"></div>
+                                <label class="flex items-center gap-2"><input type="checkbox" id="loc-generate-check-digit" name="generateCheckDigit"> Generate check digit</label>
+                            </div></fieldset>
+                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Sequence and Coordinates</legend><div class="space-y-3">
+                                <div><label for="loc-picking-seq" class="block text-sm mb-1">Picking sequence:</label><input type="number" id="loc-picking-seq" name="pickingSequence" class="input"></div>
+                                <div><label for="loc-putaway-seq" class="block text-sm mb-1">Putaway sequence:</label><input type="number" id="loc-putaway-seq" name="putawaySequence" class="input"></div>
+                                <div><label for="loc-vector-coord" class="block text-sm mb-1">Vector coordinate:</label><input type="text" id="loc-vector-coord" name="vectorCoordinate" class="input"></div>
+                            </div></fieldset>
+                            <fieldset class="border p-4 rounded-md md:col-span-2"><legend class="px-2 text-sm font-medium">Pick and Drop</legend><div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div><label for="loc-pickup-dropoff" class="block text-sm mb-1">Pick up / Drop off:</label><input type="text" id="loc-pickup-dropoff" name="pickUpDropOff" class="input"></div>
+                                <div><label for="loc-incoming-pd" class="block text-sm mb-1">Incoming P and D:</label><input type="text" id="loc-incoming-pd" name="incomingPandD" class="input"></div>
+                                <div><label for="loc-outgoing-pd" class="block text-sm mb-1">Outgoing P and D:</label><input type="text" id="loc-outgoing-pd" name="outgoingPandD" class="input"></div>
+                                <div class="md:col-span-3 pt-2"><label class="flex items-center gap-2"><input type="checkbox" id="loc-allow-work-unit" name="allowWorkUnitSelection"> Allow work unit selection</label></div>
+                            </div></fieldset>
+                        </div></div>
                         <div id="pane-qty-um" role="tabpanel" data-pane="qty-um" class="hidden"><div id="loc-qty-um-list-table" class="space-y-2 max-w-sm"></div></div>
-                        <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"></div>
+                        <div id="pane-dock" role="tabpanel" data-pane="dock" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Attributes</legend><div class="space-y-3">
+                                <div><span class="block text-sm font-medium mb-2">Dock location type:</span><div class="flex gap-4 flex-wrap"><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Dock area"> Dock area</label><label class="flex items-center gap-2"><input type="radio" name="dockLocationType" value="Staging lane"> Staging lane</label></div></div>
+                                <div><label for="loc-anchor-criteria" class="block text-sm mb-1">Anchor criteria:</label><input type="text" id="loc-anchor-criteria" name="anchorCriteria" class="input"></div>
+                                <div><label for="loc-selection-priority" class="block text-sm mb-1">Selection priority:</label><input type="number" id="loc-selection-priority" name="selectionPriority" class="input"></div>
+                                <div><label for="loc-position" class="block text-sm mb-1">Position:</label><input type="text" id="loc-position" name="position" class="input"></div>
+                            </div></fieldset>
+                            <fieldset class="border p-4 rounded-md"><legend class="px-2 text-sm font-medium">Dock Hierarchy & Size</legend><div class="space-y-3">
+                                <div><label for="loc-next-dock" class="block text-sm mb-1">Next dock area:</label><input type="text" id="loc-next-dock" name="nextDockArea" class="input"></div>
+                                <div><label for="loc-parent-dock" class="block text-sm mb-1">Parent dock area:</label><input type="text" id="loc-parent-dock" name="parentDockArea" class="input"></div>
+                                <div class="pt-2"><span class="block text-sm font-medium mb-2">Dock area size:</span><div class="flex gap-4"><label class="flex items-center gap-2"><input type="radio" name="dockAreaSize" value="Number of rows"> Number of rows</label></div></div>
+                                <div><label for="loc-num-rows" class="block text-sm mb-1">Number of rows:</label><input type="number" id="loc-num-rows" name="numberOfRows" class="input"></div>
+                            </div></fieldset>
+                        </div></div>
                         <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
                         </div></div>
