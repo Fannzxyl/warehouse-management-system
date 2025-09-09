@@ -1,6 +1,3 @@
-// configurationV4.js
-// Disempurnakan oleh Senior Frontend Engineer
-// Tujuan: Refaktor & implementasi fitur Item Master modul sesuai 19 screenshot referensi.
 
 (function () {
     document.addEventListener('DOMContentLoaded', () => {
@@ -528,18 +525,19 @@ window.showCustomConfirm = (title, message) => {
          * @returns {string} The HTML string for the header.
          */
         const renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
-            <div class="flex flex-wrap items-center gap-3 mb-4">
-              <button class="btn btn-primary" onclick="${onCreate}">${createLabel}</button>
-              <div class="grow"></div>
-              <div class="relative">
-                <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-        `;
-        
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+      <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="${onCreate}">${createLabel}</button>
+      <div class="grow"></div>
+      <div class="relative">
+        <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+`;
+
+
         /**
          * Renders a standard modal footer with Cancel and OK buttons.
          * @param {string} cancelOnclick - The JS function call for the cancel button.

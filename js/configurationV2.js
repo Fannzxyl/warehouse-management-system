@@ -875,14 +875,13 @@
         </div>
     `,
 },
-// Ganti semua isi 'allocation-rule-assignment-criteria' dengan ini
 'allocation-rule-assignment-criteria': {
     full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment Criteria</h2>
         <p class="text-wise-gray mb-4">Set criteria, and record type, etc.</p>
         
         <div class="flex justify-between items-center mb-4">
-            <button class="btn btn-primary" onclick="showARACForm('create')">Create New</button>
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showARACForm('create')">Create Allocation Rule Criteria</button>
             <input type="text" id="arac-search" placeholder="Search Allocation Rule Criteria..." class="input max-w-xs" oninput="filterARACList(this.value)">
         </div>
 

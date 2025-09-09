@@ -1066,82 +1066,81 @@ function saveZones() {
                 </div>
             `
         };
-
         window.contentData['inventory-control-values'] = {
-            full: `
-                <h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2>
-                <p class="text-gray-600">Manage system-wide inventory control settings and defaults.</p>
-                <div class="flex justify-between items-center mt-4">
-                    <button class="btn btn-primary" onclick="showICVForm('create')">
-                        Create New Value
-                    </button>
-                    <input type="text" id="icv-search" placeholder="Search inventory control values ..."
-                            class="input max-w-xs" oninput="filterICVList(this.value)">
+    full: `
+        <h2 class="text-xl font-semibold mb-4">Inventory Control Values</h2>
+        <p class="text-gray-600">Manage system-wide inventory control settings and defaults.</p>
+        <div class="flex justify-between items-center mt-4">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showICVForm('create')">
+                Create New Value
+            </button>
+            <input type="text" id="icv-search" placeholder="Search inventory control values ..."
+                    class="input max-w-xs" oninput="filterICVList(this.value)">
+        </div>
+        <div id="icv-list-container" class="mt-4 overflow-x-auto">
+            </div>
+
+        <div id="icv-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
+            <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
+                <div class="px-6 pt-5 pb-3 border-b">
+                    <h3 id="icv-form-title" class="text-lg font-semibold">Create New Value</h3>
+                    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeICVForm()" aria-label="Close">✕</button>
                 </div>
-                <div id="icv-list-container" class="mt-4 overflow-x-auto">
-                    </div>
-
-                <div id="icv-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
-                    <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
-                        <div class="px-6 pt-5 pb-3 border-b">
-                            <h3 id="icv-form-title" class="text-lg font-semibold">Create New Value</h3>
-                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeICVForm()" aria-label="Close">✕</button>
+                <div class="p-6 overflow-y-auto">
+                    <form id="icv-form" onsubmit="handleICVSubmit(event)">
+                        <div role="tablist" id="icv-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                            <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
+                            <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
                         </div>
-                        <div class="p-6 overflow-y-auto">
-                            <form id="icv-form" onsubmit="handleICVSubmit(event)">
-                                <div role="tablist" id="icv-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
-                                    <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
-                                    <button role="tab" type="button" data-tab="ud" class="tab">User defined data</button>
-                                </div>
 
-                                <div id="pane-gen" role="tabpanel" data-pane="gen" class="grid gap-4 md:grid-cols-2">
-                                    <div>
-                                        <label for="icv-key" class="block text-sm mb-1">Key <span class="text-red-500">*</span></label>
-                                        <input id="icv-key" name="key" type="number" required class="input" placeholder="e.g. 160">
-                                        <p id="icv-key-error" class="text-xs text-red-500 mt-1 hidden"></p>
-                                    </div>
-                                    <div class="md:col-span-2">
-                                        <label for="icv-description" class="block text-sm mb-1">Description <span class="text-red-500">*</span></label>
-                                        <input id="icv-description" name="description" required class="input" placeholder="Description of the control value">
-                                    </div>
-                                    <div>
-                                        <label for="icv-systemValue" class="block text-sm mb-1">System value</label>
-                                        <input id="icv-systemValue" name="systemValue" class="input" placeholder="e.g. Status Change">
-                                    </div>
-                                    <div class="md:col-span-2 flex items-center gap-4 mt-2">
-                                        <label class="flex items-center gap-2 text-sm">
-                                            <input id="icv-valueRequired" name="valueRequired" type="checkbox"> Value required
-                                        </label>
-                                        <label class="flex items-center gap-2 text-sm">
-                                            <input id="icv-systemCreated" name="systemCreated" type="checkbox"> System created
-                                        </label>
-                                    </div>
-                                </div>
+                        <div id="pane-gen" role="tabpanel" data-pane="gen" class="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <label for="icv-key" class="block text-sm mb-1">Key <span class="text-red-500">*</span></label>
+                                <input id="icv-key" name="key" type="number" required class="input" placeholder="e.g. 160">
+                                <p id="icv-key-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="icv-description" class="block text-sm mb-1">Description <span class="text-red-500">*</span></label>
+                                <input id="icv-description" name="description" required class="input" placeholder="Description of the control value">
+                            </div>
+                            <div>
+                                <label for="icv-systemValue" class="block text-sm mb-1">System value</label>
+                                <input id="icv-systemValue" name="systemValue" class="input" placeholder="e.g. Status Change">
+                            </div>
+                            <div class="md:col-span-2 flex items-center gap-4 mt-2">
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input id="icv-valueRequired" name="valueRequired" type="checkbox"> Value required
+                                </label>
+                                <label class="flex items-center gap-2 text-sm">
+                                    <input id="icv-systemCreated" name="systemCreated" type="checkbox"> System created
+                                </label>
+                            </div>
+                        </div>
 
-                                <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
-                                    ${Array.from({length: 8}, (_, i) => `
-                                    <div>
-                                        <label for="icv-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
-                                        <input id="icv-udf${i+1}" name="udf${i+1}" type="text" class="input">
-                                    </div>
-                                    `).join('')}
-                                </div>
-                            </form>
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
+                            ${Array.from({length: 8}, (_, i) => `
+                            <div>
+                                <label for="icv-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
+                                <input id="icv-udf${i+1}" name="udf${i+1}" type="text" class="input">
+                            </div>
+                            `).join('')}
                         </div>
-                        <div class="px-6 py-4 border-t flex justify-end gap-3">
-                            <button type="button" class="btn" onclick="closeICVForm()">Cancel</button>
-                            <button id="icv-submit-button" type="submit" form="icv-form" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-            `
-        };
+                <div class="px-6 py-4 border-t flex justify-end gap-3">
+                    <button type="button" class="btn" onclick="closeICVForm()">Cancel</button>
+                    <button id="icv-submit-button" type="submit" form="icv-form" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    `
+};
         window.contentData['item-class'] = {
             full: `
                 <h2 class="text-xl font-semibold mb-4">Item Class</h2>
                 <p class="text-gray-600">Group items into different classes for easier management and reporting.</p>
                 <div class="flex justify-between items-center mt-4">
-                    <button class="btn btn-primary" onclick="showItemClassForm('create')">
+                    <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showItemClassForm('create')">
                         Create New Item Class
                     </button>
                     <input type="text" id="item-class-search" placeholder="Search item class..."
@@ -1204,7 +1203,7 @@ function saveZones() {
         <h2 class="text-xl font-semibold mb-4">Storage Template</h2>
         <p class="text-gray-600">Define storage templates to standardize how items are stored.</p>
         <div class="flex justify-between items-center mt-4">
-            <button class="btn btn-primary" onclick="showStorageTemplateForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showStorageTemplateForm('create')">
                 Create New Storage Template
             </button>
             <input type="text" id="st-search" placeholder="Search storage template..."
@@ -1275,7 +1274,7 @@ window.contentData['inventory-status'] = {
         <h2 class="text-xl font-semibold mb-4">Inventory Status</h2>
         <p class="text-gray-600">Manage inventory statuses like Available, Held, or Damaged.</p>
         <div class="flex justify-between items-center mt-4">
-            <button class="btn btn-primary" onclick="showInventoryStatusForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showInventoryStatusForm('create')">
                 Create New Status
             </button>
             <input type="text" id="is-search" placeholder="Search item status..."
@@ -1330,7 +1329,7 @@ window.contentData['location-template'] = {
         <h2 class="text-xl font-semibold mb-4">Location Template</h2>
         <p class="text-gray-600">Define blueprints to generate new warehouse locations systematically.</p>
         <div class="flex justify-between items-center mt-4">
-            <button class="btn btn-primary" onclick="showLocationTemplateForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLocationTemplateForm('create')">
                 Create New Template
             </button>
             <input type="text" id="lt-search" placeholder="Search item template..."
@@ -1397,7 +1396,7 @@ window.contentData['lot-template'] = {
         <h2 class="text-xl font-semibold mb-4">Lot Template</h2>
         <p class="text-gray-600">Define templates for lot numbers and expiration rules.</p>
         <div class="flex justify-between items-center mt-4">
-            <button class="btn btn-primary" onclick="showLotTemplateForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showLotTemplateForm('create')">
                 Create New Template
             </button>
             <input type="text" id="lot-template-search" placeholder="Search lot template..."
@@ -1511,7 +1510,7 @@ window.contentData['zone'] = {
         <h2 class="text-xl font-semibold mb-4">Zone</h2>
         <p class="text-gray-600">Manage warehouse zones for different purposes like picking or storage.</p>
         <div class="flex justify-between items-center mt-4">
-            <button class="btn btn-primary" onclick="showZoneForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneForm('create')">
                 Create New Zone
             </button>
             <input type="text" id="zone-search" placeholder="Search zone..."
@@ -1584,7 +1583,7 @@ window.contentData['zone-type'] = {
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Zone Type</h2>
         <p class="text-wise-gray mb-4">Manage zone types for various areas within the warehouse.</p>
         <div class="flex justify-between items-center mb-4">
-            <button class="btn btn-primary" onclick="showZoneTypeForm('create')">
+            <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="showZoneTypeForm('create')">
                 Create New Zone Type
             </button>
             <input type="text" id="zone-type-search" placeholder="Search zone type..." class="input max-w-xs" oninput="filterZoneTypeList(this.value)">

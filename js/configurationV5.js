@@ -30,7 +30,7 @@
          */
         const renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
             <div class="flex flex-wrap items-center gap-3 mb-4">
-              <button class="btn btn-primary" onclick="${onCreate}">${createLabel}</button>
+              <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="${onCreate}">${createLabel}</button>
               <div class="grow"></div>
               <div class="relative">
                 <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
@@ -339,7 +339,7 @@
                                 <div><label for="lookup-warehouse" class="block text-sm mb-1">Warehouse:</label><input type="text" id="lookup-warehouse" class="input"></div>
                                 <button class="btn btn-primary w-full" onclick="alert('Searching...')">Search</button>
                             </div>
-                            <div class="p-4 border-t flex justify-end gap-2"><button class="btn" onclick="closeIlcLocationLookup()">Cancel</button><button class="btn btn-primary" onclick="selectIlcLocation()">OK</button></div>
+                            <div class="p-4 border-t flex justify-end gap-2"><button class="btn" onclick="closeIlcLocationLookup()">Cancel</button><button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectIlcLocation()">OK</button></div>
                         </div>
                     </div>
                 `
@@ -395,12 +395,10 @@
                         onSearch: "filterLocationList"
                     })}
                     
-                    <!-- Tabel untuk desktop -->
                     <div id="loc-table-desktop" class="hidden md:block border border-wise-border rounded-lg shadow-md overflow-hidden min-h-0">
                         <div id="loc-list-container-desktop" class="h-[70vh] overflow-auto"></div>
                     </div>
 
-                    <!-- Card view untuk mobile -->
                     <div id="loc-list-container-mobile" class="md:hidden space-y-4"></div>
 
                     <div id="loc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
@@ -449,6 +447,7 @@
                                         <button type="button" role="tab" data-tab="qty-um" class="tab">Quantity um list</button>
                                         <button type="button" role="tab" data-tab="dock" class="tab">Dock</button>
                                         <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
+                                        <button type="button" role="tab" data-tab="lookup" class="tab">Lookup UI Location</button>
                                     </div>
                                     <div id="pane-general" role="tabpanel" data-pane="general">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
@@ -508,11 +507,29 @@
                                             <div><label for="loc-num-rows" class="block text-sm mb-1">Number of rows:</label><input type="number" id="loc-num-rows" name="numberOfRows" class="input"></div>
                                         </div></fieldset>
                                     </div></div>
-                                    <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        ${Array.from({ length: 8 }, (_, i) => `<div><label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}
-                                    </div></div>
-                                    <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
-                                </form>
+                                    
+                                    <div id="pane-udf" role="tabpanel" data-pane="udf" class="hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            ${Array.from({ length: 8 }, (_, i) => `
+                                            <div>
+                                                <label for="loc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label>
+                                                <input type="text" id="loc-udf${i + 1}" name="udf${i + 1}" class="input">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div id="pane-lookup" role="tabpanel" data-pane="lookup" class="hidden">
+                                    <div class="p-4 border rounded-lg bg-gray-50 space-y-3">
+                                        <div>
+                                            <label for="lookup-loc-combined" class="block text-sm mb-1 font-medium">Location:</label>
+                                            <input type="text" id="lookup-loc-combined" class="input" placeholder="Contoh: 01.01.1.01">
+                                        </div>
+                                        <button type="button" class="btn btn-primary w-full" onclick="applyLocationLookup()">Apply to Location Fields</button>
+                                    </div>
+                                </div>
+                                <label class="flex items-center gap-2 text-sm mt-4"><input type="checkbox" id="loc-inactive" name="inactive"> Inactive</label>
+                            </form>
                             </div>
                             <div class="px-6 py-4 border-t flex justify-end items-center">
                                 ${renderStandardModalFooter({
@@ -1164,7 +1181,7 @@
             const modal = document.getElementById('loc-form-modal');
             const form = document.getElementById('loc-form');
             const title = document.getElementById('loc-form-title');
-            if (!form) return; // Pengaman kalau form tidak ditemukan
+            if (!form) return;
             form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
@@ -1195,7 +1212,6 @@
                 title.textContent = 'Edit Location';
                 const locations = loc_loadData();
                 const foundLoc = locations.find(l => l.id === id) || {};
-                // FIX: Perbaikan bug spread operator
                 loc = { ...defaultLoc, ...foundLoc };
                 loc.general = { ...defaultLoc.general, ...foundLoc.general };
                 loc.work = { ...defaultLoc.work, ...foundLoc.work };
@@ -1204,7 +1220,6 @@
                 currentLocationQtyUmList = JSON.parse(JSON.stringify(loc.quantityUmList || []));
             }
             
-            // Fungsi bantuan untuk mengisi form dengan lebih aman
             const setField = (name, value, isCheckbox = false) => {
                 const el = form.querySelector(`[name="${name}"]`);
                 if (el) {
@@ -1220,7 +1235,6 @@
                 }
             };
 
-            // Mengisi semua field form menggunakan fungsi bantuan
             setField('locationTemplate', loc.locationTemplate);
             setField('warehouse', loc.warehouse);
             setField('aisle', loc.aisle);
@@ -1267,13 +1281,16 @@
             setField('position', d.position);
             setField('numberOfRows', d.numberOfRows);
 
-            for (let i = 1; i <= 8; i++) {
-                setField(`udf${i}`, loc.userDefined[`udf${i}`]);
+            if (loc.userDefined) {
+                for (let i = 1; i <= 8; i++) {
+                    setField(`udf${i}`, loc.userDefined[`udf${i}`]);
+                }
             }
 
             renderLocationQtyUmTable(currentLocationQtyUmList);
             modal.classList.remove('hidden');
         };
+
 
         window.closeLocationForm = function() {
             document.getElementById('loc-form-modal').classList.add('hidden');
@@ -1286,16 +1303,15 @@
             const id = form.dataset.id;
 
             const selectedUms = Array.from(form.querySelectorAll('input[name="quantityUm"]:checked')).map(cb => cb.value);
-            // FIX: Perbaikan bug spread operator
             const updatedQtyUmList = currentLocationQtyUmList.map(item => ({ ...item, selected: selectedUms.includes(item.uom) }));
 
+            // KODE BARU: Mengambil data dari field User Defined
             const userDefined = {};
             for (let i = 1; i <= 8; i++) {
                 const el = form.querySelector(`[name="udf${i}"]`);
                 if (el) userDefined[`udf${i}`] = el.value;
             }
             
-            // FIX: Menggunakan optional chaining (`?.`) untuk menghindari TypeError
             const newLocation = {
                 id: id,
                 locationTemplate: form.querySelector('[name="locationTemplate"]')?.value,
@@ -1364,7 +1380,7 @@
             renderLocationList();
             await window.showCustomAlert('Success', msg);
         };
-        
+
         window.deleteLocation = async function(id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location?');
             if (confirmed) {
@@ -1376,6 +1392,28 @@
             }
         };
 
+        window.applyLocationLookup = function() {
+            const combinedValue = document.getElementById('lookup-loc-combined').value;
+            if (!combinedValue.trim()) {
+                window.showCustomAlert('Peringatan', 'Masukkan lokasi terlebih dahulu.');
+                return;
+            }
+
+            // Memecah nilai berdasarkan titik (.)
+            const parts = combinedValue.split('.');
+            if (parts.length < 4) {
+                window.showCustomAlert('Error', 'Format lokasi tidak valid. Gunakan format seperti 01.01.1.01');
+                return;
+            }
+
+            // Mengisi nilai ke field di tab General
+            document.getElementById('loc-aisle').value = parts[0] || '';
+            document.getElementById('loc-bay').value = parts[1] || '';
+            document.getElementById('loc-level').value = parts[2] || '';
+            document.getElementById('loc-slot').value = parts[3] || '';
+            window.showCustomAlert('Sukses', `Lokasi "${combinedValue}" berhasil diterapkan.`);
+            activateTab('general', document.getElementById('loc-form-modal'));
+        };
 
         // --- PEMICU (TRIGGER) UNTUK RENDER ---
         document.addEventListener('content:rendered', (e) => {
