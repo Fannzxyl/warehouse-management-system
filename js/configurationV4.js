@@ -1,4 +1,3 @@
-
 (function () {
     document.addEventListener('DOMContentLoaded', () => {
         // Memastikan variabel global sudah tersedia
@@ -545,10 +544,11 @@ window.showCustomConfirm = (title, message) => {
          * @param {string} submitLabel - Label for the submit button (default: 'OK').
          * @returns {string} The HTML string for the footer.
          */
-        const renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
+        // TAMBAHKAN parameter 'submitButtonId'
+        const renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK', submitButtonId = '' }) => `
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
-                <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
+                <button type="submit" form="${submitFormId}" ${submitButtonId ? `id="${submitButtonId}"` : ''} class="btn btn-primary">${submitLabel}</button>
             </div>
         `;
 
@@ -2138,12 +2138,12 @@ window.showIUoMForm = (mode, id = null) => {
             </div>
         </form>
     `;
-    // --- AKHIR PERUBAHAN ---
     
     // Use the new standard footer function
     footerEl.innerHTML = renderStandardModalFooter({
         cancelOnclick: "closeModal('iuom-form-modal')",
-        submitFormId: "iuom-form"
+        submitFormId: "iuom-form",
+        submitButtonId: "iuom-submit-btn"
     });
 
     // Initialize custom dropdowns
@@ -2165,8 +2165,7 @@ window.showIUoMForm = (mode, id = null) => {
     showModal('iuom-form-modal');
 };
 
-
-const toggleIUoMScope = () => {
+window.toggleIUoMScope = () => {
     const scopeItemClassRadio = document.getElementById('scope-item-class');
     const scopeItemFields = document.getElementById('scope-item-fields');
     const scopeItemClassFields = document.getElementById('scope-item-class-fields');
@@ -2199,7 +2198,6 @@ const prefillIUoMForm = (data) => {
 
     toggleIUoMScope();
     renderIUoMConversionsTable(data.conversions);
-    document.getElementById('iuom-last-updated-display').textContent = `Last updated: ${data.updatedAt ? formatDate(data.updatedAt) : 'N/A'}`;
 };
 
 const validateIUoMForm = () => {
@@ -2649,7 +2647,7 @@ window.closeModal = (id) => {
                         </div>
                         <div class="md:col-span-2">
                              <label class="flex items-center gap-2 text-sm">
-                                 <input type="checkbox" id="icv-system-created" name="systemCreated" disabled ${icv.systemCreated === 'Yes' ? 'checked' : ''}>
+                                 <input type="checkbox" id="icv-system-created" name="systemCreated" ${icv.systemCreated === 'Yes' ? 'checked' : ''}>
                                  System Created
                              </label>
                         </div>

@@ -6,7 +6,7 @@
 
         // === Search overlay flags (rollback-friendly)
         window.SEARCH_PREVIEW_ENABLED = false;   // nonaktifkan hover preview panel
-        window.SEARCH_HISTORY_ENABLED = true;    // AKTIPKAN dropdown riwayat
+        window.SEARCH_HISTORY_ENABLED = false;    // AKTIPKAN dropdown riwayat
 
         // ===== Search History Utilities =====
         const HISTORY_KEY = 'wise.searchHistory';
@@ -72,32 +72,26 @@
         window.handleSearch = function(query) {
             const overlay = $('search-overlay');
             const oInput  = $('overlay-search-input');
-            const hInput  = $('search-input'); // Assuming search-input is the header input
+            const hInput  = $('search-input');
             const histDD  = $('search-history-dropdown');
 
-            const q = (query || '').trim();
+            const q = query || ''; // <-- .trim() DIHAPUS DARI SINI
 
-            if (q.length > 0) {
-                // tampilkan overlay
+            if (q.length > 0) { // Cukup cek panjangnya aja
                 overlay?.classList?.remove('hidden');
 
-                // sinkronkan & fokuskan input overlay (supaya ketikan lanjut di popup)
                 if (oInput) {
                     oInput.value = q;
-                    if (hInput) hInput.blur();              // lepas fokus dari header
+                    if (hInput) hInput.blur();
                     try {
                         oInput.focus({ preventScroll: true });
                         oInput.setSelectionRange(oInput.value.length, oInput.value.length);
                     } catch (e) {}
                 }
 
-                // sembunyikan dropdown history saat overlay aktif
                 histDD?.classList?.add('hidden');
-
-                // render hasil
-                performSearch(q, 'overlay');
+                performSearch(q, 'overlay'); // Kirim query apa adanya, termasuk spasi
             } else {
-                // kosong → tutup overlay & kembali ke kategori aktif (jangan tampilkan history)
                 overlay?.classList?.add('hidden');
                 if (typeof selectCategory === 'function' && window.currentCategory) {
                     selectCategory(window.currentCategory);
@@ -111,13 +105,12 @@
             const detailPanel = $('overlay-detail-content-panel');
 
             if (!resultsPanel) return;
-            // kosongkan/sematikan panel detail agar tidak dipakai
             if (detailPanel) {
                 detailPanel.innerHTML = '';
                 detailPanel.style.display = 'none';
             }
 
-            const q = (query || '').toLowerCase();
+            const q = (query || '').trim().toLowerCase(); // <-- .trim() DIPINDAH KE SINI
             const items = Array.isArray(window.searchItems) ? window.searchItems : [];
             const filtered = q.length > 0 ? items.filter(it =>
                 (it.title || '').toLowerCase().includes(q) ||
@@ -139,15 +132,10 @@
                 <p class="text-wise-gray text-xs">Kategori: ${item.category || '-'}${item.lastUpdated ? ' | Terakhir Diperbarui: ' + item.lastUpdated : ''}</p>
                 `;
 
-                // TIDAK ADA HOVER PREVIEW
-                // if (window.SEARCH_PREVIEW_ENABLED) el.onmouseenter = () => showPreview(item.id);
-
-                // Klik = goto
                 el.onclick = () => selectSearchResult(item.id, item.title, query);
                 resultsPanel.appendChild(el);
             });
-
-            // pastikan list melebar penuh
+            
             resultsPanel.style.width = '100%';
         };
 
@@ -159,7 +147,6 @@
 
         // KLIK HASIL = GOTO + (opsional) history
         window.selectSearchResult = function(id, title, query) {
-            addHistory(query); // simpan query ke history
             if (typeof displayContentInMainDashboard === 'function') {
                 displayContentInMainDashboard(id);
             }
@@ -3013,7 +3000,7 @@
                 userDropdown.classList.add('hidden');
             }
             // Menggunakan hideSearchHistory() yang baru
-            if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
+            if (!searchInput.contains(event.target) && (!searchHistoryDropdown || !searchHistoryDropdown.contains(event.target))) {
                 window.hideSearchHistory();
             }
         });

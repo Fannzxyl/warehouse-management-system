@@ -382,8 +382,6 @@
                             placeholder="Search now..."
                             class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
                             oninput="handleSearch(this.value)"
-                            onfocus="showSearchHistory()"
-                            onblur="setTimeout(hideSearchHistory,150)"
                             aria-label="Search dashboard"
                         />
                         <button
@@ -394,10 +392,6 @@
                             <span class="hidden sm:inline">Search</span>
                             <i class="fas fa-search sm:hidden"></i>
                         </button>
-                    </div>
-                    
-                    <div id="search-history-dropdown" class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-fade-in">
-                        <div class="p-2" id="search-history-content"></div>
                     </div>
                 </div>
             </div>

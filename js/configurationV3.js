@@ -1517,10 +1517,8 @@ window.contentData['zone'] = {
                     class="input max-w-xs" oninput="filterZoneList(this.value)">
         </div>
         <div id="zone-list-container" class="mt-4 overflow-x-auto">
-            <!-- Tabel dirender di sini -->
-        </div>
+            </div>
 
-        <!-- Modal untuk Zone -->
         <div id="zone-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30" aria-modal="true" role="dialog">
             <div class="modal-content w-[min(800px,95vw)] bg-white rounded-xl shadow-2xl grid grid-rows-[auto,1fr,auto] max-h-[85vh] opacity-0 scale-95 transition-all">
                 <div class="px-6 pt-5 pb-3 border-b">
@@ -1529,34 +1527,39 @@ window.contentData['zone'] = {
                 </div>
                 <div class="p-6 overflow-y-auto">
                     <form id="zone-form" onsubmit="handleZoneSubmit(event)">
-                        <div class="mb-4">
-                            <label for="zone-identifier" class="block text-sm mb-1">Zone: <span class="text-red-500">*</span></label>
-                            <input id="zone-identifier" name="identifier" required class="input">
-                            <p id="zone-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
-                        <div class="mb-4">
-                            <label for="zone-description" class="block text-sm mb-1">Description:</label>
-                            <input id="zone-description" name="description" class="input">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="zone-type" class="block text-sm mb-1">Zone type:</label>
-                                <select id="zone-type" name="zoneType" class="select">
-                                    ${window._zoneTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="flex items-end pb-2">
-                                <label class="flex items-center gap-2 text-sm">
-                                    <input id="zone-pick-management" name="pickManagementActive" type="checkbox"> Pick management active
-                                </label>
-                            </div>
-                        </div>
-                        
                         <div role="tablist" id="zone-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
-                            <button role="tab" type="button" data-tab="ud" class="tab-active">User defined data</button>
+                            <button role="tab" type="button" data-tab="gen" class="tab-active">General</button>
+                            <button role="tab" type="button" data-tab="ud">User defined data</button>
                         </div>
 
-                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="grid gap-3 md:grid-cols-2">
+                        <div id="pane-gen" role="tabpanel" data-pane="gen">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="zone-identifier" class="block text-sm mb-1">Zone: <span class="text-red-500">*</span></label>
+                                    <input id="zone-identifier" name="identifier" required class="input">
+                                    <p id="zone-identifier-error" class="text-xs text-red-500 mt-1 hidden"></p>
+                                </div>
+                                <div>
+                                    <label for="zone-description" class="block text-sm mb-1">Description:</label>
+                                    <input id="zone-description" name="description" class="input">
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="zone-type" class="block text-sm mb-1">Zone type:</label>
+                                        <select id="zone-type" name="zoneType" class="select">
+                                            ${window._zoneTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                    <div class="flex items-end pb-2">
+                                        <label class="flex items-center gap-2 text-sm">
+                                            <input id="zone-pick-management" name="pickManagementActive" type="checkbox"> Pick management active
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
                             ${Array.from({length: 8}, (_, i) => `
                             <div>
                                 <label for="zone-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label>
@@ -1651,39 +1654,42 @@ window.contentData['location-type'] = {
                             <label for="location-type-name" class="block text-sm font-medium text-wise-dark-gray">Location type:</label>
                             <input type="text" id="location-type-name" name="locationType" required class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
                         </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-wise-dark-gray mb-2">General</h4>
+
+                        <div role="tablist" id="lt-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
+                            <button role="tab" type="button" data-tab="lt-general" class="tab-button tab tab-active">General</button>
+                            <button role="tab" type="button" data-tab="lt-udf" class="tab-button tab">User defined data</button>
+                        </div>
+
+                        <div id="lt-general" data-pane="lt-general" role="tabpanel" class="tab-content">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-wise-border p-4 rounded-md">
                                 <div>
                                     <label for="location-type-length" class="block text-sm font-medium text-wise-dark-gray">Length:</label>
-                                    <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="number" step="0.01" id="location-type-length" name="length" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="location-type-length-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                    <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="location-type-length-um" name="lengthUM" value="Centimeters" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="location-type-width" class="block text-sm font-medium text-wise-dark-gray">Width:</label>
-                                    <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="number" step="0.01" id="location-type-width" name="width" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="location-type-height" class="block text-sm font-medium text-wise-dark-gray">Height:</label>
-                                    <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="number" step="0.01" id="location-type-height" name="height" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="location-type-maximum-weight" class="block text-sm font-medium text-wise-dark-gray">Maximum weight:</label>
-                                    <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="number" step="0.01" id="location-type-maximum-weight" name="maximumWeight" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                                 <div>
                                     <label for="location-type-weight-um" class="block text-sm font-medium text-wise-dark-gray">UM:</label>
-                                    <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm focus:outline-none focus:ring-wise-primary focus:border-wise-primary sm:text-sm bg-white text-wise-dark-gray">
+                                    <input type="text" id="location-type-weight-um" name="weightUM" value="Kilograms" class="mt-1 block w-full px-3 py-2 border border-wise-border rounded-md shadow-sm sm:text-sm bg-white text-wise-dark-gray">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-wise-dark-gray mb-2">User Defined Data</h4>
+                        <div id="lt-udf" data-pane="lt-udf" role="tabpanel" class="tab-content hidden">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-wise-border p-4 rounded-md">
                                 <div>
                                     <label for="lt-user-defined-field1" class="block text-sm font-medium text-wise-dark-gray">User defined field 1:</label>
@@ -1715,7 +1721,7 @@ window.contentData['location-type'] = {
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="mt-6">
                             <label class="inline-flex items-center">
                                 <input type="checkbox" id="location-type-inactive" name="inactive" class="form-checkbox h-4 w-4 text-wise-primary rounded border-wise-border focus:ring-wise-primary">
@@ -2055,49 +2061,56 @@ window.allMenus.push({ name: 'Storage Template', category: 'Inventory Control' }
 
         // Fungsi render list baru untuk Inventory Control Values
         window.renderICVList = function(filter = '') {
-            const container = document.getElementById('icv-list-container');
-            if (!container) return;
-            const filteredData = inventoryControlValues.filter(icv => icv.description.toLowerCase().includes(filter.toLowerCase()));
-            let tableHtml = `
-                <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead>
-                        <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                            <th class="py-3 px-6 text-left">Key</th>
-                            <th class="py-3 px-6 text-left">Description</th>
-                            <th class="py-3 px-6 text-left">System Value</th>
-                            <th class="py-3 px-6 text-left">System Created</th>
-                            <th class="py-3 px-6 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-wise-gray text-sm font-light">
+    const container = document.getElementById('icv-list-container');
+    if (!container) return;
+    
+    // PERBAIKAN: Cek semua properti yang relevan dan pastikan tidak ada yang `undefined` sebelum di-filter.
+    const filteredData = inventoryControlValues.filter(icv => {
+        const searchable = `${icv.key || ''} ${icv.value || ''} ${icv.description || ''} ${icv.systemValue || ''}`.toLowerCase();
+        return searchable.includes(filter.toLowerCase());
+    });
+
+    let tableHtml = `
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">Key</th>
+                    <th class="py-3 px-6 text-left">Description</th>
+                    <th class="py-3 px-6 text-left">System Value</th>
+                    <th class="py-3 px-6 text-left">System Created</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-wise-gray text-sm font-light">
+    `;
+    if (filteredData.length === 0) {
+        tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No inventory control values found.</td></tr>`;
+    } else {
+        filteredData.forEach(icv => {
+            tableHtml += `
+                <tr class="border-b border-wise-border hover:bg-wise-light-gray">
+                    <td class="py-3 px-6 text-left whitespace-nowrap">${icv.key}</td>
+                    <td class="py-3 px-6 text-left">${icv.description}</td>
+                    <td class="py-3 px-6 text-left">${icv.systemValue}</td>
+                    <td class="py-3 px-6 text-left">${icv.systemCreated ? 'Yes' : 'No'}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showICVForm('edit', '${icv.id}')" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+                            <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteICV('${icv.id}')" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             `;
-            if (filteredData.length === 0) {
-                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No inventory control values found.</td></tr>`;
-            } else {
-                filteredData.forEach(icv => {
-                    tableHtml += `
-                        <tr class="border-b border-wise-border hover:bg-wise-light-gray">
-                            <td class="py-3 px-6 text-left whitespace-nowrap">${icv.key}</td>
-                            <td class="py-3 px-6 text-left">${icv.description}</td>
-                            <td class="py-3 px-6 text-left">${icv.systemValue}</td>
-                            <td class="py-3 px-6 text-left">${icv.systemCreated ? 'Yes' : 'No'}</td>
-                            <td class="py-3 px-6 text-center">
-                                <div class="flex item-center justify-center">
-                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showICVForm('edit', '${icv.id}')" title="Edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                                    </button>
-                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteICV('${icv.id}')" title="Delete">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
-            tableHtml += `</tbody></table>`;
-            container.innerHTML = tableHtml;
-        };
+        });
+    }
+    tableHtml += `</tbody></table>`;
+    container.innerHTML = tableHtml;
+};
+
 
         // Ganti fungsi renderItemClassList yang lama dengan yang ini
 window.renderItemClassList = function(filter = '') {
@@ -3622,73 +3635,7 @@ window.showStorageTemplateForm = function(mode, id = null) {
     }, 10);
 };
 
-window.handleStorageTemplateSubmit = async function(event) {
-    event.preventDefault();
-    const form = event.target;
-    const mode = form.dataset.mode;
-    const id = form.dataset.id;
-
-    if (!validateStorageTemplateForm()) return;
-
-    const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item, index) => ({
-        sequence: index + 1,
-        um: item.querySelector('[name="detail-um"]').value,
-        treatAsFullPercent: parseInt(item.querySelector('[name="detail-treatAsFullPercent"]').value, 10),
-        groupDuringCheckIn: item.querySelector('[name="detail-groupDuringCheckIn"]').checked,
-    }));
-    
-    const userDefined = {};
-    for(let i = 1; i <= 8; i++) { 
-        const udfInput = form[`udf${i}`];
-        if (udfInput) userDefined[`udf${i}`] = udfInput.value; 
-    }
-
-    const newTemplate = {
-        identifier: form['identifier'].value,
-        description: form['description'].value,
-        inactive: form['inactive'].checked,
-        systemCreated: form['systemCreated'].checked,
-        detailRecords: details,
-        userDefined, 
-    };
-
-    let msg = '';
-    if (mode === 'create') {
-        newTemplate.id = 'st_' + Date.now();
-        storageTemplates.push(newTemplate);
-        msg = 'Storage Template created successfully!';
-    } else {
-        const index = storageTemplates.findIndex(st => st.id === id);
-        if (index !== -1) {
-            storageTemplates[index] = { ...storageTemplates[index], ...newTemplate };
-            msg = 'Storage Template updated successfully!';
-        }
-    }
-    
-    saveStorageTemplates();
-    closeStorageTemplateForm();
-    renderStorageTemplateList();
-    await window.showCustomAlert('Success', msg);
-};
-
-
-window.closeStorageTemplateForm = function() {
-    const modal = document.getElementById('st-form-modal');
-    const modalContent = modal.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.classList.remove('scale-100', 'opacity-100');
-        modalContent.classList.add('scale-95', 'opacity-0');
-    }
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        document.body.classList.remove('modal-open');
-        if (modal._untrap) {
-            modal._untrap();
-            delete modal._untrap;
-        }
-    }, 300);
-};
-
+// Ganti semua fungsi handleStorageTemplateSubmit yang ada dengan yang ini
 window.handleStorageTemplateSubmit = async function(event) {
     event.preventDefault();
     if (!validateStorageTemplateForm()) return;
@@ -3697,6 +3644,7 @@ window.handleStorageTemplateSubmit = async function(event) {
     const mode = form.dataset.mode;
     const id = form.dataset.id;
 
+    // Mengambil data dari detail records
     const details = Array.from(document.querySelectorAll('#st-detail-records-list .detail-record-item')).map((item, index) => {
         return {
             sequence: index + 1,
@@ -3706,12 +3654,22 @@ window.handleStorageTemplateSubmit = async function(event) {
         };
     });
 
+    // Mengambil data dari User Defined Fields
+    const userDefined = {};
+    for (let i = 1; i <= 8; i++) {
+        const udfInput = form.querySelector(`[name="udf${i}"]`);
+        if (udfInput) {
+            userDefined[`udf${i}`] = udfInput.value;
+        }
+    }
+    
     const newTemplate = {
         identifier: form['identifier'].value,
         description: form['description'].value,
         inactive: form['inactive'].checked,
         systemCreated: form['systemCreated'].checked,
         detailRecords: details,
+        userDefined: userDefined,
     };
 
     let msg = '';
@@ -3740,6 +3698,23 @@ window.handleStorageTemplateSubmit = async function(event) {
     closeStorageTemplateForm();
     window.renderStorageTemplateList();
     await window.showCustomAlert('Success', msg);
+};
+
+window.closeStorageTemplateForm = function() {
+    const modal = document.getElementById('st-form-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+    }
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        if (modal._untrap) {
+            modal._untrap();
+            delete modal._untrap;
+        }
+    }, 300);
 };
 
 window.deleteStorageTemplate = async function(id) {
@@ -4529,7 +4504,6 @@ window.filterZoneList = function(value) {
     renderZoneList(value);
 };
 
-// Letakkan di bagian MODAL FUNCTIONS
 window.showZoneForm = function(mode, id = null) {
     const modal = document.getElementById('zone-form-modal');
     const form = document.getElementById('zone-form');
@@ -4538,6 +4512,25 @@ window.showZoneForm = function(mode, id = null) {
     form.reset();
     form.dataset.mode = mode;
     form.dataset.id = id;
+    
+    // Atur tab ke "General" saat modal pertama kali dibuka
+    activateTab('gen', modal); 
+    
+    // Tambahkan event listener untuk tombol-tombol tab
+    const tabList = document.getElementById('zone-tab-list');
+    if (tabList) {
+        // Hapus listener lama untuk mencegah duplikasi jika ada
+        if (tabList._onClickHandler) {
+            tabList.removeEventListener('click', tabList._onClickHandler);
+        }
+        // Buat listener baru
+        tabList._onClickHandler = (e) => {
+            if (e.target.role === 'tab') {
+                activateTab(e.target.dataset.tab, modal);
+            }
+        };
+        tabList.addEventListener('click', tabList._onClickHandler);
+    }
     
     if (mode === 'create') {
         title.textContent = 'Create New Zone';

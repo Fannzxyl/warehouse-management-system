@@ -318,7 +318,10 @@
                                         <div><label for="detail-max-qty" class="block text-sm mb-1">Maximum qty:</label><input type="number" id="detail-max-qty" class="input" value="20.00"></div>
                                         <div><label for="detail-um" class="block text-sm mb-1">UM:</label><select id="detail-um" class="select"><option>Pack</option><option>PCK</option><option>PLT</option></select></div>
                                         <div class="lg:col-span-2"><label for="detail-location-type" class="block text-sm mb-1">Location type:</label><input type="text" id="detail-location-type" class="input" value="CARTON FLOW 5 SLOT"></div>
-                                        <div class="lg:col-span-2"><label for="detail-location" class="block text-sm mb-1">Location:</label><div class="flex"><input type="text" id="detail-location" class="input rounded-r-none"><button type="button" class="btn rounded-l-none border-l-0" onclick="openIlcLocationLookup()">...</button></div></div>
+                                        <div class="lg:col-span-2">
+                                            <label for="detail-location" class="block text-sm mb-1">Location:</label>
+                                            <select id="detail-location" name="location" class="select"></select>
+                                        </div>
                                         <div class="lg:col-span-2 flex items-end gap-2"><button type="button" class="btn btn-primary w-full" onclick="addOrUpdateDetail()">Add/Update to List</button><button type="button" class="btn w-full" onclick="clearDetailForm()">Clear Fields</button></div>
                                     </div></div>
                                     <div id="ilc-detail-table-container" class="border rounded-lg overflow-hidden max-h-48 overflow-y-auto"></div>
@@ -883,18 +886,23 @@
                 clearDetailForm();
             }
         }
-        window.showItemLocationCapacityForm = function(mode, id = null) {
+        window.window.showItemLocationCapacityForm = function(mode, id = null) {
             const modal = document.getElementById('ilc-form-modal');
             const form = document.getElementById('ilc-form');
             const title = document.getElementById('ilc-form-title');
             form.reset();
             form.dataset.mode = mode;
             form.dataset.id = id;
+
             if (mode === 'create') {
                 title.textContent = 'Create New Item Location Capacity';
                 currentCapacityDetails = [];
-            }
-            else {
+                // Membersihkan field UDF saat membuat data baru
+                for (let i = 1; i <= 8; i++) {
+                    const udfInput = form.querySelector(`[name="udf${i}"]`);
+                    if (udfInput) udfInput.value = '';
+                }
+            } else {
                 title.textContent = 'Edit Item Location Capacity';
                 let data = ilc_loadData();
                 const item = data.find(d => d.id === id);
@@ -903,16 +911,41 @@
                     form.company.value = item.company;
                     form.itemClass.value = item.itemClass;
                     currentCapacityDetails = JSON.parse(JSON.stringify(item.capacityDetails));
+
+                    // Mengisi kembali data User Defined ke dalam form saat mode edit
+                    if (item.userDefined) {
+                        for (let i = 1; i <= 8; i++) {
+                            const udfInput = form.querySelector(`[name="udf${i}"]`);
+                            if (udfInput) {
+                                udfInput.value = item.userDefined[`udf${i}`] || '';
+                            }
+                        }
+                    }
                 }
             }
+
             if (!modal._listenersAttached) {
-                modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => activateTab(button.dataset.tab, modal) });
+                modal.querySelectorAll('[role="tab"]').forEach(button => { 
+                    button.onclick = () => activateTab(button.dataset.tab, modal) 
+                });
                 modal._listenersAttached = true;
             }
             activateTab('general', modal);
             clearDetailForm();
+            
+            // Siapin data lokasi buat dropdown
+            const allLocations = loc_loadData().map(loc => {
+                const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
+                return { value: combinedLocation, label: combinedLocation };
+            });
+            // Bikin dropdown canggihnya
+            if(window.makeLongDropdown) {
+                window.makeLongDropdown('detail-location', allLocations, '');
+            }
+            
             modal.classList.remove('hidden');
         };
+
         window.closeItemLocationCapacityForm = () => document.getElementById('ilc-form-modal').classList.add('hidden');
         window.openIlcLocationLookup = () => document.getElementById('ilc-location-lookup-modal').classList.remove('hidden');
         window.closeIlcLocationLookup = () => document.getElementById('ilc-location-lookup-modal').classList.add('hidden');
@@ -926,19 +959,33 @@
             const mode = form.dataset.mode;
             const id = form.dataset.id;
             let data = ilc_loadData();
-            const formData = { item: form.item.value, company: form.company.value, itemClass: form.itemClass.value, capacityDetails: currentCapacityDetails, userDefined: {} };
-            for(let i = 1; i <= 8; i++) {
-                formData.userDefined[`udf${i}`] = form[`udf${i}`].value;
+
+            const userDefined = {};
+            for (let i = 1; i <= 8; i++) {
+                const udfInput = form.querySelector(`[name="udf${i}"]`);
+                if (udfInput) {
+                    userDefined[`udf${i}`] = udfInput.value;
+                }
             }
+            
+            const formData = { 
+                item: form.item.value, 
+                company: form.company.value, 
+                itemClass: form.itemClass.value, 
+                capacityDetails: currentCapacityDetails, 
+                userDefined: userDefined 
+            };
+
             let msg = '';
             if (mode === 'create') {
                 formData.id = 'ILC' + Date.now();
                 data.push(formData);
                 msg = 'Capacity created!';
-            }
-            else {
+            } else {
                 const index = data.findIndex(d => d.id === id);
-                if (index !== -1) data[index] = { ...data[index], ...formData };
+                if (index !== -1) {
+                    data[index] = { ...data[index], ...formData };
+                }
                 msg = 'Capacity updated!';
             }
             ilc_saveData(data);
