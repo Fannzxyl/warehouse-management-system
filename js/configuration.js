@@ -1,6 +1,186 @@
 (function() {
     document.addEventListener('DOMContentLoaded', () => {
 
+        // === utils
+        const $ = (id) => document.getElementById(id);
+
+        // === Search overlay flags (rollback-friendly)
+        window.SEARCH_PREVIEW_ENABLED = false;   // nonaktifkan hover preview panel
+        window.SEARCH_HISTORY_ENABLED = true;    // AKTIPKAN dropdown riwayat
+
+        // ===== Search History Utilities =====
+        const HISTORY_KEY = 'wise.searchHistory';
+        const MAX_HISTORY = 8;
+
+        function getHistory() {
+          try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+          catch { return []; }
+        }
+        function setHistory(list) {
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, MAX_HISTORY)));
+        }
+        function addHistory(q) {
+          q = (q || '').trim();
+          if (!q) return;
+          const cur = getHistory().filter(x => x !== q);
+          cur.unshift(q);
+          setHistory(cur);
+        }
+
+        window.showSearchHistory = function () {
+          if (!window.SEARCH_HISTORY_ENABLED) return;
+          const dd  = document.getElementById('search-history-dropdown');
+          const box = document.getElementById('search-history-content');
+          if (!dd || !box) return;
+
+          const items = getHistory();
+          if (!items.length) {
+            box.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
+            dd.classList.remove('hidden');
+            return;
+          }
+          box.innerHTML = items.map((q,i)=>`
+            <div class="flex items-center justify-between px-3 py-2 hover:bg-wise-light-gray rounded-md">
+              <button class="text-left text-sm text-wise-dark-gray flex-1" onclick="applySearchHistory('${q.replace(/"/g,'&quot;')}')">${q}</button>
+              <button class="text-wise-gray hover:text-red-500 text-xs ml-2" onclick="removeSearchHistory(${i})">&times;</button>
+            </div>`).join('') + `
+            <div class="text-right pt-2 pb-1 px-3">
+              <button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">Clear all</button>
+            </div>`;
+          dd.classList.remove('hidden');
+        };
+        window.hideSearchHistory   = () => document.getElementById('search-history-dropdown')?.classList.add('hidden');
+        window.applySearchHistory  = (q) => { const h = document.getElementById('search-input'); if (h) h.value = q; handleSearch(q); window.hideSearchHistory(); };
+        window.removeSearchHistory = (i) => { const cur = getHistory(); cur.splice(i,1); setHistory(cur); window.showSearchHistory(); };
+        window.clearAllSearchHistory = () => { setHistory([]); window.showSearchHistory(); };
+        // ===== END Search History Utilities =====
+
+        // === global state guards (hindari warning)
+        window.searchItems = Array.isArray(window.searchItems) ? window.searchItems : [];
+        window.currentCategory = window.currentCategory || null;
+        window.zones = Array.isArray(window.zones) ? window.zones : [];
+        window.zoneTypes = Array.isArray(window.zoneTypes) ? window.zoneTypes : [];
+        window.locationTypes = Array.isArray(window.locationTypes) ? window.locationTypes : [];
+
+        // --- Perubahan Utama: Hapus implementasi lama di sini ---
+        // Mencari dan menghapus: handleSearch, performSearch, showPreview, selectSearchResult, closeSearchOverlay
+        // Serta: showSearchHistory, applySearchHistory, removeSearchHistory, clearAllSearchHistory
+        // (Semua fungsi di bawah ini adalah implementasi final)
+
+        // ================= Search Overlay (final, no preview/history) =================
+        // INPUT HANDLER
+        window.handleSearch = function(query) {
+            const overlay = $('search-overlay');
+            const oInput  = $('overlay-search-input');
+            const hInput  = $('search-input'); // Assuming search-input is the header input
+            const histDD  = $('search-history-dropdown');
+
+            const q = (query || '').trim();
+
+            if (q.length > 0) {
+                // tampilkan overlay
+                overlay?.classList?.remove('hidden');
+
+                // sinkronkan & fokuskan input overlay (supaya ketikan lanjut di popup)
+                if (oInput) {
+                    oInput.value = q;
+                    if (hInput) hInput.blur();              // lepas fokus dari header
+                    try {
+                        oInput.focus({ preventScroll: true });
+                        oInput.setSelectionRange(oInput.value.length, oInput.value.length);
+                    } catch (e) {}
+                }
+
+                // sembunyikan dropdown history saat overlay aktif
+                histDD?.classList?.add('hidden');
+
+                // render hasil
+                performSearch(q, 'overlay');
+            } else {
+                // kosong → tutup overlay & kembali ke kategori aktif (jangan tampilkan history)
+                overlay?.classList?.add('hidden');
+                if (typeof selectCategory === 'function' && window.currentCategory) {
+                    selectCategory(window.currentCategory);
+                }
+            }
+        };
+
+        // RENDER HASIL LIST-ONLY
+        window.performSearch = function(query, source) {
+            const resultsPanel = $('overlay-search-results-list-panel');
+            const detailPanel = $('overlay-detail-content-panel');
+
+            if (!resultsPanel) return;
+            // kosongkan/sematikan panel detail agar tidak dipakai
+            if (detailPanel) {
+                detailPanel.innerHTML = '';
+                detailPanel.style.display = 'none';
+            }
+
+            const q = (query || '').toLowerCase();
+            const items = Array.isArray(window.searchItems) ? window.searchItems : [];
+            const filtered = q.length > 0 ? items.filter(it =>
+                (it.title || '').toLowerCase().includes(q) ||
+                (it.category || '').toLowerCase().includes(q)
+            ) : [];
+
+            resultsPanel.innerHTML = '';
+            if (!filtered.length) {
+                resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
+                resultsPanel.style.width = '100%';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'py-2 px-3 bg-wise-light-gray rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
+                el.innerHTML = `
+                <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
+                <p class="text-wise-gray text-xs">Kategori: ${item.category || '-'}${item.lastUpdated ? ' | Terakhir Diperbarui: ' + item.lastUpdated : ''}</p>
+                `;
+
+                // TIDAK ADA HOVER PREVIEW
+                // if (window.SEARCH_PREVIEW_ENABLED) el.onmouseenter = () => showPreview(item.id);
+
+                // Klik = goto
+                el.onclick = () => selectSearchResult(item.id, item.title, query);
+                resultsPanel.appendChild(el);
+            });
+
+            // pastikan list melebar penuh
+            resultsPanel.style.width = '100%';
+        };
+
+        // NO-OP PREVIEW (untuk kompatibilitas pemanggil lama)
+        window.showPreview = function(id) {
+            if (!window.SEARCH_PREVIEW_ENABLED) return; // tidak melakukan apa-apa
+            // (opsional) jika nanti diaktifkan kembali, isi di sini.
+        };
+
+        // KLIK HASIL = GOTO + (opsional) history
+        window.selectSearchResult = function(id, title, query) {
+            addHistory(query); // simpan query ke history
+            if (typeof displayContentInMainDashboard === 'function') {
+                displayContentInMainDashboard(id);
+            }
+        };
+
+        // TUTUP OVERLAY (pastikan history dropdown ikut disembunyikan)
+        window.closeSearchOverlay = function() {
+            const overlay = $('search-overlay');
+            overlay?.classList?.add('hidden');
+
+            const histDD = $('search-history-dropdown');
+            if (histDD) histDD.classList.add('hidden');
+        };
+
+        // (Opsional tapi direkomendasikan) Matikan UI History dari sisi JS
+        // Hapus implementasi lama yang bersifat no-op, diganti dengan yang baru di atas
+        // window.showSearchHistory = () => {};
+        // window.applySearchHistory = () => {};
+        // window.removeSearchHistory = () => {};
+        // window.clearAllSearchHistory = () => {};
+
         const mainContent = document.getElementById('default-content-area');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
         const searchOverlay = document.getElementById('search-overlay');
@@ -822,94 +1002,9 @@
             },
         };
 
-        window.handleSearch = function(query) {
-            const searchOverlay = document.getElementById('search-overlay');
-            const overlaySearchInput = document.getElementById('overlay-search-input');
-            const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-
-            if (query.length > 0) {
-                searchOverlay.classList.remove('hidden');
-                overlaySearchInput.value = query;
-                performSearch(query, 'overlay');
-                searchHistoryDropdown.classList.add('hidden');
-            } else {
-                searchOverlay.classList.add('hidden');
-                selectCategory(currentCategory);
-                showSearchHistory();
-            }
-        };
-
-        window.performSearch = function(query, source) {
-            const resultsPanel = document.getElementById('overlay-search-results-list-panel');
-            const detailPanel = document.getElementById('overlay-detail-content-panel');
-            const filtersContainer = document.getElementById('overlay-search-filters');
-
-            if (query.length > 0) {
-                let filteredResults = searchItems.filter(item =>
-                    item.title.toLowerCase().includes(query.toLowerCase()) ||
-                    item.category.toLowerCase().includes(query.toLowerCase())
-                );
-
-                resultsPanel.innerHTML = '';
-                if (filteredResults.length > 0) {
-                    filteredResults.forEach(item => {
-                        const resultItem = document.createElement('div');
-                        resultItem.className = 'py-2 px-3 bg-wise-light-gray rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
-                        resultItem.innerHTML = `
-                            <h4 class="text-wise-dark-gray font-medium text-sm">${item.title}</h4>
-                            <p class="text-wise-gray text-xs">Kategori: ${item.category} | Terakhir Diperbarui: ${item.lastUpdated}</p>
-                        `;
-                        resultItem.onmouseenter = () => showPreview(item.id);
-                        resultItem.onclick = () => selectSearchResult(item.id, item.title, query);
-                        resultsPanel.appendChild(resultItem);
-                    });
-                } else {
-                    resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
-                }
-                if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
-                }
-            } else {
-                resultsPanel.innerHTML = '';
-                if (detailPanel) {
-                    detailPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Arahkan kursor ke item di kiri untuk pratinjau.</p>`;
-                }
-            }
-        };
-
-        window.showPreview = function(id) {
-            const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
-            const content = contentData[id];
-
-            if (content && (content.detail || content.full)) {
-                overlayDetailContentPanel.innerHTML = `
-                    ${content.detail || content.full}    
-                    <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="displayContentInMainDashboard('${id}')">
-                        Tampilkan Halaman
-                    </button>
-                `;
-            } else {
-                overlayDetailContentPanel.innerHTML = `<p class="text-wise-gray text-center text-sm">Tidak ada pratinjau tersedia untuk item ini.</p>`;
-            }
-        };
-
-
-        window.selectSearchResult = function(id, title, query) {
-            addSearchHistory(query);
-            displayContentInMainDashboard(id);
-        };
-
         window.displayContentInMainDashboard = function(id) {
             selectCategory(id);
             closeSearchOverlay();
-        };
-
-        window.closeSearchOverlay = function() {
-            document.getElementById('search-overlay').classList.add('hidden');
-            document.getElementById('search-input').value = '';
-            document.getElementById('overlay-search-input').value = '';
-            activeFilters = [];
-            document.getElementById('search-history-dropdown').classList.add('hidden');
         };
 
         window.removeOverlayFilter = function(filterName) {
@@ -936,67 +1031,22 @@
             performSearch(query, 'overlay');
         };
 
-        function addSearchHistory(query) {
-            if (query && !searchHistory.includes(query)) {
-                searchHistory.unshift(query);
-                searchHistory = searchHistory.slice(0, 5);
-                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            }
-        }
-
-        window.showSearchHistory = function() {
-            const historyDropdown = document.getElementById('search-history-dropdown');
-            const historyContent = document.getElementById('search-history-content');
-
-            historyContent.innerHTML = '';
-
-            if (searchHistory.length > 0) {
-                searchHistory.forEach((item, index) => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-wise-light-gray rounded-md';
-                    historyItem.innerHTML = `
-                        <span class="text-wise-dark-gray text-sm" onclick="applySearchHistory('${item}')">${item}</span>
-                        <button class="text-wise-gray hover:text-wise-dark-gray text-xs ml-2" onclick="removeSearchHistory(${index})">&times;</button>
-                    `;
-                    historyContent.appendChild(historyItem);
-                });
-                const clearAllButton = document.createElement('div');
-                clearAllButton.className = 'text-right pt-2 pb-1 px-3';
-                clearAllButton.innerHTML = `<button class="text-wise-gray hover:underline text-xs" onclick="clearAllSearchHistory()">clear All Search History</button>`;
-                historyContent.appendChild(clearAllButton);
-                historyDropdown.classList.remove('hidden');
-            } else {
-                historyContent.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada riwayat pencarian.</p>`;
-                historyDropdown.classList.remove('hidden');
-            }
-        };
-
-        window.applySearchHistory = function(query) {
-            document.getElementById('search-input').value = query;
-            handleSearch(query);
-            document.getElementById('search-history-dropdown').classList.add('hidden');
-        };
-
-        window.removeSearchHistory = function(index) {
-            event.stopPropagation();
-            searchHistory.splice(index, 1);
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-            showSearchHistory();
-        };
-
-        window.clearAllSearchHistory = function() {
-            event.stopPropagation();
-            searchHistory = [];
-            localStorage.removeItem('searchHistory');
-            showSearchHistory();
-        };
+        // Old addSearchHistory function removed, replaced by global addHistory
+        // function addSearchHistory(query) {
+        //     if (query && !searchHistory.includes(query)) {
+        //         searchHistory.unshift(query);
+        //         searchHistory = searchHistory.slice(0, 5);
+        //         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        //     }
+        // }
 
         let currentCategory = 'configuration';
         let activeFilters = [];
-        let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        // Old searchHistory variable removed, replaced by getHistory() from localStorage
+        // let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
         window.searchItems = [
-            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' }, 
+            { id: 'configuration-warehouse', title: 'Warehouse Configuration', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-strategies', title: 'Locating Strategies', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'locating-rule', title: 'Locating Rule', category: 'Configuration', lastUpdated: 'Latest' },
             { id: 'configuration-user-profile', title: 'User Profile Management', category: 'Configuration', lastUpdated: 'Latest' },
@@ -1057,28 +1107,28 @@
         ];
 
         window.userProfiles = [
-            { 
-                id: 'UP001', 
-                user: 'admin', 
-                description: 'System Administrator', 
-                defaultWarehouse: 'WH001', 
-                shift: 'Day', 
-                menu: 'Full Access', 
-                language: 'English', 
-                inactive: false, 
-                defaultLabelPrinter: 'PRINTER_A', 
-                defaultReportPrinter: 'PRINTER_B', 
-                locateEmptyLpn: true, 
-                locateEmptyItem: true, 
-                locateLpnStaging: false, 
-                locateItemStaging: false, 
-                udf1: 'Admin_UDF1', 
-                udf2: '', 
-                udf3: '', 
-                udf4: '', 
-                udf5: '', 
-                udf6: '', 
-                udf7: '', 
+            {
+                id: 'UP001',
+                user: 'admin',
+                description: 'System Administrator',
+                defaultWarehouse: 'WH001',
+                shift: 'Day',
+                menu: 'Full Access',
+                language: 'English',
+                inactive: false,
+                defaultLabelPrinter: 'PRINTER_A',
+                defaultReportPrinter: 'PRINTER_B',
+                locateEmptyLpn: true,
+                locateEmptyItem: true,
+                locateLpnStaging: false,
+                locateItemStaging: false,
+                udf1: 'Admin_UDF1',
+                udf2: '',
+                udf3: '',
+                udf4: '',
+                udf5: '',
+                udf6: '',
+                udf7: '',
                 udf8: '',
                 cycleCounting: 'Default',
                 shipping: 'Default',
@@ -1399,8 +1449,8 @@
                     document.getElementById('return-address3').value = warehouse.returnAddress3;
                     document.getElementById('return-city').value = warehouse.returnCity;
                     document.getElementById('return-state').value = warehouse.returnState;
-                    document.getElementById('return-postal-code').value = warehouse.postalCode;
-                    document.getElementById('return-country').value = warehouse.country;
+                    document.getElementById('return-postal-code').value = warehouse.returnPostalCode;
+                    document.getElementById('return-country').value = warehouse.returnCountry;
                     document.getElementById('return-fax-number').value = warehouse.returnFaxNumber;
                     document.getElementById('return-attention-to').value = warehouse.returnAttentionTo;
                     document.getElementById('return-phone-number').value = warehouse.returnPhoneNumber;
@@ -2252,7 +2302,7 @@
             div.className = 'detail-record-item p-3 border border-wise-border rounded-md bg-white relative';
             div.innerHTML = `
                 <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700" onclick="removeDetailRecord(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -2940,6 +2990,19 @@
             }
         };
 
+        // (Opsional) Fungsi untuk membuka overlay pencarian secara paksa
+        window.openSearchOverlay = function() {
+          const overlay = document.getElementById('search-overlay');
+          const hInput  = document.getElementById('search-input');
+          const oInput  = document.getElementById('overlay-search-input');
+          overlay?.classList?.remove('hidden');
+          if (oInput) {
+            oInput.value = hInput?.value || '';
+            hInput?.blur();
+            try { oInput.focus({preventScroll:true}); } catch(e) {}
+          }
+        };
+
         document.addEventListener('click', function(event) {
             const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
             const userDropdown = document.getElementById('user-dropdown');
@@ -2949,8 +3012,9 @@
             if (userIconContainer && userDropdown && !userIconContainer.contains(event.target) && !userDropdown.contains(event.target)) {
                 userDropdown.classList.add('hidden');
             }
+            // Menggunakan hideSearchHistory() yang baru
             if (!searchInput.contains(event.target) && !searchHistoryDropdown.contains(event.target)) {
-                searchHistoryDropdown.classList.add('hidden');
+                window.hideSearchHistory();
             }
         });
 })();
