@@ -19,16 +19,12 @@
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        /**
-         * Menampilkan modal alert kustom.
-         * @param {string} title - Judul modal.
-         * @param {string} message - Pesan modal.
-         * @returns {Promise<boolean>} - Mengembalikan Promise yang resolve dengan true ketika tombol OK diklik.
-         */
         window.showCustomAlert = function(title, message) {
             customModalTitle.textContent = title;
-            customModalMessage.textContent = message;
-            customModalCancelBtn.classList.add('hidden'); // Sembunyikan tombol batal untuk alert
+            // customModalMessage.textContent = message;
+            // UBAH JADI .innerHTML agar bisa merender tag HTML
+            customModalMessage.innerHTML = message;
+            customModalCancelBtn.classList.add('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -44,16 +40,12 @@
             });
         };
 
-        /**
-         * Menampilkan modal konfirmasi kustom.
-         * @param {string} title - Judul modal.
-         * @param {string} message - Pesan modal.
-         * @returns {Promise<boolean>} - Mengembalikan Promise yang resolve dengan true jika OK diklik, false jika Cancel.
-         */
         window.showCustomConfirm = function(title, message) {
             customModalTitle.textContent = title;
-            customModalMessage.textContent = message;
-            customModalCancelBtn.classList.remove('hidden'); // Tampilkan tombol batal untuk konfirmasi
+            
+            // UBAH JUGA BAGIAN INI DARI .textContent MENJADI .innerHTML
+            customModalMessage.innerHTML = message;
+            customModalCancelBtn.classList.remove('hidden');
             customModalOkBtn.textContent = 'OK';
             customModalOverlay.classList.remove('hidden');
             customModalOverlay.classList.add('flex');
@@ -409,11 +401,12 @@
 
         <div class="bg-wise-light-gray p-5 rounded-xl shadow-md mb-6 border border-wise-border">
             <div class="flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200" onclick="toggleFilterSection()">
-                <h3 class="text-lg font-semibold text-wise-dark-gray flex items-center">
-                    <i class="fas fa-filter text-wise-primary mr-2"></i>Filter Penerimaan
-                </h3>
-                <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
-            </div>
+  <div class="text-sm font-medium text-wise-dark-gray flex items-center">
+    <i class="fas fa-filter text-wise-primary mr-2 text-base"></i>
+    <span>Filter Penerimaan</span>
+  </div>
+  <i id="filter-arrow" class="fas fa-chevron-down transform transition-transform duration-300"></i>
+</div>
 
             <div id="collapsible-filter-area" class="transition-all duration-500 ease-in-out overflow-hidden max-h-0">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-wise-border mt-4">
@@ -1742,11 +1735,14 @@
             // Inisialisasi formulir atau tabel jika kategori terkait
             // Khusus untuk Receipt Explorer, panggil renderReceiptTable()
             if (category === 'receiving-receipt-explorer') {
-                // Initialize filtered data and render table on load
-                filteredReceiptData = [...receiptData]; // Start with unfiltered data for initial render
-                currentPage = 1;
-                renderReceiptTable();
-            }
+                            // Initialize filtered data and render table on load
+            filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
+
+            // Langsung loncat ke halaman terakhir biar data barunya keliatan
+            const totalPages = Math.ceil(receiptData.length / rowsPerPage);
+            currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
+            renderReceiptTable();
+                        }
             
             // Tutup sidebar di tampilan mobile setelah memilih kategori
             if (window.innerWidth < 768) {
@@ -2200,47 +2196,64 @@
         let filteredReceiptData = [];
 
         /**
-         * Menerapkan filter dan merender tabel penerimaan.
+         * MENAMBAHKAN data baru ke tabel berdasarkan input filter, bukan mem-filter.
          */
-        window.applyReceiptFilters = function() {
-            console.log('applyReceiptFilters called'); // Debugging
-            const receiptId = document.getElementById('filter-receipt-id').value.toLowerCase();
-            const receiptIdType = document.getElementById('filter-receipt-id-type').value.toLowerCase();
-            const trailerId = document.getElementById('filter-trailer-id').value.toLowerCase();
+        window.applyReceiptFilters = async function() {
+            console.log('applyReceiptFilters (Add Mode) called'); 
+            const receiptId = document.getElementById('filter-receipt-id').value;
+            const receiptIdType = document.getElementById('filter-receipt-id-type').value;
+            const trailerId = document.getElementById('filter-trailer-id').value;
             const receiptDate = document.getElementById('filter-receipt-date').value;
             const closedDate = document.getElementById('filter-closed-date').value;
-            const loadingStatus = document.getElementById('filter-loading-status').value.toLowerCase();
-            const trailerStatus = document.getElementById('filter-trailer-status').value.toLowerCase();
-            const receiptType = document.getElementById('filter-receipt-type').value.toLowerCase();
-            const purchaseOrderId = document.getElementById('filter-po-id').value.toLowerCase();
-            const sourceId = document.getElementById('filter-source-id').value.toLowerCase();
-            const source = document.getElementById('filter-source').value.toLowerCase();
-            const ship = document.getElementById('filter-ship').value.toLowerCase();
+            const loadingStatus = document.getElementById('filter-loading-status').value;
+            const trailingStatus = document.getElementById('filter-trailer-status').value;
+            const receiptType = document.getElementById('filter-receipt-type').value;
+            const purchaseOrderId = document.getElementById('filter-po-id').value;
+            const sourceId = document.getElementById('filter-source-id').value;
+            const source = document.getElementById('filter-source').value;
+            const ship = document.getElementById('filter-ship').value;
+            if (!receiptId) {
+                await showCustomAlert('Input Tidak Lengkap', 'Mohon isi **Receipt ID** terlebih dahulu.');
+                return;
+            }
+            const newReceipt = {
+                receiptId: receiptId,
+                receiptIdType: receiptIdType || 'Unassigned',
+                trailerId: trailerId || 'Unassigned',
+                receiptDate: receiptDate || new Date().toISOString().split('T')[0], // Default ke hari ini jika kosong
+                closedDate: closedDate || '',
+                loadingStatus: loadingStatus || 'Pending',
+                trailingStatus: trailingStatus || 'Check in Pending',
+                receiptType: receiptType || 'Unassigned',
+                purchaseOrderId: purchaseOrderId || 'Unassigned',
+                sourceId: sourceId || 'Unassigned',
+                source: source || 'Unassigned',
+                ship: ship || 'Unassigned'
+            };
+            console.log('New data to add:', newReceipt);
+            receiptData.push(newReceipt);
+            // 4. Reset filter dan render ulang tabel
+filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
 
-            console.log('Filter values:', { receiptId, receiptIdType, trailerId, receiptDate, closedDate, loadingStatus, trailerStatus, receiptType, purchaseOrderId, sourceId, source, ship }); // Debugging
+// Langsung loncat ke halaman terakhir biar data barunya keliatan
+const totalPages = Math.ceil(receiptData.length / rowsPerPage);
+currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
 
-            filteredReceiptData = receiptData.filter(receipt => {
-                const matchesReceiptId = !receiptId || (receipt.receiptId && receipt.receiptId.toLowerCase().includes(receiptId));
-                const matchesReceiptIdType = !receiptIdType || (receipt.receiptIdType && receipt.receiptIdType.toLowerCase() === receiptIdType);
-                const matchesTrailerId = !trailerId || (receipt.trailerId && receipt.trailerId.toLowerCase().includes(trailerId));
-                const matchesReceiptDate = !receiptDate || (receipt.receiptDate && receipt.receiptDate === receiptDate);
-                const matchesClosedDate = !closedDate || (receipt.closedDate && receipt.closedDate === closedDate);
-                const matchesLoadingStatus = !loadingStatus || (receipt.loadingStatus && receipt.loadingStatus.toLowerCase() === loadingStatus);
-                const matchesTrailerStatus = !trailerStatus || (receipt.trailerStatus && receipt.trailerStatus.toLowerCase() === trailerStatus);
-                const matchesReceiptType = !receiptType || (receipt.receiptType && receipt.receiptType.toLowerCase() === receiptType);
-                const matchesPurchaseOrderId = !purchaseOrderId || (receipt.purchaseOrderId && receipt.purchaseOrderId.toLowerCase().includes(purchaseOrderId));
-                const matchesSourceId = !sourceId || (receipt.sourceId && receipt.sourceId.toLowerCase().includes(sourceId));
-                const matchesSource = !source || (receipt.source && receipt.source.toLowerCase().includes(source));
-                const matchesShip = !ship || (receipt.ship && receipt.ship.toLowerCase().includes(ship));
+renderReceiptTable();
+            document.getElementById('filter-receipt-id').value = '';
+            document.getElementById('filter-receipt-id-type').value = '';
+            document.getElementById('filter-trailer-id').value = '';
+            document.getElementById('filter-receipt-date').value = '';
+            document.getElementById('filter-closed-date').value = '';
+            document.getElementById('filter-loading-status').value = '';
+            document.getElementById('filter-trailer-status').value = '';
+            document.getElementById('filter-receipt-type').value = '';
+            document.getElementById('filter-po-id').value = '';
+            document.getElementById('filter-source-id').value = '';
+            document.getElementById('filter-source').value = '';
+            document.getElementById('filter-ship').value = '';
 
-                return matchesReceiptId && matchesReceiptIdType && matchesTrailerId && matchesReceiptDate &&
-                       matchesClosedDate && matchesLoadingStatus && matchesTrailerStatus && matchesReceiptType &&
-                       matchesPurchaseOrderId && matchesSourceId && matchesSource && matchesShip;
-            });
-
-            console.log('Filtered data length:', filteredReceiptData.length); // Debugging
-            currentPage = 1; // Reset to first page after applying filters
-            renderReceiptTable();
+            await showCustomAlert('Sukses', `Data dengan Receipt ID <strong>${receiptId}</strong> berhasil ditambahkan!`);
         };
 
         /**
@@ -2285,7 +2298,7 @@ window.renderReceiptTable = function() {
                     <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Source ID</th>
                     <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Source</th>
                     <th class="py-3 px-4 text-left font-semibold whitespace-nowrap">Ship</th>
-                    <th class="py-3 px-4 text-center font-semibold whitespace-nowrap">Actions</th>
+                    <th class="sticky right-0 bg-wise-light-gray py-3 px-4 text-center font-semibold whitespace-nowrap">Actions</th>
                 </tr>
             </thead>
             <tbody class="text-wise-gray text-sm font-light">
@@ -2300,7 +2313,7 @@ window.renderReceiptTable = function() {
     } else {
         paginatedData.forEach((item, index) => {
             tableHtml += `
-                <tr class="border-t border-wise-border hover:bg-gray-50">
+                <tr class="border-t border-wise-border hover:bg-gray-50 group">
                     <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
                     <td class="py-3 px-4 text-left whitespace-nowrap font-medium text-wise-dark-gray">${item.receiptId}</td>
                     <td class="py-3 px-4 text-left whitespace-nowrap">${item.receiptIdType}</td>
@@ -2314,7 +2327,7 @@ window.renderReceiptTable = function() {
                     <td class="py-3 px-4 text-left whitespace-nowrap">${item.sourceId}</td>
                     <td class="py-3 px-4 text-left whitespace-nowrap">${item.source}</td>
                     <td class="py-3 px-4 text-left whitespace-nowrap">${item.ship}</td>
-                    <td class="py-3 px-4 text-center whitespace-nowrap">
+                    <td class="sticky right-0 bg-white group-hover:bg-gray-50 py-3 px-4 text-center whitespace-nowrap">
                         <button class="px-3 py-1 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm text-xs active-press transform" onclick="showReceiptDetails('${item.receiptId}')">Details</button>
                     </td>
                 </tr>
@@ -2402,27 +2415,60 @@ window.renderReceiptTable = function() {
             }
         };
 
-        /**
-         * Menampilkan detail penerimaan dalam modal kustom.
-         * @param {string} receiptId - ID penerimaan.
-         */
         window.showReceiptDetails = async function(receiptId) {
             const receipt = receiptData.find(item => item.receiptId === receiptId);
             if (receipt) {
                 let detailsHtml = `
-                    <p class="mb-1"><strong>Receipt ID:</strong> ${receipt.receiptId}</p>
-                    <p class="mb-1"><strong>Receipt ID Type:</strong> ${receipt.receiptIdType}</p>
-                    <p class="mb-1"><strong>Trailer ID:</strong> ${receipt.trailerId}</p>
-                    <p class="mb-1"><strong>Receipt Date:</strong> ${receipt.receiptDate}</p>
-                    <p class="mb-1"><strong>Closed Date/Time:</strong> ${receipt.closedDate}</p>
-                    <p class="mb-1"><strong>Loading Status:</strong> ${receipt.loadingStatus}</p>
-                    <p class="mb-1"><strong>Trailing Status:</strong> ${receipt.trailingStatus || 'N/A'}</p>
-                    <p class="mb-1"><strong>Receipt Type:</strong> ${receipt.receiptType}</p>
-                    <p class="mb-1"><strong>Purchase Order ID:</strong> ${receipt.purchaseOrderId}</p>
-                    <p class="mb-1"><strong>Source ID:</strong> ${receipt.sourceId}</p>
-                    <p class="mb-1"><strong>Source:</strong> ${receipt.source}</p>
-                    <p class="mb-1"><strong>Ship:</strong> ${receipt.ship}</p>
-                    <p class="mt-4 text-wise-gray text-sm italic">Ini adalah detail dummy untuk penerimaan.</p>
+                    <div class="text-sm space-y-2">
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Receipt ID:</strong>
+                            <span>${receipt.receiptId}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">ID Type:</strong>
+                            <span>${receipt.receiptIdType}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Trailer ID:</strong>
+                            <span>${receipt.trailerId}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Receipt Date:</strong>
+                            <span>${receipt.receiptDate}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Closed Date:</strong>
+                            <span>${receipt.closedDate || '-'}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Loading Status:</strong>
+                            <span>${receipt.loadingStatus}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Trailing Status:</strong>
+                            <span>${receipt.trailingStatus || 'N/A'}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Receipt Type:</strong>
+                            <span>${receipt.receiptType}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">PO ID:</strong>
+                            <span>${receipt.purchaseOrderId}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Source ID:</strong>
+                            <span>${receipt.sourceId}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Source:</strong>
+                            <span>${receipt.source}</span>
+                        </div>
+                        <div class="grid grid-cols-[auto,1fr] gap-x-4">
+                            <strong class="text-wise-gray text-right">Ship:</strong>
+                            <span>${receipt.ship}</span>
+                        </div>
+                    </div>
                 `;
                 await showCustomAlert(`Detail Penerimaan: ${receiptId}`, detailsHtml);
             } else {
