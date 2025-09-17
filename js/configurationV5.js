@@ -1134,8 +1134,8 @@
             // --- RENDER UNTUK DESKTOP ---
             let tableHtml = `<table class="min-w-max w-full table-auto bg-white"><thead>
                 <tr class="bg-wise-light-gray text-wise-dark-gray text-sm"> 
-                    <th class="py-2 px-4 text-left font-semibold sticky left-0 bg-wise-light-gray z-10 whitespace-nowrap">Warehouse</th>
-                    <th class="py-2 px-4 text-left font-semibold sticky left-[110px] bg-wise-light-gray z-10 whitespace-nowrap">Location</th>
+                    <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Warehouse</th>
+                    <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location</th>                  
                     <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location template</th>
                     <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Type</th>
                     <th class="py-2 px-4 text-left font-semibold whitespace-nowrap">Location Status</th>
@@ -1143,7 +1143,7 @@
                     <th class="py-2 px-4 text-left font-semibold">Allocation zone</th>
                     <th class="py-2 px-4 text-left font-semibold">Work zone</th>
                     <th class="py-2 px-4 text-left font-semibold">Active</th>
-                    <th class="py-2 px-4 text-center font-semibold">Actions</th>
+                    <th class="py-2 px-4 text-center font-semibold sticky right-0 bg-wise-light-gray z-10">Actions</th>
                 </tr></thead><tbody class="text-wise-gray text-sm font-light">`;
 
             if (filteredData.length === 0) {
@@ -1151,9 +1151,11 @@
             } else {
                 filteredData.forEach(loc => {
                     const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-                    tableHtml += `<tr class="border-b hover:bg-gray-50">
-                        <td class="py-2 px-4 text-left whitespace-nowrap sticky left-0 bg-white hover:bg-gray-50 z-10">${loc.warehouse}</td>
-                        <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap sticky left-[110px] bg-white hover:bg-gray-50 z-10">${combinedLocation}</td>
+                    
+                    {/* DITAMBAH: class 'group' pada <tr> */}
+                    tableHtml += `<tr class="border-b hover:bg-gray-50 group">
+                        <td class="py-2 px-4 text-left whitespace-nowrap">${loc.warehouse}</td>
+                        <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap">${combinedLocation}</td>
                         <td class="py-2 px-4 text-left whitespace-nowrap">${loc.locationTemplate}</td>
                         <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationType || ''}</td>
                         <td class="py-2 px-4 text-left whitespace-nowrap">${loc.general?.locationStatus || ''}</td>
@@ -1161,7 +1163,7 @@
                         <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.allocationZone || ''}">${loc.allocationZone || ''}</td>
                         <td class="py-2 px-4 text-left truncate max-w-[150px]" title="${loc.workZone || ''}">${loc.workZone || ''}</td>
                         <td class="py-2 px-4 text-left whitespace-nowrap">${!loc.inactive ? 'Yes' : 'No'}</td>
-                        <td class="py-2 px-4 text-center">
+                        <td class="py-2 px-4 text-center sticky right-0 bg-white group-hover:bg-gray-50 z-10">
                             <div class="flex item-center justify-center">
                                 <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="showLocationForm('edit', '${loc.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
                                 <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="deleteLocation('${loc.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
@@ -1209,8 +1211,8 @@
             }
             containerMobile.innerHTML = cardHtml;
         };
-        window.filterLocationList = debounce((value) => renderLocationList(value), 300);
 
+        window.filterLocationList = debounce((value) => renderLocationList(value), 300);
         function renderLocationQtyUmTable(list) {
             const container = document.getElementById('loc-qty-um-list-table');
             if (!container) return;

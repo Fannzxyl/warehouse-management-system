@@ -596,10 +596,10 @@
 
             <!-- New Command Palette Overlay -->
             <div id="search-overlay" role="dialog" aria-modal="true" aria-label="Search overlay" class="fixed inset-0 z-[60] hidden transition-all-smooth">
-                <div class="absolute inset-0 bg-black/30 transition-all-smooth" onclick="closeSearchOverlay()"></div>
+                <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-all-smooth" onclick="closeSearchOverlay()"></div>
                 <div id="search-dialog" class="relative md:fixed md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2
-         w-[92vw] max-w-[720px] rounded-xl border border-gray-200/70 bg-white shadow-lg search-overlay-card
-         flex flex-col md:max-h-[80vh] md:h-auto h-[88vh] md:p-6 p-4 md:mt-0 mt-20">
+                    w-[92vw] max-w-[720px] rounded-xl border border-gray-200/70 bg-white shadow-lg search-overlay-card
+                    flex flex-col md:max-h-[80vh] md:h-auto h-[88vh] md:p-6 p-4 md:mt-0 mt-20">
                     <div class="flex items-center gap-3 p-4 border-b md:p-0 md:border-b-0">
                         <h2 id="overlay-title" class="text-lg font-semibold text-wise-dark-gray hidden">Search</h2>
                         <div class="relative flex-1 flex items-center">

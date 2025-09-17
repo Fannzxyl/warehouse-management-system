@@ -1593,151 +1593,6 @@ window.showCustomConfirm = (title, message) => {
                 showToast('Item berhasil dihapus!');
             }
         };
-
-        // --- CSV EXPORT/IMPORT ---
-        window.exportItemsToCSV = () => {
-             const headers = [
-                "id", "company", "itemCode", "description", "inactive", "inventoryTracking",
-                "itemTemplate", "inboundShelfLife", "promoItem", "containerType", "tiHi", "primarySupplier", "mfgExpDate", "shelfLife", "outboundShelfLife",
-                "immediateEligible", "immediateLocatingRule", "inboundQcStatus",
-                "cost", "listPrice", "netPrice", "companyPrefix", "itemReference", "cageCode", "gs1GtinEnabled", "gs1Type",
-                "eqValue", "division", "itemColor", "department", "itemStyle", "shippingBOM",
-                "char2a", "char2b", ...Array.from({ length: 8 }, (_, i) => `udf${i + 1}`),
-                "allocationRule", "locatingRule", "nmfcCode", "itemClass", "packingClass", "storageTemplate",
-                "catchWeightRequired", "lotControlled", "lotTemplate", "lotDaysToExpire",
-                "serialControlled", "serialInbound", "serialInventory", "serialOutbound", "serialTemplate",
-                "inboundEligible", "computeQtyAs", "inspectionQty", "inspectionUm", "qcLocatingRule",
-                "webImage", "webThumb", "longDescription", "availableForWebOrder",
-                "alternateItem", "substituteItem", "substituteList",
-                "preferenceCriterion", "harmonizedCode", "harmonizedUploaded", "countryOfOrigin", "netCost", "countries",
-                ...Array.from({ length: 10 }, (_, i) => `categories${i + 1}`), "updatedAt"
-            ];
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += headers.map(h => `"${h}"`).join(",") + "\r\n";
-
-            items.forEach(item => {
-                const row = headers.map(header => {
-                    let value;
-                    if (header.startsWith('udf')) {
-                        const udfNum = header.replace('udf', '');
-                        value = item.udf?.[`udf${udfNum}`] || '';
-                    } else if (header.startsWith('categories')) {
-                        const catNum = header.replace('categories', '');
-                        value = item.categories?.[catNum] || '';
-                    } else {
-                        value = item[header];
-                    }
-
-                    if (value === null || value === undefined) {
-                        value = '';
-                    } else if (typeof value === 'boolean') {
-                        value = value ? 'true' : 'false';
-                    } else if (typeof value === 'object' && (header === 'substituteList' || header === 'countries')) {
-                        value = JSON.stringify(value).replace(/"/g, '""');
-                    }
-                    return `"${String(value).replace(/"/g, '""')}"`;
-                }).join(",");
-                csvContent += row + "\r\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "items.csv");
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        };
-
-        window.importItemsFromCSV = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const text = e.target.result;
-                const lines = text.split('\n').filter(l => l.trim() !== '');
-                if (lines.length <= 1) {
-                    showToast('File CSV kosong atau tidak valid.', 'error');
-                    return;
-                }
-
-                const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
-                const newItems = [];
-                const errors = [];
-                for (let i = 1; i < lines.length; i++) {
-                    const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g, '').trim());
-                    const item = { udf: {}, categories: {}, substituteList: [], countries: [] }; 
-                    let isValid = true;
-                    
-                    if (values.length !== headers.length) {
-                        errors.push(`Baris ${i + 1}: Jumlah kolom tidak cocok.`);
-                        continue;
-                    }
-
-                    headers.forEach((header, index) => {
-                        let value = values[index];
-                        if (header.startsWith('udf')) {
-                            const udfNum = header.replace('udf', '');
-                            item.udf[`udf${udfNum}`] = value;
-                        } else if (header.startsWith('categories')) {
-                            const catNum = header.replace('categories', '');
-                            item.categories[catNum] = value;
-                        } else if (['substituteList', 'countries'].includes(header)) {
-                             try {
-                                item[header] = JSON.parse(value);
-                             } catch (e) {
-                                errors.push(`Baris ${i + 1}: JSON tidak valid untuk ${header}.`);
-                                isValid = false;
-                             }
-                        } else if (['inactive', 'inventoryTracking', 'gs1GtinEnabled', 'availableForWebOrder', 'preferenceCriterion',
-                                    'harmonizedUploaded', 'catchWeightRequired', 'lotControlled', 'serialControlled',
-                                    'serialInbound', 'serialInventory', 'serialOutbound', 'immediateEligible', 'inboundEligible'].includes(header)) {
-                             item[header] = value.toLowerCase() === 'true';
-                        } else if (['cost', 'listPrice', 'netPrice', 'eqValue', 'lotDaysToExpire', 'inspectionQty', 'shelfLife'].includes(header)) {
-                             item[header] = parseFloat(value) || 0;
-                        } else if (header === 'updatedAt') {
-                            // Do nothing, we'll set it to now
-                        }
-                        else {
-                            item[header] = value;
-                        }
-                    });
-
-                    if (!item.itemCode || !item.company) {
-                        isValid = false;
-                        errors.push(`Baris ${i + 1}: Kode Item dan Perusahaan diperlukan.`);
-                    }
-                    
-                    if (isValid) newItems.push(item);
-                }
-
-                if (errors.length > 0) {
-                    await window.showCustomAlert('Error Impor', `Ditemukan ${errors.length} kesalahan:\n${errors.join('\n')}`);
-                }
-
-                if (newItems.length > 0) {
-                    newItems.forEach(newItem => {
-                        const existingIndex = items.findIndex(item => item.itemCode === newItem.itemCode && item.company === newItem.company);
-                        if (existingIndex === -1) {
-                             // Fix ID for new items
-                            const maxId = items.reduce((max, item) => {
-                                const num = parseInt(item.id.replace('ITM', ''), 10);
-                                return Math.max(max, isNaN(num) ? 0 : num);
-                            }, 0);
-                            newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
-                            items.push(newItem);
-                        } else {
-                            Object.assign(items[existingIndex], newItem, { updatedAt: Date.now() });
-                        }
-                    });
-                    saveItems();
-                    window.renderItemList();
-                    showToast(`${newItems.length} data Item berhasil diimpor!`);
-                }
-            };
-            reader.readAsText(file);
-        };
         
         // --- ITEM LIST RENDER & FILTER ---
         window.renderItemList = (filter = '', sortBy = '', sortDir = 'asc') => {
@@ -1790,9 +1645,6 @@ window.showCustomConfirm = (title, message) => {
                             <td class="py-3 px-6 text-left">${formatDate(item.updatedAt)}</td>
                             <td class="py-3 px-6 text-center">
                                 <div class="flex item-center justify-center">
-                                    <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemForm('view', '${item.id}')" title="Lihat">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                    </button>
                                     <button class="w-6 h-6 p-1 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemForm('edit', '${item.id}')" title="Edit">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     </button>
@@ -2119,7 +1971,7 @@ window.showIUoMForm = (mode, id = null) => {
                         <button type="button" class="btn btn-sm btn-outline" onclick="moveConversionRowDown()">↓</button>
                     </div>
                 </div>
-                <div class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto">
+                <div class="border rounded-md overflow-x-auto max-h-[300px] overflow-y-auto">
                     <table class="min-w-full text-sm"><thead class="sticky top-0 bg-gray-100"><tr>
                         <th class="py-2 px-4 w-12"><input type="checkbox" id="iuom-select-all-conversions" onchange="toggleAllConversions(this.checked)"></th>
                         <th class="py-2 px-4 text-left">Seq</th>
@@ -2779,7 +2631,6 @@ window.closeModal = (id) => {
                     searchPlaceholder: "Search...",
                     onSearch: "filterItemList"
                 })}
-                <!-- Container untuk tabel item. Scrollbar vertikal + batasi tinggi -->
                 <div id="item-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };

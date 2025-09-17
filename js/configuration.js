@@ -139,34 +139,25 @@
             resultsPanel.style.width = '100%';
         };
 
-        // NO-OP PREVIEW (untuk kompatibilitas pemanggil lama)
-        window.showPreview = function(id) {
-            if (!window.SEARCH_PREVIEW_ENABLED) return; // tidak melakukan apa-apa
-            // (opsional) jika nanti diaktifkan kembali, isi di sini.
-        };
-
         // KLIK HASIL = GOTO + (opsional) history
-        window.selectSearchResult = function(id, title, query) {
-            if (typeof displayContentInMainDashboard === 'function') {
+        window.selectSearchResult = function(id) {
+            if (id === 'configuration') {
+                window.location.href = 'configuration.html';
+            } else {
                 displayContentInMainDashboard(id);
             }
         };
 
         // TUTUP OVERLAY (pastikan history dropdown ikut disembunyikan)
         window.closeSearchOverlay = function() {
-            const overlay = $('search-overlay');
-            overlay?.classList?.add('hidden');
-
-            const histDD = $('search-history-dropdown');
-            if (histDD) histDD.classList.add('hidden');
+            const overlay = document.getElementById('search-overlay');
+            if (overlay) overlay.classList.add('hidden');
+            
+            const headerInput = document.getElementById('search-input');
+            const overlayInput = document.getElementById('overlay-search-input');
+            if (headerInput) headerInput.value = '';
+            if (overlayInput) overlayInput.value = '';
         };
-
-        // (Opsional tapi direkomendasikan) Matikan UI History dari sisi JS
-        // Hapus implementasi lama yang bersifat no-op, diganti dengan yang baru di atas
-        // window.showSearchHistory = () => {};
-        // window.applySearchHistory = () => {};
-        // window.removeSearchHistory = () => {};
-        // window.clearAllSearchHistory = () => {};
 
         const mainContent = document.getElementById('default-content-area');
         const sidebarItems = document.querySelectorAll('.sidebar-item');
