@@ -111,7 +111,7 @@
         <div>
           <div class="flex items-center justify-between mb-2">
             <label for="password" class="block text-base font-semibold text-gray-700">Password</label>
-            <a href="#" class="text-xs sm:text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline transition-colors duration-200">Forgot password?</a>
+            <a href="#" id="forgotPasswordLink" class="text-xs sm:text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline transition-colors duration-200">Forgot password?</a>
           </div>
           <div class="input-field-wrapper">
             <input
@@ -147,6 +147,43 @@
       </form>
     </div>
   </div>
+
+  <!-- Forgot Password Modal -->
+<div id="forgotPasswordModal" class="fixed inset-0 hidden bg-black/40 backdrop-blur-sm z-50 items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center border-b pb-3">
+      <h2 class="text-lg font-semibold text-gray-800">Password Reset Request</h2>
+      <button id="closeForgotModal" class="text-gray-500 hover:text-gray-700">✕</button>
+    </div>
+
+    <!-- Body -->
+    <form id="forgotForm" class="mt-4 space-y-4">
+      <div>
+        <label for="forgotEmail" class="text-sm text-gray-600">Your Email</label>
+        <input type="email" id="forgotEmail" required
+          class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
+      </div>
+      <div>
+        <label for="adminEmail" class="text-sm text-gray-600">Supervisor/Admin Email</label>
+        <input type="email" id="adminEmail" required
+          class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
+      </div>
+      <div>
+        <label for="reason" class="text-sm text-gray-600">Reason</label>
+        <textarea id="reason" rows="2"
+          class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600"></textarea>
+      </div>
+      <button type="submit"
+        class="w-full h-11 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700">
+        Send Request
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <p class="text-xs text-gray-500 mt-4">This request will be reviewed by your direct supervisor or admin.</p>
+  </div>
+</div>
 
   <!-- JS -->
   <script src="./js/login.js"></script>

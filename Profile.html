@@ -128,6 +128,17 @@
                         </dl>
                     </div>
                 </div>
+                
+                <!-- Password Change Section -->
+                <div class="bg-white border border-border-light rounded-xl shadow-sm">
+                    <div class="px-6 py-4 flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-text-dark">Change Password</h3>
+                        <button id="changePasswordButton" class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
+                            <i class="fas fa-lock w-4 h-4 mr-2"></i>
+                            Change Password
+                        </button>
+                    </div>
+                </div>
 
                 <div class="bg-white border border-border-light rounded-xl shadow-sm">
                     <div class="px-6 py-4 border-b border-border-light">
@@ -230,6 +241,7 @@
         </div>
     </div>
 
+    <!-- Edit Profile Modal -->
     <div id="editModal" class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
             <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
@@ -296,7 +308,68 @@
         </div>
     </div>
 
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
+                <h3 class="text-xl font-semibold text-text-dark">Change Password</h3>
+                <button id="closePasswordModal" class="text-text-light hover:text-text-dark transition-colors">
+                    <i class="fas fa-times w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="changePasswordForm" class="p-6">
+                <div class="space-y-5">
+                    <div>
+                        <label for="currentPassword" class="block text-sm font-medium text-text-dark mb-2">Current Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <i class="fas fa-lock text-text-light"></i>
+                            </span>
+                            <input type="password" id="currentPassword" required class="w-full pl-10 pr-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="newPassword" class="block text-sm font-medium text-text-dark mb-2">New Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <i class="fas fa-lock text-text-light"></i>
+                            </span>
+                            <input type="password" id="newPassword" required minlength="6" class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark" onclick="togglePasswordVisibility('newPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-text-light mt-2">Must be at least 6 characters long.</p>
+                        <div class="mt-2 h-2 bg-border-light rounded-full overflow-hidden">
+                            <div id="passwordStrengthBar" class="h-full bg-red-500 transition-all duration-300" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="confirmNewPassword" class="block text-sm font-medium text-text-dark mb-2">Confirm New Password</label>
+                        <div class="relative">
+                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                <i class="fas fa-lock text-text-light"></i>
+                            </span>
+                            <input type="password" id="confirmNewPassword" required class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark" onclick="togglePasswordVisibility('confirmNewPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p id="passwordMismatchError" class="text-xs text-red-600 mt-2 hidden">Passwords do not match.</p>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-8">
+                    <button type="button" id="cancelPasswordButton" class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
+                        Cancel
+                    </button>
+                    <button type="submit" id="savePasswordButton" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm" disabled>
+                        Save New Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="./js/profile.js"></script>
 </body>
 </html>
-

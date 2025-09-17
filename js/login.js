@@ -13,21 +13,28 @@
   const eyeClosed = document.getElementById('eye-closed');
   const honeypot = document.getElementById('company');
 
+  // Forgot password refs (UPDATED)
+  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+  const closeForgotModalButton = document.getElementById('closeForgotModal');
+  const forgotForm = document.getElementById('forgotForm'); // New form reference
+
   // === Config ===
   const MAX_ATTEMPTS = 5;
   const COOLDOWN_MS = 5 * 60 * 1000; // 5 menit
   const REDIRECT_URL = 'dashboard.html';
 
   // === Demo credentials (hashed password: SHA-256 hex) ===
-  // password map:
-  // admin@gmail.com -> 123456
-  // user@wise.com   -> password123
-  // demo@wise.com   -> demo123
-  const HASHED_CREDENTIALS = {
-    'admin@gmail.com': '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',
-    'user@wise.com':   'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f',
-    'demo@wise.com':   'f6c5f5b5bd1068cf6d22116e176b6aa6b3bfec21f26a823b692e2ea21d0260b7'
+  const HASHED_CREDENTIALS_KEY = 'user_credentials';
+  let HASHED_CREDENTIALS = JSON.parse(localStorage.getItem(HASHED_CREDENTIALS_KEY)) || {
+    'admin@gmail.com': '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password: 123456
+    'user@wise.com':   'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', // password: password123
+    'demo@wise.com':   'f6c5f5b5bd1068cf6d22116e176b6aa6b3bfec21f26a823b692e2ea21d0260b7' // password: demo123
   };
+
+  function saveCredentials() {
+    localStorage.setItem(HASHED_CREDENTIALS_KEY, JSON.stringify(HASHED_CREDENTIALS));
+  }
 
   // === Utils ===
   function showMessage(type, message) {
@@ -39,22 +46,13 @@
   }
   function hideMessage() {
     messageBox.classList.remove('show');
-    messageBox.classList.add('hidden');
   }
   function setLoading(isLoading) {
-    if (isLoading) {
-      loginButton.disabled = true;
-      loginText.textContent = 'Logging in...';
-      loadingSpinner.classList.remove('hidden');
-    } else {
-      loginButton.disabled = false;
-      loginText.textContent = 'Log In';
-      loadingSpinner.classList.add('hidden');
-    }
+    loginButton.disabled = isLoading;
+    loginText.textContent = isLoading ? 'Logging in...' : 'Log In';
+    loadingSpinner.classList.toggle('hidden', !isLoading);
   }
   function emailLike(str) {
-    // sederhana: izinkan username biasa atau email
-    // kalau email, cek format dasar
     if (str.includes('@')) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(str);
     }
@@ -64,36 +62,19 @@
     const errors = [];
     if (!username.trim()) errors.push('Username/email is required');
     else if (!emailLike(username.trim())) errors.push('Invalid email/username format');
-
     if (!password.trim()) errors.push('Password is required');
     else if (password.length < 6) errors.push('Password must be at least 6 characters');
-
     return errors;
   }
   function getNow() { return Date.now(); }
 
   // Rate limit (localStorage)
-  const RL_KEYS = {
-    ATTEMPTS: 'login_attempts',
-    COOLDOWN_UNTIL: 'login_cooldown_until'
-  };
-  function getAttempts() {
-    return parseInt(localStorage.getItem(RL_KEYS.ATTEMPTS) || '0', 10);
-  }
-  function setAttempts(n) {
-    localStorage.setItem(RL_KEYS.ATTEMPTS, String(n));
-  }
-  function getCooldownUntil() {
-    return parseInt(localStorage.getItem(RL_KEYS.COOLDOWN_UNTIL) || '0', 10);
-  }
-  function setCooldownUntil(ts) {
-    localStorage.setItem(RL_KEYS.COOLDOWN_UNTIL, String(ts));
-  }
-  function resetRateLimit() {
-    setAttempts(0);
-    setCooldownUntil(0);
-  }
-
+  const RL_KEYS = { ATTEMPTS: 'login_attempts', COOLDOWN_UNTIL: 'login_cooldown_until' };
+  function getAttempts() { return parseInt(localStorage.getItem(RL_KEYS.ATTEMPTS) || '0', 10); }
+  function setAttempts(n) { localStorage.setItem(RL_KEYS.ATTEMPTS, String(n)); }
+  function getCooldownUntil() { return parseInt(localStorage.getItem(RL_KEYS.COOLDOWN_UNTIL) || '0', 10); }
+  function setCooldownUntil(ts) { localStorage.setItem(RL_KEYS.COOLDOWN_UNTIL, String(ts)); }
+  function resetRateLimit() { setAttempts(0); setCooldownUntil(0); }
   function remainingCooldownMs() {
     const until = getCooldownUntil();
     const left = until - getNow();
@@ -110,26 +91,19 @@
     if (window.crypto?.subtle) {
       const enc = new TextEncoder().encode(text);
       const buf = await crypto.subtle.digest('SHA-256', enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b => b.toString(16).padStart(2, '0')).join('');
+    const arr = Array.from(new Uint8Array(buf));
+    return arr.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-    // fallback (tidak ideal, tapi tetap jalan)
-    // simple hash (bukan SHA-256) hanya untuk demo: jangan gunakan di produksi
     let h = 0;
     for (let i = 0; i < text.length; i++) {
-      h = (h << 5) - h + text.charCodeAt(i);
-      h |= 0;
+      h = (h << 5) - h + text.charCodeAt(i); h |= 0;
     }
     return ('00000000' + (h >>> 0).toString(16)).slice(-8).repeat(8).slice(0, 64);
   }
-
   function constantTimeEqual(a, b) {
-    // samakan panjang
     if (a.length !== b.length) return false;
     let res = 0;
-    for (let i = 0; i < a.length; i++) {
-      res |= a.charCodeAt(i) ^ b.charCodeAt(i);
-    }
+    for (let i = 0; i < a.length; i++) { res |= a.charCodeAt(i) ^ b.charCodeAt(i); }
     return res === 0;
   }
 
@@ -137,23 +111,12 @@
   async function handleLogin(e) {
     e.preventDefault();
     e.stopPropagation();
-
     if (loginButton.disabled) return;
-
-    // Honeypot filled? block
-    if (honeypot && honeypot.value) {
-      showMessage('error', 'Request blocked.');
-      return;
-    }
-
+    if (honeypot && honeypot.value) { showMessage('error', 'Request blocked.'); return; }
     hideMessage();
 
-    // Rate-limit checks
     const left = remainingCooldownMs();
-    if (left > 0) {
-      showMessage('error', `Too many attempts. Try again in ${formatMs(left)}.`);
-      return;
-    }
+    if (left > 0) { showMessage('error', `Too many attempts. Try again in ${formatMs(left)}.`); return; }
     if (getAttempts() >= MAX_ATTEMPTS) {
       setCooldownUntil(getNow() + COOLDOWN_MS);
       setAttempts(0);
@@ -163,54 +126,34 @@
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
-
     const validationErrors = validateForm(username, password);
-    if (validationErrors.length > 0) {
-      showMessage('error', validationErrors[0]);
-      return;
-    }
+    if (validationErrors.length > 0) { showMessage('error', validationErrors[0]); return; }
 
     setLoading(true);
     try {
-      // simulasi delay
       await new Promise(r => setTimeout(r, 500));
-
       const storedHash = HASHED_CREDENTIALS[username];
       const passHash = await sha256Hex(password);
-
       const ok = typeof storedHash === 'string' && constantTimeEqual(passHash, storedHash);
 
       if (ok) {
         showMessage('success', `Welcome back, ${username}!`);
-
-        // Remember me
-        if (rememberMeInput?.checked) {
-          localStorage.setItem('rememberedUser', username);
-          localStorage.setItem('rememberMe', 'true');
-        } else {
-          localStorage.removeItem('rememberedUser');
-          localStorage.removeItem('rememberMe');
-        }
-
+        localStorage.setItem('rememberMe', rememberMeInput?.checked ? 'true' : 'false');
+        if (rememberMeInput?.checked) localStorage.setItem('rememberedUser', username);
+        else localStorage.removeItem('rememberedUser');
         sessionStorage.setItem('isLoggedIn', 'true');
         sessionStorage.setItem('currentUser', username);
-
         resetRateLimit();
-
-        setTimeout(() => {
-          window.location.href = REDIRECT_URL;
-        }, 900);
+        setTimeout(() => { window.location.href = REDIRECT_URL; }, 900);
       } else {
         const tries = getAttempts() + 1;
         setAttempts(tries);
-
         if (tries >= MAX_ATTEMPTS) {
           setCooldownUntil(getNow() + COOLDOWN_MS);
           setAttempts(0);
           showMessage('error', `Too many attempts. Try again in ${formatMs(COOLDOWN_MS)}.`);
         } else {
-          const left = MAX_ATTEMPTS - tries;
-          showMessage('error', `Invalid username/email or password. Attempts left: ${left}.`);
+          showMessage('error', `Invalid username/email or password. Attempts left: ${MAX_ATTEMPTS - tries}.`);
         }
       }
     } catch (err) {
@@ -221,8 +164,45 @@
     }
   }
 
+  // --- Forgot Password Logic (SIMPLIFIED & UPDATED) ---
+  function openForgotPasswordModal(e) {
+    e.preventDefault();
+    forgotPasswordModal.classList.remove('hidden');
+    forgotPasswordModal.classList.add('flex');
+    // Animate the modal appearance
+    setTimeout(() => {
+        forgotPasswordModal.querySelector('div').style.transform = 'scale(1)';
+        forgotPasswordModal.querySelector('div').style.opacity = '1';
+    }, 10);
+    hideMessage();
+  }
+
+  function closeForgotPasswordModal() {
+    forgotPasswordModal.querySelector('div').style.transform = 'scale(0.95)';
+    forgotPasswordModal.querySelector('div').style.opacity = '0';
+    setTimeout(() => {
+        forgotPasswordModal.classList.add('hidden');
+        forgotPasswordModal.classList.remove('flex');
+    }, 300);
+  }
+
+  function handleForgotSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgotEmail').value.trim();
+    const admin = document.getElementById('adminEmail').value.trim();
+    const reason = document.getElementById('reason').value.trim() || 'No reason provided';
+
+    // Create a mailto link
+    const subject = encodeURIComponent(`WISE Password Reset Request from ${email}`);
+    const body = encodeURIComponent(`User: ${email}\nReason: ${reason}\n\nPlease assist with password reset.`);
+    window.location.href = `mailto:${admin}?subject=${subject}&body=${body}`;
+
+    showMessage('success', "Your request has been prepared. Please confirm it in your email client.");
+    closeForgotPasswordModal();
+  }
+
+  // --- Initializers & Events ---
   function initializeForm() {
-    // Prefill remembered user
     const rememberedUser = localStorage.getItem('rememberedUser');
     const shouldRemember = localStorage.getItem('rememberMe') === 'true';
     if (rememberedUser && shouldRemember) {
@@ -232,21 +212,10 @@
     } else {
       usernameInput.focus();
     }
-
-    // Responsif scroll lock seperti versi sebelumnya
-    const isMobile = window.innerWidth < 768;
-    document.body.style.overflow = isMobile ? 'auto' : 'hidden';
+    onResize();
   }
-
-  function onResize() {
-    const isMobile = window.innerWidth < 768;
-    document.body.style.overflow = isMobile ? 'auto' : 'hidden';
-  }
-
-  function onInputChange() {
-    hideMessage();
-  }
-
+  function onResize() { document.body.style.overflow = window.innerWidth < 768 ? 'auto' : 'hidden'; }
+  function onInputChange() { hideMessage(); }
   function togglePasswordVisibility() {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
@@ -256,29 +225,18 @@
     eyeClosed.classList.toggle('hidden', !isHidden);
   }
 
-  // === Wire up ===
+  // Wire up
   loginForm.addEventListener('submit', handleLogin);
-  usernameInput.addEventListener('input', onInputChange);
-  passwordInput.addEventListener('input', onInputChange);
+  [usernameInput, passwordInput].forEach(el => el.addEventListener('input', onInputChange));
+  if (togglePasswordBtn) togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
 
-  // Enter → pindah fokus / submit
-  usernameInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      passwordInput.focus();
-    }
+  // Forgot password event listeners (UPDATED)
+  forgotPasswordLink.addEventListener('click', openForgotPasswordModal);
+  closeForgotModalButton.addEventListener('click', closeForgotPasswordModal);
+  forgotPasswordModal.addEventListener('click', (e) => {
+    if (e.target === forgotPasswordModal) closeForgotPasswordModal();
   });
-  passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (!loginButton.disabled) loginForm.dispatchEvent(new Event('submit'));
-    }
-  });
-
-  // Toggle password via button (bukan inline onclick)
-  if (togglePasswordBtn) {
-    togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
-  }
+  forgotForm.addEventListener('submit', handleForgotSubmit);
 
   document.addEventListener('DOMContentLoaded', initializeForm);
   window.addEventListener('resize', onResize);
