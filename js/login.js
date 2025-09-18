@@ -18,6 +18,7 @@
   const forgotPasswordModal = document.getElementById('forgotPasswordModal');
   const closeForgotModalButton = document.getElementById('closeForgotModal');
   const forgotForm = document.getElementById('forgotForm'); // New form reference
+  const backdrop = document.getElementById('backdrop');
 
   // === Config ===
   const MAX_ATTEMPTS = 5;
@@ -169,21 +170,24 @@
     e.preventDefault();
     forgotPasswordModal.classList.remove('hidden');
     forgotPasswordModal.classList.add('flex');
-    // Animate the modal appearance
-    setTimeout(() => {
-        forgotPasswordModal.querySelector('div').style.transform = 'scale(1)';
-        forgotPasswordModal.querySelector('div').style.opacity = '1';
-    }, 10);
+    requestAnimationFrame(()=>{
+      backdrop.classList.add('backdrop-enter-active');
+      const card = forgotPasswordModal.querySelector('[role="dialog"]');
+      card.classList.add('modal-enter-active');
+    });
+    document.body.style.overflow='hidden';
     hideMessage();
   }
 
   function closeForgotPasswordModal() {
-    forgotPasswordModal.querySelector('div').style.transform = 'scale(0.95)';
-    forgotPasswordModal.querySelector('div').style.opacity = '0';
+    backdrop.classList.remove('backdrop-enter-active');
+    const card = forgotPasswordModal.querySelector('[role="dialog"]');
+    card.classList.remove('modal-enter-active');
     setTimeout(() => {
         forgotPasswordModal.classList.add('hidden');
         forgotPasswordModal.classList.remove('flex');
-    }, 300);
+        document.body.style.overflow='';
+    }, 160);
   }
 
   function handleForgotSubmit(e) {
@@ -235,6 +239,9 @@
   closeForgotModalButton.addEventListener('click', closeForgotPasswordModal);
   forgotPasswordModal.addEventListener('click', (e) => {
     if (e.target === forgotPasswordModal) closeForgotPasswordModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !forgotPasswordModal.classList.contains('hidden')) closeForgotPasswordModal();
   });
   forgotForm.addEventListener('submit', handleForgotSubmit);
 
