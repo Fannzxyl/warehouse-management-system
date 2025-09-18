@@ -4660,7 +4660,6 @@ window.deleteZone = async function(id) {
     // Panggil sekali pas pertama kali script-nya jalan
     ensureAllLists();
 })();
-
         console.log('Configuration V3 (Inventory Control) loaded successfully');
     });
 })();
