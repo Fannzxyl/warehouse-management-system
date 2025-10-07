@@ -490,6 +490,11 @@
                                 aria-label="Select Allocation Rule Assignment Criteria">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Rule Assignment Criteria</span>
                             </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('customer')" tabindex="0" role="button"
+                                aria-label="Select Customer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Customer</span>
+                            </div>
                             
                             <div id="inventory-control"
                                 class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
@@ -664,6 +669,7 @@
         <script src="./js/configurationV3.js"></script>
         <script src="./js/configurationV4.js"></script>
         <script src="./js/configurationV5.js"></script>
+        <script src="./js/configurationV6.js"></script>
         <script>
             window.addEventListener('load', () => selectCategory('configuration'));
         </script>

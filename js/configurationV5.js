@@ -28,7 +28,7 @@
          * @param {string} onSearch - The JS function call for the search input's oninput event.
          * @returns {string} The HTML string for the header.
          */
-        const renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
+        window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) =>`
             <div class="flex flex-wrap items-center gap-3 mb-4">
               <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="${onCreate}">${createLabel}</button>
               <div class="grow"></div>
@@ -48,7 +48,7 @@
          * @param {string} submitLabel - Label for the submit button (default: 'OK').
          * @returns {string} The HTML string for the footer.
          */
-        const renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
+        window.renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
             <div class="px-6 py-4 border-t flex justify-end gap-3">
                 <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
                 <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
@@ -1018,7 +1018,7 @@
             }
             else {
                 filteredData.forEach(t => {
-                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
@@ -1500,86 +1500,91 @@ window.closeSidebar = function() {
     if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
 };
 
+// --- BAGIAN INI YANG DIPERBAIKI ---
+const originalSelectCategoryV5 = window.selectCategory; // <-- TAMBAHAN: Menyimpan fungsi selectCategory dari V4
+
 window.selectCategory = function(category) {
-            const bodyEl = document.body;
-            const mainEl = document.querySelector('main');
+    // Panggil fungsi aslinya dulu (dari V4) biar "sinyal"-nya terkirim
+    if (typeof originalSelectCategoryV5 === 'function') {
+        originalSelectCategoryV5(category); // <-- TAMBAHAN: Ini yang paling penting
+    }
 
-            // Mengatur ulang style body dan main ke default setiap kali fungsi dipanggil.
-            bodyEl.classList.add('overflow-x-hidden');
-            if (mainEl) mainEl.classList.remove('min-w-0');
+    // Kode di bawah ini sebagian besar sama dengan punyamu, hanya ada sedikit penyesuaian
+    const bodyEl = document.body;
+    const mainEl = document.querySelector('main');
 
-            // Menerapkan style khusus HANYA untuk halaman 'location' agar scrollbar bisa muncul.
-            if (category === 'location') {
-                bodyEl.classList.remove('overflow-x-hidden');
-                if (mainEl) mainEl.classList.add('min-w-0');
+    bodyEl.classList.add('overflow-x-hidden');
+    if (mainEl) mainEl.classList.remove('min-w-0');
+
+    if (category === 'location') {
+        bodyEl.classList.remove('overflow-x-hidden');
+        if (mainEl) mainEl.classList.add('min-w-0');
+    }
+
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('bg-wise-light-gray', 'font-semibold');
+    });
+    document.querySelectorAll('.sidebar-child').forEach(item => {
+        item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+        item.classList.add('text-wise-gray');
+    });
+
+    const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
+    if (childElement) {
+        childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
+        childElement.classList.remove('text-wise-gray');
+        
+        const parentId = parentMapping[category];
+        if (parentId) {
+            const parentElement = document.getElementById(parentId);
+            const parentChildrenContainer = document.getElementById(parentId + '-children');
+            
+            if (parentElement) {
+                parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
             }
-
-            // Menghapus status aktif dari semua item sidebar untuk reset.
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('bg-wise-light-gray', 'font-semibold');
-            });
-            document.querySelectorAll('.sidebar-child').forEach(item => {
-                item.classList.remove('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                item.classList.add('text-wise-gray');
-            });
-
-            // Memberikan style aktif pada item sidebar yang sedang dipilih.
-            const childElement = document.querySelector(`.sidebar-child[onclick="selectCategory('${category}')"]`);
-            if (childElement) {
-                childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
-                childElement.classList.remove('text-wise-gray');
-
-                // Jika yang dipilih adalah sub-menu, buka menu parent-nya.
-                const parentId = parentMapping[category];
-                if (parentId) {
-                    const parentElement = document.getElementById(parentId);
-                    const parentChildrenContainer = document.getElementById(parentId + '-children');
-                    
-                    if (parentElement) {
-                        parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
-                    }
-                    if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
-                        toggleChildren(parentId);
-                    }
-                }
-            } else {
-                // Jika yang dipilih adalah menu utama.
-                const mainElement = document.getElementById(category);
-                if(mainElement) {
-                    mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
-                }
+            if (parentChildrenContainer && parentChildrenContainer.classList.contains('hidden')) {
+                toggleChildren(parentId);
             }
+        }
+    } else {
+        const mainElement = document.getElementById(category);
+        if(mainElement) {
+            mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
+        }
+    }
 
-            // Menyimpan kategori yang sedang aktif dan menampilkan kontennya.
-            currentCategory = category;
-            const content = contentData[category];
-            const mainContent = document.getElementById('default-content-area');
-            if (content && content.full) {
-                mainContent.innerHTML = content.full;
-            } else {
-                mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
-            }
+    currentCategory = category;
+    const content = contentData[category];
+    const mainContent = document.getElementById('default-content-area');
+    if (content && content.full) {
+        mainContent.innerHTML = content.full;
+    } else {
+        mainContent.innerHTML = `<h2 class="text-2xl font-bold">Content for ${category}</h2><p>Content not found.</p>`;
+    }
 
-            // Memanggil fungsi render yang spesifik untuk setiap halaman.
-            if (category === 'configuration-warehouse') renderWarehouseList();
-            else if (category === 'location-type') renderLocationTypeList();
-            else if (category === 'locating-strategies') renderLocatingStrategyList();
-            else if (category === 'locating-rule') renderLocatingRuleList();
-            else if (category === 'configuration-user-profile') renderUserProfileList();
-            else if (category === 'security-group') renderSecurityGroupList();
-            else if (category === 'security-permission') renderSecurityPermissionList();
-            else if (category === 'allocation-rule') renderAllocationRuleList();
-            else if (category === 'allocation-strategies') renderAllocationStrategyList();
-            else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
-            else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
-            else if (category === 'allocation-rule-assignment-criteria') renderARACList();
-            else if (category === 'zone-type') renderZoneTypeList();
-            else if (category === 'location') renderLocationList();
-            document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
-            if (window.innerWidth < 768) {
-                closeSidebar();
-            }
-        };
+    // Memanggil fungsi render yang spesifik untuk setiap halaman.
+    if (category === 'configuration-warehouse') renderWarehouseList();
+    else if (category === 'location-type') renderLocationTypeList();
+    else if (category === 'locating-strategies') renderLocatingStrategyList();
+    else if (category === 'locating-rule') renderLocatingRuleList();
+    else if (category === 'configuration-user-profile') renderUserProfileList();
+    else if (category === 'security-group') renderSecurityGroupList();
+    else if (category === 'security-permission') renderSecurityPermissionList();
+    else if (category === 'allocation-rule') renderAllocationRuleList();
+    else if (category === 'allocation-strategies') renderAllocationStrategyList();
+    else if (category === 'allocation-rule-assignment') renderAllocationRuleAssignmentList();
+    else if (category === 'allocation-location-selection') renderAllocationLocationSelectionList();
+    else if (category === 'allocation-rule-assignment-criteria') renderARACList();
+    else if (category === 'zone-type') renderZoneTypeList();
+    else if (category === 'location') renderLocationList();
+    else if (category === 'customer') renderCustomerList(); 
+
+    // document.dispatchEvent(...) Dihapus dari sini karena sudah ditangani oleh fungsi V4 yang kita panggil di atas
+
+    if (window.innerWidth < 768) {
+        closeSidebar();
+    }
+};
 
 window.goBack = function() {
     console.log("Go back function not yet implemented.");

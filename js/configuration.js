@@ -306,6 +306,20 @@
                                    Manage Allocation Rule Assignment Criteria
                                </button>
                            </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                               <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Inventory Controller</h3>
+                               <p class="text-wise-gray text-sm mt-1">Select a sub-category to manage inventory control.</p>
+                               <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('inventory-control')">
+                                   Manage Inventory Controller
+                               </button>
+                           </div>
+                           <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                                <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Customer Management</h3>
+                                <p class="text-wise-gray text-sm mt-1">Manage customer master data, addresses, and classification.</p>
+                                <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('customer')">
+                                    Manage Customers
+                                </button>
+                            </div>
                     </div>
                 `,
             },
@@ -1245,6 +1259,7 @@
             else if (category === 'allocation-rule-assignment-criteria') renderARACList();
             else if (category === 'zone-type') renderZoneTypeList();
             else if (category === 'location') renderLocationList();
+            else if (category === 'customer') renderCustomerList(); 
 
             // Memberi tahu script lain bahwa konten telah berubah.
             document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));

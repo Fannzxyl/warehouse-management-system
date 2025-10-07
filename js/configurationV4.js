@@ -2850,47 +2850,47 @@ window.closeSidebar = function() {
     if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
 };
 
-window.selectCategory = function(category) {
-    const mainContent = document.getElementById('main-content');
-    const categoryMenu = document.getElementById('category-menu');
+// window.selectCategory = function(category) {
+//     const mainContent = document.getElementById('main-content');
+//     const categoryMenu = document.getElementById('category-menu');
 
-    if (window.contentData[category]) {
-        if (mainContent) mainContent.innerHTML = window.contentData[category].full;
+//     if (window.contentData[category]) {
+//         if (mainContent) mainContent.innerHTML = window.contentData[category].full;
         
-        if (category === 'item') {
-            window.renderItemList();
-        } else if (category === 'item-unit-of-measure') {
-            window.renderIUoMList();
-        } else if (category === 'item-cross-reference') {
-            window.renderItemCrossReferenceList();
-        } else {
-            const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
-            if (typeof window[rendererName] === 'function') {
-                window[rendererName]();
-            } else {
-                console.warn(`Renderer for category '${category}' (${rendererName}) not found.`);
-            }
-        }
+//         if (category === 'item') {
+//             window.renderItemList();
+//         } else if (category === 'item-unit-of-measure') {
+//             window.renderIUoMList();
+//         } else if (category === 'item-cross-reference') {
+//             window.renderItemCrossReferenceList();
+//         } else {
+//             const rendererName = `render${category.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('')}List`;
+//             if (typeof window[rendererName] === 'function') {
+//                 window[rendererName]();
+//             } else {
+//                 console.warn(`Renderer for category '${category}' (${rendererName}) not found.`);
+//             }
+//         }
 
-        if (window.innerWidth < 768) {
-            window.closeSidebar();
-        }
+//         if (window.innerWidth < 768) {
+//             window.closeSidebar();
+//         }
         
-        if (categoryMenu) {
-            const menuItems = categoryMenu.querySelectorAll('button');
-            menuItems.forEach(item => {
-                const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
-                if (itemCategory === category) {
-                    item.classList.add('bg-wise-dark-gray', 'text-white');
-                } else {
-                    item.classList.remove('bg-wise-dark-gray', 'text-white');
-                }
-            });
-        }
-    } else {
-        console.error(`Category data for '${category}' not found in window.contentData.`);
-    }
-};
+//         if (categoryMenu) {
+//             const menuItems = categoryMenu.querySelectorAll('button');
+//             menuItems.forEach(item => {
+//                 const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
+//                 if (itemCategory === category) {
+//                     item.classList.add('bg-wise-dark-gray', 'text-white');
+//                 } else {
+//                     item.classList.remove('bg-wise-dark-gray', 'text-white');
+//                 }
+//             });
+//         }
+//     } else {
+//         console.error(`Category data for '${category}' not found in window.contentData.`);
+//     }
+// };
 
 window.goBack = function() {
     console.log("Go back function not yet implemented.");
