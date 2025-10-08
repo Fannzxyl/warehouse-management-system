@@ -79,6 +79,10 @@
             { id: CUSTOMER_ID_PREFIX + '003', customer: '12162', shipTo: '002', company: 'DCB', name: 'PT SEJAHTERA SELALU', parent: '12162', inactive: true, residential: false, onHold: true, carriers: [], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, rfid: EMPTY_CUSTOMER.rfid }
         ];
 
+        const generateUniqueId = () => {
+            // Menggunakan timestamp milidetik dan prefix 'CUS'
+            return CUSTOMER_ID_PREFIX + Date.now().toString().slice(-8);
+        };
         const saveCustomers = () => localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customers));
 
         // --- RENDER & FILTER FUNCTIONS ---
@@ -92,26 +96,30 @@
                 (c.name || '').toLowerCase().includes(lowerFilter) ||
                 (c.company || '').toLowerCase().includes(lowerFilter)
             );
-
-            let tableHtml = `<table class="min-w-full bg-white rounded-lg shadow-md">
+            
+            // Tambahkan wrapper dengan tinggi dan scrollbar
+            let listWrapperHtml = `
+                <div class="max-h-[60vh] overflow-y-auto border border-wise-border rounded-lg shadow-md">
+                <table class="min-w-full bg-white">
                 <thead>
                     <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left">Customer</th>
-                        <th class="py-3 px-6 text-left">Ship To</th>
-                        <th class="py-3 px-6 text-left">Company</th>
-                        <th class="py-3 px-6 text-left">Name</th>
-                        <th class="py-3 px-6 text-left">Parent</th>
-                        <th class="py-3 px-6 text-left">Active</th>
-                        <th class="py-3 px-6 text-center">Actions</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Customer</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Ship To</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Company</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Name</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Parent</th>
+                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Active</th>
+                        <th class="py-3 px-6 text-center sticky top-0 bg-wise-light-gray">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-wise-gray text-sm font-light">`;
 
             if (filteredData.length === 0) {
-                tableHtml += `<tr><td colspan="7" class="py-3 px-6 text-center">No customers found.</td></tr>`;
+                listWrapperHtml += `<tr><td colspan="7" class="py-3 px-6 text-center">No customers found.</td></tr>`;
             } else {
+                // Render data apa adanya (Data baru akan muncul di bawah jika ditambahkan dengan 'push')
                 filteredData.forEach(c => {
-                    tableHtml += `<tr class="border-b hover:bg-gray-50">
+                    listWrapperHtml += `<tr class="border-b hover:bg-gray-50">
                         <td class="py-3 px-6 text-left whitespace-nowrap">${c.customer}</td>
                         <td class="py-3 px-6 text-left">${c.shipTo || 'N/A'}</td>
                         <td class="py-3 px-6 text-left">${c.company}</td>
@@ -127,50 +135,67 @@
                     </tr>`;
                 });
             }
-            tableHtml += `</tbody></table>`;
-            container.innerHTML = tableHtml;
+            listWrapperHtml += `</tbody></table></div>`;
+            container.innerHTML = listWrapperHtml;
         };
+
         window.filterCustomerList = window.debounce((value) => window.renderCustomerList(value), 300); 
 
         // --- VALIDATION ---
-        // FIX: Nonaktifkan HTML5 validation dan gunakan custom validation
         function validateCustomerForm(modal) {
             const form = document.getElementById('customer-form');
-            form.noValidate = true; // FIX: nonaktifkan native HTML5 validation
-            // FIX: adjust validation to ['customer','company','name']
+            form.noValidate = true; // Nonaktifkan native HTML5 validation
+            
+            // Field wajib yang menyebabkan error fokus di awal
             const requiredFields = ['customer', 'company', 'name']; 
             let isValid = true;
             let firstInvalid = null;
+            let targetTab = null;
 
-            // Clear previous errors
+            // Bersihkan error sebelumnya
             form.querySelectorAll('.error-message').forEach(el => el.remove());
             form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
             
-            const setError = (input, message) => {
+            const setError = (input, message, tabId) => {
                 let errorEl = document.createElement('p');
                 errorEl.className = 'error-message text-red-500 text-xs mt-1';
                 errorEl.textContent = message;
                 input.parentNode.appendChild(errorEl);
                 input.setAttribute('aria-invalid', 'true');
-                if (!firstInvalid) { firstInvalid = input; }
+                if (!firstInvalid) { 
+                    firstInvalid = input; 
+                    targetTab = tabId;
+                }
                 isValid = false;
             };
 
-            requiredFields.forEach(field => {
-                const el = form.querySelector(`[name="${field}"]`);
-                if (el && !el.value.trim()) { setError(el, `${field} is required.`); }
+            requiredFields.forEach(fieldName => {
+                const el = form.querySelector(`[name="${fieldName}"]`); 
+                if (el) {
+                    // Cari ID tab (pane) tempat elemen ini berada
+                    const tabId = el.closest('[role="tabpanel"]')?.dataset.pane;
+                    if (!el.value.trim()) { 
+                        setError(el, `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required.`, tabId); 
+                    }
+                }
             });
 
             if (firstInvalid) {
-                const tabPane = firstInvalid.closest('[role="tabpanel"]');
-                if (tabPane) {
-                    // FIX: Fokuskan tab yang memuat input invalid
-                    window.activateTab(tabPane.dataset.pane, modal); 
+                // Fokuskan tab yang memuat input invalid
+                if (targetTab) {
+                    window.activateTab(targetTab, modal); 
                 }
-                firstInvalid.focus();
+                
+                // Beri fokus ke elemen yang invalid setelah ada delay 
+                // untuk mengatasi masalah fokus saat transisi tab/modal
+                setTimeout(() => {
+                    try { firstInvalid.focus(); } catch(e) { console.error("Failed to focus invalid input:", e); }
+                }, 100); 
+
+                return false;
             }
 
-            return isValid;
+            return true;
         }
 
         // --- MODAL FORM FUNCTIONS ---
@@ -241,14 +266,16 @@
         }
 
         function renderGeneralTab(data) {
-            // FIX: remove Ship To & Parent from General
-            const { customer = '', company = '', onHold = false, carriers = [] } = data;
+            const { customer = '', company = '', onHold = false, carriers = [] } = data; 
+            
+            // DIHAPUS: Logika readonly dihapus biar field Customer bisa diedit kapan aja
+            // const isReadonly = !!data.id; 
 
             return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="customer" class="block text-sm mb-1">Customer: <span class="text-red-500">*</span></label>
-                        <input type="text" id="customer" name="customer" required class="input" value="${customer}" ${data.id ? 'readonly' : ''}>
+                        <input type="text" id="customer" name="customer" required class="input" value="${customer}">
                     </div>
                     <div class="md:col-span-1">
                         <label for="company" class="block text-sm mb-1">Company: <span class="text-red-500">*</span></label>
@@ -256,8 +283,7 @@
                             <option value="">-- Select --</option>
                             ${dummyCompanies.map(c => `<option value="${c}" ${company === c ? 'selected' : ''}>${c}</option>`).join('')}
                         </select>
-                    </div>
-                    <!-- Ship To and Parent removed as requested -->
+                    </div>              
                     <div class="md:col-span-2">
                         <label class="flex items-center gap-2 text-sm">
                             <input type="checkbox" id="onHold" name="onHold" ${onHold ? 'checked' : ''}> On hold for order
@@ -279,6 +305,7 @@
                 </div>
             `;
         }
+
         window.addCarrierField = function() {
             const container = document.getElementById('carrier-list-container');
             const randomCarrier = dummyCarriers[Math.floor(Math.random() * dummyCarriers.length)];
@@ -434,23 +461,33 @@
         }
 
         // --- RFID CRUD Logic ---
-        const getRfidModel = () => {
-            const form = document.getElementById('customer-form');
-            if (!form) return EMPTY_CUSTOMER.rfid;
-            const customerId = form.dataset.id;
+        const getRfidModel = (customerId) => {
             const customer = customers.find(c => c.id === customerId);
             return (customer ? customer.rfid : EMPTY_CUSTOMER.rfid) || EMPTY_CUSTOMER.rfid;
         };
-        const setRfidModel = (newRfid) => {
-            const form = document.getElementById('customer-form');
-            if (!form) return;
-            const customerId = form.dataset.id;
+
+        /// Update model dan auto-save setelah perubahan.
+        const setRfidModelAndSave = (customerId, newRfid) => {
             const customerIndex = customers.findIndex(c => c.id === customerId);
             if (customerIndex !== -1) {
+                // Update data internal
                 customers[customerIndex].rfid = newRfid;
-                window.renderRFIDTab(customers[customerIndex]);
+                
+                // Persistensi Seketika
+                saveCustomers(); 
+                
+                // RENDER ULANG TAB RFID DI DALAM MODAL
+                const rfidPane = document.getElementById('pane-rfid');
+                if (rfidPane) {
+                    // Render ulang konten tab
+                    rfidPane.innerHTML = window.renderRFIDTab(customers[customerIndex]);
+                }
+                
+                return customers[customerIndex].rfid;
             }
+            return EMPTY_CUSTOMER.rfid;
         };
+        
         const getRfidFormInput = () => ({
             containerClass: document.getElementById('rfid-container-class').value,
             epcEncoding: document.getElementById('rfid-epc-encoding').value,
@@ -458,53 +495,97 @@
             multiItem: document.getElementById('rfid-multi-item').checked,
             udf1: document.getElementById('rfid-udf1').value,
         });
-
+        
         window.selectRfidRule = function(index) {
-            let rfid = getRfidModel();
+            const customerId = document.getElementById('customer-form').dataset.id;
+            let rfid = getRfidModel(customerId);
             rfid.selectedIndex = index;
             const rule = rfid.rows[index];
+            
+            // Isi form dengan data rule yang terpilih
             document.getElementById('rfid-container-class').value = rule.containerClass;
             document.getElementById('rfid-epc-encoding').value = rule.epcEncoding;
             document.getElementById('rfid-single-item').checked = rule.singleItem;
             document.getElementById('rfid-multi-item').checked = rule.multiItem;
             document.getElementById('rfid-udf1').value = rule.udf1;
-            setRfidModel(rfid); // Re-render untuk highlight seleksi
+            
+            setRfidModelAndSave(customerId, rfid); // Re-render untuk highlight seleksi
         };
-        window.clearRfidForm = function() {
-            document.getElementById('rfid-container-class').selectedIndex = 0;
-            document.getElementById('rfid-epc-encoding').value = '';
-            document.getElementById('rfid-single-item').checked = false;
-            document.getElementById('rfid-multi-item').checked = false;
-            document.getElementById('rfid-udf1').value = '';
-            let rfid = getRfidModel();
-            rfid.selectedIndex = -1;
-            setRfidModel(rfid); // Re-render untuk hapus highlight
-        };
-        window.addRfidRule = function() {
-            let rfid = getRfidModel();
+
+        // window.clearRfidForm = function() {
+        //     const customerId = document.getElementById('customer-form').dataset.id;
+        //     document.getElementById('rfid-container-class').selectedIndex = 0;
+        //     document.getElementById('rfid-epc-encoding').value = '';
+        //     document.getElementById('rfid-single-item').checked = false;
+        //     document.getElementById('rfid-multi-item').checked = false;
+        //     document.getElementById('rfid-udf1').value = '';
+            
+        //     let rfid = getRfidModel(customerId);
+        //     rfid.selectedIndex = -1;
+        //     setRfidModelAndSave(customerId, rfid); // Re-render untuk hapus highlight
+        // };
+        window.addRfidRule = async function() {
+            const customerId = document.getElementById('customer-form').dataset.id;
+            let rfid = getRfidModel(customerId);
             const newRule = getRfidFormInput();
+
+            // FIX 3: Validasi Cepat sebelum menambah
+            if (!newRule.containerClass || !newRule.epcEncoding || !newRule.udf1) {
+                 await window.showCustomAlert('Perhatian', 'Container Class, EPC Encoding, dan User Defined Field 1 wajib diisi sebelum menambah aturan.');
+                 return;
+            }
+
             rfid.rows.push(newRule);
             rfid.selectedIndex = rfid.rows.length - 1;
-            setRfidModel(rfid);
-            window.showCustomAlert('Sukses', 'Aturan RFID ditambahkan!');
+            setRfidModelAndSave(customerId, rfid);
+            await window.showCustomAlert('Sukses', 'Aturan RFID ditambahkan dan disimpan!');
         };
-        window.updateRfidRule = function() {
-            let rfid = getRfidModel();
-            if (rfid.selectedIndex === -1) { window.showCustomAlert('Error', 'Pilih baris yang akan diperbarui dulu!'); return; }
-            rfid.rows[rfid.selectedIndex] = getRfidFormInput();
-            setRfidModel(rfid);
-            window.showCustomAlert('Sukses', 'Aturan RFID diperbarui!');
+        
+        window.updateRfidRule = async function() {
+            const customerId = document.getElementById('customer-form').dataset.id;
+            let rfid = getRfidModel(customerId);
+            
+            if (rfid.selectedIndex === -1) { await window.showCustomAlert('Error', 'Pilih baris yang akan diperbarui dulu!'); return; }
+            
+            const updatedRule = getRfidFormInput();
+            // FIX 3: Validasi Cepat sebelum update
+            if (!updatedRule.containerClass || !updatedRule.epcEncoding || !updatedRule.udf1) {
+                 await window.showCustomAlert('Perhatian', 'Container Class, EPC Encoding, dan User Defined Field 1 wajib diisi sebelum memperbarui.');
+                 return;
+            }
+            
+            rfid.rows[rfid.selectedIndex] = updatedRule;
+            setRfidModelAndSave(customerId, rfid);
+            await window.showCustomAlert('Sukses', 'Aturan RFID diperbarui dan disimpan!');
         };
+
         window.removeRfidRule = async function() {
-            let rfid = getRfidModel();
-            if (rfid.selectedIndex === -1) { window.showCustomAlert('Error', 'Pilih baris yang akan dihapus dulu!'); return; }
+            const customerId = document.getElementById('customer-form').dataset.id;
+            let rfid = getRfidModel(customerId);
+            
+            if (rfid.selectedIndex === -1) { await window.showCustomAlert('Error', 'Pilih baris yang akan dihapus dulu!'); return; }
+            
             const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Yakin hapus aturan RFID ini?');
             if (confirmed) {
                 rfid.rows.splice(rfid.selectedIndex, 1);
                 rfid.selectedIndex = -1;
-                setRfidModel(rfid);
+                setRfidModelAndSave(customerId, rfid);
                 clearRfidForm();
-                window.showCustomAlert('Dihapus', 'Aturan RFID berhasil dihapus.');
+                await window.showCustomAlert('Dihapus', 'Aturan RFID berhasil dihapus dan disimpan.');
+            }
+        };
+
+        window.moveRfidRule = function(direction) {
+            const customerId = document.getElementById('customer-form').dataset.id;
+            let rfid = getRfidModel(customerId);
+            const idx = rfid.selectedIndex;
+            if (idx === -1) return;
+            
+            const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+            if (newIdx >= 0 && newIdx < rfid.rows.length) {
+                [rfid.rows[idx], rfid.rows[newIdx]] = [rfid.rows[newIdx], rfid.rows[idx]];
+                rfid.selectedIndex = newIdx;
+                setRfidModelAndSave(customerId, rfid);
             }
         };
         window.moveRfidRule = function(direction) {
@@ -553,7 +634,6 @@
             let customerData = {};
 
             if (mode === 'create') {
-                // FIX: Gunakan deep clone dari EMPTY_CUSTOMER
                 customerData = JSON.parse(JSON.stringify(EMPTY_CUSTOMER)); 
             } else if (mode === 'edit' && id) {
                 const found = customers.find(c => c.id === id);
@@ -561,16 +641,14 @@
                     window.showCustomAlert('Error', 'Customer not found!');
                     return;
                 }
-                // FIX: Gunakan deep clone dari data yang ditemukan
                 customerData = JSON.parse(JSON.stringify(found)); 
             } else {
-                 // Fallback aman
                 customerData = JSON.parse(JSON.stringify(EMPTY_CUSTOMER));
             }
 
             title.textContent = mode === 'create' ? 'Customer - Create New' : 'Customer - Edit Existing';
             
-            // Render tabs
+            // Render Tabs Dulu
             document.getElementById('pane-address').innerHTML = renderAddressTab(customerData);
             document.getElementById('pane-general').innerHTML = renderGeneralTab(customerData);
             document.getElementById('pane-categories').innerHTML = renderCategoriesTab(customerData);
@@ -582,13 +660,80 @@
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => window.activateTab(button.dataset.tab, modal) });
                 modal._listenersAttached = true;
             }
-            // FIX: Default tab aktif harus Address
-            window.activateTab('address', modal);
+            window.activateTab('general', modal);
 
             form.dataset.id = customerData.id || '';
             form.dataset.mode = mode;
 
+            // MANUAL POPULATE INPUTS (FIX UTAMA AGAR EDIT BERFUNGSI)
+            // Ini memastikan elemen form benar-benar diisi dengan nilai lama
+            
+            // Tab General
+            document.getElementById('customer').value = customerData.customer || '';
+            document.getElementById('company').value = customerData.company || '';
+            if (document.getElementById('onHold')) document.getElementById('onHold').checked = customerData.onHold || false;
+            if (document.getElementById('residential')) document.getElementById('residential').checked = customerData.residential || false;
+            if (document.getElementById('isActive')) document.getElementById('isActive').checked = customerData.isActive !== false; // Default true
+            if (document.getElementById('isBanned')) document.getElementById('isBanned').checked = customerData.isBanned || false;
+            
+            // Tab Address (tempat field 'name' berada)
+            document.getElementById('name').value = customerData.name || ''; // FIX untuk field NAME
+            document.getElementById('address1').value = customerData.address1 || '';
+            document.getElementById('address2').value = customerData.address2 || '';
+            document.getElementById('city').value = customerData.city || '';
+            document.getElementById('state').value = customerData.state || '';
+            document.getElementById('postalCode').value = customerData.zip || '';
+            document.getElementById('country').value = customerData.country || '';
+            document.getElementById('emailAddress').value = customerData.email || '';
+            document.getElementById('phoneNumber').value = customerData.phone || '';
+            
+            // Tab FBA (Contoh)
+            if (document.getElementById('fba-name')) document.getElementById('fba-name').value = customerData.fba_name || '';
+
+
+            // Logika Tampilan Modal (Tetap sama seperti perbaikan sebelumnya)
+            const modalContent = modal.querySelector('.bg-white.rounded-xl.shadow-2xl');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+                
+                const customerInput = document.getElementById('customer');
+                if (customerInput) {
+                    try { customerInput.focus(); } catch(e) { console.error("Failed to focus customer input:", e); }
+                }
+
+                modal._keydownHandler = (e) => {
+                    if (e.key === 'Escape') {
+                         window.closeCustomerForm();
+                    }
+                };
+                modal.addEventListener('keydown', modal._keydownHandler);
+                
+            }, 10);
+        };
+
+        window.closeCustomerForm = function () {
+            const modal = document.getElementById('customer-form-modal');
+            const modalContent = modal.querySelector('.bg-white.rounded-xl.shadow-2xl');
+
+             if (modal._keydownHandler) {
+                 modal.removeEventListener('keydown', modal._keydownHandler);
+                 delete modal._keydownHandler;
+            }
+
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300); // Sesuai durasi transisi
         };
 
         window.closeCustomerForm = function () {
@@ -597,85 +742,95 @@
 
         window.handleCustomerSubmit = async function (event) {
             event.preventDefault();
-            const modal = document.getElementById('customer-form-modal'); // FIX: Ambil modal untuk validasi
-            if (!validateCustomerForm(modal)) return; // FIX: Panggil custom validation
+            const modal = document.getElementById('customer-form-modal');
+            
+            // Panggil custom validation. Jika gagal, hentikan proses.
+            if (!validateCustomerForm(modal)) {
+                return;
+            }
 
             const form = event.target;
             const mode = form.dataset.mode;
             const id = form.dataset.id;
             
-            // Dapatkan data lama (jika ada) untuk mempertahankan shipTo dan parent
-            const oldCustomerData = customers.find(c => c.id === id) || EMPTY_CUSTOMER;
-
-            // FIX: Membangun struktur nested lengkap saat submit
-            const newCustomer = {
-                // General Tab
-                customer: form.customer.value,
-                company: form.company.value,
-                name: form.name.value,
-                inactive: form.inactive.checked,
-                onHold: form.onHold.checked,
-                carriers: Array.from(form.querySelectorAll('[name="carriers"]')).map(el => el.value),
+            // Kumpulkan semua data form
+            const formData = {
+                id: id || generateUniqueId(),
                 
-                // FIX: Pertahankan Ship To dan Parent dari data lama/default
-                shipTo: oldCustomerData.shipTo || '', 
-                parent: oldCustomerData.parent || '',
-
-                // Address Tab
-                residential: form.residential.checked,
-                address1: form.address1.value,
-                address2: form.address2.value,
-                address3: form.address3.value,
-                city: form.city.value,
-                state: form.state.value,
-                postalCode: form.postalCode.value,
-                country: form.country.value,
-                faxNumber: form.faxNumber.value,
-                phoneNumber: form.phoneNumber.value,
-                emailAddress: form.emailAddress.value,
-
-                // Categories Tab (Memastikan 10 field ada)
-                categories: Array.from({ length: 10 }, (_, i) => form[`category${i + 1}`].value).reduce((obj, val, i) => ({ ...obj, [`category${i + 1}`]: val }), {}),
+                // --- General Tab ---
+                customer: document.getElementById('customer').value.trim(),
+                // DIHAPUS: Baris untuk shipTo
+                // DIHAPUS: Baris untuk parent
+                company: document.getElementById('company').value,
+                onHold: document.getElementById('onHold')?.checked || false,
+                carriers: Array.from(form.querySelectorAll('input[name="carriers"]')).map(el => el.value.trim()).filter(Boolean),
                 
-                // FBA Tab
-                fba_name: form.fba_name.value,
-                fba_address1: form.fba_address1.value,
-                fba_address2: form.fba_address2.value,
-                fba_address3: form.fba_address3.value,
-                fba_city: form.fba_city.value,
-                fba_state: form.fba_state.value,
-                fba_postalCode: form.fba_postalCode.value,
-                fba_country: form.fba_country.value,
+                // --- Address Tab ---
+                name: document.getElementById('name').value.trim(),
+                residential: document.getElementById('residential')?.checked || false,
+                address1: document.getElementById('address1').value.trim(),
+                address2: document.getElementById('address2').value.trim(),
+                address3: document.getElementById('address3').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state').value.trim(),
+                postalCode: document.getElementById('postalCode').value.trim(),
+                country: document.getElementById('country').value.trim(),
+                faxNumber: document.getElementById('faxNumber').value.trim(),
+                phoneNumber: document.getElementById('phoneNumber').value.trim(),
+                emailAddress: document.getElementById('emailAddress').value.trim(),
 
-                // FIX: UDF Tab (Memastikan 6 field ada)
-                udf: Array.from({ length: 6 }, (_, i) => form[`udf${i + 1}`].value).reduce((obj, val, i) => ({ ...obj, [`udf${i + 1}`]: val }), {}),
+                // --- Categories Tab ---
+                categories: Array.from({ length: 10 }).reduce((acc, _, i) => {
+                    const key = `category${i + 1}`;
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) acc[key] = input.value.trim();
+                    return acc;
+                }, {}),
 
-                // FIX: Ambil data RFID dari model state internal (bukan dari form langsung)
-                rfid: getRfidModel(), 
+                // --- FBA Tab ---
+                fba_name: document.getElementById('fba-name')?.value.trim() || '',
+                fba_address1: document.getElementById('fba-address1')?.value.trim() || '',
+                fba_address2: document.getElementById('fba-address2')?.value.trim() || '',
+                fba_address3: document.getElementById('fba-address3')?.value.trim() || '',
+                fba_city: document.getElementById('fba-city')?.value.trim() || '',
+                fba_state: document.getElementById('fba-state')?.value.trim() || '',
+                fba_postalCode: document.getElementById('fba-postalCode')?.value.trim() || '',
+                fba_country: document.getElementById('fba-country')?.value.trim() || '',
+                
+                // --- RFID Tab (Data RFID di-handle terpisah sama CRUD-nya, jadi gak perlu diambil di sini) ---
+                rfid: (customers.find(c => c.id === id) || EMPTY_CUSTOMER).rfid,
+
+                // --- UDF Tab ---
+                udf: Array.from({ length: 6 }).reduce((acc, _, i) => {
+                    const key = `udf${i + 1}`;
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) acc[key] = input.value.trim();
+                    return acc;
+                }, {}),
+                inactive: document.getElementById('inactive')?.checked || false,
+
             };
 
-            let msg = '';
+
+            // Proses penyimpanan (Create / Update)
             if (mode === 'create') {
-                const maxId = customers.reduce((max, item) => {
-                    const num = parseInt(item.id.replace(CUSTOMER_ID_PREFIX, ''), 10);
-                    return Math.max(max, isNaN(num) ? 0 : num);
-                }, 0);
-                newCustomer.id = CUSTOMER_ID_PREFIX + String(maxId + 1).padStart(3, '0');
-                
-                customers.push(newCustomer);
-                msg = 'Customer created successfully!';
-            } else {
+                customers.push(formData);
+                await window.showCustomAlert('Success', 'Customer created successfully.');
+            } else if (mode === 'edit') {
                 const index = customers.findIndex(c => c.id === id);
                 if (index !== -1) {
-                    // Update field utama, tapi biarkan field rfid dari state internal
-                    customers[index] = { ...customers[index], ...newCustomer };
-                    msg = 'Customer updated successfully!';
+                    // Gabungkan data lama dengan data baru
+                    customers[index] = { ...customers[index], ...formData };
+                    await window.showCustomAlert('Success', `Customer ${formData.customer} updated successfully.`);
                 }
             }
+            
+            // Simpan ke Local Storage
             saveCustomers();
-            closeCustomerForm();
+
+            // Tutup modal dan refresh list
+            window.closeCustomerForm();
             window.renderCustomerList();
-            await window.showCustomAlert('Success', msg);
         };
 
         window.deleteCustomer = async function (id) {
