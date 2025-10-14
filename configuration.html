@@ -495,6 +495,13 @@
                                 aria-label="Select Customer">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Customer</span>
                             </div>
+                            <!-- START A. Sidebar: sisipkan tombol “Company” setelah “Customer” -->
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                 onclick="selectCategory('company')" tabindex="0" role="button"
+                                 aria-label="Select Company">
+                              <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Company</span>
+                            </div>
+                            <!-- END A. Sidebar: sisipkan tombol “Company” setelah “Customer” -->
                             
                             <div id="inventory-control"
                                 class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
@@ -646,7 +653,7 @@
                         </button>
                     </div>
                     
-                    <div id="overlay-search-results-list-panel" role="listbox" class="flex-1 mt-4 space-y-2 max-h-[60vh] overflow-y-auto no-scrollbar px-2 pb-2 transition-all-smooth">
+                    <div id="overlay-search-results-list-panel" role="listbox" aria-label="Search results" class="flex-1 mt-4 space-y-2 max-h-[60vh] overflow-y-auto no-scrollbar px-2 pb-2 transition-all-smooth">
                         <!-- Search results will be rendered here -->
                     </div>
                     
@@ -664,6 +671,242 @@
             </div>
         </main>
 
+        <script>
+            // Utility functions for sidebar and modal handling (Toggling children logic)
+            window.toggleChildren = function(id) {
+                const children = document.getElementById(id + '-children');
+                const arrow = document.getElementById(id + '-arrow');
+                const item = document.getElementById(id);
+
+                if (children && arrow && item) {
+                    const isExpanded = item.getAttribute('aria-expanded') === 'true';
+
+                    if (isExpanded) {
+                        children.classList.add('hidden');
+                        arrow.classList.remove('rotate-180');
+                        item.setAttribute('aria-expanded', 'false');
+                    } else {
+                        children.classList.remove('hidden');
+                        arrow.classList.add('rotate-180');
+                        item.setAttribute('aria-expanded', 'true');
+                    }
+                }
+            };
+            
+            window.closeSidebar = function() {
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                
+                if (sidebar) sidebar.classList.add('-translate-x-full');
+                if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+            };
+
+            window.openSidebar = function() {
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebar-overlay');
+                
+                if (sidebar) sidebar.classList.remove('-translate-x-full');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('hidden');
+            };
+
+            document.getElementById('sidebar-toggle-btn').addEventListener('click', window.openSidebar);
+
+            // Menu logic holder (actual logic is in configurationV6.js)
+            const DEFAULT_CONFIG_CONTENT = {
+                'configuration': {
+                    full: `
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-6">Configuration Modules</h2>
+                        <p class="text-wise-gray mb-6">Pilih modul di bawah ini untuk mengelola data master, aturan, dan konfigurasi sistem.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Existing Customer Card -->
+                            <section class="card p-6 shadow-card shadow-card-hover hover-lift transition-all-smooth">
+                                <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Customer Management</h3>
+                                <p class="text-wise-gray text-sm mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
+                                <button class="btn btn-primary hover-lift active-press"
+                                        onclick="selectCategory('customer')">
+                                    Manage Customers
+                                </button>
+                            </section>
+                            <!-- END Existing Customer Card -->
+
+                            <!-- START B. Kartu “Company Management” pada beranda konfigurasi -->
+                            <section class="card p-6 shadow-card shadow-card-hover hover-lift transition-all-smooth">
+                                <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Company Management</h3>
+                                <p class="text-wise-gray text-sm mb-4">Manage company master data, addresses, warehouses, and web header.</p>
+                                <button class="btn btn-primary hover-lift active-press"
+                                        onclick="selectCategory('company')">
+                                    Manage Companies
+                                </button>
+                            </section>
+                            <!-- END B. Kartu “Company Management” pada beranda konfigurasi -->
+                            
+                            <!-- Placeholder cards for other modules -->
+                            <section class="card p-6 bg-gray-50 border-dashed border-gray-300">
+                                <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Inventory Control</h3>
+                                <p class="text-wise-gray text-sm mb-4">Kelola data item, UoM, lokasi, dan status inventaris.</p>
+                                <button class="btn btn-ghost border border-gray-300 active-press" onclick="selectCategory('inventory-control')">
+                                    View Inventory Settings
+                                </button>
+                            </section>
+                            <section class="card p-6 bg-gray-50 border-dashed border-gray-300">
+                                <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">User & Security</h3>
+                                <p class="text-wise-gray text-sm mb-4">Atur hak akses, grup keamanan, dan profil pengguna.</p>
+                                <button class="btn btn-ghost border border-gray-300 active-press" onclick="selectCategory('security-group')">
+                                    Manage Security
+                                </button>
+                            </section>
+                            <!-- Add more cards here if needed -->
+                        </div>
+                    `
+                },
+                // Add default content for other categories if needed, or rely on JS modules
+                'configuration-warehouse': { full: '<h2 class="text-xl font-semibold">Warehouse Configuration</h2><p class="text-wise-gray">Isi dari konfigurasi Warehouse.</p>' },
+                'security-group': { full: '<h2 class="text-xl font-semibold">Security Group</h2><p class="text-wise-gray">Isi dari Security Group.</p>' },
+                // The actual content for 'customer' and 'company' comes from configurationV6.js
+            };
+
+            // Global content management function
+            window.selectCategory = function(category) {
+                const mainContent = document.getElementById('default-content-area');
+                const sidebarChildren = document.querySelectorAll('.sidebar-child');
+                
+                // Set content
+                const content = window.contentData[category] || DEFAULT_CONFIG_CONTENT[category] || { full: `<h2>${category.toUpperCase()}</h2><p>Content not found for ${category}.</p>` };
+                if (mainContent) {
+                    mainContent.innerHTML = content.full;
+                }
+                
+                // Highlight active item in sidebar
+                sidebarChildren.forEach(item => {
+                    const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
+                    if (itemCategory === category) {
+                        item.classList.add('bg-wise-primary/10', 'text-wise-primary');
+                        item.querySelector('span')?.classList.remove('text-wise-gray');
+                        item.querySelector('span')?.classList.add('text-wise-primary');
+                    } else {
+                        item.classList.remove('bg-wise-primary/10', 'text-wise-primary');
+                        item.querySelector('span')?.classList.remove('text-wise-primary');
+                        item.querySelector('span')?.classList.add('text-wise-gray');
+                    }
+                });
+
+                if (window.innerWidth < 768) {
+                    window.closeSidebar();
+                }
+
+                 // Dispatch event for JS modules to render list data
+                document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
+            };
+
+            // Initial load function
+            window.navigateToHome = function() {
+                window.selectCategory('configuration');
+            };
+            
+            window.navigateToProfile = function() {
+                window.showCustomAlert('Profile', 'Navigasi ke halaman Profil (Demo).');
+            };
+
+            window.handleLogout = function() {
+                window.showCustomAlert('Logout', 'Anda telah berhasil Logout (Demo).');
+            };
+            
+            window.toggleUserDropdown = function() {
+                document.getElementById('user-dropdown').classList.toggle('hidden');
+            };
+
+
+            // Search Overlay Logic (Simplified for consistency)
+            const searchInput = document.getElementById('search-input');
+            const overlayInput = document.getElementById('overlay-search-input');
+            const searchOverlay = document.getElementById('search-overlay');
+            const searchResultsPanel = document.getElementById('overlay-search-results-list-panel');
+
+            // Combine all search items from the global context, generated by configurationV6.js
+            function getGlobalSearchItems() {
+                let items = [];
+                // Collect items from global registration points (set by configurationV6.js)
+                if (window.searchItems && Array.isArray(window.searchItems)) {
+                    items = items.concat(window.searchItems.map(item => ({
+                        id: item.id,
+                        title: item.title,
+                        description: item.description || (item.category || 'Configuration'),
+                        category: item.category || 'Configuration'
+                    })));
+                }
+                return items;
+            }
+
+            function renderSearchResults(query) {
+                searchResultsPanel.innerHTML = '';
+                const items = getGlobalSearchItems();
+                const filtered = items.filter(item => 
+                    item.title.toLowerCase().includes(query.toLowerCase()) || 
+                    item.id.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (filtered.length === 0 && query.length > 0) {
+                     searchResultsPanel.innerHTML = `<p class="p-4 text-center text-wise-gray">No results found for "${query}".</p>`;
+                     return;
+                }
+
+                let currentCategory = '';
+                filtered.forEach(item => {
+                    if (item.category !== currentCategory) {
+                        searchResultsPanel.innerHTML += `<div class="search-group-heading">${item.category}</div>`;
+                        currentCategory = item.category;
+                    }
+                    searchResultsPanel.innerHTML += `
+                        <div class="search-item" onclick="selectCategory('${item.id}'); closeSearchOverlay();" tabindex="0" role="option">
+                            <p class="text-sm font-medium text-wise-dark-gray">${item.title}</p>
+                            <p class="text-xs text-wise-gray">${item.description}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            window.handleSearch = function(query) {
+                if (query.trim()) {
+                    searchInput.value = query; // Keep the header input synchronized
+                    overlayInput.value = query; // Keep the overlay input synchronized
+                    openSearchOverlay();
+                    renderSearchResults(query.trim());
+                } else {
+                    closeSearchOverlay();
+                }
+            };
+            
+            function openSearchOverlay() {
+                searchOverlay.classList.remove('hidden');
+                document.body.classList.add('modal-open');
+                setTimeout(() => {
+                    overlayInput.focus();
+                }, 100);
+            }
+
+            window.closeSearchOverlay = function() {
+                searchOverlay.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+                overlayInput.value = '';
+                searchInput.value = '';
+                renderSearchResults('');
+            };
+
+            // Keyboard shortcut Ctrl+K
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openSearchOverlay();
+                } else if (e.key === 'Escape' && !searchOverlay.classList.contains('hidden')) {
+                    e.preventDefault();
+                    window.closeSearchOverlay();
+                }
+            });
+
+            // Initialize content on load
+            window.addEventListener('load', window.navigateToHome);
+
+        </script>
         <script src="./js/configuration.js"></script>
         <script src="./js/configurationV2.js"></script>
         <script src="./js/configurationV3.js"></script>
