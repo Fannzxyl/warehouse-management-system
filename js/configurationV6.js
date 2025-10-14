@@ -104,6 +104,23 @@
         const dummyCompanies = ['DCB', 'DCI', 'DMR', 'DCS', 'DCJ', 'DCK', 'DCL', 'DCM'];
         const dummyContainerClasses = ['Bag', 'Crate', 'Dus', 'Eggs', 'Pallet', 'Roll Cage', 'Tote'];
         const dummyProvinces = ['ACEH', 'BALI', 'Bandung', 'Banten', 'Bogor', 'Brebes', 'Ciamis', 'Cianjur', 'JAKTIM', 'JAK-PUS'];
+        
+        // FIX: Data lengkap semua user untuk tab Assigned Users (Berdasarkan Gambar)
+        const ALL_USERS_LIST = [
+            'Abdu23074560', 'Abdul04120625', 'Abdul19100020', 'Abo13080182', 
+            'Absari93030039', 'Achmad00090094', 'Adam18101751', 'ade', 'Ade15040047', 
+            'Ade21120012', 'Ades17080031', 'Adi20100099', 'Adi2020284', 'Adi22110060', 
+            'Adi23070426', 'Adj24070022', 'Administrator', 'ADMReturDCB', 'Affand24051301', 
+            'Affang12050122', 'Agung15050074', 'Agung92060006', 'AgusHD4182', 'Aji18100334', 
+            'Aldi18100012', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 
+            'aneu03090082', 'Angga20030129', 'Anggi12020296', 'Anggi224114936', 'Anthony16070099', 
+            'Antonius08030061', 'Anwar08060080', 'Anwar23110223', 'Apep12020068', 'Ariefudin08100941', 
+            'Ari14100032', 'aris03090062', 'Aris09030029', 'Arlan12050176', 'ASEP01100086', 
+            'Asep08060073', 'Asep11010929', 'Asep12040051', 'Asep17040017', 'Asep18050091', 
+            'Asep19030279', 'Asep20072189', 'Asep20103123', 'Atun931', 'Bagus1', 'Bambar', 
+            'Budi08', 'Budi12', 'Budi13', 'Burhani', 'Buyung', 'candra', 'Cece04', 'CecepC', 
+            'Cheke', 'Cheke'
+        ];
 
         // --- MODEL CUSTOMER (TETAP) ---
         const EMPTY_CUSTOMER = {
@@ -188,7 +205,11 @@
             },
             
             // Tab Assigned users
-            assignedUsers: [], 
+            assignedUsers: [
+                { userId: 'Anggi12020296', name: 'Anggi12020296' },
+                { userId: 'Anggi224114936', name: 'Anggi224114936' },
+                { userId: 'Atun931', name: 'Atun931' }
+            ], 
 
             // Tab User defined data (8 fields)
             udf: Array.from({ length: 8 }, (_, i) => ({ [`udf${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
@@ -216,6 +237,10 @@
                     city: 'JAKARTA', 
                     postalCode: '10730' 
                 },
+                assignedUsers: [
+                    { userId: 'Anggi12020296', name: 'Anggi12020296' },
+                    { userId: 'Anggi224114936', name: 'Anggi224114936' }
+                ],
                 warehouses: {
                     rows: [
                         { ...EMPTY_WAREHOUSE_INFO, // Pastikan juga warehouse menggunakan spread yang benar
@@ -247,6 +272,9 @@
                 id: COMPANY_ID_PREFIX + '002', 
                 companyCode: 'DCC', 
                 inactive: true, 
+                assignedUsers: [
+                     { userId: 'Atun931', name: 'Atun931' }
+                ],
                 companyAddress: { 
                     ...EMPTY_ADDRESS, 
                     name: 'DC CIKONENG', 
@@ -1204,104 +1232,43 @@
             `;
         }
 
-        // FIX: Render Assigned Users tab
+        // FIX: Render Assigned Users tab (Diperbaiki agar menggunakan Checkbox Grid)
         function renderAssignedUsersTab(companyData) {
-            // FIX: Gunakan companyData langsung karena ini hanya untuk render tampilan saat modal dibuka
             const assignedUsers = companyData.assignedUsers || [];
-            
+            const assignedUserIds = assignedUsers.map(u => u.userId);
+
             return `
                 <div class="space-y-4">
                     <h3 class="text-sm font-semibold text-wise-dark-gray">Assigned Users List</h3>
-                    <div class="flex gap-2">
-                        <button type="button" class="btn btn-sm btn-primary" onclick="window.addAssignedUser('${companyData.id}')">Add Dummy User</button>
-                        <button type="button" class="btn btn-sm text-red-500 border-red-500 hover:bg-red-500 hover:text-white" onclick="window.removeAssignedUser('${companyData.id}')">Remove Last</button>
-                    </div>
+                    <p class="text-xs text-gray-500">
+                        Centang user yang akan di-assign ke Company ini.
+                    </p>
                     
-                    <div class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto">
-                        <table class="min-w-full text-sm">
-                            <thead>
-                                <tr class="bg-gray-100 sticky top-0">
-                                    <th class="py-2 px-4 text-left w-12">#</th>
-                                    <th class="py-2 px-4 text-left">User ID</th>
-                                    <th class="py-2 px-4 text-left">Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${assignedUsers.length === 0 ? 
-                                    `<tr><td colspan="3" class="p-4 text-center text-gray-400">No users assigned.</td></tr>` : 
-                                    assignedUsers.map((user, index) => `
-                                        <tr class="border-b hover:bg-gray-50">
-                                            <td class="py-2 px-4 w-12">${index + 1}</td>
-                                            <td class="py-2 px-4">${user.userId}</td>
-                                            <td class="py-2 px-4">${user.name}</td>
-                                        </tr>
-                                    `).join('')
-                                }
-                            </tbody>
-                        </table>
+                    <div class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto p-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-y-1">
+                            ${ALL_USERS_LIST.map(user => `
+                                <label class="flex items-center gap-2 text-sm whitespace-nowrap">
+                                    <input type="checkbox" name="assignedUsers" value="${user}" 
+                                        ${assignedUserIds.includes(user) ? 'checked' : ''}> ${user}
+                                </label>
+                            `).join('')}
+                        </div>
                     </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        Catatan: Perubahan akan tersimpan saat Anda klik 'Save' di modal utama.
+                    </p>
                 </div>
             `;
         }
-
+        
+        // DUMMY/DEPREKASI: Fungsi ini tidak lagi relevan karena user memilih dari checkbox grid
         window.addAssignedUser = function(companyId) {
-            const form = document.getElementById('company-form');
-            const mode = form.dataset.mode;
-            let companyData = companies.find(c => c.id === companyId);
-            
-            // FIX: Cegah penambahan di mode 'create' karena data belum tersimpan.
-            if (mode === 'create') {
-                 window.showCustomAlert('Perhatian', 'Harap simpan Company terlebih dahulu sebelum menambahkan Assigned User.', 'warning');
-                 return;
-            }
-
-            // FIX: Cek jika data tidak ditemukan (seharusnya hanya terjadi jika bug atau data corrupt)
-            if (!companyData) { 
-                window.showCustomAlert('Error', 'Company data tidak ditemukan.', 'error'); 
-                return; 
-            }
-            
-            const newUser = { userId: `USR${Math.floor(Math.random() * 999)}`, name: `Dummy User ${companyData.assignedUsers.length + 1}` };
-            companyData.assignedUsers.push(newUser); // Modify local object reference
-            
-            // Simpan ke array global dan localStorage
-            const companyIndex = companies.findIndex(c => c.id === companyId);
-            if (companyIndex !== -1) {
-                companies[companyIndex] = companyData;
-                saveCompanies();
-            }
-            
-            // Re-render the tab menggunakan data yang sudah diupdate
-            document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
+            window.showCustomAlert('Info', 'Aksi ini tidak diperlukan. Silakan centang user di daftar di atas untuk menugaskan user.', 'info');
         };
 
+        // DUMMY/DEPREKASI: Fungsi ini tidak lagi relevan karena user memilih dari checkbox grid
         window.removeAssignedUser = function(companyId) {
-            const form = document.getElementById('company-form');
-            const mode = form.dataset.mode;
-            let companyData = companies.find(c => c.id === companyId);
-            
-             // FIX: Cegah penghapusan di mode 'create'.
-             if (mode === 'create') {
-                 window.showCustomAlert('Perhatian', 'Harap simpan Company terlebih dahulu.', 'warning');
-                 return;
-            }
-
-            if (!companyData || companyData.assignedUsers.length === 0) return;
-
-            // Menggunakan showCustomConfirm yang sudah dikunci
-            window.showCustomConfirm('Yakin hapus user terakhir dari daftar?', () => {
-                companyData.assignedUsers.pop();
-                
-                 // Simpan ke array global dan localStorage
-                const companyIndex = companies.findIndex(c => c.id === companyId);
-                if (companyIndex !== -1) {
-                    companies[companyIndex] = companyData;
-                    saveCompanies();
-                }
-                
-                document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
-                window.showCustomAlert('Dihapus', 'User terakhir berhasil dihapus.', 'success');
-            });
+            window.showCustomAlert('Info', 'Aksi ini tidak diperlukan. Silakan hapus centang pada user di daftar di atas untuk menghapus tugas.', 'info');
         };
 
         // FIX: Render UDF Company (8 fields)
@@ -1404,6 +1371,7 @@
             
             document.getElementById('pane-cmp-internet').innerHTML = renderInternetInfoTab(companyData);
             document.getElementById('pane-cmp-webheader').innerHTML = renderWebHeaderTab(companyData);
+            // FIX: Panggil renderAssignedUsersTab yang sudah diperbarui
             document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
             document.getElementById('pane-cmp-udf').innerHTML = renderCompanyUdfTab(companyData);
 
@@ -1757,6 +1725,14 @@
                 
             const freightBillToAddress = freightSameAsChecked ? 
                 companyAddress : getAddressData('freightBillToAddress');
+                
+            // FIX: Baca data Assigned Users dari checkbox yang tercentang
+            const assignedUsers = Array.from(form.querySelectorAll('[name="assignedUsers"]'))
+                                    .filter(el => el.checked)
+                                    .map(el => ({ 
+                                        userId: el.value, 
+                                        name: el.value // Menggunakan ID sebagai nama
+                                    }));
 
             return {
                 id: companyId,
@@ -1800,8 +1776,10 @@
                     return acc;
                 }, {}),
                 
+                // Data Assigned Users yang sudah dibaca dari Checkbox
+                assignedUsers: assignedUsers,
+                
                 // Pertahankan data nested yang tidak di-edit di modal utama
-                assignedUsers: existingCompany.assignedUsers,
                 warehouses: existingCompany.warehouses,
             };
         }
