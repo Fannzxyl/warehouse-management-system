@@ -10,7 +10,27 @@
     
     // Fallbacks untuk fungsi helper proyek (Dibiarkan tetap sama)
     if (typeof window.showCustomAlert === 'undefined') window.showCustomAlert = (title, message, type = 'info') => console.log(`Alert: ${title} - ${message} (${type})`);
-    if (typeof window.showCustomConfirm === 'undefined') window.showCustomConfirm = (title, callback) => new Promise(resolve => resolve(true));
+    
+    // [LANGKAH WAJIB A & B] KUNCI DEFINISI showCustomConfirm agar tidak bisa ditimpa.
+    // Ini mengamankan bahwa showCustomConfirm yang kita definisikan ini yang akan selalu terpakai, 
+    // meskipun ada file lain yang mencoba menimpanya.
+    if (typeof window.showCustomConfirm === 'undefined' || window.showCustomConfirm.isSafe !== true) {
+        Object.defineProperty(window, 'showCustomConfirm', {
+            value: (message, onOk) => {
+                const ok = window.confirm(message);
+                if (ok && typeof onOk === 'function') onOk();
+                return ok;
+            },
+            writable: false, // TIDAK BISA DITIMPA
+            configurable: false // TIDAK BISA DIUBAH propertinya
+        });
+        window.showCustomConfirm.isSafe = true; // Tandai bahwa ini versi yang aman
+    }
+    
+    // Jika window.showCustomConfirm sudah di-define, pastikan fungsinya tidak merender callback.
+    // Karena kita sudah mengunci di atas, bagian ini sebenarnya opsional, tapi amankan jika ada skrip yang load duluan.
+    // Karena instruksi menyarankan kunci definitif, kita gunakan Object.defineProperty di atas.
+    
     if (typeof window.selectCategory === 'undefined') window.selectCategory = (category) => console.log(`Selecting category: ${category}`);
     if (typeof window.renderStandardListHeader === 'undefined') window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
         <div class="flex flex-wrap items-center gap-3 mb-4">
@@ -58,6 +78,7 @@
         const COMPANY_ID_PREFIX = 'CMP';
         const COMPANY_CATEGORY_KEY = 'company';
         const WAREHOUSE_ID_PREFIX = 'WHS';
+        const WAREHOUSE_CATEGORY_KEY = 'configuration-warehouse'; // Kategori baru untuk halaman Warehouse mandiri
 
         // State global untuk Company yang sedang di-edit
         window.currentSelectedCompanyId = null;
@@ -206,6 +227,15 @@
                                 address1: 'Jl. Buah Batu No. 1' 
                             }, 
                             // other warehouse addresses and UDF will default to EMPTY_WAREHOUSE_INFO
+                        },
+                        { ...EMPTY_WAREHOUSE_INFO, 
+                            id: WAREHOUSE_ID_PREFIX + '002', 
+                            warehouseCode: 'WHS02', 
+                            shipFromAddress: { 
+                                ...EMPTY_ADDRESS, 
+                                name: 'DC CIKARANG WHS', 
+                                address1: 'Jl. Cikarang Utama' 
+                            }, 
                         }
                     ],
                     selectedIndex: -1
@@ -591,6 +621,7 @@
             const form = document.getElementById('warehouse-form');
             form.noValidate = true; 
             
+            // FIX: requiredFields untuk Warehouse
             const requiredFields = [
                 { name: 'warehouseCode', tab: 'ship-from', label: 'Warehouse Code' }, 
                 { name: 'shipFromAddress_name', tab: 'ship-from', label: 'Ship From Name' }, 
@@ -621,7 +652,7 @@
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
                 if (el && !el.disabled) {
                     if (!el.value.trim()) { 
-                        setError(el, `${field.label} is required.`, field.tab); 
+                        setError(el, `${field.label} wajib diisi.`, field.tab); // FIX: Pesan error B.Indo
                         if(tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
@@ -641,12 +672,12 @@
                     }
                     if (tabId && !el.value.trim()) {
                          const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} is required.`, tabId);
+                         setError(el, `${label} wajib diisi.`, tabId); // FIX: Pesan error B.Indo
                          const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
                          if(tabButton) tabButton.classList.add('text-red-500'); 
                     } else if (tabId && !el.checkValidity()) {
                          const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} format is invalid.`, tabId);
+                         setError(el, `${label} format tidak valid.`, tabId); // FIX: Pesan error B.Indo
                          const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
                          if(tabButton) tabButton.classList.add('text-red-500'); 
                     }
@@ -655,6 +686,7 @@
 
 
             if (firstInvalid) {
+                // FIX: Aktivasi tab error dan fokus field
                 if (targetTab) {
                     window.activateTab(targetTab, modal); 
                 }
@@ -680,33 +712,78 @@
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
             
             const container = document.getElementById('warehouse-list-container');
-            const companyData = companies.find(c => c.id === companyId);
-            const warehouses = companyData?.warehouses?.rows || [];
-            const selectedIndex = companyData?.warehouses?.selectedIndex || -1;
+            const companyIndex = companies.findIndex(c => c.id === companyId);
+            const companyData = companies[companyIndex];
+            
+            // FIX: Handle companyData undefined (walaupun seharusnya tidak terjadi jika dipanggil dari modal)
+            if (!companyData) {
+                 // Tidak lagi menampilkan error merah jika dipanggil di halaman mandiri tanpa company
+                 if (document.getElementById('wh-company-selector')) {
+                     // Jika di halaman mandiri, return (akan dihandle oleh renderWarehousePage)
+                     return;
+                 }
+                 if (container) container.innerHTML = '<p class="text-red-500">Error: Company data tidak ditemukan.</p>';
+                 return;
+            }
+            
+            const warehouses = companyData.warehouses.rows || [];
             
             if (!container) return;
 
-            // Cari index baris terpilih berdasarkan ID jika list ter-render ulang
-            const selectedWarehouseId = companyData?.warehouses?.rows[selectedIndex]?.id;
-            let currentSelectedIndex = -1;
-            if (selectedWarehouseId) {
-                currentSelectedIndex = warehouses.findIndex(w => w.id === selectedWarehouseId);
-            }
-            // Update selectedIndex di state global
-            if(companyData) companyData.warehouses.selectedIndex = currentSelectedIndex;
+            // B. Tentukan currentSelectedIndex dari state.selectedIndex
+            let currentSelectedIndex = companyData.warehouses.selectedIndex;
             
-            const buttonDisabled = currentSelectedIndex === -1 ? 'disabled' : '';
+            // FIX: Clamp selectedIndex untuk mencegah error array out-of-bounds jika data terhapus
+            if (warehouses.length > 0 && currentSelectedIndex >= warehouses.length) {
+                currentSelectedIndex = warehouses.length - 1;
+                companyData.warehouses.selectedIndex = currentSelectedIndex;
+            } else if (warehouses.length === 0) {
+                currentSelectedIndex = -1;
+                companyData.warehouses.selectedIndex = -1;
+            }
+            
+            // Sinkronisasi data setelah clamping
+            if(companyData) {
+                companies[companyIndex] = companyData;
+                saveCompanies(); // Simpan state seleksi yang sudah dikoreksi
+            }
 
+
+            // C. Set disabled state untuk Open/Delete/Copy, dan Up/Down berdasarkan currentSelectedIndex.
+            const isSelected = currentSelectedIndex !== -1;
+            const isFirst = currentSelectedIndex === 0;
+            const isLast = currentSelectedIndex === warehouses.length - 1;
+            
+            const buttonDisabled = isSelected ? '' : 'disabled';
+            const buttonDisabledClass = isSelected ? '' : 'btn-disabled';
+            
+            const upDisabled = isSelected && !isFirst ? '' : 'disabled';
+            const upDisabledClass = isSelected && !isFirst ? '' : 'btn-disabled';
+            
+            const downDisabled = isSelected && !isLast ? '' : 'disabled';
+            const downDisabledClass = isSelected && !isLast ? '' : 'btn-disabled';
+
+
+            // C. Tombol Up/Down di toolbar
             let listHtml = `
                 <div class="flex flex-wrap items-center gap-2 mb-3">
                     <button type="button" id="btn-warehouse-new" class="btn btn-sm btn-primary" onclick="showWarehouseForm('new', '${companyId}')">New</button>
-                    <button type="button" id="btn-warehouse-open" class="btn btn-sm ${currentSelectedIndex !== -1 ? 'btn-outline-primary' : 'btn-disabled'}" ${buttonDisabled} onclick="openSelectedWarehouse('${companyId}')">Open</button>
-                    <button type="button" id="btn-warehouse-delete" class="btn btn-sm text-red-500 border-red-500 hover:bg-red-500 hover:text-white ${currentSelectedIndex !== -1 ? 'btn-outline-danger' : 'btn-disabled'}" ${buttonDisabled} onclick="deleteSelectedWarehouse('${companyId}')">Delete</button>
-                    <button type="button" id="btn-warehouse-copy" class="btn btn-sm text-green-500 border-green-500 hover:bg-green-500 hover:text-white ${currentSelectedIndex !== -1 ? 'btn-outline-success' : 'btn-disabled'}" ${buttonDisabled} onclick="copySelectedWarehouse('${companyId}')">Copy</button>
+                    <button type="button" id="btn-warehouse-open" class="btn btn-sm ${buttonDisabledClass} ${isSelected ? 'btn-outline-primary' : ''}" ${buttonDisabled} onclick="openSelectedWarehouse('${companyId}')">Open</button>
+                    <button type="button" id="btn-warehouse-delete" class="btn btn-sm text-red-500 border-red-500 hover:bg-red-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="deleteSelectedWarehouse('${companyId}')">Delete</button>
+                    <button type="button" id="btn-warehouse-copy" class="btn btn-sm text-green-500 border-green-500 hover:bg-green-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="copySelectedWarehouse('${companyId}')">Copy</button>
+                    
                     <div class="grow"></div>
+                    
+                    <!-- Tombol Up/Down -->
+                    <button type="button" id="btn-warehouse-up"
+                        class="btn btn-sm btn-primary ${upDisabledClass}"
+                        ${upDisabled} onclick="moveWarehouseSelection('${companyId}', -1)">↑ Up</button>
+                    <button type="button" id="btn-warehouse-down"
+                        class="btn btn-sm btn-primary ${downDisabledClass}"
+                        ${downDisabled} onclick="moveWarehouseSelection('${companyId}', 1)">↓ Down</button>
                 </div>
 
-                <div class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto" id="whs-table-wrapper">
+                <div tabIndex="0" class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" id="whs-table-wrapper">
                     <table id="warehouse-list-table" class="min-w-full text-sm">
                         <thead>
                             <tr class="bg-gray-100 sticky top-0">
@@ -721,8 +798,14 @@
                 listHtml += `<tr><td colspan="3" class="p-4 text-center text-gray-400">No warehouse information found.</td></tr>`;
             } else {
                 warehouses.forEach((w, index) => {
+                    const isRowSelected = index === currentSelectedIndex;
+                    const selectedClass = isRowSelected ? 'bg-blue-100 font-medium selected' : '';
+                    const whsId = w.id;
+                    
+                    // H. Double-click tetap Open, onclick untuk seleksi
+                    // C. Render baris dengan atribut data-id, class “selected”
                     listHtml += `
-                        <tr data-id="${w.id}" onclick="selectWarehouseRow('${companyId}', '${w.id}')" ondblclick="openSelectedWarehouse('${companyId}')" class="border-b hover:bg-gray-50 cursor-pointer ${w.id === selectedWarehouseId ? 'bg-blue-100 font-medium selected' : ''}">
+                        <tr data-id="${whsId}" onclick="selectWarehouseRow('${companyId}', '${whsId}')" ondblclick="openSelectedWarehouse('${companyId}')" class="border-b hover:bg-gray-50 cursor-pointer ${selectedClass}">
                             <td class="py-2 px-4 w-12">${index + 1}</td>
                             <td class="py-2 px-4">${w.warehouseCode}</td>
                             <td class="py-2 px-4">${w.shipFromAddress.name || 'N/A'}</td>
@@ -732,15 +815,35 @@
             }
             listHtml += `</tbody></table></div>`;
             container.innerHTML = listHtml;
+            
+            // E. Panggil bindWarehouseKeys() di akhir.
+            bindWarehouseKeys();
+            
+            // Auto-scroll ke baris terpilih (setelah re-render)
+            const table = document.getElementById('warehouse-list-table');
+            if (currentSelectedIndex !== -1 && warehouses[currentSelectedIndex]) {
+                const selId = warehouses[currentSelectedIndex].id;
+                const tr = table?.querySelector(`tr[data-id="${selId}"]`);
+                tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+            
+            // Log untuk debugging
+            console.log('[WHS Render]', 'State:', { companyId, selectedIndex: currentSelectedIndex, rowsLen: warehouses.length });
         };
 
+        // E. Pilih baris berdasar index
         window.selectWarehouseRow = function (companyId, warehouseId) {
             const companyIndex = companies.findIndex(c => c.id === companyId);
-            if (companyIndex !== -1) {
-                // Cari index berdasarkan ID (lebih stabil)
-                const newIndex = companies[companyIndex].warehouses.rows.findIndex(w => w.id === warehouseId);
-                companies[companyIndex].warehouses.selectedIndex = newIndex;
-                
+            if (companyIndex === -1) return;
+            
+            const companyData = companies[companyIndex];
+            // Cari index aktual berdasarkan ID
+            const newIdx = companyData.warehouses.rows.findIndex(w => w.id === warehouseId);
+            
+            // FIX: Hanya render ulang jika seleksi benar-benar berubah
+            if (companyData.warehouses.selectedIndex !== newIdx) {
+                companyData.warehouses.selectedIndex = newIdx;
+                saveCompanies();
                 // FIX: Setelah selection berubah, render ulang list untuk update status tombol
                 window.renderWarehouseList(companyId);
             }
@@ -748,10 +851,12 @@
 
         window.openSelectedWarehouse = function (companyId) {
             const company = companies.find(c => c.id === companyId);
+            // FIX: Ambil selectedIndex langsung dari data yang sudah di-load/di-clamp
             const selectedIndex = company?.warehouses?.selectedIndex;
 
             if (selectedIndex !== undefined && selectedIndex !== -1) {
-                const warehouseData = company.warehouses.rows[selectedIndex];
+                // Ambil data berdasarkan index yang tersimpan
+                const warehouseData = company.warehouses.rows[selectedIndex]; 
                 // Pastikan mengirim ID Warehouse, bukan index
                 showWarehouseForm('edit', companyId, warehouseData.id);
             } else {
@@ -770,7 +875,8 @@
                 return;
             }
             
-            const src = companies[companyIndex].warehouses.rows[selectedIndex];
+            const companyData = companies[companyIndex];
+            const src = companyData.warehouses.rows[selectedIndex];
             if (!src) return;
 
             // Deep clone dan ubah ID/Code
@@ -780,34 +886,151 @@
                 warehouseCode: src.warehouseCode + "_COPY",
             };
 
-            companies[companyIndex].warehouses.rows.push(copy);
-            companies[companyIndex].warehouses.selectedIndex = companies[companyIndex].warehouses.rows.length - 1; // Select the new item
+            companyData.warehouses.rows.push(copy);
+            // Select item baru
+            companyData.warehouses.selectedIndex = companyData.warehouses.rows.length - 1; 
+            
             saveCompanies();
             window.renderWarehouseList(companyId);
             window.showCustomAlert('Success', `Warehouse ${src.warehouseCode} berhasil dicopy menjadi ${copy.warehouseCode}.`);
-        };
-
-        // 2. Tambahkan deleteSelectedWarehouse()
-        window.deleteSelectedWarehouse = function (companyId) {
-            const companyIndex = companies.findIndex(c => c.id === companyId);
-            if (companyIndex === -1) return;
-
-            const selectedIndex = companies[companyIndex].warehouses.selectedIndex;
-            if (selectedIndex === -1) { 
-                window.showCustomAlert("Pilih warehouse dulu", "warning"); 
-                return;
-            }
             
-            const warehouseCode = companies[companyIndex].warehouses.rows[selectedIndex].warehouseCode;
-
-            window.showCustomConfirm(`Yakin hapus warehouse ${warehouseCode} ini?`, () => {
-                companies[companyIndex].warehouses.rows.splice(selectedIndex, 1);
-                companies[companyIndex].warehouses.selectedIndex = -1;
-                saveCompanies();
-                window.renderWarehouseList(companyId);
-                window.showCustomAlert('Dihapus', `Warehouse ${warehouseCode} berhasil dihapus.`, 'success');
-            });
+            console.log('[WHS Copy]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: companyData.warehouses.rows.length });
         };
+
+        // [LANGKAH WAJIB] Perbaiki deleteSelectedWarehouse
+        // Mengganti showCustomConfirm dengan window.confirm langsung untuk bypass konflik file lain.
+        window.deleteSelectedWarehouse = function (companyId) {
+            const ci = companies.findIndex(c => c.id === companyId);
+            if (ci === -1) return;
+            
+            const companyData = companies[ci];
+            const rows = companyData.warehouses.rows;
+            let sel = companyData.warehouses.selectedIndex;
+            
+            // Validasi seleksi
+            if (sel === -1 || sel >= rows.length) { 
+                window.showCustomAlert('Pilih baris dulu.', 'warning'); 
+                return; 
+            }
+
+            const code = rows[sel].warehouseCode;
+            
+            // Mengganti showCustomConfirm dengan window.confirm langsung
+            if (window.confirm(`Yakin hapus warehouse ${code}?`)) {
+                rows.splice(sel, 1);
+
+                // Tentukan selectedIndex baru dengan clamp (sesuai instruksi)
+                if (rows.length === 0) {
+                    companyData.warehouses.selectedIndex = -1;
+                } else {
+                    // Pilih baris terdekat: tetap di index yang sama, kecuali out-of-range
+                    const next = Math.min(sel, rows.length - 1);
+                    companyData.warehouses.selectedIndex = next;
+                }
+
+                saveCompanies();
+                renderWarehouseList(companyId);                         // refresh
+                window.showCustomAlert('Dihapus', `Warehouse ${code} dihapus.`, 'success');
+                
+                console.log('[WHS Delete]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: rows.length });
+            }
+        };
+        
+        // D. Fungsi pindah seleksi + auto-scroll
+        window.moveWarehouseSelection = function(companyId, dir) {
+          const ci = companies.findIndex(c => c.id === companyId);
+          if (ci === -1) return;
+          
+          const companyData = companies[ci];
+          const rows = companyData.warehouses.rows;
+          if (!rows.length) return;
+
+          let idx = companyData.warehouses.selectedIndex;
+          
+          // Jika tidak ada yang terpilih, mulai dari 0 jika pindah ke bawah, atau baris terakhir jika pindah ke atas
+          if (idx === -1) {
+              idx = dir > 0 ? 0 : rows.length - 1;
+          } else {
+              idx += dir;
+          }
+
+          idx = Math.max(0, Math.min(rows.length - 1, idx)); // clamp
+          
+          // Hanya jika index berubah, lakukan update
+          if (companyData.warehouses.selectedIndex !== idx) {
+            companyData.warehouses.selectedIndex = idx;
+            saveCompanies();           // simpan state seleksi juga
+            renderWarehouseList(companyId);
+            
+            // auto-scroll ke baris terpilih
+            const table = document.getElementById('warehouse-list-table');
+            // Menggunakan data-id untuk menemukan baris terpilih yang baru
+            const selId = rows[idx]?.id;
+            const tr = table?.querySelector(`tr[data-id="${selId}"]`);
+            
+            tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            
+            console.log('[WHS Move]', 'action', { companyId, selectedIndex: idx, rowsLen: rows.length });
+          }
+        };
+        
+        // F. Bind keyboard di tabel
+        const bindWarehouseKeys = (function bindWarehouseKeys(){
+          return function() {
+              const wrap = document.getElementById('whs-table-wrapper');
+              // Hapus binding lama sebelum menambah yang baru (jika ada)
+              if (wrap && wrap._keysBound) {
+                  wrap.removeEventListener('keydown', wrap._keysBound);
+                  wrap._keysBound = false;
+              }
+              
+              if (!wrap) return;
+
+              // Pastikan wrapper bisa menerima fokus
+              wrap.tabIndex = 0;
+
+              const handler = (e) => {
+                  const form = document.getElementById('company-form');
+                  // FIX: Cek ID Company dari selector jika di halaman mandiri
+                  const companyId = form?.dataset.id || document.getElementById('wh-company-selector')?.value;
+
+                  if (!companyId) return;
+                  
+                  // Pastikan tabel wrapper sedang fokus
+                  if (document.activeElement !== wrap) return;
+
+                  if (e.key === 'ArrowUp')  { 
+                      e.preventDefault(); 
+                      window.moveWarehouseSelection(companyId, -1); 
+                  }
+                  if (e.key === 'ArrowDown'){ 
+                      e.preventDefault(); 
+                      window.moveWarehouseSelection(companyId,  1); 
+                  }
+                  
+                  // Cek apakah ada baris terpilih sebelum memproses Enter/Delete
+                  const companyData = companies.find(c => c.id === companyId);
+                  const isSelected = companyData?.warehouses?.selectedIndex !== -1;
+                  
+                  if (isSelected) {
+                      // FIX: Pastikan tidak membuka modal ganda jika form warehouse sudah terbuka
+                      const whsModalVisible = !document.getElementById('warehouse-form-modal').classList.contains('hidden');
+                      if (e.key === 'Enter' && !whsModalVisible) { 
+                          e.preventDefault(); 
+                          window.openSelectedWarehouse(companyId); 
+                      }
+                      if (e.key === 'Delete')   { 
+                          e.preventDefault(); 
+                          window.deleteSelectedWarehouse(companyId); 
+                      }
+                  }
+              };
+              
+              wrap.addEventListener('keydown', handler);
+              wrap._keysBound = handler;
+          };
+        })();
+
 
         // --- RENDER TAB COMPANY (BARU) ---
 
@@ -855,6 +1078,20 @@
             const { general, id: companyId } = companyData;
             const { uccEanNumber = '', orderIdPrefix = '', receiptIdPrefix = '', purchaseOrderIdPrefix = '', availabilityChecking = false } = general; 
             
+            // FIX: Cek mode: Jika 'create', tombol Warehouse New/Open/dll di-disabled
+            const form = document.getElementById('company-form');
+            const mode = form.dataset.mode;
+            const isNewCompany = mode === 'create';
+            const disabledAttr = isNewCompany ? 'disabled' : '';
+            const disabledClass = isNewCompany ? 'btn-disabled' : '';
+
+            let whsListContent;
+            if (isNewCompany) {
+                 whsListContent = `<p class="p-4 text-center text-red-500 font-semibold">Simpan Company terlebih dahulu sebelum mengelola daftar Warehouse.</p>`;
+            } else {
+                 whsListContent = `<!-- List akan di-render di sini oleh window.renderWarehouseList() -->`;
+            }
+
             return `
                 <!-- Bagian Prefix dan UCC/EAN -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 max-w-xl mb-6">
@@ -885,9 +1122,9 @@
 
                 <!-- Bagian Warehouse List (Nested CRUD) -->
                 <h3 class="text-base font-semibold text-wise-dark-gray mb-3 border-t pt-4 pb-2">Warehouse List (Nested Info)</h3>
-                <p class="text-xs text-gray-500 mb-2">Double click baris untuk membuka detail Warehouse.</p>
-                <div id="warehouse-list-container">
-                    <!-- List akan di-render di sini oleh window.renderWarehouseList() -->
+                <p class="text-xs text-gray-500 mb-2">Double click baris, tekan Enter, atau tombol Open untuk membuka detail Warehouse.</p>
+                <div id="warehouse-list-container" data-is-new="${isNewCompany}">
+                    ${whsListContent}
                 </div>
             `;
         }
@@ -1038,7 +1275,7 @@
             document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
         };
 
-        window.removeAssignedUser = async function(companyId) {
+        window.removeAssignedUser = function(companyId) {
             const form = document.getElementById('company-form');
             const mode = form.dataset.mode;
             let companyData = companies.find(c => c.id === companyId);
@@ -1051,8 +1288,8 @@
 
             if (!companyData || companyData.assignedUsers.length === 0) return;
 
-            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Yakin hapus user terakhir dari daftar?');
-            if (confirmed) {
+            // Menggunakan showCustomConfirm yang sudah dikunci
+            window.showCustomConfirm('Yakin hapus user terakhir dari daftar?', () => {
                 companyData.assignedUsers.pop();
                 
                  // Simpan ke array global dan localStorage
@@ -1064,7 +1301,7 @@
                 
                 document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
                 window.showCustomAlert('Dihapus', 'User terakhir berhasil dihapus.', 'success');
-            }
+            });
         };
 
         // FIX: Render UDF Company (8 fields)
@@ -1100,7 +1337,17 @@
 
             if (mode === 'create') {
                 companyData = JSON.parse(JSON.stringify(EMPTY_COMPANY)); 
-                companyData.id = generateUniqueId(COMPANY_ID_PREFIX); // ID untuk data attribute form
+                // FIX: JANGAN generate ID di sini, tapi di handleCompanySubmit, 
+                // agar ID baru hanya terpakai jika form disubmit.
+                // Tapi kita butuh ID di form.dataset untuk membedakan mode.
+                // Biarkan ID generated, tapi CompanyList belum di-update.
+                // Kita akan menggunakan ID sementara yang akan dikonfirmasi saat submit.
+                
+                // Menggunakan ID temporer untuk navigasi internal modal
+                const tempId = generateUniqueId(COMPANY_ID_PREFIX); 
+                companyData.id = tempId; 
+                form.dataset.tempId = tempId; // Simpan ID sementara
+                
             } else if (mode === 'edit' && id) {
                 // PENTING: Gunakan array global yang sudah diupdate dari renderCompanyList
                 const found = companies.find(c => c.id === id); 
@@ -1119,7 +1366,8 @@
             form.dataset.mode = mode;
             
             // Perbaiki header modal agar menampilkan Company Code
-            title.innerHTML = mode === 'create' ? 'Company - Create New' : `Company - Edit Existing (<span class="font-bold text-blue-600">${companyData.companyCode}</span>)`;
+            const headerCode = mode === 'create' ? 'New Company (Unsaved)' : companyData.companyCode;
+            title.innerHTML = mode === 'create' ? 'Company - Create New' : `Company - Edit Existing (<span class="font-bold text-blue-600">${headerCode}</span>)`;
 
             // Render Tabs
             document.getElementById('pane-cmp-general').innerHTML = renderCompanyGeneralTab(companyData);
@@ -1165,8 +1413,22 @@
                     window.activateTab(button.dataset.tab, modal);
                     // FIX: Panggil renderWarehouseList saat tab Warehouse dibuka
                     if (button.dataset.tab === 'company-info') {
-                        // Selalu ambil id dari form.dataset
-                        window.renderWarehouseList(form.dataset.id); 
+                         // Ambil status mode dari form
+                        const currentMode = document.getElementById('company-form').dataset.mode;
+                        if (currentMode !== 'create') {
+                            window.renderWarehouseList(form.dataset.id); 
+                        } else {
+                            // Biarkan pesan "Simpan dulu" muncul dari renderCompanyInfoTab
+                            document.getElementById('warehouse-list-container').innerHTML = `<p class="p-4 text-center text-red-500 font-semibold">Simpan Company terlebih dahulu sebelum mengelola daftar Warehouse.</p>`;
+                        }
+                        
+                        // Set fokus ke wrapper tabel (Fokus keyboard binding)
+                        const whsWrapper = document.getElementById('whs-table-wrapper');
+                        if (whsWrapper) {
+                            setTimeout(() => {
+                                whsWrapper.focus();
+                            }, 50); // Delay sedikit agar DOM siap
+                        }
                     }
                 }});
                 modal._listenersAttached = true;
@@ -1198,10 +1460,10 @@
                 modal.addEventListener('keydown', modal._keydownHandler);
                 
                 // FIX: Panggil renderWarehouseList jika tab info adalah default
-                if (document.querySelector('[role="tab"][data-tab="company-info"]').classList.contains('tab-active')) {
+                if (document.querySelector('[role="tab"][data-tab="company-info"]').classList.contains('tab-active') && mode !== 'create') {
                      window.renderWarehouseList(form.dataset.id);
                 }
-                
+
             }, 10);
             
             // FIX: Panggil renderStandardModalFooter di sini
@@ -1223,11 +1485,19 @@
         window.closeCompanyForm = function () {
             const modal = document.getElementById('company-form-modal');
             const modalContent = modal.querySelector('.modal-content');
+            const form = document.getElementById('company-form');
 
              if (modal._keydownHandler) {
                  modal.removeEventListener('keydown', modal._keydownHandler);
                  delete modal._keydownHandler;
             }
+            
+            // FIX: Hapus ID temporer jika ada dan mode create
+            if (form.dataset.mode === 'create') {
+                delete form.dataset.tempId;
+                form.dataset.id = null;
+            }
+
 
             modalContent.classList.remove('scale-100', 'opacity-100');
             modalContent.classList.add('scale-95', 'opacity-0');
@@ -1243,6 +1513,13 @@
 
         // 6. Perbaiki showWarehouseForm() agar pass companyData
         window.showWarehouseForm = function (mode, companyId, warehouseId = null) {
+            // Cek Alur Create Company: Jika Company belum disimpan, tolak
+            const companyForm = document.getElementById('company-form');
+            if (companyForm && companyForm.dataset.mode === 'create') {
+                window.showCustomAlert('Aksi Ditolak', 'Harap simpan Company terlebih dahulu sebelum menambahkan Warehouse.', 'error');
+                return;
+            }
+            
             // FIX: Ambil companyData di sini
             const companyData = companies.find(c => c.id === companyId);
             if (!companyData) { window.showCustomAlert('Error', 'Company data not found.', 'error'); return; }
@@ -1250,7 +1527,8 @@
             const modal = document.getElementById('warehouse-form-modal');
             const form = document.getElementById('warehouse-form');
             const title = document.getElementById('warehouse-form-title');
-            
+            const footerPlaceholder = document.getElementById('warehouse-form-footer-placeholder');
+
             let warehouseData = {};
             let isEditMode = false;
 
@@ -1258,6 +1536,7 @@
                 warehouseData = JSON.parse(JSON.stringify(EMPTY_WAREHOUSE_INFO)); 
                 warehouseData.id = generateUniqueId(WAREHOUSE_ID_PREFIX);
             } else if (mode === 'edit' && warehouseId) {
+                // FIX: Gunakan companyData.warehouses.rows untuk mencari
                 const found = companyData.warehouses.rows.find(w => w.id === warehouseId);
                 if (!found) {
                     window.showCustomAlert('Error', 'Warehouse Info not found!', 'error');
@@ -1319,6 +1598,20 @@
             document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
             
+            // Pasang listener submit di sini
+            // FIX: Pastikan listener onsubmit terpasang sekali
+            form.onsubmit = window.handleWarehouseSubmit;
+            
+            // FIX: Render footer ke placeholder baru yang lebih aman
+            if(footerPlaceholder) {
+                 footerPlaceholder.innerHTML = window.renderStandardModalFooter({
+                    cancelOnclick: "closeWarehouseForm()",
+                    submitFormId: "warehouse-form",
+                    submitLabel: "OK"
+                });
+            }
+
+
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
                 modalContent.classList.add('scale-100', 'opacity-100');
@@ -1332,25 +1625,21 @@
                 
             }, 10);
             
-            // FIX: Pasang footer modal Warehouse yang benar
-            const modalFooterPlaceholder = modal.querySelector('.modal-content > .px-6.py-4.border-t.flex.justify-between.items-center').parentNode;
-            if (modalFooterPlaceholder) {
-                 modalFooterPlaceholder.innerHTML = window.renderStandardModalFooter({
-                    cancelOnclick: "closeWarehouseForm()",
-                    submitFormId: "warehouse-form",
-                    submitLabel: "OK"
-                });
-            }
         };
 
         window.closeWarehouseForm = function () {
             const modal = document.getElementById('warehouse-form-modal');
+            const form = document.getElementById('warehouse-form');
             const modalContent = modal.querySelector('.modal-content');
 
              if (modal._keydownHandler) {
                  modal.removeEventListener('keydown', modal._keydownHandler);
                  delete modal._keydownHandler;
             }
+            
+            // Hapus listener onsubmit saat modal ditutup
+            form.onsubmit = null; 
+
 
             modalContent.classList.remove('scale-100', 'opacity-100');
             modalContent.classList.add('scale-95', 'opacity-0');
@@ -1517,7 +1806,7 @@
             };
         }
 
-        window.handleCompanySubmit = async function (event) {
+        window.handleCompanySubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('company-form-modal');
             
@@ -1525,7 +1814,7 @@
 
             const form = event.target;
             const mode = form.dataset.mode;
-            const id = form.dataset.id;
+            let id = form.dataset.id; // Gunakan let karena ID bisa berubah di mode 'create'
             
             const formData = getCompanyFormData(form);
 
@@ -1537,8 +1826,20 @@
                     window.showCustomAlert('Error', `Company code ${formData.companyCode} already exists.`, 'error');
                     return;
                 }
+                
+                // FIX: Generate ID unik di sini (ID yang sebenarnya)
+                id = generateUniqueId(COMPANY_ID_PREFIX);
+                formData.id = id;
                 companies.push(formData);
                 msg = `Company ${formData.companyCode} created successfully.`;
+                
+                // FIX: Update dataset.id agar modal yang sama bisa digunakan untuk edit lanjut
+                form.dataset.id = id;
+                form.dataset.companyId = id;
+                form.dataset.mode = 'edit';
+                // FIX: Update header modal
+                document.getElementById('company-form-title').innerHTML = `Company - Edit Existing (<span class="font-bold text-blue-600">${formData.companyCode}</span>)`;
+
             } else if (mode === 'edit') {
                 const index = companies.findIndex(c => c.id === id);
                 if (index !== -1) {
@@ -1556,27 +1857,36 @@
             // Simpan ke Local Storage
             saveCompanies();
 
-            // Tutup modal dan refresh list
-            window.closeCompanyForm();
+            // FIX: Di mode Create, JANGAN langsung tutup modal, tapi refresh tampilan (terutama tab Warehouse)
+            // Di mode Edit, tutup modal (sesuai ekspektasi CRUD list)
+            if (mode === 'create') {
+                 // Langsung pindah ke tab Warehouse/company information agar user bisa lanjut
+                 window.activateTab('company-info', modal);
+                 // Render Warehouse List sekarang sudah bisa dipanggil
+                 window.renderWarehouseList(id); 
+            } else {
+                 window.closeCompanyForm();
+            }
+            
             window.renderCompanyList();
-            await window.showCustomAlert('Success', msg, 'success');
+            window.showCustomAlert('Success', msg, 'success');
         };
 
-        window.deleteCompany = async function (id) {
-            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this company?');
-            if (confirmed) {
+        window.deleteCompany = function (id) {
+            // Menggunakan showCustomConfirm yang sudah dikunci
+            window.showCustomConfirm('Are you sure you want to delete this company?', () => {
                 // FIX: Gunakan filter untuk menghapus
                 companies = companies.filter(c => c.id !== id);
                 saveCompanies();
                 window.renderCompanyList();
-                await window.showCustomAlert('Deleted', 'Company deleted successfully!', 'success');
+                window.showCustomAlert('Deleted', 'Company deleted successfully!', 'success');
                 
                 // Jika modal Company terbuka, tutup
                 const modal = document.getElementById('company-form-modal');
                 if(!modal.classList.contains('hidden') && modal.querySelector('#company-form').dataset.id === id) {
                     window.closeCompanyForm();
                 }
-            }
+            });
         };
 
 
@@ -1625,7 +1935,7 @@
         }
 
         // 1. Implement handleWarehouseFormSubmit sesuai instruksi
-        window.handleWarehouseSubmit = async function (event) {
+        window.handleWarehouseSubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('warehouse-form-modal');
             const form = event.target;
@@ -1638,41 +1948,50 @@
             const warehouseId = form.dataset.warehouseId;
             
             const companyIndex = companies.findIndex(c => c.id === companyId);
-            if (companyIndex === -1) { await window.showCustomAlert('Error', 'Company tidak ditemukan.', 'error'); return; }
+            if (companyIndex === -1) { window.showCustomAlert('Error', 'Company tidak ditemukan.', 'error'); return; }
             
             let data = getWarehouseFormData(); // Ambil data dari form
 
+            const companyData = companies[companyIndex];
+            const rows = companyData.warehouses.rows;
+            let newSelectedIndex = -1;
             let msg = '';
+            
             // Proses penyimpanan (Create / Update)
             // FIX: Tambahkan mode 'new' di cek kondisi
             if (mode === 'new' || mode === 'create') {
                 // Check duplikasi code
-                if (companies[companyIndex].warehouses.rows.some(w => w.warehouseCode === data.warehouseCode)) {
+                if (rows.some(w => w.warehouseCode === data.warehouseCode)) {
                     window.showCustomAlert('Error', `Warehouse code ${data.warehouseCode} sudah ada di Company ini.`, 'error');
                     return;
                 }
                 
                 // Hasilkan ID unik baru dan push
                 data.id = generateUniqueId(WAREHOUSE_ID_PREFIX);
-                companies[companyIndex].warehouses.rows.push(data);
-                companies[companyIndex].warehouses.selectedIndex = companies[companyIndex].warehouses.rows.length - 1;
+                rows.push(data);
+                // FIX: Set selectedIndex ke item baru
+                newSelectedIndex = rows.length - 1;
                 msg = `Warehouse Info ${data.warehouseCode} created successfully.`;
             } else if (mode === 'edit') {
-                const whsIndex = companies[companyIndex].warehouses.rows.findIndex(w => w.id === warehouseId);
+                const whsIndex = rows.findIndex(w => w.id === warehouseId);
                 if (whsIndex !== -1) {
                     // Check duplikasi code, kecuali code milik sendiri
-                    if (companies[companyIndex].warehouses.rows.some((w, i) => i !== whsIndex && w.warehouseCode === data.warehouseCode)) {
+                    if (rows.some((w, i) => i !== whsIndex && w.warehouseCode === data.warehouseCode)) {
                         window.showCustomAlert('Error', `Warehouse code ${data.warehouseCode} sudah ada di Company ini.`, 'error');
                         return;
                     }
 
                     // Pastikan ID tidak berubah
                     data.id = warehouseId; 
-                    companies[companyIndex].warehouses.rows[whsIndex] = data;
-                    companies[companyIndex].warehouses.selectedIndex = whsIndex;
+                    rows[whsIndex] = data;
+                    // FIX: Set selectedIndex ke item yang diedit
+                    newSelectedIndex = whsIndex;
                     msg = `Warehouse Info ${data.warehouseCode} updated successfully.`;
                 }
             }
+            
+            // Update state seleksi
+            companyData.warehouses.selectedIndex = newSelectedIndex;
             
             // Simpan ke Local Storage
             saveCompanies();
@@ -1680,7 +1999,9 @@
             // Tutup sub-modal dan refresh list di modal utama
             window.closeWarehouseForm();
             window.renderWarehouseList(companyId); // Pastikan re-render
-            await window.showCustomAlert('Success', msg, 'success');
+            window.showCustomAlert('Success', msg, 'success');
+            
+            console.log('[WHS Submit]', 'action', { companyId, selectedIndex: newSelectedIndex, rowsLen: rows.length });
         };
         
         // --- End of Company Logic ---
@@ -1745,14 +2066,14 @@
 
         window.filterCustomerList = window.debounce((value) => window.renderCustomerList(value), 300);
 
-        window.deleteCustomer = async function (id) {
-            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this customer?');
-            if (confirmed) {
+        window.deleteCustomer = function (id) {
+            // Menggunakan showCustomConfirm yang sudah dikunci
+            window.showCustomConfirm('Are you sure you want to delete this customer?', () => {
                 customers = customers.filter(c => c.id !== id);
                 saveCustomers();
                 window.renderCustomerList();
-                await window.showCustomAlert('Deleted', 'Customer deleted successfully!', 'success');
-            }
+                window.showCustomAlert('Deleted', 'Customer deleted successfully!', 'success');
+            });
         };
 
         function validateCustomerForm(modal) {
@@ -1813,7 +2134,7 @@
             return true;
         }
         
-        window.handleCustomerSubmit = async function (event) {
+        window.handleCustomerSubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('customer-form-modal');
             
@@ -1892,7 +2213,7 @@
             saveCustomers();
             window.closeCustomerForm();
             window.renderCustomerList();
-            await window.showCustomAlert('Success', msg, 'success');
+            window.showCustomAlert('Success', msg, 'success');
         };
         
         window.showCustomerForm = function (mode, id = null) {
@@ -2331,7 +2652,7 @@
             window.showCustomAlert('Success', 'Baris RFID berhasil diperbarui.', 'success');
         };
 
-        window.removeRFIDRow = async function() {
+        window.removeRFIDRow = function() {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
             const customerIndex = customers.findIndex(c => c.id === customerId);
@@ -2341,17 +2662,17 @@
             const selectedIndex = customers[customerIndex].rfid.selectedIndex;
             if (selectedIndex === -1) { window.showCustomAlert('Warning', 'Pilih baris yang akan dihapus terlebih dahulu.', 'warning'); return; }
             
-            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Yakin hapus baris RFID yang dipilih?');
-            if (!confirmed) return;
-
-            customers[customerIndex].rfid.rows.splice(selectedIndex, 1);
-            customers[customerIndex].rfid.selectedIndex = -1;
-            saveCustomers();
-            
-            const modal = document.getElementById('customer-form-modal');
-            modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
-            window.activateTab('rfid', modal);
-            window.showCustomAlert('Success', 'Baris RFID berhasil dihapus.', 'success');
+            // Menggunakan showCustomConfirm yang sudah dikunci
+            window.showCustomConfirm('Yakin hapus baris RFID yang dipilih?', () => {
+                customers[customerIndex].rfid.rows.splice(selectedIndex, 1);
+                customers[customerIndex].rfid.selectedIndex = -1;
+                saveCustomers();
+                
+                const modal = document.getElementById('customer-form-modal');
+                modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
+                window.activateTab('rfid', modal);
+                window.showCustomAlert('Success', 'Baris RFID berhasil dihapus.', 'success');
+            });
         };
 
 
@@ -2485,7 +2806,7 @@
                                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeWarehouseForm()">✕</button>
                             </div>
                             <div class="p-6 overflow-y-auto">
-                                <form id="warehouse-form" onsubmit="handleWarehouseSubmit(event)">
+                                <form id="warehouse-form">
                                     <div class="overflow-x-auto border-b mb-4">
                                         <div role="tablist" class="flex flex-nowrap gap-x-4 text-sm font-medium w-max min-w-full">
                                             <button type="button" role="tab" data-tab="ship-from" class="tab tab-active">Ship from address</button>
@@ -2503,12 +2824,8 @@
                                     <input type="hidden" name="id" value="">
                                 </form>
                             </div>
-                            <!-- Footer akan di-render di showWarehouseForm() -->
-                            ${window.renderStandardModalFooter({
-                                cancelOnclick: "closeWarehouseForm()",
-                                submitFormId: "warehouse-form",
-                                submitLabel: "OK"
-                            })}
+                            <!-- Placeholder untuk Footer yang akan di-render di showWarehouseForm -->
+                            <div id="warehouse-form-footer-placeholder"></div>
                         </div>
                     </div>
                 `
@@ -2518,6 +2835,75 @@
             window.allMenus.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'configuration' });
             window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration'; 
         }
+
+        // [BARU] Logika untuk Halaman Warehouse Berdiri Sendiri (Mode Alternatif)
+        
+        const WAREHOUSE_LAST_COMPANY_KEY = 'wms_whs_last_company_id';
+
+        window.renderWarehousePage = function() {
+            // PENTING: Reload companies dari storage
+            companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
+            
+            const container = document.getElementById('content-container');
+            const targetContainer = container.querySelector(`[data-key="${WAREHOUSE_CATEGORY_KEY}"]`);
+            if (!targetContainer) return;
+            
+            if (companies.length === 0) {
+                 targetContainer.innerHTML = `
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
+                    <p class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-md mt-4">
+                        <span class="font-bold">Perhatian:</span> Tidak ada Company ditemukan. Harap buat Company terlebih dahulu di menu "Company".
+                    </p>
+                 `;
+                 return;
+            }
+
+            // 1. Ambil Company yang terakhir dipilih
+            let selectedCompanyId = localStorage.getItem(WAREHOUSE_LAST_COMPANY_KEY);
+            const firstCompanyId = companies[0].id;
+
+            // 2. Tentukan Company ID yang aktif
+            if (!selectedCompanyId || !companies.some(c => c.id === selectedCompanyId)) {
+                selectedCompanyId = firstCompanyId;
+                localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, selectedCompanyId);
+            }
+
+            const selectedCompany = companies.find(c => c.id === selectedCompanyId);
+
+            let companyOptions = companies.map(c => 
+                `<option value="${c.id}" ${c.id === selectedCompanyId ? 'selected' : ''}>${c.companyCode} - ${c.companyAddress.name || 'N/A'}</option>`
+            ).join('');
+
+            targetContainer.innerHTML = `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
+                <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-gray-50">
+                    <label for="wh-company-selector" class="font-medium text-sm whitespace-nowrap">Pilih Company Aktif:</label>
+                    <select id="wh-company-selector" class="select select-bordered w-full sm:w-80" onchange="window.handleWarehouseCompanyChange(this.value)">
+                        ${companyOptions}
+                    </select>
+                </div>
+                
+                <div id="warehouse-list-container" class="mt-4">
+                    <!-- List akan di-render di sini oleh renderWarehouseList(selectedCompanyId) -->
+                </div>
+            `;
+            
+            // Panggil render list dengan Company ID yang aktif
+            window.renderWarehouseList(selectedCompanyId);
+            
+            // Perbarui currentSelectedCompanyId global (opsional, untuk konsistensi)
+            window.currentSelectedCompanyId = selectedCompanyId;
+        };
+        
+        window.handleWarehouseCompanyChange = function(companyId) {
+            if (!companyId) return;
+            
+            // Simpan pilihan terakhir
+            localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, companyId);
+            
+            // Render ulang list untuk Company yang baru
+            window.renderWarehouseList(companyId);
+        };
 
 
         // 3. Auto-render dan listener (Memastikan render list saat berpindah ke tab)
@@ -2551,6 +2937,10 @@
             }
             if (e.detail.key === COMPANY_CATEGORY_KEY) {
                 window.renderCompanyList();
+            }
+            // [BARU] Hook untuk kategori Warehouse mandiri
+            if (e.detail.key === WAREHOUSE_CATEGORY_KEY) {
+                window.renderWarehousePage();
             }
         });
 

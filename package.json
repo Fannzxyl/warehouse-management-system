@@ -24,5 +24,8 @@
     "javascript"
   ],
   "author": "Developer",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "tree": "^0.1.3"
+  }
 }

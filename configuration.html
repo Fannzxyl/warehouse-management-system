@@ -361,8 +361,8 @@
                 </button>
                 
                 <a href="dashboard.html" class="ml-4 flex items-center">
-  <img src="public/images/wise.png" alt="WISE Logo" class="h-6 w-auto object-contain" />
-</a>
+                    <img src="public/images/wise.png" alt="WISE Logo" class="h-6 w-auto object-contain" />
+                </a>
 
 
                 <div class="hidden md:flex items-center gap-2 ml-4">
@@ -450,10 +450,31 @@
                             <i id="configuration-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
 
+                        <!-- START OF configuration-children: Diubah urutan menjadi Warehouse, Customer, Company -->
                         <div id="configuration-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="configuration">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button" aria-label="Select Warehouse">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
+                            
+                            <!-- 1. Warehouse -->
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                 onclick="selectCategory('configuration-warehouse')" tabindex="0" role="button"
+                                 aria-label="Select Warehouse">
+                              <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Warehouse</span>
                             </div>
+
+                            <!-- 2. Customer -->
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('customer')" tabindex="0" role="button"
+                                aria-label="Select Customer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Customer</span>
+                            </div>
+                            
+                            <!-- 3. Company -->
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                 onclick="selectCategory('company')" tabindex="0" role="button"
+                                 aria-label="Select Company">
+                              <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Company</span>
+                            </div>
+                            
+                            <!-- Menu-menu lainnya tetap di bawah -->
                             <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('locating-strategies')" tabindex="0" role="button" aria-label="Select Locating Strategies">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Locating Strategies</span>
                             </div>
@@ -490,18 +511,7 @@
                                 aria-label="Select Allocation Rule Assignment Criteria">
                                 <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Allocation Rule Assignment Criteria</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
-                                onclick="selectCategory('customer')" tabindex="0" role="button"
-                                aria-label="Select Customer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Customer</span>
-                            </div>
-                            <!-- START A. Sidebar: sisipkan tombol “Company” setelah “Customer” -->
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
-                                 onclick="selectCategory('company')" tabindex="0" role="button"
-                                 aria-label="Select Company">
-                              <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Company</span>
-                            </div>
-                            <!-- END A. Sidebar: sisipkan tombol “Company” setelah “Customer” -->
+                            
                             
                             <div id="inventory-control"
                                 class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
@@ -588,6 +598,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- END OF configuration-children -->
                     </div>
 
                 </div>
@@ -718,7 +729,18 @@
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-6">Configuration Modules</h2>
                         <p class="text-wise-gray mb-6">Pilih modul di bawah ini untuk mengelola data master, aturan, dan konfigurasi sistem.</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Existing Customer Card -->
+                            <!-- START: Kartu “Warehouse” dipindah ke urutan pertama -->
+                            <section class="card p-6 shadow-card shadow-card-hover hover-lift transition-all-smooth">
+                                <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Warehouse Information</h3>
+                                <p class="text-wise-gray text-sm mb-4">Manage warehouse details, addresses, and user-defined fields.</p>
+                                <button class="btn btn-primary hover-lift active-press"
+                                        onclick="selectCategory('configuration-warehouse')">
+                                    Manage Warehouses
+                                </button>
+                            </section>
+                            <!-- END: Kartu “Warehouse” -->
+
+                            <!-- 2. Customer Card -->
                             <section class="card p-6 shadow-card shadow-card-hover hover-lift transition-all-smooth">
                                 <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Customer Management</h3>
                                 <p class="text-wise-gray text-sm mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
@@ -727,18 +749,18 @@
                                     Manage Customers
                                 </button>
                             </section>
-                            <!-- END Existing Customer Card -->
+                            <!-- END Customer Card -->
 
-                            <!-- START B. Kartu “Company Management” pada beranda konfigurasi -->
+                            <!-- 3. Company Management Card -->
                             <section class="card p-6 shadow-card shadow-card-hover hover-lift transition-all-smooth">
                                 <h3 class="text-lg font-semibold text-wise-dark-gray mb-1">Company Management</h3>
-                                <p class="text-wise-gray text-sm mb-4">Manage company master data, addresses, warehouses, and web header.</p>
+                                <p class="text-wise-gray text-sm mb-4">Manage company master data, addresses, and nested warehouse info.</p>
                                 <button class="btn btn-primary hover-lift active-press"
                                         onclick="selectCategory('company')">
                                     Manage Companies
                                 </button>
                             </section>
-                            <!-- END B. Kartu “Company Management” pada beranda konfigurasi -->
+                            <!-- END Company Management Card -->
                             
                             <!-- Placeholder cards for other modules -->
                             <section class="card p-6 bg-gray-50 border-dashed border-gray-300">
@@ -759,8 +781,24 @@
                         </div>
                     `
                 },
-                // Add default content for other categories if needed, or rely on JS modules
-                'configuration-warehouse': { full: '<h2 class="text-xl font-semibold">Warehouse Configuration</h2><p class="text-wise-gray">Isi dari konfigurasi Warehouse.</p>' },
+                // Tambahkan skeleton HTML WAJIB di sini
+                'configuration-warehouse': { 
+                    full: `
+                        <div id="content-container" data-key="configuration-warehouse">
+                            <!-- Header dan Loading/Guard akan dimuat di sini oleh renderWarehousePage() -->
+                            <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse Configuration</h2>
+                            <div id="warehouse-page-skeleton" class="animate-pulse">
+                                <div class="bg-gray-200 h-10 w-96 rounded-lg mb-6"></div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="bg-blue-300 h-10 w-40 rounded-lg"></div>
+                                    <div class="grow"></div>
+                                    <div class="bg-gray-200 h-10 w-72 rounded-lg"></div>
+                                </div>
+                                <div class="bg-gray-100 h-64 rounded-lg"></div>
+                            </div>
+                        </div>
+                    ` 
+                },
                 'security-group': { full: '<h2 class="text-xl font-semibold">Security Group</h2><p class="text-wise-gray">Isi dari Security Group.</p>' },
                 // The actual content for 'customer' and 'company' comes from configurationV6.js
             };
@@ -778,8 +816,14 @@
                 
                 // Highlight active item in sidebar
                 sidebarChildren.forEach(item => {
+                    // Check if the item is a direct child category (not a submenu item like inventory-control which opens a list)
                     const itemCategory = item.getAttribute('onclick').match(/selectCategory\('(.*?)'\)/)?.[1];
-                    if (itemCategory === category) {
+                    // Special handling for sub-menus which also act as categories
+                    const isSubMenuCategory = item.id && item.id.endsWith('-control'); 
+                    const isDirectCategory = itemCategory === category && !isSubMenuCategory;
+
+
+                    if (isDirectCategory) {
                         item.classList.add('bg-wise-primary/10', 'text-wise-primary');
                         item.querySelector('span')?.classList.remove('text-wise-gray');
                         item.querySelector('span')?.classList.add('text-wise-primary');
@@ -821,6 +865,12 @@
             const overlayInput = document.getElementById('overlay-search-input');
             const searchOverlay = document.getElementById('search-overlay');
             const searchResultsPanel = document.getElementById('overlay-search-results-list-panel');
+
+            // Global search items registry
+            window.searchItems = window.searchItems || [];
+            // START: Opsional pencarian global untuk Company
+            window.searchItems.push({ id: 'company', title: 'Company', category: 'Configuration', lastUpdated: 'Latest' });
+            // END: Opsional pencarian global untuk Company
 
             // Combine all search items from the global context, generated by configurationV6.js
             function getGlobalSearchItems() {
