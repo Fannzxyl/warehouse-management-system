@@ -735,7 +735,7 @@
          * Render list Warehouse di tab Warehouse/company information.
          * @param {string} companyId - ID Company
          */
-        window.renderWarehouseList = function (companyId) {
+        window.renderCompanyWarehouseList = function (companyId) {
             // PENTING: Reload data sebelum render
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
             
@@ -795,7 +795,7 @@
             // C. Tombol Up/Down di toolbar
             let listHtml = `
                 <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <button type="button" id="btn-warehouse-new" class="btn btn-sm btn-primary" onclick="showWarehouseForm('new', '${companyId}')">New</button>
+                    <button type="button" id="btn-warehouse-new" class="btn btn-sm btn-primary" onclick="showCompanyWarehouseForm('new', '${companyId}')">New</button>
                     <button type="button" id="btn-warehouse-open" class="btn btn-sm ${buttonDisabledClass} ${isSelected ? 'btn-outline-primary' : ''}" ${buttonDisabled} onclick="openSelectedWarehouse('${companyId}')">Open</button>
                     <button type="button" id="btn-warehouse-delete" class="btn btn-sm text-red-500 border-red-500 hover:bg-red-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="deleteSelectedWarehouse('${companyId}')">Delete</button>
                     <button type="button" id="btn-warehouse-copy" class="btn btn-sm text-green-500 border-green-500 hover:bg-green-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="copySelectedWarehouse('${companyId}')">Copy</button>
@@ -1384,7 +1384,7 @@
                          // Ambil status mode dari form
                         const currentMode = document.getElementById('company-form').dataset.mode;
                         if (currentMode !== 'create') {
-                            window.renderWarehouseList(form.dataset.id); 
+                            window.renderCompanyWarehouseList(form.dataset.id); 
                         } else {
                             // Biarkan pesan "Simpan dulu" muncul dari renderCompanyInfoTab
                             document.getElementById('warehouse-list-container').innerHTML = `<p class="p-4 text-center text-red-500 font-semibold">Simpan Company terlebih dahulu sebelum mengelola daftar Warehouse.</p>`;
@@ -1429,7 +1429,7 @@
                 
                 // FIX: Panggil renderWarehouseList jika tab info adalah default
                 if (document.querySelector('[role="tab"][data-tab="company-info"]').classList.contains('tab-active') && mode !== 'create') {
-                     window.renderWarehouseList(form.dataset.id);
+                     window.renderCompanyWarehouseList(form.dataset.id);
                 }
 
             }, 10);
@@ -1480,7 +1480,7 @@
         // --- HANDLER SUB MODAL WAREHOUSE (BARU) ---
 
         // 6. Perbaiki showWarehouseForm() agar pass companyData
-        window.showWarehouseForm = function (mode, companyId, warehouseId = null) {
+        window.showCompanyWarehouseForm = function (mode, companyId, warehouseId = null) {
             // Cek Alur Create Company: Jika Company belum disimpan, tolak
             const companyForm = document.getElementById('company-form');
             if (companyForm && companyForm.dataset.mode === 'create') {
@@ -2714,7 +2714,7 @@
             };
 
             window.searchItems.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'Configuration', lastUpdated: 'Latest' });
-            window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'configuration' });
+            window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, name: 'Customer', category: 'configuration' });
             window.parentMapping[CUSTOMER_CATEGORY_KEY] = 'configuration'; 
         }
 
@@ -2810,7 +2810,7 @@
             };
 
             window.searchItems.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'Configuration', lastUpdated: 'Latest' });
-            window.allMenus.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'configuration' });
+            window.allMenus.push({ id: COMPANY_CATEGORY_KEY, name: 'Company', category: 'configuration' });
             window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration'; 
         }
 
@@ -2875,14 +2875,9 @@
         
         window.handleWarehouseCompanyChange = function(companyId) {
             if (!companyId) return;
-            
-            // Simpan pilihan terakhir
             localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, companyId);
-            
-            // Render ulang list untuk Company yang baru
-            window.renderWarehouseList(companyId);
+            window.renderCompanyWarehouseList(companyId);
         };
-
 
         // 3. Auto-render dan listener (Memastikan render list saat berpindah ke tab)
         const autoRenderCustomer = () => {
@@ -2908,18 +2903,16 @@
             });
         });
         observer.observe(document.body, { childList: true, subtree: true });
-        
+
         document.addEventListener('content:rendered', (e) => {
-            if (e.detail.key === CUSTOMER_CATEGORY_KEY) {
-                window.renderCustomerList();
-            }
-            if (e.detail.key === COMPANY_CATEGORY_KEY) {
-                window.renderCompanyList();
-            }
-            // [BARU] Hook untuk kategori Warehouse mandiri
-            if (e.detail.key === WAREHOUSE_CATEGORY_KEY) {
+            // ... (ada if untuk 'customer' dan 'company' di atasnya) ...
+
+            // Hook untuk kategori Warehouse mandiri
+            // Dimatikan sementara agar tidak konflik dengan configuration.js
+            /* if (e.detail.key === WAREHOUSE_CATEGORY_KEY) {
                 window.renderWarehousePage();
             }
+            */
         });
 
     });
