@@ -17,6 +17,7 @@
     if (typeof window.showCustomConfirm === 'undefined' || window.showCustomConfirm.isSafe !== true) {
         Object.defineProperty(window, 'showCustomConfirm', {
             value: (message, onOk) => {
+                // FIX: Menampilkan window.confirm yang bersih (tanpa dump function body)
                 const ok = window.confirm(message);
                 if (ok && typeof onOk === 'function') onOk();
                 return ok;
@@ -228,6 +229,14 @@
                 ...EMPTY_COMPANY, // Start with base structure
                 id: COMPANY_ID_PREFIX + '001', 
                 companyCode: 'DCJ', 
+                // Inisialisasi general dengan data
+                general: { 
+                    uccEanNumber: '1234567890',
+                    orderIdPrefix: 'ORD-',
+                    receiptIdPrefix: 'RCPT-',
+                    purchaseOrderIdPrefix: 'PO-',
+                    availabilityChecking: true,
+                },
                 inactive: false,
                 companyAddress: { 
                     ...EMPTY_ADDRESS, 
@@ -805,10 +814,10 @@
                     <!-- Tombol Up/Down -->
                     <button type="button" id="btn-warehouse-up"
                         class="btn btn-sm btn-primary ${upDisabledClass}"
-                        ${upDisabled} onclick="moveWarehouseSelection('${companyId}', -1)">↑ Up</button>
+                        ${upDisabled} onclick="moveNestedRow('${companyId}', 'up')">↑ Up</button>
                     <button type="button" id="btn-warehouse-down"
                         class="btn btn-sm btn-primary ${downDisabledClass}"
-                        ${downDisabled} onclick="moveWarehouseSelection('${companyId}', 1)">↓ Down</button>
+                        ${downDisabled} onclick="moveNestedRow('${companyId}', 'down')">↓ Down</button>
                 </div>
 
                 <div tabIndex="0" class="border rounded-md overflow-hidden max-h-[300px] overflow-y-auto outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" id="whs-table-wrapper">
@@ -943,8 +952,8 @@
 
             const code = rows[sel].warehouseCode;
             
-            // Mengganti showCustomConfirm dengan window.confirm langsung
-            if (window.confirm(`Yakin hapus warehouse ${code}?`)) {
+            // Menggunakan window.showCustomConfirm yang sudah di-override
+            window.showCustomConfirm(`Yakin hapus warehouse ${code}?`, () => {
                 rows.splice(sel, 1);
 
                 // Tentukan selectedIndex baru dengan clamp (sesuai instruksi)
@@ -961,46 +970,43 @@
                 window.showCustomAlert('Dihapus', `Warehouse ${code} dihapus.`, 'success');
                 
                 console.log('[WHS Delete]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: rows.length });
-            }
+            });
         };
         
-        // D. Fungsi pindah seleksi + auto-scroll
-        window.moveWarehouseSelection = function(companyId, dir) {
+        // D. Fungsi pindah baris (Up/Down) dan seleksi + auto-scroll
+        window.moveNestedRow = function(companyId, direction) {
           const ci = companies.findIndex(c => c.id === companyId);
           if (ci === -1) return;
           
           const companyData = companies[ci];
           const rows = companyData.warehouses.rows;
+          const state = companyData.warehouses;
           if (!rows.length) return;
 
-          let idx = companyData.warehouses.selectedIndex;
+          const i = state.selectedIndex;
+          if (i < 0) return;
           
-          // Jika tidak ada yang terpilih, mulai dari 0 jika pindah ke bawah, atau baris terakhir jika pindah ke atas
-          if (idx === -1) {
-              idx = dir > 0 ? 0 : rows.length - 1;
-          } else {
-              idx += dir;
-          }
+          const j = direction === 'up' ? i - 1 : i + 1;
+          
+          if (j < 0 || j >= rows.length) return;
+          
+          // Swap
+          [rows[i], rows[j]] = [rows[j], rows[i]];
+          
+          // Update selectedIndex
+          state.selectedIndex = j;
+          
+          saveCompanies();
+          renderWarehouseList(companyId);
 
-          idx = Math.max(0, Math.min(rows.length - 1, idx)); // clamp
+          // Auto-scroll ke baris terpilih
+          const table = document.getElementById('warehouse-list-table');
+          const selId = rows[j]?.id;
+          const tr = table?.querySelector(`tr[data-id="${selId}"]`);
+          tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
           
-          // Hanya jika index berubah, lakukan update
-          if (companyData.warehouses.selectedIndex !== idx) {
-            companyData.warehouses.selectedIndex = idx;
-            saveCompanies();           // simpan state seleksi juga
-            renderWarehouseList(companyId);
-            
-            // auto-scroll ke baris terpilih
-            const table = document.getElementById('warehouse-list-table');
-            // Menggunakan data-id untuk menemukan baris terpilih yang baru
-            const selId = rows[idx]?.id;
-            const tr = table?.querySelector(`tr[data-id="${selId}"]`);
-            
-            tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            
-            console.log('[WHS Move]', 'action', { companyId, selectedIndex: idx, rowsLen: rows.length });
-          }
-        };
+          console.log('[WHS Move Row]', 'action', { companyId, oldIndex: i, newIndex: j });
+        }
         
         // F. Bind keyboard di tabel
         const bindWarehouseKeys = (function bindWarehouseKeys(){
@@ -1029,11 +1035,11 @@
 
                   if (e.key === 'ArrowUp')  { 
                       e.preventDefault(); 
-                      window.moveWarehouseSelection(companyId, -1); 
+                      window.moveNestedRow(companyId, 'up'); // Gunakan moveNestedRow untuk seleksi & swap
                   }
                   if (e.key === 'ArrowDown'){ 
                       e.preventDefault(); 
-                      window.moveWarehouseSelection(companyId,  1); 
+                      window.moveNestedRow(companyId, 'down'); // Gunakan moveNestedRow untuk seleksi & swap
                   }
                   
                   // Cek apakah ada baris terpilih sebelum memproses Enter/Delete
@@ -1101,7 +1107,7 @@
             `;
         }
         
-        // FIX: Render tab Warehouse/company information di modal Company
+        // FIX: Render tab Warehouse/company information di modal Company (Layout BARU 2 kolom)
         function renderCompanyInfoTab(companyData) {
             const { general, id: companyId } = companyData;
             const { uccEanNumber = '', orderIdPrefix = '', receiptIdPrefix = '', purchaseOrderIdPrefix = '', availabilityChecking = false } = general; 
@@ -1110,8 +1116,6 @@
             const form = document.getElementById('company-form');
             const mode = form.dataset.mode;
             const isNewCompany = mode === 'create';
-            const disabledAttr = isNewCompany ? 'disabled' : '';
-            const disabledClass = isNewCompany ? 'btn-disabled' : '';
 
             let whsListContent;
             if (isNewCompany) {
@@ -1120,41 +1124,42 @@
                  whsListContent = `<!-- List akan di-render di sini oleh window.renderWarehouseList() -->`;
             }
 
+            // ===== BLOK RENDER TAB "Warehouse/company information" (COMPANY) BARU =====
             return `
-                <!-- Bagian Prefix dan UCC/EAN -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 max-w-xl mb-6">
-                    <div>
-                        <label for="uccEanNumber" class="block text-sm mb-1">UCC/EAN number:</label>
-                        <input type="text" id="uccEanNumber" name="general_uccEanNumber" class="input" value="${uccEanNumber}">
-                    </div>
-                    <div class="flex items-center pt-2">
-                         <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox" id="availabilityChecking" name="general_availabilityChecking" ${availabilityChecking ? 'checked' : ''}> Availability checking
-                        </label>
-                    </div>
-                    <div>
-                        <label for="orderIdPrefix" class="block text-sm mb-1">Order ID prefix:</label>
-                        <input type="text" id="orderIdPrefix" name="general_orderIdPrefix" class="input" value="${orderIdPrefix}">
-                    </div>
-                    <div></div> 
-                    <div>
-                        <label for="receiptIdPrefix" class="block text-sm mb-1">Receipt ID prefix:</label>
-                        <input type="text" id="receiptIdPrefix" name="general_receiptIdPrefix" class="input" value="${receiptIdPrefix}">
-                    </div>
-                    <div></div> 
-                    <div>
-                        <label for="purchaseOrderIdPrefix" class="block text-sm mb-1">Purchase order ID prefix:</label>
-                        <input type="text" id="purchaseOrderIdPrefix" name="general_purchaseOrderIdPrefix" class="input" value="${purchaseOrderIdPrefix}">
-                    </div>
-                </div>
+                <div class="w-full max-w-3xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6">
+                        <div>
+                            <label for="uccEanNumber" class="block text-sm mb-1">UCC/EAN number:</label>
+                            <input type="text" id="uccEanNumber" name="general_uccEanNumber" class="input" value="${uccEanNumber}">
+                        </div>
+                        <div>
+                            <label for="orderIdPrefix" class="block text-sm mb-1">Order ID prefix:</label>
+                            <input type="text" id="orderIdPrefix" name="general_orderIdPrefix" class="input" value="${orderIdPrefix}">
+                        </div>
 
-                <!-- Bagian Warehouse List (Nested CRUD) -->
-                <h3 class="text-base font-semibold text-wise-dark-gray mb-3 border-t pt-4 pb-2">Warehouse List (Nested Info)</h3>
-                <p class="text-xs text-gray-500 mb-2">Double click baris, tekan Enter, atau tombol Open untuk membuka detail Warehouse.</p>
-                <div id="warehouse-list-container" data-is-new="${isNewCompany}">
-                    ${whsListContent}
+                        <div>
+                            <label for="receiptIdPrefix" class="block text-sm mb-1">Receipt ID prefix:</label>
+                            <input type="text" id="receiptIdPrefix" name="general_receiptIdPrefix" class="input" value="${receiptIdPrefix}">
+                        </div>
+                        <div>
+                            <label for="purchaseOrderIdPrefix" class="block text-sm mb-1">Purchase order ID prefix:</label>
+                            <input type="text" id="purchaseOrderIdPrefix" name="general_purchaseOrderIdPrefix" class="input" value="${purchaseOrderIdPrefix}">
+                        </div>
+
+                        <div class="flex items-center md:col-span-2 mt-1">
+                            <input type="checkbox" id="availabilityChecking" name="general_availabilityChecking" ${availabilityChecking ? 'checked' : ''}>
+                            <label for="availabilityChecking" class="ml-2 text-sm">Availability checking</label>
+                        </div>
+                    </div>
+
+                    <h3 class="text-base font-semibold text-wise-dark-gray mb-3 border-t pt-4 pb-2">Warehouse List (Nested Info)</h3>
+                    <p class="text-xs text-gray-500 mb-2">Double click baris, tekan Enter, atau tombol Open untuk membuka detail Warehouse.</p>
+                    <div id="warehouse-list-container" data-is-new="${isNewCompany}">
+                        ${whsListContent}
+                    </div>
                 </div>
             `;
+            // ===== END BLOK RENDER TAB "Warehouse/company information" (COMPANY) BARU =====
         }
 
         // FIX: Render Internet Information tab
@@ -1733,20 +1738,24 @@
                                         userId: el.value, 
                                         name: el.value // Menggunakan ID sebagai nama
                                     }));
+                                    
+            // LOGIC BARU: Ambil field general.* dari form
+            const newGeneralData = {
+                uccEanNumber: form.querySelector('[name="general_uccEanNumber"]')?.value.trim() || '',
+                orderIdPrefix: form.querySelector('[name="general_orderIdPrefix"]')?.value.trim() || '',
+                receiptIdPrefix: form.querySelector('[name="general_receiptIdPrefix"]')?.value.trim() || '',
+                purchaseOrderIdPrefix: form.querySelector('[name="general_purchaseOrderIdPrefix"]')?.value.trim() || '',
+                availabilityChecking: form.querySelector('[name="general_availabilityChecking"]')?.checked || false,
+            };
+
 
             return {
                 id: companyId,
                 companyCode: form.querySelector('[name="companyCode"]')?.value.trim() || '',
                 inactive: inactiveStatus,
                 
-                // General/Info
-                general: {
-                    uccEanNumber: form.querySelector('[name="general_uccEanNumber"]')?.value.trim() || '',
-                    orderIdPrefix: form.querySelector('[name="general_orderIdPrefix"]')?.value.trim() || '',
-                    receiptIdPrefix: form.querySelector('[name="general_receiptIdPrefix"]')?.value.trim() || '',
-                    purchaseOrderIdPrefix: form.querySelector('[name="general_purchaseOrderIdPrefix"]')?.value.trim() || '',
-                    availabilityChecking: form.querySelector('[name="general_availabilityChecking"]')?.checked || false,
-                },
+                // General/Info (Menggunakan data baru)
+                general: newGeneralData,
 
                 // Addresses
                 companyAddress: companyAddress,
@@ -2656,63 +2665,65 @@
 
         // --- REGISTRATION CUSTOMER (MENGEMBALIKAN) ---
 
-        if (!window.contentData[CUSTOMER_CATEGORY_KEY]) {
-             window.contentData[CUSTOMER_CATEGORY_KEY] = {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
-                    <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
-                    ${window.renderStandardListHeader({
-                        createLabel: "Create New Customer",
-                        onCreate: "showCustomerForm('create')", 
-                        searchId: "customer-search",
-                        searchPlaceholder: "Search customer...",
-                        onSearch: "filterCustomerList"
-                    })}
-                    <div id="customer-list-container" class="overflow-x-auto"></div>
+        // HAPUS 'if' untuk memastikan V6 selalu menimpa definisi lama
+        window.contentData[CUSTOMER_CATEGORY_KEY] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
+                <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
+                ${window.renderStandardListHeader({
+                    createLabel: "Create New Customer",
+                    onCreate: "showCustomerForm('create')", 
+                    searchId: "customer-search",
+                    searchPlaceholder: "Search customer...",
+                    onSearch: "filterCustomerList"
+                })}
+                <div id="customer-list-container" class="overflow-x-auto"></div>
 
-                    <!-- Customer Form Modal -->
-                    <div id="customer-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[90vh] opacity-0 scale-95 transition-all duration-300">
-                            <div class="px-6 pt-5 pb-3 border-b relative">
-                                <h3 id="customer-form-title" class="text-lg font-semibold"></h3>
-                                <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCustomerForm()">✕</button>
-                            </div>
-                            <div class="p-6 overflow-y-auto">
-                                <form id="customer-form" onsubmit="handleCustomerSubmit(event)">
-                                    <!-- Tabs -->
-                                    <div role="tablist" class="border-b mb-4 flex flex-wrap gap-4 text-sm font-medium">
-                                        <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
-                                        <button type="button" role="tab" data-tab="address" class="tab">Address</button>
-                                        <button type="button" role="tab" data-tab="categories" class="tab">Categories</button>
-                                        <button type="button" role="tab" data-tab="fba" class="tab">Freight bill to address</button>
-                                        <button type="button" role="tab" data-tab="rfid" class="tab">RFID</button>
-                                        <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
-                                    </div>
-                                    
-                                    <div id="pane-cust-general" role="tabpanel" data-pane="general"></div>
-                                    <div id="pane-cust-address" role="tabpanel" data-pane="address" class="hidden"></div>
-                                    <div id="pane-cust-categories" role="tabpanel" data-pane="categories" class="hidden"></div>
-                                    <div id="pane-cust-fba" role="tabpanel" data-pane="fba" class="hidden"></div>
-                                    <div id="pane-cust-rfid" role="tabpanel" data-pane="rfid" class="hidden"></div>
-                                    <div id="pane-cust-udf" role="tabpanel" data-pane="udf" class="hidden"></div>
-                                    
-                                </form>
-                            </div>
-                            <!-- Footer will be rendered in showCustomerForm -->
-                            <div class="px-6 py-4 border-t flex justify-between items-center">
-                                <label class="flex items-center gap-2 text-sm text-wise-dark-gray">
-                                    <input type="checkbox" id="inactive-cust-placeholder" name="inactive-placeholder" disabled> Inactive (Controlled by General Tab)
-                                </label>
-                                <div class="flex justify-end gap-3 w-full">
-                                    <button type="button" class="btn" onclick="closeCustomerForm()">Cancel</button>
-                                    <button type="submit" form="customer-form" class="btn btn-primary">Save</button>
+                <!-- Customer Form Modal -->
+                <div id="customer-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
+                    <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[90vh] opacity-0 scale-95 transition-all duration-300">
+                        <div class="px-6 pt-5 pb-3 border-b relative">
+                            <h3 id="customer-form-title" class="text-lg font-semibold"></h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCustomerForm()">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="customer-form" onsubmit="handleCustomerSubmit(event)">
+                                <!-- Tabs -->
+                                <div role="tablist" class="border-b mb-4 flex flex-wrap gap-4 text-sm font-medium">
+                                    <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
+                                    <button type="button" role="tab" data-tab="address" class="tab">Address</button>
+                                    <button type="button" role="tab" data-tab="categories" class="tab">Categories</button>
+                                    <button type="button" role="tab" data-tab="fba" class="tab">Freight bill to address</button>
+                                    <button type="button" role="tab" data-tab="rfid" class="tab">RFID</button>
+                                    <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
                                 </div>
+                                
+                                <div id="pane-cust-general" role="tabpanel" data-pane="general"></div>
+                                <div id="pane-cust-address" role="tabpanel" data-pane="address" class="hidden"></div>
+                                <div id="pane-cust-categories" role="tabpanel" data-pane="categories" class="hidden"></div>
+                                <div id="pane-cust-fba" role="tabpanel" data-pane="fba" class="hidden"></div>
+                                <div id="pane-cust-rfid" role="tabpanel" data-pane="rfid" class="hidden"></div>
+                                <div id="pane-cust-udf" role="tabpanel" data-pane="udf" class="hidden"></div>
+                                
+                            </form>
+                        </div>
+                        <!-- Footer will be rendered in showCustomerForm -->
+                        <div class="px-6 py-4 border-t flex justify-between items-center">
+                            <label class="flex items-center gap-2 text-sm text-wise-dark-gray">
+                                <input type="checkbox" id="inactive-cust-placeholder" name="inactive-placeholder" disabled> Inactive (Controlled by General Tab)
+                            </label>
+                            <div class="flex justify-end gap-3 w-full">
+                                <button type="button" class="btn" onclick="closeCustomerForm()">Cancel</button>
+                                <button type="submit" form="customer-form" class="btn btn-primary">Save</button>
                             </div>
                         </div>
                     </div>
-                `
-            };
+                </div>
+            `
+        };
 
+        // Pastikan tidak duplikat jika file di-load ulang
+        if (!window.searchItems.some(item => item.id === CUSTOMER_CATEGORY_KEY)) {
             window.searchItems.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'Configuration', lastUpdated: 'Latest' });
             window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'configuration' });
             window.parentMapping[CUSTOMER_CATEGORY_KEY] = 'configuration'; 
@@ -2720,98 +2731,113 @@
 
 
         // --- REGISTRATION COMPANY (DIPERBAIKI) ---
-        if (!window.contentData[COMPANY_CATEGORY_KEY]) {
-            window.contentData[COMPANY_CATEGORY_KEY] = {
-                full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
-                    <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
-                    ${window.renderStandardListHeader({
-                        createLabel: "Create New Company",
-                        onCreate: "showCompanyForm('create')", 
-                        searchId: "company-search",
-                        searchPlaceholder: "Search company...",
-                        onSearch: "filterCompanyList"
-                    })}
-                    <div id="company-list-container" class="overflow-x-auto"></div>
+        // HAPUS 'if' untuk memastikan V6 selalu menimpa definisi lama
+        window.contentData[COMPANY_CATEGORY_KEY] = {
+            full: `
+                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
+                <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
+                ${window.renderStandardListHeader({
+                    createLabel: "Create New Company",
+                    onCreate: "showCompanyForm('create')", 
+                    searchId: "company-search",
+                    searchPlaceholder: "Search company...",
+                    onSearch: "filterCompanyList"
+                })}
+                <div id="company-list-container" class="overflow-x-auto"></div>
 
-                    <!-- Company Form Modal -->
-                    <div id="company-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
-                            <div class="px-6 pt-5 pb-3 border-b relative">
-                                <h3 id="company-form-title" class="text-lg font-semibold"></h3>
-                                <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCompanyForm()">✕</button>
-                            </div>
-                            <div class="p-6 overflow-y-auto">
-                                <form id="company-form" onsubmit="handleCompanySubmit(event)">
-                                    <!-- Tabs di dalam wrapper yang bisa discroll horizontal -->
-                                    <div class="overflow-x-auto border-b mb-4">
-                                        <div role="tablist" id="company-tab-list" class="flex flex-nowrap gap-x-4 text-sm font-medium w-max min-w-full">
-                                            <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
-                                            <button type="button" role="tab" data-tab="company-info" class="tab">Warehouse/company information</button>
-                                            <button type="button" role="tab" data-tab="company-address" class="tab">Company address</button>
-                                            <button type="button" role="tab" data-tab="return-address" class="tab">Returns address</button>
-                                            <button type="button" role="tab" data-tab="freight-address" class="tab">Freight bill to address</button>
-                                            <button type="button" role="tab" data-tab="internet-info" class="tab">Internet information</button>
-                                            <button type="button" role="tab" data-tab="web-header" class="tab">Web header</button>
-                                            <button type="button" role="tab" data-tab="assigned-users" class="tab">Assigned users</button>
-                                            <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="pane-cmp-general" role="tabpanel" data-pane="general"></div>
-                                    <div id="pane-cmp-info" role="tabpanel" data-pane="company-info" class="hidden"></div>
-                                    <div id="pane-cmp-address" role="tabpanel" data-pane="company-address" class="hidden"></div>
-                                    <div id="pane-cmp-return" role="tabpanel" data-pane="return-address" class="hidden"></div>
-                                    <div id="pane-cmp-freight" role="tabpanel" data-pane="freight-address" class="hidden"></div>
-                                    <div id="pane-cmp-internet" role="tabpanel" data-pane="internet-info" class="hidden"></div>
-                                    <div id="pane-cmp-webheader" role="tabpanel" data-pane="web-header" class="hidden"></div>
-                                    <div id="pane-cmp-assigned" role="tabpanel" data-pane="assigned-users" class="hidden"></div>
-                                    <div id="pane-cmp-udf" role="tabpanel" data-pane="udf" class="hidden"></div>
-
-                                    <input type="hidden" name="id" value="">
-                                </form>
-                            </div>
-                            <!-- Footer akan di-render ulang oleh showCompanyForm untuk memasukkan inactiveCheckboxHtml -->
-                            <div id="company-form-footer-placeholder"></div>
+                <!-- Company Form Modal -->
+                <div id="company-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
+                    <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
+                        <div class="px-6 pt-5 pb-3 border-b relative">
+                            <h3 id="company-form-title" class="text-lg font-semibold"></h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCompanyForm()">✕</button>
                         </div>
-                    </div>
-
-                    <!-- Warehouse Info Sub-Modal (Nested CRUD) -->
-                    <div id="warehouse-form-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
-                            <div class="px-6 pt-5 pb-3 border-b relative">
-                                <h3 id="warehouse-form-title" class="text-lg font-semibold"></h3>
-                                <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeWarehouseForm()">✕</button>
-                            </div>
-                            <div class="p-6 overflow-y-auto">
-                                <form id="warehouse-form">
-                                    <div class="overflow-x-auto border-b mb-4">
-                                        <div role="tablist" class="flex flex-nowrap gap-x-4 text-sm font-medium w-max min-w-full">
-                                            <button type="button" role="tab" data-tab="ship-from" class="tab tab-active">Ship from address</button>
-                                            <button type="button" role="tab" data-tab="return-whs" class="tab">Return address</button>
-                                            <button type="button" role="tab" data-tab="freight-whs" class="tab">Freight bill to address</button>
-                                            <button type="button" role="tab" data-tab="udf-whs" class="tab">User defined data</button>
-                                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="company-form" onsubmit="handleCompanySubmit(event)">
+                                <!-- Tabs di dalam wrapper yang bisa discroll horizontal -->
+                                <div class="overflow-x-auto border-b mb-4">
+                                    <div role="tablist" id="company-tab-list" class="flex flex-nowrap gap-x-4 text-sm font-medium w-max min-w-full">
+                                        <button type="button" role="tab" data-tab="general" class="tab tab-active">General</button>
+                                        <button type="button" role="tab" data-tab="company-info" class="tab">Warehouse/company information</button>
+                                        <button type="button" role="tab" data-tab="company-address" class="tab">Company address</button>
+                                        <button type="button" role="tab" data-tab="return-address" class="tab">Returns address</button>
+                                        <button type="button" role="tab" data-tab="freight-address" class="tab">Freight bill to address</button>
+                                        <button type="button" role="tab" data-tab="internet-info" class="tab">Internet information</button>
+                                        <button type="button" role="tab" data-tab="web-header" class="tab">Web header</button>
+                                        <button type="button" role="tab" data-tab="assigned-users" class="tab">Assigned users</button>
+                                        <button type="button" role="tab" data-tab="udf" class="tab">User defined data</button>
                                     </div>
-                                    
-                                    <div id="pane-whs-shipfrom" role="tabpanel" data-pane="ship-from"></div>
-                                    <div id="pane-whs-return" role="tabpanel" data-pane="return-whs" class="hidden"></div>
-                                    <div id="pane-whs-freight" role="tabpanel" data-pane="freight-whs" class="hidden"></div>
-                                    <div id="pane-whs-udf" role="tabpanel" data-pane="udf-whs" class="hidden"></div>
+                                </div>
+                                
+                                <div id="pane-cmp-general" role="tabpanel" data-pane="general"></div>
+                                <div id="pane-cmp-info" role="tabpanel" data-pane="company-info" class="hidden"></div>
+                                <div id="pane-cmp-address" role="tabpanel" data-pane="company-address" class="hidden"></div>
+                                <div id="pane-cmp-return" role="tabpanel" data-pane="return-address" class="hidden"></div>
+                                <div id="pane-cmp-freight" role="tabpanel" data-pane="freight-address" class="hidden"></div>
+                                <div id="pane-cmp-internet" role="tabpanel" data-pane="internet-info" class="hidden"></div>
+                                <div id="pane-cmp-webheader" role="tabpanel" data-pane="web-header" class="hidden"></div>
+                                <div id="pane-cmp-assigned" role="tabpanel" data-pane="assigned-users" class="hidden"></div>
+                                <div id="pane-cmp-udf" role="tabpanel" data-pane="udf" class="hidden"></div>
 
-                                    <input type="hidden" name="id" value="">
-                                </form>
-                            </div>
-                            <!-- Placeholder untuk Footer yang akan di-render di showWarehouseForm -->
-                            <div id="warehouse-form-footer-placeholder"></div>
+                                <input type="hidden" name="id" value="">
+                            </form>
                         </div>
+                        <!-- Footer akan di-render ulang oleh showCompanyForm untuk memasukkan inactiveCheckboxHtml -->
+                        <div id="company-form-footer-placeholder"></div>
                     </div>
-                `
-            };
+                </div>
 
+                <!-- Warehouse Info Sub-Modal (Nested CRUD) -->
+                <div id="warehouse-form-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50">
+                    <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
+                        <div class="px-6 pt-5 pb-3 border-b relative">
+                            <h3 id="warehouse-form-title" class="text-lg font-semibold"></h3>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeWarehouseForm()">✕</button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <form id="warehouse-form">
+                                <div class="overflow-x-auto border-b mb-4">
+                                    <div role="tablist" class="flex flex-nowrap gap-x-4 text-sm font-medium w-max min-w-full">
+                                        <button type="button" role="tab" data-tab="ship-from" class="tab tab-active">Ship from address</button>
+                                        <button type="button" role="tab" data-tab="return-whs" class="tab">Return address</button>
+                                        <button type="button" role="tab" data-tab="freight-whs" class="tab">Freight bill to address</button>
+                                        <button type="button" role="tab" data-tab="udf-whs" class="tab">User defined data</button>
+                                    </div>
+                                </div>
+                                
+                                <div id="pane-whs-shipfrom" role="tabpanel" data-pane="ship-from"></div>
+                                <div id="pane-whs-return" role="tabpanel" data-pane="return-whs" class="hidden"></div>
+                                <div id="pane-whs-freight" role="tabpanel" data-pane="freight-whs" class="hidden"></div>
+                                <div id="pane-whs-udf" role="tabpanel" data-pane="udf-whs" class="hidden"></div>
+
+                                <input type="hidden" name="id" value="">
+                            </form>
+                        </div>
+                        <!-- Placeholder untuk Footer yang akan di-render di showWarehouseForm -->
+                        <div id="warehouse-form-footer-placeholder"></div>
+                    </div>
+                </div>
+            `
+        };
+
+        // Pastikan tidak duplikat
+        if (!window.searchItems.some(item => item.id === COMPANY_CATEGORY_KEY)) {
             window.searchItems.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'Configuration', lastUpdated: 'Latest' });
             window.allMenus.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'configuration' });
             window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration'; 
+        }
+
+        // [BARU] REGISTRASI UNTUK HALAMAN WAREHOUSE MANDIRI
+        // Ini akan menimpa definisi lama dari file lain.
+        // Kontennya hanya placeholder, karena akan di-render oleh renderWarehousePage().
+        window.contentData[WAREHOUSE_CATEGORY_KEY] = {
+            full: `<div data-key="${WAREHOUSE_CATEGORY_KEY}"></div>`
+        };
+        // Pastikan tidak duplikat
+        if (!window.searchItems.some(item => item.id === WAREHOUSE_CATEGORY_KEY)) {
+            window.searchItems.push({ id: WAREHOUSE_CATEGORY_KEY, title: 'Warehouse/company information', category: 'Configuration', lastUpdated: 'Latest' });
+            window.allMenus.push({ id: WAREHOUSE_CATEGORY_KEY, title: 'Warehouse/company information', category: 'configuration' });
+            window.parentMapping[WAREHOUSE_CATEGORY_KEY] = 'configuration';
         }
 
         // [BARU] Logika untuk Halaman Warehouse Berdiri Sendiri (Mode Alternatif)
@@ -2823,6 +2849,14 @@
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
             
             const container = document.getElementById('content-container');
+            // FIX: Tambahkan penjaga untuk mencegah error jika container tidak ada.
+            if (!container) {
+                // Ini berarti fungsi dipanggil dalam konteks halaman yang salah (misalnya, halaman warehouse lama).
+                // Kita log peringatan dan keluar dengan aman.
+                console.warn("renderWarehousePage was called, but the '#content-container' element was not found. This might happen if an older page layout is active. Aborting render.");
+                return;
+            }
+            
             const targetContainer = container.querySelector(`[data-key="${WAREHOUSE_CATEGORY_KEY}"]`);
             if (!targetContainer) return;
             
@@ -2924,3 +2958,4 @@
 
     });
 })();
+
