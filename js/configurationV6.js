@@ -1,19 +1,17 @@
 (function () {
-    // Menambahkan log sederhana saat file dimuat
+    // Logging sederhana saat file konfigurasi dimuat
     console.log("Configuration V6 (Customer dan Company) loaded"); 
 
-    // Memastikan variabel global sudah tersedia
+    // Memastikan variabel global utama tersedia
     if (typeof window.contentData === 'undefined') window.contentData = {};
     if (typeof window.searchItems === 'undefined') window.searchItems = [];
     if (typeof window.parentMapping === 'undefined') window.parentMapping = {};
     if (typeof window.allMenus === 'undefined') window.allMenus = [];
     
-    // Fallbacks untuk fungsi helper proyek (Dibiarkan tetap sama)
+    // Fallback untuk fungsi helper (misalnya, menampilkan notifikasi)
     if (typeof window.showCustomAlert === 'undefined') window.showCustomAlert = (title, message, type = 'info') => console.log(`Alert: ${title} - ${message} (${type})`);
     
-    // [LANGKAH WAJIB A & B] KUNCI DEFINISI showCustomConfirm agar tidak bisa ditimpa.
-    // Ini mengamankan bahwa showCustomConfirm yang kita definisikan ini yang akan selalu terpakai, 
-    // meskipun ada file lain yang mencoba menimpanya.
+    // Mengunci definisi showCustomConfirm agar tidak dapat ditimpa oleh script lain.
     if (typeof window.showCustomConfirm === 'undefined' || window.showCustomConfirm.isSafe !== true) {
         Object.defineProperty(window, 'showCustomConfirm', {
             value: (message, onOk) => {
@@ -21,24 +19,24 @@
                 if (ok && typeof onOk === 'function') onOk();
                 return ok;
             },
-            writable: false, // TIDAK BISA DITIMPA
-            configurable: false // TIDAK BISA DIUBAH propertinya
+            writable: false, 
+            configurable: false 
         });
-        window.showCustomConfirm.isSafe = true; // Tandai bahwa ini versi yang aman
+        window.showCustomConfirm.isSafe = true; // Menandai versi ini sebagai versi aman
     }
     
-    // Jika window.showCustomConfirm sudah di-define, pastikan fungsinya tidak merender callback.
-    // Karena kita sudah mengunci di atas, bagian ini sebenarnya opsional, tapi amankan jika ada skrip yang load duluan.
-    // Karena instruksi menyarankan kunci definitif, kita gunakan Object.defineProperty di atas.
-    
+    // Fallback fungsi UI helper standar
     if (typeof window.selectCategory === 'undefined') window.selectCategory = (category) => console.log(`Selecting category: ${category}`);
+    
+    // Render header list standar (Tombol Create, Search bar)
     if (typeof window.renderStandardListHeader === 'undefined') window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
         <div class="flex flex-wrap items-center gap-3 mb-4">
             <button onclick="${onCreate}" class="px-4 py-2 bg-blue-500 text-white rounded-md">${createLabel}</button>
             <div class="grow"></div>
             <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" onkeydown="if(event.key === 'Enter') ${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
         </div>`;
-    // FIX: Update renderStandardModalFooter untuk menerima inactiveCheckboxHtml
+        
+    // Render footer modal standar (Tombol Cancel/OK/Save)
     if (typeof window.renderStandardModalFooter === 'undefined') window.renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK', inactiveCheckboxHtml = '' }) => `
         <div class="px-6 py-4 border-t flex justify-between items-center">
             ${inactiveCheckboxHtml}
@@ -47,20 +45,29 @@
                 <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
             </div>
         </div>`;
+        
+    // Debounce function untuk membatasi laju eksekusi saat input
     if (typeof window.debounce === 'undefined') window.debounce = (fn, delay) => {
         let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn.apply(this, args), delay); };
     };
+    
+    // Aktivasi tab panel UI
     if (typeof window.activateTab === 'undefined') window.activateTab = (tabName, container) => {
+        // Reset visual semua tab
         container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2'));
+        // Sembunyikan semua tab panel
         container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
+        
+        // Aktifkan tab yang dipilih
         const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
         if (activeTab) { 
             activeTab.classList.add('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2'); 
         }
+        // Tampilkan tab panel yang sesuai
         const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
         if (activePane) { activePane.classList.remove('hidden'); }
         
-        // Cek jika ada error di tab lain, hapus status errornya
+        // Hapus status error visual pada semua tab
         container.querySelectorAll('.tab').forEach(tab => {
             tab.classList.remove('text-red-500', 'border-red-500');
         });
@@ -68,22 +75,22 @@
 
 
     document.addEventListener('DOMContentLoaded', () => {
-        // --- DATA SEED & STORAGE CUSTOMER ---
+        // --- KONSTANTA DAN KUNCI STORAGE CUSTOMER ---
         const CUSTOMER_STORAGE_KEY = 'wms_customers_v6';
         const CUSTOMER_ID_PREFIX = 'CUS';
         const CUSTOMER_CATEGORY_KEY = 'customer'; 
 
-        // --- DATA SEED & STORAGE COMPANY (BARU) ---
+        // --- KONSTANTA DAN KUNCI STORAGE COMPANY ---
         const COMPANY_STORAGE_KEY = 'wms_companies_v6';
         const COMPANY_ID_PREFIX = 'CMP';
         const COMPANY_CATEGORY_KEY = 'company';
         const WAREHOUSE_ID_PREFIX = 'WHS';
-        const WAREHOUSE_CATEGORY_KEY = 'configuration-warehouse'; // Kategori baru untuk halaman Warehouse mandiri
+        const WAREHOUSE_CATEGORY_KEY = 'configuration-warehouse'; // Kategori halaman Warehouse mandiri
 
-        // State global untuk Company yang sedang di-edit
+        // State global untuk ID Company yang sedang dipilih
         window.currentSelectedCompanyId = null;
 
-        // --- DROPDOWN REFERENSI (BARU) ---
+        // --- DATA DUMMY DROPDOWN/LIST ---
         const DUMMY_STATE_CODES = [
             'JAK-PUS','JAKTIM','JAKBAR','JAKSEL','JAKUT',
             'ACEH','BALI','Bandung','Banten','Bogor',
@@ -98,14 +105,11 @@
             'DCE', 'DCF', 'DCJ', 'DCK', 'DCL', 'DCM' 
         ]; 
 
-        // Data Dummy Bersama
         const dummyCarriers = ['D8232EC', 'D8375DE', 'D8382EB', 'D8391DA', 'D8434DM', 'D8473FU', 'D8513FU', 'D8517FB'];
-        const dummyCities = ['Jakarta', 'Bandung', 'Yogyakarta', 'Surabaya'];
         const dummyCompanies = ['DCB', 'DCI', 'DMR', 'DCS', 'DCJ', 'DCK', 'DCL', 'DCM'];
         const dummyContainerClasses = ['Bag', 'Crate', 'Dus', 'Eggs', 'Pallet', 'Roll Cage', 'Tote'];
-        const dummyProvinces = ['ACEH', 'BALI', 'Bandung', 'Banten', 'Bogor', 'Brebes', 'Ciamis', 'Cianjur', 'JAKTIM', 'JAK-PUS'];
         
-        // FIX: Data lengkap semua user untuk tab Assigned Users (Berdasarkan Gambar)
+        // Data lengkap semua user untuk tab Assigned Users (Company)
         const ALL_USERS_LIST = [
             'Abdu23074560', 'Abdul04120625', 'Abdul19100020', 'Abo13080182', 
             'Absari93030039', 'Achmad00090094', 'Adam18101751', 'ade', 'Ade15040047', 
@@ -122,27 +126,28 @@
             'Cheke', 'Cheke'
         ];
 
-        // --- MODEL CUSTOMER (TETAP) ---
+        // --- MODEL CUSTOMER DEFAULT ---
         const EMPTY_CUSTOMER = {
-            // General
+            // Data Umum
             id: null, customer: '', shipTo: '', company: '', name: '', parent: '', inactive: false,
             onHold: false, carriers: [], 
-            // Address (menggunakan top-level keys)
+            // Data Alamat Level-atas
             residential: false, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', phoneNumber: '', emailAddress: '',
-            // Categories
+            // Kategori (10 field)
             categories: Array.from({ length: 10 }, (_, i) => ({ [`category${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-            // FBA
+            // Alamat Freight Bill To
             fba_name: '', fba_address1: '', fba_address2: '', fba_address3: '', fba_city: '', fba_state: '', fba_postalCode: '', fba_country: '',
-            // RFID structure
+            // Struktur data RFID
             rfid: { 
                 rows: [],
-                selectedIndex: -1, // State untuk seleksi baris UI
+                selectedIndex: -1, // Status seleksi UI
                 filter: { andOr: 'AND', attribute: '', op: '=', value: '' }
             },
-            // UDF model
+            // UDF (6 field)
             udf: Array.from({ length: 6 }, (_, i) => ({ [`udf${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
         };
 
+        // Memuat atau inisialisasi data Customer
         let customers = JSON.parse(localStorage.getItem(CUSTOMER_STORAGE_KEY)) || [
             { id: CUSTOMER_ID_PREFIX + '001', customer: '12160', shipTo: '001', company: 'DCB', name: 'PT MAJU JAYA ABADI', parent: '12160', inactive: false, residential: false, onHold: false, carriers: ['D8232EC'], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, fba_name: 'Freight Bill Co', fba_address1: 'FBA Address 1', fba_city: 'Jakarta', fba_country: 'ID', 
                 rfid: { rows: [{ containerClass: 'Pallet', epcEncoding: 'EPC123', singleItem: true, multiItem: false, udf1: 'A1' }], selectedIndex: -1, filter: EMPTY_CUSTOMER.rfid.filter } 
@@ -151,43 +156,43 @@
             { id: CUSTOMER_ID_PREFIX + '003', customer: '12162', shipTo: '002', company: 'DCB', name: 'PT SEJAHTERA SELALU', parent: '12162', inactive: true, residential: false, onHold: true, carriers: [], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, rfid: EMPTY_CUSTOMER.rfid }
         ];
 
+        // Helper untuk menghasilkan ID unik
         const generateUniqueId = (prefix) => {
             return prefix + Date.now().toString().slice(-8) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
         };
+        // Helper untuk menyimpan data Customer
         const saveCustomers = () => localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customers));
 
-        // --- MODEL COMPANY (BARU) ---
-
-        // FIX: Model Alamat diseragamkan
+        // --- MODEL COMPANY DEFAULT ---
+        
+        // Model Alamat yang terstandarisasi
         const EMPTY_ADDRESS = {
             name: '', address1: '', address2: '', address3: '', 
             city: '', statePostalCode: '', postalCode: '', country: 'ID', 
             attentionTo: '', faxNumber: '', phoneNumber: '', emailAddress: '',
         };
 
-        // FIX: Model Warehouse Info
+        // Model detail Warehouse
         const EMPTY_WAREHOUSE_INFO = {
             id: null,
             warehouseCode: '', 
             shipFromAddress: { ...EMPTY_ADDRESS },
             warehouseReturnAddress: { ...EMPTY_ADDRESS },
             warehouseFreightBillToAddress: { ...EMPTY_ADDRESS },
+            // UDF Warehouse (8 field)
             warehouseUdf: Array.from({ length: 8 }, (_, i) => ({ [`udf${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
         };
 
-        // FIX: Model Company disesuaikan dengan instruksi
+        // Model Company utama
         const EMPTY_COMPANY = {
             id: null, 
-            companyCode: '', // DCJ, DCB, dll
+            companyCode: '', 
             inactive: false,
             
             // Tab General / Warehouse/company information
             general: { 
-                uccEanNumber: '',
-                orderIdPrefix: '',
-                receiptIdPrefix: '',
-                purchaseOrderIdPrefix: '',
-                availabilityChecking: false,
+                uccEanNumber: '', orderIdPrefix: '', receiptIdPrefix: '',
+                purchaseOrderIdPrefix: '', availabilityChecking: false,
             },
 
             // Addresses
@@ -195,37 +200,32 @@
             returnAddress: { ...EMPTY_ADDRESS },
             freightBillToAddress: { ...EMPTY_ADDRESS },
             
-            // Tab Internet information, Web header
+            // Tab Internet information & Web header
             webHeader: {
                 leftGraphic: '', centerGraphic: '', rightGraphic: '',
                 leftUrl: '', centerUrl: '', rightUrl: '',
             },
-            internetInfo: { // FIX: Sediakan field sederhana untuk Internet Info
+            internetInfo: {
                 websiteUrl: '', emailSupport: '', phoneSupport: ''
             },
             
             // Tab Assigned users
-            assignedUsers: [
-                { userId: 'Anggi12020296', name: 'Anggi12020296' },
-                { userId: 'Anggi224114936', name: 'Anggi224114936' },
-                { userId: 'Atun931', name: 'Atun931' }
-            ], 
+            assignedUsers: [], 
 
-            // Tab User defined data (8 fields)
+            // Tab User defined data (8 field)
             udf: Array.from({ length: 8 }, (_, i) => ({ [`udf${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
 
-            // Tab Warehouse/company information (Nested CRUD container)
+            // Nested Warehouse/company information list
             warehouses: {
                 rows: [],
                 selectedIndex: -1
             }
         };
         
+        // Memuat atau inisialisasi data Company
         let companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || [
-            // Seed Company 1 (Aktif)
-            // FIX: Perbaiki urutan spread agar ID, Code tidak tertimpa null dari EMPTY_COMPANY
             { 
-                ...EMPTY_COMPANY, // Start with base structure
+                ...EMPTY_COMPANY, 
                 id: COMPANY_ID_PREFIX + '001', 
                 companyCode: 'DCJ', 
                 inactive: false,
@@ -243,57 +243,40 @@
                 ],
                 warehouses: {
                     rows: [
-                        { ...EMPTY_WAREHOUSE_INFO, // Pastikan juga warehouse menggunakan spread yang benar
+                        { ...EMPTY_WAREHOUSE_INFO, 
                             id: WAREHOUSE_ID_PREFIX + '001', 
                             warehouseCode: 'WHS01', 
-                            shipFromAddress: { 
-                                ...EMPTY_ADDRESS, 
-                                name: 'DC BUAH BATU WHS', 
-                                address1: 'Jl. Buah Batu No. 1' 
-                            }, 
-                            // other warehouse addresses and UDF will default to EMPTY_WAREHOUSE_INFO
+                            shipFromAddress: { ...EMPTY_ADDRESS, name: 'DC BUAH BATU WHS', address1: 'Jl. Buah Batu No. 1' }
                         },
                         { ...EMPTY_WAREHOUSE_INFO, 
                             id: WAREHOUSE_ID_PREFIX + '002', 
                             warehouseCode: 'WHS02', 
-                            shipFromAddress: { 
-                                ...EMPTY_ADDRESS, 
-                                name: 'DC CIKARANG WHS', 
-                                address1: 'Jl. Cikarang Utama' 
-                            }, 
+                            shipFromAddress: { ...EMPTY_ADDRESS, name: 'DC CIKARANG WHS', address1: 'Jl. Cikarang Utama' } 
                         }
                     ],
                     selectedIndex: -1
                 }
             },
-            // Seed Company 2 (Inactive)
             { 
-                ...EMPTY_COMPANY, // Start with base structure
+                ...EMPTY_COMPANY, 
                 id: COMPANY_ID_PREFIX + '002', 
                 companyCode: 'DCC', 
                 inactive: true, 
-                assignedUsers: [
-                     { userId: 'Atun931', name: 'Atun931' }
-                ],
-                companyAddress: { 
-                    ...EMPTY_ADDRESS, 
-                    name: 'DC CIKONENG', 
-                    address1: 'Jl. Cikoneng No. 10',
-                    statePostalCode: 'Bandung',
-                    city: 'Bandung' 
-                }
+                assignedUsers: [ { userId: 'Atun931', name: 'Atun931' } ],
+                companyAddress: { ...EMPTY_ADDRESS, name: 'DC CIKONENG', address1: 'Jl. Cikoneng No. 10', statePostalCode: 'Bandung', city: 'Bandung' }
             },
         ];
         
+        // Helper untuk menyimpan data Company
         const saveCompanies = () => localStorage.setItem(COMPANY_STORAGE_KEY, JSON.stringify(companies));
 
-        // --- HELPER RENDERING COMPANY/WAREHOUSE ADDRESSES (BARU) ---
+        // --- HELPER RENDERING ALAMAT (COMPANY/WAREHOUSE) ---
 
         /**
-         * Render form alamat terpusat untuk Company atau Warehouse.
-         * @param {object} data - Data alamat spesifik.
-         * @param {string} type - Tipe alamat (company, return, freight, shipFromAddress, warehouseReturnAddress, warehouseFreightBillToAddress)
-         * @param {boolean} isNested - Apakah ini form di sub-modal Warehouse?
+         * Render formulir input alamat standar.
+         * @param {object} data - Objek data alamat.
+         * @param {string} type - Tipe prefix field (e.g., 'companyAddress').
+         * @param {boolean} isNested - Apakah ini form di sub-modal Warehouse.
          */
         const renderGenericAddressForm = (data, type, isNested = false) => {
             const { name = '', address1 = '', address2 = '', address3 = '', 
@@ -305,21 +288,18 @@
             const labelName = type === 'shipFromAddress' ? 'Ship From Name' : 'Company Name';
             const isCompanyAddressTab = type === 'companyAddress';
             
-            // Copy button hanya muncul di Returns, Freight (Company Modal) dan di semua Address di Sub-Modal Warehouse
+            // Tombol Copy muncul di alamat selain Company Address, dan di semua alamat Warehouse
             const showCopyButton = (!isNested && !isCompanyAddressTab) || isNested;
 
-            // FIX: Tambah tombol Copy di Sub-modal Warehouse
             const copyButtonHtml = showCopyButton ? `
                 <button type="button" class="btn btn-sm mb-2 text-wise-primary border-wise-primary hover:bg-wise-light-gray" onclick="window.copyCompanyAddress('${type}', ${isNested})">
                     Copy from Company
                 </button>
             ` : '';
             
-            // Dapatkan status disabled jika ada checkbox 'Same as company address' yang aktif di modal Company
             const sameAsCheckbox = !isNested && !isCompanyAddressTab ? 
                 document.getElementById(`${type.replace('Address', '')}-same-as-company`) : null;
             
-            // Jika checkbox Same As Company dicentang di modal Company, form di-disabled
             const disabledAttr = sameAsCheckbox?.checked && !isNested ? 'disabled' : '';
 
             return `
@@ -386,19 +366,16 @@
         
         /**
          * Helper untuk menyalin alamat Company ke alamat lain di modal Company atau Sub-modal Warehouse.
-         * @param {string} targetType - Tipe alamat target (e.g., 'returnAddress', 'shipFromAddress')
-         * @param {boolean} isNested - Apakah dipanggil dari sub-modal Warehouse?
          */
         window.copyCompanyAddress = function(targetType, isNested = false) {
             const form = isNested ? document.getElementById('warehouse-form') : document.getElementById('company-form');
-            const companyId = form.dataset.companyId || form.dataset.id; // Ambil ID Company dari form yang relevan
+            const companyId = form.dataset.companyId || form.dataset.id;
             
-            // FIX: Cek mode form. Jika 'create', gunakan data dari Company Address form.
             const mode = form.dataset.mode;
             let source = {};
 
             if (mode === 'create' && !isNested) {
-                // Dalam mode Create (Modal Company), sumbernya adalah data yang sudah di-input di tab Company Address.
+                // Ambil data dari input Company Address di form yang sama
                 const companyAddressInputs = Array.from(form.querySelectorAll('[name^="companyAddress_"]'));
                 source = {};
                 companyAddressInputs.forEach(input => {
@@ -407,17 +384,14 @@
                 });
                 
             } else {
-                // Mode Edit atau mode Create di sub-modal Warehouse (yang berarti Company sudah tersimpan)
+                // Ambil data dari Company yang sudah tersimpan
                 const companyData = companies.find(c => c.id === companyId);
                 if (!companyData) { 
-                    // FIX: Perbaiki penanganan error agar tidak muncul saat pindah tab di mode Create
-                    // Hanya munculkan alert jika di-trigger oleh tombol copy manual dan data tidak ada
                     if (isNested || form.querySelector(`[name="${targetType}_sameAsCompany"]`)) {
-                        // Jika dipanggil oleh change event checkbox atau dari sub-modal, jangan tampilkan alert.
                         source = EMPTY_COMPANY.companyAddress;
                     } else {
                          window.showCustomAlert('Error', 'Company data not found for copying.'); 
-                         return; // Hentikan jika ini adalah klik tombol manual
+                         return;
                     }
                 } else {
                     source = companyData.companyAddress;
@@ -428,18 +402,12 @@
             const sameAsCheckbox = document.getElementById(checkboxId);
             
             const elementsToCopy = [
-                { idSuffix: 'name', name: 'name' },
-                { idSuffix: 'address1', name: 'address1' },
-                { idSuffix: 'address2', name: 'address2' },
-                { idSuffix: 'address3', name: 'address3' },
-                { idSuffix: 'city', name: 'city' },
-                { idSuffix: 'statePostalCode', name: 'statePostalCode' },
-                { idSuffix: 'postalCode', name: 'postalCode' },
-                { idSuffix: 'country', name: 'country' },
-                { idSuffix: 'attentionTo', name: 'attentionTo' },
-                { idSuffix: 'faxNumber', name: 'faxNumber' },
-                { idSuffix: 'phoneNumber', name: 'phoneNumber' },
-                { idSuffix: 'emailAddress', name: 'emailAddress' },
+                { idSuffix: 'name', name: 'name' }, { idSuffix: 'address1', name: 'address1' },
+                { idSuffix: 'address2', name: 'address2' }, { idSuffix: 'address3', name: 'address3' },
+                { idSuffix: 'city', name: 'city' }, { idSuffix: 'statePostalCode', name: 'statePostalCode' },
+                { idSuffix: 'postalCode', name: 'postalCode' }, { idSuffix: 'country', name: 'country' },
+                { idSuffix: 'attentionTo', name: 'attentionTo' }, { idSuffix: 'faxNumber', name: 'faxNumber' },
+                { idSuffix: 'phoneNumber', name: 'phoneNumber' }, { idSuffix: 'emailAddress', name: 'emailAddress' },
             ];
             
             // Fungsi untuk mengaktifkan/menonaktifkan field
@@ -459,13 +427,12 @@
             const isChecked = sameAsCheckbox?.checked || false;
             
             if (!isNested) {
-                // Konteks Modal Company (Returns/Freight)
                 if (sameAsCheckbox) {
                     toggleFields(isChecked);
                 }
             }
             
-            // Salin data hanya jika: 1. Dipanggil dari tombol "Copy from Company" ATAU 2. Checkbox "Same As Company" di modal utama dicentang
+            // Salin data
             if (!sameAsCheckbox || isChecked) {
                  elementsToCopy.forEach(field => {
                     const el = form.querySelector(`[name="${targetType}_${field.idSuffix}"]`);
@@ -473,22 +440,19 @@
                         el.value = source[field.name] || '';
                     }
                 });
-            } else if (!isChecked && !isNested) {
-                 // Tidak melakukan apa-apa pada data, hanya membuka kunci field (ditangani di handleSameAsCompanyChange)
             }
-
         };
         
-        // FIX: Re-render address form di modal Company untuk mengaktifkan/menonaktifkan field
+        /**
+         * Menangani perubahan checkbox "Same as company address" di modal Company.
+         */
         window.handleSameAsCompanyChange = function(type) {
             const checkbox = document.getElementById(`${type}-same-as-company`);
             const form = document.getElementById('company-form');
             
             if (checkbox.checked) {
-                // Jika dicentang, salin data dan kunci field
                 window.copyCompanyAddress(`${type}Address`, false);
             } else {
-                // Jika tidak dicentang, buka kunci field. Data di field tetap ada.
                 const elementsToCopy = [ 'name', 'address1', 'address2', 'address3', 'city', 'statePostalCode', 'postalCode', 'country', 'attentionTo', 'faxNumber', 'phoneNumber', 'emailAddress'];
                 
                 elementsToCopy.forEach(field => {
@@ -501,14 +465,16 @@
         };
 
 
-        // --- RENDER & FILTER FUNCTIONS COMPANY (BARU) ---
+        // --- FUNGSI RENDER DAN FILTER COMPANY ---
 
+        /**
+         * Render daftar Company di halaman utama Company.
+         */
         window.renderCompanyList = function (filter = '') {
             const container = document.getElementById('company-list-container');
             if (!container) return;
             const lowerFilter = filter.toLowerCase();
             
-            // PENTING: Perbarui array global 'companies' dari localStorage setiap kali render list
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
 
             const filteredData = companies.filter(c => 
@@ -533,8 +499,6 @@
                 listWrapperHtml += `<tr><td colspan="4" class="py-3 px-6 text-center">No companies found.</td></tr>`;
             } else {
                 filteredData.forEach(c => {
-                    // FIX: Perbaiki cara c.id diteruskan di dalam fungsi onclick dan ondblclick
-                    // Menggunakan ID sebagai string literal
                     listWrapperHtml += `<tr class="border-b hover:bg-gray-50 cursor-pointer" onclick="window.currentSelectedCompanyId = '${c.id}'" ondblclick="showCompanyForm('edit', '${c.id}')">
                         <td class="py-3 px-6 text-left whitespace-nowrap">${c.companyCode}</td>
                         <td class="py-3 px-6 text-left">${c.companyAddress.name || 'N/A'}</td>
@@ -552,9 +516,10 @@
             container.innerHTML = listWrapperHtml;
         };
 
+        // Fungsi debounce untuk pencarian Company
         window.filterCompanyList = window.debounce((value) => window.renderCompanyList(value), 300); 
 
-        // --- VALIDATION COMPANY (TETAP) ---
+        // --- VALIDASI FORM COMPANY ---
 
         function validateCompanyForm(modal) {
             const form = document.getElementById('company-form');
@@ -569,6 +534,7 @@
             let firstInvalid = null;
             let targetTab = null;
 
+            // Bersihkan error sebelumnya
             form.querySelectorAll('.error-message').forEach(el => el.remove());
             form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
             
@@ -586,20 +552,21 @@
                 isValid = false;
             };
 
+            // Validasi field wajib
             requiredFields.forEach(field => {
                 const el = form.querySelector(`[name="${field.name}"]`); 
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
+                // Cek jika field ada dan tidak disabled
                 if (el && !el.disabled) {
                     if (!el.value.trim()) { 
                         setError(el, `${field.label} is required.`, field.tab); 
-                        if(tabButton) tabButton.classList.add('text-red-500'); // Tandai tab yang error
+                        if(tabButton) tabButton.classList.add('text-red-500'); 
                     }
                 }
             });
             
-            // Periksa jika ada field lain yang error (misalnya tipe number/email)
+            // Validasi format HTML5 lainnya (e.g., email, url, number)
             form.querySelectorAll('input:invalid, select:invalid').forEach(el => {
-                // Cek apakah ini sudah ditangani oleh requiredFields atau apakah ini error HTML5
                 if (el.hasAttribute('aria-invalid') || !el.checkValidity()) {
                     let tabId;
                     let currentElement = el;
@@ -611,15 +578,9 @@
                          currentElement = currentElement.parentNode;
                     }
 
-                    if (tabId && !el.value.trim()) {
+                    if (tabId && (!el.checkValidity() || !el.value.trim())) {
                          const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} is required.`, tabId);
-                         const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
-                         if(tabButton) tabButton.classList.add('text-red-500'); 
-                    } else if (tabId && !el.checkValidity()) {
-                         // Hanya untuk error tipe/format jika sudah tidak empty
-                         const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} format is invalid.`, tabId);
+                         setError(el, `${label} ${!el.value.trim() ? 'is required.' : 'format is invalid.'}`, tabId);
                          const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
                          if(tabButton) tabButton.classList.add('text-red-500'); 
                     }
@@ -633,8 +594,8 @@
                 }
                 
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Failed to focus invalid input:", e); }
-                }, 100); 
+                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Company:", e); }
+                } , 100); 
 
                 return false;
             }
@@ -643,13 +604,12 @@
         }
 
 
-        // --- VALIDATION WAREHOUSE (BARU) ---
+        // --- VALIDASI FORM WAREHOUSE (SUB-MODAL) ---
 
         function validateWarehouseForm(modal) {
             const form = document.getElementById('warehouse-form');
             form.noValidate = true; 
             
-            // FIX: requiredFields untuk Warehouse
             const requiredFields = [
                 { name: 'warehouseCode', tab: 'ship-from', label: 'Warehouse Code' }, 
                 { name: 'shipFromAddress_name', tab: 'ship-from', label: 'Ship From Name' }, 
@@ -680,7 +640,7 @@
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
                 if (el && !el.disabled) {
                     if (!el.value.trim()) { 
-                        setError(el, `${field.label} wajib diisi.`, field.tab); // FIX: Pesan error B.Indo
+                        setError(el, `${field.label} wajib diisi.`, field.tab); 
                         if(tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
@@ -698,14 +658,9 @@
                          }
                          currentElement = currentElement.parentNode;
                     }
-                    if (tabId && !el.value.trim()) {
+                    if (tabId && (!el.checkValidity() || !el.value.trim())) {
                          const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} wajib diisi.`, tabId); // FIX: Pesan error B.Indo
-                         const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
-                         if(tabButton) tabButton.classList.add('text-red-500'); 
-                    } else if (tabId && !el.checkValidity()) {
-                         const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} format tidak valid.`, tabId); // FIX: Pesan error B.Indo
+                         setError(el, `${label} ${!el.value.trim() ? 'wajib diisi.' : 'format tidak valid.'}`, tabId); 
                          const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
                          if(tabButton) tabButton.classList.add('text-red-500'); 
                     }
@@ -714,13 +669,12 @@
 
 
             if (firstInvalid) {
-                // FIX: Aktivasi tab error dan fokus field
                 if (targetTab) {
                     window.activateTab(targetTab, modal); 
                 }
                 
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Failed to focus invalid input:", e); }
+                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Warehouse:", e); }
                 }, 100); 
 
                 return false;
@@ -729,39 +683,26 @@
             return true;
         }
 
-        // --- RENDER WAREHOUSE LIST (BARU) ---
+        // --- FUNGSI PENGELOLAAN LIST WAREHOUSE (NESTED CRUD) ---
 
         /**
          * Render list Warehouse di tab Warehouse/company information.
-         * @param {string} companyId - ID Company
+         * Menggunakan nama baru untuk menghindari konflik.
          */
-        window.renderWarehouseList = function (companyId) {
-            // PENTING: Reload data sebelum render
+        window.renderCompanyWarehouseList = function (companyId) {
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
             
             const container = document.getElementById('warehouse-list-container');
             const companyIndex = companies.findIndex(c => c.id === companyId);
             const companyData = companies[companyIndex];
             
-            // FIX: Handle companyData undefined (walaupun seharusnya tidak terjadi jika dipanggil dari modal)
-            if (!companyData) {
-                 // Tidak lagi menampilkan error merah jika dipanggil di halaman mandiri tanpa company
-                 if (document.getElementById('wh-company-selector')) {
-                     // Jika di halaman mandiri, return (akan dihandle oleh renderWarehousePage)
-                     return;
-                 }
-                 if (container) container.innerHTML = '<p class="text-red-500">Error: Company data tidak ditemukan.</p>';
-                 return;
-            }
+            if (!companyData || !container) return;
             
             const warehouses = companyData.warehouses.rows || [];
             
-            if (!container) return;
-
-            // B. Tentukan currentSelectedIndex dari state.selectedIndex
             let currentSelectedIndex = companyData.warehouses.selectedIndex;
             
-            // FIX: Clamp selectedIndex untuk mencegah error array out-of-bounds jika data terhapus
+            // Koreksi index jika out-of-bounds (clamp)
             if (warehouses.length > 0 && currentSelectedIndex >= warehouses.length) {
                 currentSelectedIndex = warehouses.length - 1;
                 companyData.warehouses.selectedIndex = currentSelectedIndex;
@@ -770,14 +711,13 @@
                 companyData.warehouses.selectedIndex = -1;
             }
             
-            // Sinkronisasi data setelah clamping
             if(companyData) {
                 companies[companyIndex] = companyData;
-                saveCompanies(); // Simpan state seleksi yang sudah dikoreksi
+                saveCompanies();
             }
 
 
-            // C. Set disabled state untuk Open/Delete/Copy, dan Up/Down berdasarkan currentSelectedIndex.
+            // Tentukan status disabled untuk tombol aksi
             const isSelected = currentSelectedIndex !== -1;
             const isFirst = currentSelectedIndex === 0;
             const isLast = currentSelectedIndex === warehouses.length - 1;
@@ -792,17 +732,17 @@
             const downDisabledClass = isSelected && !isLast ? '' : 'btn-disabled';
 
 
-            // C. Tombol Up/Down di toolbar
+            // Render toolbar dan tabel
             let listHtml = `
                 <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <button type="button" id="btn-warehouse-new" class="btn btn-sm btn-primary" onclick="showWarehouseForm('new', '${companyId}')">New</button>
+                    <button type="button" id="btn-warehouse-new" class="btn btn-sm btn-primary" onclick="showCompanyWarehouseForm('new', '${companyId}')">New</button>
                     <button type="button" id="btn-warehouse-open" class="btn btn-sm ${buttonDisabledClass} ${isSelected ? 'btn-outline-primary' : ''}" ${buttonDisabled} onclick="openSelectedWarehouse('${companyId}')">Open</button>
                     <button type="button" id="btn-warehouse-delete" class="btn btn-sm text-red-500 border-red-500 hover:bg-red-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="deleteSelectedWarehouse('${companyId}')">Delete</button>
                     <button type="button" id="btn-warehouse-copy" class="btn btn-sm text-green-500 border-green-500 hover:bg-green-500 hover:text-white ${buttonDisabledClass}" ${buttonDisabled} onclick="copySelectedWarehouse('${companyId}')">Copy</button>
                     
                     <div class="grow"></div>
                     
-                    <!-- Tombol Up/Down -->
+                    <!-- Tombol Pindah Baris -->
                     <button type="button" id="btn-warehouse-up"
                         class="btn btn-sm btn-primary ${upDisabledClass}"
                         ${upDisabled} onclick="moveNestedRow('${companyId}', 'up')">↑ Up</button>
@@ -830,8 +770,7 @@
                     const selectedClass = isRowSelected ? 'bg-blue-100 font-medium selected' : '';
                     const whsId = w.id;
                     
-                    // H. Double-click tetap Open, onclick untuk seleksi
-                    // C. Render baris dengan atribut data-id, class “selected”
+                    // Baris tabel dengan event handler seleksi dan edit
                     listHtml += `
                         <tr data-id="${whsId}" onclick="selectWarehouseRow('${companyId}', '${whsId}')" ondblclick="openSelectedWarehouse('${companyId}')" class="border-b hover:bg-gray-50 cursor-pointer ${selectedClass}">
                             <td class="py-2 px-4 w-12">${index + 1}</td>
@@ -844,62 +783,43 @@
             listHtml += `</tbody></table></div>`;
             container.innerHTML = listHtml;
             
-            // E. Panggil bindWarehouseKeys() di akhir.
+            // Mengaktifkan keyboard binding untuk navigasi tabel
             bindWarehouseKeys();
             
-            // Auto-scroll ke baris terpilih (setelah re-render)
+            // Auto-scroll ke baris baru
             const table = document.getElementById('warehouse-list-table');
             if (currentSelectedIndex !== -1 && warehouses[currentSelectedIndex]) {
                 const selId = warehouses[currentSelectedIndex].id;
                 const tr = table?.querySelector(`tr[data-id="${selId}"]`);
                 tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
-            
-            // Log untuk debugging
-            console.log('[WHS Render]', 'State:', { companyId, selectedIndex: currentSelectedIndex, rowsLen: warehouses.length });
         };
 
-        // E. Pilih baris berdasar index
-        window.selectWarehouseRow = function (companyId, warehouseId) {
-            const companyIndex = companies.findIndex(c => c.id === companyId);
-            if (companyIndex === -1) return;
-            
-            const companyData = companies[companyIndex];
-            // Cari index aktual berdasarkan ID
-            const newIdx = companyData.warehouses.rows.findIndex(w => w.id === warehouseId);
-            
-            // FIX: Hanya render ulang jika seleksi benar-benar berubah
-            if (companyData.warehouses.selectedIndex !== newIdx) {
-                companyData.warehouses.selectedIndex = newIdx;
-                saveCompanies();
-                // FIX: Setelah selection berubah, render ulang list untuk update status tombol
-                window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
-            }
-        };
-
+        /**
+         * Membuka sub-modal edit untuk Warehouse yang terpilih.
+         */
         window.openSelectedWarehouse = function (companyId) {
             const company = companies.find(c => c.id === companyId);
-            // FIX: Ambil selectedIndex langsung dari data yang sudah di-load/di-clamp
             const selectedIndex = company?.warehouses?.selectedIndex;
 
             if (selectedIndex !== undefined && selectedIndex !== -1) {
-                // Ambil data berdasarkan index yang tersimpan
                 const warehouseData = company.warehouses.rows[selectedIndex]; 
-                // Pastikan mengirim ID Warehouse, bukan index
                 window.showCompanyWarehouseForm('edit', companyId, warehouseData.id);
             } else {
                 window.showCustomAlert('Perhatian', 'Pilih baris warehouse yang ingin dibuka terlebih dahulu.', 'warning');
             }
         };
 
-        // 3. Tambahkan copySelectedWarehouse()
+        /**
+         * Menyalin data Warehouse yang terpilih.
+         */
         window.copySelectedWarehouse = function (companyId) {
             const companyIndex = companies.findIndex(c => c.id === companyId);
             if (companyIndex === -1) return;
 
             const selectedIndex = companies[companyIndex].warehouses.selectedIndex;
             if (selectedIndex === -1) {
-                window.showCustomAlert("Pilih warehouse dulu", "warning"); 
+                window.showCustomAlert("Perhatian", "Pilih warehouse dulu", "warning"); 
                 return;
             }
             
@@ -907,7 +827,6 @@
             const src = companyData.warehouses.rows[selectedIndex];
             if (!src) return;
 
-            // Deep clone dan ubah ID/Code
             const copy = {
                 ...JSON.parse(JSON.stringify(src)),
                 id: generateUniqueId(WAREHOUSE_ID_PREFIX),
@@ -915,18 +834,16 @@
             };
 
             companyData.warehouses.rows.push(copy);
-            // Select item baru
             companyData.warehouses.selectedIndex = companyData.warehouses.rows.length - 1; 
             
             saveCompanies();
-            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
-            window.showCustomAlert('Success', `Warehouse ${src.warehouseCode} berhasil dicopy menjadi ${copy.warehouseCode}.`);
-            
-            console.log('[WHS Copy]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: companyData.warehouses.rows.length });
+            window.renderCompanyWarehouseList(companyId);
+            window.showCustomAlert('Success', `Warehouse ${src.warehouseCode} berhasil dicopy menjadi ${copy.warehouseCode}.`, 'success');
         };
 
-        // [LANGKAH WAJIB] Perbaiki deleteSelectedWarehouse
-        // Mengganti showCustomConfirm dengan window.confirm langsung untuk bypass konflik file lain.
+        /**
+         * Menghapus Warehouse yang terpilih setelah konfirmasi.
+         */
         window.deleteSelectedWarehouse = function (companyId) {
             const ci = companies.findIndex(c => c.id === companyId);
             if (ci === -1) return;
@@ -935,36 +852,32 @@
             const rows = companyData.warehouses.rows;
             let sel = companyData.warehouses.selectedIndex;
             
-            // Validasi seleksi
             if (sel === -1 || sel >= rows.length) { 
-                window.showCustomAlert('Pilih baris dulu.', 'warning'); 
+                window.showCustomAlert('Perhatian', 'Pilih baris dulu.', 'warning'); 
                 return; 
             }
 
             const code = rows[sel].warehouseCode;
             
-            // Mengganti showCustomConfirm dengan window.confirm langsung
             if (window.confirm(`Yakin hapus warehouse ${code}?`)) {
                 rows.splice(sel, 1);
 
-                // Tentukan selectedIndex baru dengan clamp (sesuai instruksi)
                 if (rows.length === 0) {
                     companyData.warehouses.selectedIndex = -1;
                 } else {
-                    // Pilih baris terdekat: tetap di index yang sama, kecuali out-of-range
                     const next = Math.min(sel, rows.length - 1);
                     companyData.warehouses.selectedIndex = next;
                 }
 
                 saveCompanies();
-                window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
+                window.renderCompanyWarehouseList(companyId);                       
                 window.showCustomAlert('Dihapus', `Warehouse ${code} dihapus.`, 'success');
-                
-                console.log('[WHS Delete]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: rows.length });
             }
         };
         
-        // D. Fungsi pindah seleksi + auto-scroll
+        /**
+         * Memindahkan baris ke atas atau ke bawah.
+         */
         window.moveNestedRow = function(companyId, direction) {
             const ci = companies.findIndex(c => c.id === companyId);
             if (ci === -1) return;
@@ -984,8 +897,7 @@
             state.selectedIndex = j;
             
             saveCompanies();
-            // PENTING: Memakai nama fungsi yang sudah benar!
-            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
+            window.renderCompanyWarehouseList(companyId);
             
             const table = document.getElementById('warehouse-list-table');
             const selId = rows[j]?.id;
@@ -993,11 +905,12 @@
             tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
         
-        // F. Bind keyboard di tabel
+        /**
+         * Mengikat event keyboard pada tabel Warehouse.
+         */
         const bindWarehouseKeys = (function bindWarehouseKeys(){
           return function() {
               const wrap = document.getElementById('whs-table-wrapper');
-              // Hapus binding lama sebelum menambah yang baru (jika ada)
               if (wrap && wrap._keysBound) {
                   wrap.removeEventListener('keydown', wrap._keysBound);
                   wrap._keysBound = false;
@@ -1005,17 +918,14 @@
               
               if (!wrap) return;
 
-              // Pastikan wrapper bisa menerima fokus
-              wrap.tabIndex = 0;
+              wrap.tabIndex = 0; 
 
               const handler = (e) => {
                   const form = document.getElementById('company-form');
-                  // FIX: Cek ID Company dari selector jika di halaman mandiri
                   const companyId = form?.dataset.id || document.getElementById('wh-company-selector')?.value;
 
                   if (!companyId) return;
                   
-                  // Pastikan tabel wrapper sedang fokus
                   if (document.activeElement !== wrap) return;
                   
                     if (e.key === 'ArrowUp')  { 
@@ -1027,12 +937,10 @@
                         window.moveNestedRow(companyId, 'down');
                     }
                   
-                  // Cek apakah ada baris terpilih sebelum memproses Enter/Delete
                   const companyData = companies.find(c => c.id === companyId);
                   const isSelected = companyData?.warehouses?.selectedIndex !== -1;
                   
                   if (isSelected) {
-                      // FIX: Pastikan tidak membuka modal ganda jika form warehouse sudah terbuka
                       const whsModalVisible = !document.getElementById('warehouse-form-modal').classList.contains('hidden');
                       if (e.key === 'Enter' && !whsModalVisible) { 
                           e.preventDefault(); 
@@ -1051,12 +959,10 @@
         })();
 
 
-        // --- RENDER TAB COMPANY (BARU) ---
+        // --- RENDER TAB COMPANY MODAL ---
 
         /**
-         * Render tab alamat untuk Company (Company, Return, Freight Bill)
-         * @param {object} data - Data alamat spesifik
-         * @param {string} type - Tipe alamat ('companyAddress', 'returnAddress', 'freightBillToAddress')
+         * Render template tab alamat Company.
          */
         const renderCompanyAddressTab = (data, type) => {
             const baseType = type.replace('Address', '');
@@ -1077,7 +983,9 @@
             `;
         };
         
-        // FIX: Render General tab di modal Company
+        /**
+         * Render tab General di modal Company.
+         */
         function renderCompanyGeneralTab(data) {
             const { companyCode = '' } = data; 
             
@@ -1092,7 +1000,9 @@
             `;
         }
         
-        // FIX: Render tab Warehouse/company information di modal Company
+        /**
+         * Render tab Warehouse/company information di modal Company.
+         */
         function renderCompanyInfoTab(companyData) {
             const { general, id: companyId } = companyData;
             const { uccEanNumber = '', orderIdPrefix = '', receiptIdPrefix = '', purchaseOrderIdPrefix = '', availabilityChecking = false } = general;
@@ -1141,7 +1051,9 @@
             `;
         }
 
-        // FIX: Render Internet Information tab
+        /**
+         * Render tab Internet Information di modal Company.
+         */
         function renderInternetInfoTab(data) {
             const { websiteUrl = '', emailSupport = '', phoneSupport = '' } = data.internetInfo;
             return `
@@ -1162,7 +1074,9 @@
             `;
         }
 
-        // FIX: Render Web Header tab
+        /**
+         * Render tab Web Header di modal Company.
+         */
         function renderWebHeaderTab(data) {
             const { leftGraphic = '', centerGraphic = '', rightGraphic = '', leftUrl = '', centerUrl = '', rightUrl = '' } = data.webHeader; 
             
@@ -1215,10 +1129,11 @@
             `;
         }
 
-        // FIX: Render Assigned Users tab (Diperbaiki agar menggunakan Checkbox Grid)
+        /**
+         * Render tab Assigned Users di modal Company.
+         */
         function renderAssignedUsersTab(companyData) {
-            const assignedUsers = companyData.assignedUsers || [];
-            const assignedUserIds = assignedUsers.map(u => u.userId);
+            const assignedUserIds = (companyData.assignedUsers || []).map(u => u.userId);
 
             return `
                 <div class="space-y-4">
@@ -1238,23 +1153,15 @@
                         </div>
                     </div>
                     <p class="text-xs text-gray-500 mt-2">
-                        Catatan: Perubahan akan tersimpan saat Anda klik 'Save' di modal utama.
+                        Catatan: Perubahan akan tersimpan saat kamu klik 'Save' di modal utama.
                     </p>
                 </div>
             `;
         }
-        
-        // DUMMY/DEPREKASI: Fungsi ini tidak lagi relevan karena user memilih dari checkbox grid
-        window.addAssignedUser = function(companyId) {
-            window.showCustomAlert('Info', 'Aksi ini tidak diperlukan. Silakan centang user di daftar di atas untuk menugaskan user.', 'info');
-        };
 
-        // DUMMY/DEPREKASI: Fungsi ini tidak lagi relevan karena user memilih dari checkbox grid
-        window.removeAssignedUser = function(companyId) {
-            window.showCustomAlert('Info', 'Aksi ini tidak diperlukan. Silakan hapus centang pada user di daftar di atas untuk menghapus tugas.', 'info');
-        };
-
-        // FIX: Render UDF Company (8 fields)
+        /**
+         * Render tab User Defined Data (8 field) di modal Company.
+         */
         function renderCompanyUdfTab(model) {
             const { udf = EMPTY_COMPANY.udf } = model || {};
 
@@ -1263,7 +1170,7 @@
                     ${Array.from({ length: 8 }, (_, i) => { // 8 fields
                         const key = `udf${i + 1}`;
                         const value = udf[key] || '';
-                        const isDecimal = i >= 6; // UDF 7 dan 8 angka desimal
+                        const isDecimal = i >= 6; // UDF 7 dan 8 adalah angka desimal
                         return `
                         <div>
                             <label for="cmp-${key}" class="block text-sm mb-1">User defined field ${i + 1}: ${isDecimal ? '(Decimal)' : ''}</label>
@@ -1277,7 +1184,9 @@
 
         // --- HANDLER MODAL UTAMA COMPANY ---
         
-        // Fungsi baru untuk Company
+        /**
+         * Menampilkan modal form Company (Create/Edit).
+         */
         window.showCompanyForm = function (mode, id = null) {
             const modal = document.getElementById('company-form-modal');
             const form = document.getElementById('company-form');
@@ -1287,22 +1196,13 @@
 
             if (mode === 'create') {
                 companyData = JSON.parse(JSON.stringify(EMPTY_COMPANY)); 
-                // FIX: JANGAN generate ID di sini, tapi di handleCompanySubmit, 
-                // agar ID baru hanya terpakai jika form disubmit.
-                // Tapi kita butuh ID di form.dataset untuk membedakan mode.
-                // Biarkan ID generated, tapi CompanyList belum di-update.
-                // Kita akan menggunakan ID sementara yang akan dikonfirmasi saat submit.
-                
-                // Menggunakan ID temporer untuk navigasi internal modal
                 const tempId = generateUniqueId(COMPANY_ID_PREFIX); 
                 companyData.id = tempId; 
-                form.dataset.tempId = tempId; // Simpan ID sementara
-                
+                form.dataset.tempId = tempId;
             } else if (mode === 'edit' && id) {
-                // PENTING: Gunakan array global yang sudah diupdate dari renderCompanyList
                 const found = companies.find(c => c.id === id); 
                 if (!found) {
-                    window.showCustomAlert('Error', 'Company not found!', 'error');
+                    window.showCustomAlert('Error', 'Company tidak ditemukan!', 'error');
                     return;
                 }
                 companyData = JSON.parse(JSON.stringify(found));
@@ -1312,73 +1212,53 @@
             
             // Set data attributes
             form.dataset.id = companyData.id;
-            form.dataset.companyId = companyData.id; // Untuk helper copyCompanyAddress
+            form.dataset.companyId = companyData.id;
             form.dataset.mode = mode;
             
-            // Perbaiki header modal agar menampilkan Company Code
             const headerCode = mode === 'create' ? 'New Company (Unsaved)' : companyData.companyCode;
             title.innerHTML = mode === 'create' ? 'Company - Create New' : `Company - Edit Existing (<span class="font-bold text-blue-600">${headerCode}</span>)`;
 
-            // Render Tabs
+            // Render semua Tab
             document.getElementById('pane-cmp-general').innerHTML = renderCompanyGeneralTab(companyData);
             document.getElementById('pane-cmp-info').innerHTML = renderCompanyInfoTab(companyData);
-            
-            // Render alamat dengan menentukan tipe address key di model
             document.getElementById('pane-cmp-address').innerHTML = renderCompanyAddressTab(companyData.companyAddress, 'companyAddress');
             document.getElementById('pane-cmp-return').innerHTML = renderCompanyAddressTab(companyData.returnAddress, 'returnAddress');
             document.getElementById('pane-cmp-freight').innerHTML = renderCompanyAddressTab(companyData.freightBillToAddress, 'freightBillToAddress');
-            
-            // Re-check sameAsCompany state (Apply disabled/data copy if checkbox was already checked)
+            document.getElementById('pane-cmp-internet').innerHTML = renderInternetInfoTab(companyData);
+            document.getElementById('pane-cmp-webheader').innerHTML = renderWebHeaderTab(companyData);
+            document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
+            document.getElementById('pane-cmp-udf').innerHTML = renderCompanyUdfTab(companyData);
+
+            // Re-check sameAsCompany state untuk Returns dan Freight
             const addressesToCheck = ['return', 'freight'];
             addressesToCheck.forEach(baseType => {
                 const type = `${baseType}Address`;
                 const checkbox = document.getElementById(`${baseType}-same-as-company`);
                 if (checkbox) {
-                    const companyAddressJSON = JSON.stringify(companyData.companyAddress);
-                    const targetAddressJSON = JSON.stringify(companyData[type]);
-                    
-                    // Logic untuk menentukan apakah checkbox harus dicentang saat load:
-                    // Bandingkan alamat target dengan alamat perusahaan. Jika sama persis, centang.
-                    const isSameAsCompany = companyAddressJSON === targetAddressJSON;
+                    const isSameAsCompany = JSON.stringify(companyData.companyAddress) === JSON.stringify(companyData[type]);
                     checkbox.checked = isSameAsCompany; 
                     
                     if (isSameAsCompany) {
-                        // Terapkan disabled state pada field target
                         window.copyCompanyAddress(type, false); 
                     } else {
-                        // FIX: Pastikan field tidak disabled jika data tidak sama atau di mode edit
-                        window.handleSameAsCompanyChange(baseType); // Panggil untuk memastikan field enable
+                        window.handleSameAsCompanyChange(baseType);
                     }
                 }
             });
             
-            document.getElementById('pane-cmp-internet').innerHTML = renderInternetInfoTab(companyData);
-            document.getElementById('pane-cmp-webheader').innerHTML = renderWebHeaderTab(companyData);
-            // FIX: Panggil renderAssignedUsersTab yang sudah diperbarui
-            document.getElementById('pane-cmp-assigned').innerHTML = renderAssignedUsersTab(companyData);
-            document.getElementById('pane-cmp-udf').innerHTML = renderCompanyUdfTab(companyData);
-
-
             if (!modal._listenersAttached) {
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => {
                     window.activateTab(button.dataset.tab, modal);
-                    // FIX: Panggil renderWarehouseList saat tab Warehouse dibuka
                     if (button.dataset.tab === 'company-info') {
-                         // Ambil status mode dari form
                         const currentMode = document.getElementById('company-form').dataset.mode;
                         if (currentMode !== 'create') {
-                            window.renderWarehouseList(form.dataset.id); 
-                        } else {
-                            // Biarkan pesan "Simpan dulu" muncul dari renderCompanyInfoTab
-                            document.getElementById('warehouse-list-container').innerHTML = `<p class="p-4 text-center text-red-500 font-semibold">Simpan Company terlebih dahulu sebelum mengelola daftar Warehouse.</p>`;
+                            window.renderCompanyWarehouseList(form.dataset.id); 
                         }
-                        
-                        // Set fokus ke wrapper tabel (Fokus keyboard binding)
                         const whsWrapper = document.getElementById('whs-table-wrapper');
                         if (whsWrapper) {
                             setTimeout(() => {
                                 whsWrapper.focus();
-                            }, 50); // Delay sedikit agar DOM siap
+                            }, 50);
                         }
                     }
                 }});
@@ -1386,7 +1266,7 @@
             }
             window.activateTab('general', modal);
 
-            // Set state visual untuk modal
+            // Tampilkan modal dengan transisi
             const modalContent = modal.querySelector('.modal-content');
             modalContent.classList.remove('max-w-4xl', 'scale-100', 'opacity-100');
             modalContent.classList.add('max-w-4xl', 'scale-95', 'opacity-0');
@@ -1400,7 +1280,7 @@
                 
                 const companyInput = document.getElementById('companyCode');
                 if (companyInput) {
-                    try { companyInput.focus(); } catch(e) { console.error("Failed to focus company input:", e); }
+                    try { companyInput.focus(); } catch(e) { console.error("Gagal fokus input Company:", e); }
                 }
 
                 modal._keydownHandler = (e) => {
@@ -1410,14 +1290,13 @@
                 };
                 modal.addEventListener('keydown', modal._keydownHandler);
                 
-                // FIX: Panggil renderWarehouseList jika tab info adalah default
                 if (document.querySelector('[role="tab"][data-tab="company-info"]').classList.contains('tab-active') && mode !== 'create') {
-                     window.renderWarehouseList(form.dataset.id);
+                     window.renderCompanyWarehouseList(form.dataset.id);
                 }
 
             }, 10);
             
-            // FIX: Panggil renderStandardModalFooter di sini
+            // Render footer dengan checkbox Inactive
             const modalFooterPlaceholder = document.getElementById('company-form-footer-placeholder');
             if(modalFooterPlaceholder) {
                  modalFooterPlaceholder.innerHTML = window.renderStandardModalFooter({
@@ -1433,6 +1312,9 @@
             }
         };
 
+        /**
+         * Menutup modal form Company.
+         */
         window.closeCompanyForm = function () {
             const modal = document.getElementById('company-form-modal');
             const modalContent = modal.querySelector('.modal-content');
@@ -1443,7 +1325,6 @@
                  delete modal._keydownHandler;
             }
             
-            // FIX: Hapus ID temporer jika ada dan mode create
             if (form.dataset.mode === 'create') {
                 delete form.dataset.tempId;
                 form.dataset.id = null;
@@ -1456,22 +1337,22 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 document.body.classList.remove('modal-open');
-            }, 300); // Sesuai durasi transisi
+            }, 300);
         };
 
 
-        // --- HANDLER SUB MODAL WAREHOUSE (BARU) ---
+        // --- HANDLER SUB MODAL WAREHOUSE ---
 
-        // 6. Perbaiki showWarehouseForm() agar pass companyData
+        /**
+         * Menampilkan sub-modal form Warehouse.
+         */
         window.showCompanyWarehouseForm = function (mode, companyId, warehouseId = null) {
-            // Cek Alur Create Company: Jika Company belum disimpan, tolak
             const companyForm = document.getElementById('company-form');
             if (companyForm && companyForm.dataset.mode === 'create') {
                 window.showCustomAlert('Aksi Ditolak', 'Harap simpan Company terlebih dahulu sebelum menambahkan Warehouse.', 'error');
                 return;
             }
             
-            // FIX: Ambil companyData di sini
             const companyData = companies.find(c => c.id === companyId);
             if (!companyData) { window.showCustomAlert('Error', 'Company data not found.', 'error'); return; }
 
@@ -1487,7 +1368,6 @@
                 warehouseData = JSON.parse(JSON.stringify(EMPTY_WAREHOUSE_INFO)); 
                 warehouseData.id = generateUniqueId(WAREHOUSE_ID_PREFIX);
             } else if (mode === 'edit' && warehouseId) {
-                // FIX: Gunakan companyData.warehouses.rows untuk mencari
                 const found = companyData.warehouses.rows.find(w => w.id === warehouseId);
                 if (!found) {
                     window.showCustomAlert('Error', 'Warehouse Info not found!', 'error');
@@ -1496,38 +1376,32 @@
                 warehouseData = JSON.parse(JSON.stringify(found));
                 isEditMode = true;
             } else {
-                 return; // Error case
+                 return;
             }
 
             title.innerHTML = isEditMode ? 
                 `Warehouse/company information detail window (<span class="font-bold text-blue-600">${warehouseData.warehouseCode}</span>)` : 
                 'Warehouse/company information detail window (New)'; 
             
-            // Set data-attribute untuk ID Company, ID Warehouse, dan mode
             form.dataset.companyId = companyId;
             form.dataset.warehouseId = warehouseData.id;
-            form.dataset.mode = mode; // PENTING: Set mode di sini
+            form.dataset.mode = mode;
             
-            // Tampilkan Company Code
-            // FIX: Samakan ID teks Company
             const companyCodeEl = document.getElementById('whs-company-code-display');
             if (companyCodeEl) {
                 companyCodeEl.textContent = companyData.companyCode;
             }
 
 
-            // Render Tabs, pastikan companyData dan warehouseData di-pass
-            // FIX: Mengganti renderWarehouseOtherAddressTab dengan fungsi yang diperbarui
+            // Render Tabs
             document.getElementById('pane-whs-shipfrom').innerHTML = renderWarehouseShipFromTab(warehouseData, companyData);
             document.getElementById('pane-whs-return').innerHTML = renderWarehouseOtherAddressTab(warehouseData.warehouseReturnAddress, 'warehouseReturnAddress', companyData);
             document.getElementById('pane-whs-freight').innerHTML = renderWarehouseOtherAddressTab(warehouseData.warehouseFreightBillToAddress, 'warehouseFreightBillToAddress', companyData);
             document.getElementById('pane-whs-udf').innerHTML = renderWarehouseUdfTab(warehouseData);
             
-            // Cek status checkbox Same as company address untuk Ship From
+            // Reset status checkbox 'Same as company address'
             const shipFromCheckbox = document.getElementById('whs-same-as-company');
             if (shipFromCheckbox) {
-                // Di sub-modal, checkbox ini hanya untuk COPY, tidak mengunci field
-                // Jadi statusnya tidak perlu dipertahankan berdasarkan data
                 shipFromCheckbox.checked = false; 
             }
 
@@ -1536,24 +1410,18 @@
                 modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => window.activateTab(button.dataset.tab, modal) });
                 modal._listenersAttached = true;
             }
-            window.activateTab('ship-from', modal); // Default tab
+            window.activateTab('ship-from', modal);
 
-            // Set state visual untuk modal
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-
-            // Sembunyikan modal Company (jika ada)
+            // Sembunyikan modal Company yang ada di belakangnya
             document.getElementById('company-form-modal').classList.add('invisible');
 
             document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
             
-            // Pasang listener submit di sini
-            // FIX: Pastikan listener onsubmit terpasang sekali
+            // Pasang listener submit
             form.onsubmit = window.handleWarehouseSubmit;
             
-            // FIX: Render footer ke placeholder baru yang lebih aman
+            // Render footer
             if(footerPlaceholder) {
                  footerPlaceholder.innerHTML = window.renderStandardModalFooter({
                     cancelOnclick: "closeCompanyWarehouseForm()",
@@ -1562,6 +1430,10 @@
                 });
             }
 
+            // Tampilkan modal dengan transisi
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
 
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
@@ -1578,6 +1450,9 @@
             
         };
 
+        /**
+         * Menutup sub-modal form Warehouse.
+         */
         window.closeCompanyWarehouseForm = function () {
             const modal = document.getElementById('warehouse-form-modal');
             const form = document.getElementById('warehouse-form');
@@ -1588,7 +1463,7 @@
                  delete modal._keydownHandler;
             }
             
-            // Hapus listener onsubmit saat modal ditutup
+            // Hapus listener onsubmit
             form.onsubmit = null; 
 
 
@@ -1601,10 +1476,12 @@
 
                 // Tampilkan kembali modal Company
                 document.getElementById('company-form-modal').classList.remove('invisible');
-            }, 300); // Sesuai durasi transisi
+            }, 300);
         };
         
-        // FIX: Render Warehouse Ship From Address tab (memastikan companyData di-pass)
+        /**
+         * Render tab Ship From Address (termasuk kode Warehouse).
+         */
         function renderWarehouseShipFromTab(warehouseData, companyData) {
             const { warehouseCode = '' } = warehouseData;
             
@@ -1636,9 +1513,10 @@
             `;
         }
         
-        // FIX: Render Warehouse Return/Freight Address tab (memastikan companyData di-pass)
+        /**
+         * Render tab Return/Freight Address Warehouse.
+         */
         function renderWarehouseOtherAddressTab(addressData, type, companyData) {
-            // companyData tidak digunakan secara langsung di sini, tapi di-pass agar konsisten
             return `
                 <div class="p-2 border rounded-md">
                     ${renderGenericAddressForm(addressData, type, true)}
@@ -1646,7 +1524,9 @@
             `;
         }
 
-        // FIX: Render UDF Warehouse (8 fields)
+        /**
+         * Render tab UDF (8 field) di modal Warehouse.
+         */
         function renderWarehouseUdfTab(model) {
             const { warehouseUdf = EMPTY_WAREHOUSE_INFO.warehouseUdf } = model || {};
 
@@ -1671,8 +1551,6 @@
 
         /**
          * Helper untuk mengumpulkan data form Company ke dalam model yang terstruktur.
-         * @param {HTMLFormElement} form 
-         * @returns {object}
          */
         const getCompanyFormData = (form) => {
              const getAddressData = (prefix) => ({
@@ -1693,36 +1571,38 @@
             const companyId = form.dataset.id;
             const existingCompany = companies.find(c => c.id === companyId) || EMPTY_COMPANY;
 
-            const inactiveCheckbox = form.querySelector('[name="inactive"]');
-            const inactiveStatus = inactiveCheckbox ? inactiveCheckbox.checked : existingCompany.inactive;
+            const inactiveStatus = form.querySelector('[name="inactive"]')?.checked || existingCompany.inactive;
             
             const returnSameAsChecked = form.querySelector('[name="returnAddress_sameAsCompany"]')?.checked || false;
             const freightSameAsChecked = form.querySelector('[name="freightBillToAddress_sameAsCompany"]')?.checked || false;
 
-            // Ambil companyAddress yang baru
             const companyAddress = getAddressData('companyAddress');
             
-            // Tentukan Returns dan Freight Address: jika "Same As" dicentang, gunakan companyAddress yang baru
             const returnAddress = returnSameAsChecked ? 
                 companyAddress : getAddressData('returnAddress');
                 
             const freightBillToAddress = freightSameAsChecked ? 
                 companyAddress : getAddressData('freightBillToAddress');
                 
-            // FIX: Baca data Assigned Users dari checkbox yang tercentang
             const assignedUsers = Array.from(form.querySelectorAll('[name="assignedUsers"]'))
                                     .filter(el => el.checked)
                                     .map(el => ({ 
                                         userId: el.value, 
-                                        name: el.value // Menggunakan ID sebagai nama
+                                        name: el.value 
                                     }));
+                                    
+            const udfData = Array.from({ length: 8 }).reduce((acc, _, i) => {
+                const key = `udf${i + 1}`;
+                const input = form.querySelector(`[name="udf_${key}"]`);
+                if (input) acc[key] = input.value;
+                return acc;
+            }, {});
 
             return {
                 id: companyId,
                 companyCode: form.querySelector('[name="companyCode"]')?.value.trim() || '',
                 inactive: inactiveStatus,
                 
-                // General/Info
                 general: {
                     uccEanNumber: form.querySelector('[name="general_uccEanNumber"]')?.value.trim() || '',
                     orderIdPrefix: form.querySelector('[name="general_orderIdPrefix"]')?.value.trim() || '',
@@ -1731,12 +1611,10 @@
                     availabilityChecking: form.querySelector('[name="general_availabilityChecking"]')?.checked || false,
                 },
 
-                // Addresses
                 companyAddress: companyAddress,
                 returnAddress: returnAddress,
                 freightBillToAddress: freightBillToAddress,
                 
-                // Internet information, Web Header, Assigned Users, UDF
                 webHeader: {
                     leftGraphic: form.querySelector('[name="webHeader_leftGraphic"]')?.value.trim() || '',
                     centerGraphic: form.querySelector('[name="webHeader_centerGraphic"]')?.value.trim() || '',
@@ -1751,22 +1629,16 @@
                     phoneSupport: form.querySelector('[name="internetInfo_phoneSupport"]')?.value.trim() || '',
                 },
                 
-                // UDF (8 fields)
-                udf: Array.from({ length: 8 }).reduce((acc, _, i) => {
-                    const key = `udf${i + 1}`;
-                    const input = form.querySelector(`[name="udf_${key}"]`);
-                    if (input) acc[key] = input.value;
-                    return acc;
-                }, {}),
-                
-                // Data Assigned Users yang sudah dibaca dari Checkbox
+                udf: udfData,
                 assignedUsers: assignedUsers,
                 
-                // Pertahankan data nested yang tidak di-edit di modal utama
                 warehouses: existingCompany.warehouses,
             };
         }
 
+        /**
+         * Menangani submit form Company (Create/Update).
+         */
         window.handleCompanySubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('company-form-modal');
@@ -1782,28 +1654,29 @@
 
             if (mode === 'create') {
                 if (companies.some(c => c.companyCode === formData.companyCode)) {
-                    window.showCustomAlert('Error', `Company code ${formData.companyCode} already exists.`, 'error');
+                    window.showCustomAlert('Error', `Company code ${formData.companyCode} sudah ada.`, 'error');
                     return;
                 }
                 
                 id = generateUniqueId(COMPANY_ID_PREFIX);
                 formData.id = id;
                 companies.push(formData);
-                msg = `Company ${formData.companyCode} created successfully.`;
+                msg = `Company ${formData.companyCode} berhasil dibuat.`;
                 
                 form.dataset.id = id;
                 form.dataset.companyId = id;
                 form.dataset.mode = 'edit';
                 document.getElementById('company-form-title').innerHTML = `Company - Edit Existing (<span class="font-bold text-blue-600">${formData.companyCode}</span>)`;
+                
             } else if (mode === 'edit') {
                 const index = companies.findIndex(c => c.id === id);
                 if (index !== -1) {
                     if (companies.some((c, i) => i !== index && c.companyCode === formData.companyCode)) {
-                        window.showCustomAlert('Error', `Company code ${formData.companyCode} already exists.`, 'error');
+                        window.showCustomAlert('Error', `Company code ${formData.companyCode} sudah ada.`, 'error');
                         return;
                     }
                     companies[index] = { ...companies[index], ...formData };
-                    msg = `Company ${formData.companyCode} updated successfully.`;
+                    msg = `Company ${formData.companyCode} berhasil diupdate.`;
                 }
             }
             
@@ -1811,8 +1684,7 @@
             
             if (mode === 'create') {
                 window.activateTab('company-info', modal);
-                // PENTING: Memakai nama fungsi yang sudah benar!
-                window.renderWarehouseList(id); // Diganti dari renderCompanyWarehouseList
+                window.renderCompanyWarehouseList(id); 
             } else {
                 window.closeCompanyForm();
             }
@@ -1821,16 +1693,16 @@
             window.showCustomAlert('Success', msg, 'success');
         };
 
+        /**
+         * Menghapus Company.
+         */
         window.deleteCompany = function (id) {
-            // Menggunakan showCustomConfirm yang sudah dikunci
-            window.showCustomConfirm('Are you sure you want to delete this company?', () => {
-                // FIX: Gunakan filter untuk menghapus
+            window.showCustomConfirm('Yakin kamu mau hapus Company ini?', () => {
                 companies = companies.filter(c => c.id !== id);
                 saveCompanies();
                 window.renderCompanyList();
-                window.showCustomAlert('Deleted', 'Company deleted successfully!', 'success');
+                window.showCustomAlert('Dihapus', 'Company berhasil dihapus!', 'success');
                 
-                // Jika modal Company terbuka, tutup
                 const modal = document.getElementById('company-form-modal');
                 if(!modal.classList.contains('hidden') && modal.querySelector('#company-form').dataset.id === id) {
                     window.closeCompanyForm();
@@ -1843,26 +1715,16 @@
 
         /**
          * Helper untuk mengumpulkan data form Warehouse ke dalam model yang terstruktur.
-         * @returns {object}
          */
-        // Tulis getWarehouseFormData sesuai instruksi
         const getWarehouseFormData = () => {
              const form = document.getElementById('warehouse-form'); 
              const pick = (name) => (form.querySelector(`[name="${name}"]`)?.value || "").trim();
              
              const readAddr = (prefix) =>({
-                name: pick(`${prefix}_name`),
-                address1: pick(`${prefix}_address1`),
-                address2: pick(`${prefix}_address2`),
-                address3: pick(`${prefix}_address3`),
-                city: pick(`${prefix}_city`),
-                statePostalCode: pick(`${prefix}_statePostalCode`),
-                postalCode: pick(`${prefix}_postalCode`),
-                country: pick(`${prefix}_country`),
-                attentionTo: pick(`${prefix}_attentionTo`),
-                faxNumber: pick(`${prefix}_faxNumber`),
-                phoneNumber: pick(`${prefix}_phoneNumber`),
-                emailAddress: pick(`${prefix}_emailAddress`)
+                name: pick(`${prefix}_name`), address1: pick(`${prefix}_address1`), address2: pick(`${prefix}_address2`),
+                address3: pick(`${prefix}_address3`), city: pick(`${prefix}_city`), statePostalCode: pick(`${prefix}_statePostalCode`),
+                postalCode: pick(`${prefix}_postalCode`), country: pick(`${prefix}_country`), attentionTo: pick(`${prefix}_attentionTo`),
+                faxNumber: pick(`${prefix}_faxNumber`), phoneNumber: pick(`${prefix}_phoneNumber`), emailAddress: pick(`${prefix}_emailAddress`)
             });
             
             const readUdf = () => {
@@ -1874,7 +1736,7 @@
             };
 
             return {
-                id: form.dataset.warehouseId, // Pertahankan id yang sudah dibuat
+                id: form.dataset.warehouseId,
                 warehouseCode: pick("warehouseCode"),
                 shipFromAddress: readAddr("shipFromAddress"),
                 warehouseReturnAddress: readAddr("warehouseReturnAddress"),
@@ -1883,13 +1745,14 @@
             };
         }
 
-        // 1. Implement handleWarehouseFormSubmit sesuai instruksi
+        /**
+         * Menangani submit form Warehouse (Create/Update).
+         */
         window.handleWarehouseSubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('warehouse-form-modal');
             const form = event.target;
 
-            // Validasi wajib
             if (!validateWarehouseForm(modal)) { return; }
 
             const mode = form.dataset.mode;
@@ -1906,58 +1769,49 @@
             let newSelectedIndex = -1;
             let msg = '';
 
-            // Proses penyimpanan (Create / Update)
             if (mode === 'new' || mode === 'create') {
-                // Check duplikasi code
                 if (rows.some(w => w.warehouseCode === data.warehouseCode)) {
                     window.showCustomAlert('Error', `Warehouse code ${data.warehouseCode} sudah ada di Company ini.`, 'error');
                     return;
                 }
 
-                // Hasilkan ID unik baru dan push
                 data.id = generateUniqueId(WAREHOUSE_ID_PREFIX);
                 rows.push(data);
                 newSelectedIndex = rows.length - 1;
-                msg = `Warehouse Info ${data.warehouseCode} created successfully.`;
+                msg = `Warehouse Info ${data.warehouseCode} berhasil dibuat.`;
             } else if (mode === 'edit') {
                 const whsIndex = rows.findIndex(w => w.id === warehouseId);
                 if (whsIndex !== -1) {
-                    // Check duplikasi code, kecuali code milik sendiri
                     if (rows.some((w, i) => i !== whsIndex && w.warehouseCode === data.warehouseCode)) {
                         window.showCustomAlert('Error', `Warehouse code ${data.warehouseCode} sudah ada di Company ini.`, 'error');
                         return;
                     }
 
-                    data.id = warehouseId; // Pastikan ID tidak berubah
+                    data.id = warehouseId;
                     rows[whsIndex] = data;
                     newSelectedIndex = whsIndex;
-                    msg = `Warehouse Info ${data.warehouseCode} updated successfully.`;
+                    msg = `Warehouse Info ${data.warehouseCode} berhasil diupdate.`;
                 }
             }
 
-            // Update state seleksi dan simpan
             companyData.warehouses.selectedIndex = newSelectedIndex;
             saveCompanies();
 
-            // Tutup sub-modal dan refresh list di modal utama
             window.closeCompanyWarehouseForm();
-
-            // INI BAGIAN KUNCINYA: Memanggil fungsi render ulang setelah save
-            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
+            window.renderCompanyWarehouseList(companyId); 
 
             window.showCustomAlert('Success', msg, 'success');
-            console.log('[WHS Submit]', 'action', { companyId, selectedIndex: newSelectedIndex, rowsLen: rows.length });
         };
         
-        // --- End of Company Logic ---
+        // --- End of Company/Warehouse Logic ---
 
         // ====================================================================================
-        // --- CUSTOMER LOGIC (LENGKAP) ---
+        // --- CUSTOMER LOGIC ---
         // ====================================================================================
         
-        // --- CUSTOMER CRUD & RENDER FUNCTIONS ---
-        // ... (Logika Customer tetap sama seperti sebelumnya)
-
+        /**
+         * Render daftar Customer di halaman utama Customer.
+         */
         window.renderCustomerList = function (filter = '') {
             const container = document.getElementById('customer-list-container');
             if (!container) return;
@@ -2011,16 +1865,21 @@
 
         window.filterCustomerList = window.debounce((value) => window.renderCustomerList(value), 300);
 
+        /**
+         * Menghapus Customer yang dipilih.
+         */
         window.deleteCustomer = function (id) {
-            // Menggunakan showCustomConfirm yang sudah dikunci
-            window.showCustomConfirm('Are you sure you want to delete this customer?', () => {
+            window.showCustomConfirm('Yakin kamu mau hapus Customer ini?', () => {
                 customers = customers.filter(c => c.id !== id);
                 saveCustomers();
                 window.renderCustomerList();
-                window.showCustomAlert('Deleted', 'Customer deleted successfully!', 'success');
+                window.showCustomAlert('Dihapus', 'Customer berhasil dihapus!', 'success');
             });
         };
 
+        /**
+         * Validasi form Customer.
+         */
         function validateCustomerForm(modal) {
             const form = document.getElementById('customer-form');
             form.noValidate = true; 
@@ -2070,7 +1929,7 @@
                 }
                 
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Failed to focus invalid input:", e); }
+                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Customer:", e); }
                 }, 100); 
 
                 return false;
@@ -2079,6 +1938,9 @@
             return true;
         }
         
+        /**
+         * Menangani submit form Customer (Create/Update).
+         */
         window.handleCustomerSubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('customer-form-modal');
@@ -2122,7 +1984,6 @@
                 phoneNumber: form.phoneNumber.value,
                 emailAddress: form.emailAddress.value,
                 
-                // Categories
                 categories: categories,
                 
                 // FBA
@@ -2135,10 +1996,9 @@
                 fba_postalCode: form.fba_postalCode.value,
                 fba_country: form.fba_country.value,
                 
-                // UDF
                 udf: udf,
                 
-                // RFID (Pertahankan struktur lama)
+                // Pertahankan struktur RFID yang ada (karena CRUD-nya nested)
                 rfid: (customers.find(c => c.id === id) || EMPTY_CUSTOMER).rfid
             };
             
@@ -2146,12 +2006,12 @@
             if (mode === 'create') {
                 newCustomer.id = generateUniqueId(CUSTOMER_ID_PREFIX);
                 customers.push(newCustomer);
-                msg = `Customer ${newCustomer.customer} created successfully.`;
+                msg = `Customer ${newCustomer.customer} berhasil dibuat.`;
             } else {
                 const index = customers.findIndex(c => c.id === id);
                 if (index !== -1) {
-                    customers[index] = { ...customers[index], ...newCustomer }; // Gabungkan data lama dengan baru
-                    msg = `Customer ${newCustomer.customer} updated successfully.`;
+                    customers[index] = { ...customers[index], ...newCustomer };
+                    msg = `Customer ${newCustomer.customer} berhasil diupdate.`;
                 }
             }
             
@@ -2161,6 +2021,9 @@
             window.showCustomAlert('Success', msg, 'success');
         };
         
+        /**
+         * Menampilkan modal form Customer (Create/Edit).
+         */
         window.showCustomerForm = function (mode, id = null) {
             const modal = document.getElementById('customer-form-modal');
             const form = document.getElementById('customer-form');
@@ -2174,7 +2037,7 @@
             } else if (mode === 'edit' && id) {
                 const found = customers.find(c => c.id === id);
                 if (!found) {
-                    window.showCustomAlert('Error', 'Customer not found!', 'error');
+                    window.showCustomAlert('Error', 'Customer tidak ditemukan!', 'error');
                     return;
                 }
                 customerData = JSON.parse(JSON.stringify(found));
@@ -2184,7 +2047,7 @@
 
             title.textContent = mode === 'create' ? 'Customer - Create New' : `Customer - Edit Existing (${customerData.customer})`;
             
-            // Render Tabs
+            // Render semua Tab
             document.getElementById('pane-cust-general').innerHTML = renderGeneralTab(customerData);
             document.getElementById('pane-cust-address').innerHTML = renderAddressTab(customerData);
             document.getElementById('pane-cust-categories').innerHTML = renderCategoriesTab(customerData);
@@ -2212,7 +2075,7 @@
                 modalContent.classList.add('scale-100', 'opacity-100');
             }, 10);
             
-            // FIX: Ensure footer is rendered with inactive checkbox
+            // Render footer
             const modalFooter = document.getElementById('customer-form-footer-placeholder');
             if(modalFooter) {
                 modalFooter.innerHTML = window.renderStandardModalFooter({
@@ -2223,6 +2086,9 @@
             }
         };
         
+        /**
+         * Menutup modal form Customer.
+         */
         window.closeCustomerForm = function () {
             const modal = document.getElementById('customer-form-modal');
             const modalContent = modal.querySelector('.modal-content');
@@ -2233,9 +2099,12 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 document.body.classList.remove('modal-open');
-            }, 300); // Sesuai durasi transisi
+            }, 300);
         };
 
+        /**
+         * Render tab General Customer.
+         */
         function renderGeneralTab(model) {
              const { customer = '', shipTo = '', company = '', name = '', parent = '', inactive = false, onHold = false, carriers = [] } = model || {};
              return `
@@ -2286,9 +2155,10 @@
         }
 
 
-        // FIX: Update renderAddressTab Customer untuk menggunakan City: text dan State: select
+        /**
+         * Render tab Address Customer.
+         */
         function renderAddressTab(data) {
-             // FIX: Use destructuring with safe fallbacks
             const { name = '', address1 = '', address2 = '', address3 = '', city = '', state = '', postalCode = '', country = '', faxNumber = '', phoneNumber = '', emailAddress = '', residential = false } = data;
 
             return `
@@ -2351,6 +2221,9 @@
             `;
         }
 
+        /**
+         * Render tab Categories Customer (10 field).
+         */
         function renderCategoriesTab(model) {
             const { categories = EMPTY_CUSTOMER.categories } = model;
              return `
@@ -2368,7 +2241,9 @@
             `;
         }
         
-        // FIX: Update renderFreightBillTab Customer untuk menggunakan City: text dan State: select
+        /**
+         * Render tab Freight Bill To Address Customer.
+         */
         function renderFreightBillTab(model) {
             const { fba_name = '', fba_address1 = '', fba_address2 = '', fba_address3 = '', fba_city = '', fba_state = '', fba_postalCode = '', fba_country = '' } = model || {};
             
@@ -2415,6 +2290,9 @@
             `;
         }
 
+        /**
+         * Render tab RFID Customer (list dan filter).
+         */
         function renderRFIDTab(model) {
             const { rfid: { rows, selectedIndex, filter } } = model;
             
@@ -2496,6 +2374,9 @@
             `;
         }
 
+        /**
+         * Render tab UDF Customer (6 field).
+         */
         function renderUDFTab(model) {
             const { udf = EMPTY_CUSTOMER.udf } = model;
             
@@ -2515,7 +2396,10 @@
         }
 
         // RFID Sub-handlers 
-
+        
+        /**
+         * Memilih baris RFID, mengisi form, dan me-render ulang list.
+         */
         window.selectRFIDRow = function(index) {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
@@ -2525,7 +2409,6 @@
                 const rfidData = customers[customerIndex].rfid;
                 rfidData.selectedIndex = index;
                 
-                // Isi form dari data yang dipilih
                 const row = rfidData.rows[index];
                 form.containerClass.value = row.containerClass;
                 form.epcEncoding.value = row.epcEncoding;
@@ -2533,13 +2416,15 @@
                 form.multiItem.checked = row.multiItem;
                 form.rfidUdf1.value = row.udf1;
                 
-                // Re-render hanya untuk update status tombol
                 const modal = document.getElementById('customer-form-modal');
                 modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
-                window.activateTab('rfid', modal); // Tetap di tab RFID
+                window.activateTab('rfid', modal); 
             }
         };
 
+        /**
+         * Mendapatkan data RFID dari input form saat ini.
+         */
         const getCurrentRFIDData = (form) => ({
             containerClass: form.containerClass.value,
             epcEncoding: form.epcEncoding.value,
@@ -2548,6 +2433,9 @@
             udf1: form.rfidUdf1.value,
         });
 
+        /**
+         * Menambahkan baris RFID baru ke dalam list.
+         */
         window.addRFIDRow = function() {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
@@ -2562,7 +2450,7 @@
             }
 
             customers[customerIndex].rfid.rows.push(newRow);
-            customers[customerIndex].rfid.selectedIndex = -1; // Reset selection
+            customers[customerIndex].rfid.selectedIndex = -1;
             saveCustomers();
             
             const modal = document.getElementById('customer-form-modal');
@@ -2571,6 +2459,9 @@
             window.showCustomAlert('Success', 'Baris RFID berhasil ditambahkan.', 'success');
         };
 
+        /**
+         * Mengupdate baris RFID yang sedang dipilih.
+         */
         window.updateRFIDRow = function() {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
@@ -2597,6 +2488,9 @@
             window.showCustomAlert('Success', 'Baris RFID berhasil diperbarui.', 'success');
         };
 
+        /**
+         * Menghapus baris RFID yang sedang dipilih.
+         */
         window.removeRFIDRow = function() {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
@@ -2607,7 +2501,6 @@
             const selectedIndex = customers[customerIndex].rfid.selectedIndex;
             if (selectedIndex === -1) { window.showCustomAlert('Warning', 'Pilih baris yang akan dihapus terlebih dahulu.', 'warning'); return; }
             
-            // Menggunakan showCustomConfirm yang sudah dikunci
             window.showCustomConfirm('Yakin hapus baris RFID yang dipilih?', () => {
                 customers[customerIndex].rfid.rows.splice(selectedIndex, 1);
                 customers[customerIndex].rfid.selectedIndex = -1;
@@ -2621,13 +2514,13 @@
         };
 
 
-        // --- REGISTRATION CUSTOMER (MENGEMBALIKAN) ---
+        // --- REGISTRASI KONTEN CUSTOMER ---
 
         if (!window.contentData[CUSTOMER_CATEGORY_KEY]) {
              window.contentData[CUSTOMER_CATEGORY_KEY] = {
-                // FIX: Menghapus div wrapper yang mungkin memiliki background selain putih, dan memastikan konten utama langsung di dalam div.
+                // Background halaman utama Customer harus putih
                 full: `
-                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Tambahkan wrapper putih baru -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg"> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
                         <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
                         ${window.renderStandardListHeader({
@@ -2668,7 +2561,7 @@
                                     
                                 </form>
                             </div>
-                            <!-- Footer will be rendered in showCustomerForm -->
+                            <!-- Placeholder untuk Footer -->
                             <div id="customer-form-footer-placeholder"></div>
                         </div>
                     </div>
@@ -2676,17 +2569,17 @@
             };
 
             window.searchItems.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'Configuration', lastUpdated: 'Latest' });
-            window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'configuration' });
+            window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, name: 'Customer', category: 'configuration' });
             window.parentMapping[CUSTOMER_CATEGORY_KEY] = 'configuration'; 
         }
 
 
-        // --- REGISTRATION COMPANY (DIPERBAIKI) ---
+        // --- REGISTRASI KONTEN COMPANY ---
         if (!window.contentData[COMPANY_CATEGORY_KEY]) {
             window.contentData[COMPANY_CATEGORY_KEY] = {
-                // FIX: Menghapus div wrapper yang mungkin memiliki background selain putih, dan memastikan konten utama langsung di dalam div.
+                // Background halaman utama Company harus putih
                 full: `
-                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Tambahkan wrapper putih baru -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
                         <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
                         ${window.renderStandardListHeader({
@@ -2736,7 +2629,7 @@
                                     <input type="hidden" name="id" value="">
                                 </form>
                             </div>
-                            <!-- Footer akan di-render ulang oleh showCompanyForm untuk memasukkan inactiveCheckboxHtml -->
+                            <!-- Placeholder untuk Footer -->
                             <div id="company-form-footer-placeholder"></div>
                         </div>
                     </div>
@@ -2767,7 +2660,7 @@
                                     <input type="hidden" name="id" value="">
                                 </form>
                             </div>
-                            <!-- Placeholder untuk Footer yang akan di-render di showWarehouseForm -->
+                            <!-- Placeholder untuk Footer -->
                             <div id="warehouse-form-footer-placeholder"></div>
                         </div>
                     </div>
@@ -2775,16 +2668,15 @@
             };
 
             window.searchItems.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'Configuration', lastUpdated: 'Latest' });
-            window.allMenus.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'configuration' });
+            window.allMenus.push({ id: COMPANY_CATEGORY_KEY, name: 'Company', category: 'configuration' });
             window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration'; 
         }
 
-        // [BARU] Logika untuk Halaman Warehouse Berdiri Sendiri (Mode Alternatif)
+        // --- LOGIKA HALAMAN WAREHOUSE MANDIRI (OPSIONAL) ---
         
         const WAREHOUSE_LAST_COMPANY_KEY = 'wms_whs_last_company_id';
 
         window.renderWarehousePage = function() {
-            // PENTING: Reload companies dari storage
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
             
             const container = document.getElementById('content-container');
@@ -2793,7 +2685,7 @@
             
             if (companies.length === 0) {
                  targetContainer.innerHTML = `
-                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Pastikan wrapper putih -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg"> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
                         <p class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-md mt-4">
                             <span class="font-bold">Perhatian:</span> Tidak ada Company ditemukan. Harap buat Company terlebih dahulu di menu "Company".
@@ -2803,24 +2695,20 @@
                  return;
             }
 
-            // 1. Ambil Company yang terakhir dipilih
             let selectedCompanyId = localStorage.getItem(WAREHOUSE_LAST_COMPANY_KEY);
             const firstCompanyId = companies[0].id;
 
-            // 2. Tentukan Company ID yang aktif
             if (!selectedCompanyId || !companies.some(c => c.id === selectedCompanyId)) {
                 selectedCompanyId = firstCompanyId;
                 localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, selectedCompanyId);
             }
-
-            const selectedCompany = companies.find(c => c.id === selectedCompanyId);
 
             let companyOptions = companies.map(c => 
                 `<option value="${c.id}" ${c.id === selectedCompanyId ? 'selected' : ''}>${c.companyCode} - ${c.companyAddress.name || 'N/A'}</option>`
             ).join('');
 
             targetContainer.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Pastikan wrapper putih -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
                     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-white">
                         <label for="wh-company-selector" class="font-medium text-sm whitespace-nowrap">Pilih Company Aktif:</label>
@@ -2830,38 +2718,31 @@
                     </div>
                     
                     <div id="warehouse-list-container" class="mt-4">
-                        <!-- List akan di-render di sini oleh renderWarehouseList(selectedCompanyId) -->
+                        <!-- List akan di-render di sini oleh renderCompanyWarehouseList(selectedCompanyId) -->
                     </div>
                 </div>
             `;
             
-            // Panggil render list dengan Company ID yang aktif
-            window.renderWarehouseList(selectedCompanyId);
-            
-            // Perbarui currentSelectedCompanyId global (opsional, untuk konsistensi)
+            window.renderCompanyWarehouseList(selectedCompanyId);
             window.currentSelectedCompanyId = selectedCompanyId;
         };
         
         window.handleWarehouseCompanyChange = function(companyId) {
             if (!companyId) return;
-            
-            // Simpan pilihan terakhir
             localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, companyId);
-            
-            // Render ulang list untuk Company yang baru
-            window.renderWarehouseList(companyId);
+            window.renderCompanyWarehouseList(companyId);
         };
 
 
-        // 3. Auto-render dan listener (Memastikan render list saat berpindah ke tab)
-        const autoRenderCustomer = () => {
+        // --- PENGENDALIAN AUTORENDER ---
+        
+        const autoRenderContent = () => {
             const customerContainer = document.getElementById('customer-list-container');
             if (customerContainer && !customerContainer.dataset.bound) {
                 window.renderCustomerList();
                 customerContainer.dataset.bound = '1';
             }
 
-            // AUTO RENDER COMPANY (BARU)
             const companyContainer = document.getElementById('company-list-container');
             if (companyContainer && !companyContainer.dataset.bound) {
                 window.renderCompanyList();
@@ -2872,7 +2753,7 @@
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                    autoRenderCustomer();
+                    autoRenderContent();
                 }
             });
         });
@@ -2885,10 +2766,11 @@
             if (e.detail.key === COMPANY_CATEGORY_KEY) {
                 window.renderCompanyList();
             }
-            // [BARU] Hook untuk kategori Warehouse mandiri
-            if (e.detail.key === WAREHOUSE_CATEGORY_KEY) {
+            // Hook untuk kategori Warehouse mandiri
+            /* if (e.detail.key === WAREHOUSE_CATEGORY_KEY) {
                 window.renderWarehousePage();
             }
+            */
         });
 
     });
