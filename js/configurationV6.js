@@ -2642,7 +2642,7 @@
 
                     <!-- Customer Form Modal -->
                     <div id="customer-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[90vh] opacity-0 scale-95 transition-all duration-300">
+                        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[90vh] opacity-0 scale-95 transition-all duration-300">
                             <div class="px-6 pt-5 pb-3 border-b relative">
                                 <h3 id="customer-form-title" class="text-lg font-semibold"></h3>
                                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCustomerForm()">✕</button>
@@ -2701,7 +2701,7 @@
 
                     <!-- Company Form Modal -->
                     <div id="company-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
+                        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
                             <div class="px-6 pt-5 pb-3 border-b relative">
                                 <h3 id="company-form-title" class="text-lg font-semibold"></h3>
                                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCompanyForm()">✕</button>
@@ -2743,7 +2743,7 @@
 
                     <!-- Warehouse Info Sub-Modal (Nested CRUD) -->
                     <div id="warehouse-form-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50">
-                        <div class="modal-content bg-white/90 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
+                        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden opacity-0 scale-95 transition-all duration-300">
                             <div class="px-6 pt-5 pb-3 border-b relative">
                                 <h3 id="warehouse-form-title" class="text-lg font-semibold"></h3>
                                 <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onclick="closeCompanyWarehouseForm()">✕</button>
@@ -2822,7 +2822,7 @@
             targetContainer.innerHTML = `
                 <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Pastikan wrapper putih -->
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
-                    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-gray-50">
+                    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-white">
                         <label for="wh-company-selector" class="font-medium text-sm whitespace-nowrap">Pilih Company Aktif:</label>
                         <select id="wh-company-selector" class="select select-bordered w-full sm:w-80" onchange="window.handleWarehouseCompanyChange(this.value)">
                             ${companyOptions}
