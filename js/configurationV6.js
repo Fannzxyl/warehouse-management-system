@@ -873,7 +873,7 @@
                 companyData.warehouses.selectedIndex = newIdx;
                 saveCompanies();
                 // FIX: Setelah selection berubah, render ulang list untuk update status tombol
-                window.renderCompanyWarehouseList(companyId);
+                window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
             }
         };
 
@@ -919,7 +919,7 @@
             companyData.warehouses.selectedIndex = companyData.warehouses.rows.length - 1; 
             
             saveCompanies();
-            window.renderCompanyWarehouseList(companyId);
+            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
             window.showCustomAlert('Success', `Warehouse ${src.warehouseCode} berhasil dicopy menjadi ${copy.warehouseCode}.`);
             
             console.log('[WHS Copy]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: companyData.warehouses.rows.length });
@@ -957,7 +957,7 @@
                 }
 
                 saveCompanies();
-                window.renderCompanyWarehouseList(companyId);                       
+                window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
                 window.showCustomAlert('Dihapus', `Warehouse ${code} dihapus.`, 'success');
                 
                 console.log('[WHS Delete]', 'action', { companyId, selectedIndex: companyData.warehouses.selectedIndex, rowsLen: rows.length });
@@ -985,7 +985,7 @@
             
             saveCompanies();
             // PENTING: Memakai nama fungsi yang sudah benar!
-            window.renderCompanyWarehouseList(companyId);
+            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
             
             const table = document.getElementById('warehouse-list-table');
             const selId = rows[j]?.id;
@@ -1463,7 +1463,7 @@
         // --- HANDLER SUB MODAL WAREHOUSE (BARU) ---
 
         // 6. Perbaiki showWarehouseForm() agar pass companyData
-        window.showWarehouseForm = function (mode, companyId, warehouseId = null) {
+        window.showCompanyWarehouseForm = function (mode, companyId, warehouseId = null) {
             // Cek Alur Create Company: Jika Company belum disimpan, tolak
             const companyForm = document.getElementById('company-form');
             if (companyForm && companyForm.dataset.mode === 'create') {
@@ -1812,7 +1812,7 @@
             if (mode === 'create') {
                 window.activateTab('company-info', modal);
                 // PENTING: Memakai nama fungsi yang sudah benar!
-                window.renderCompanyWarehouseList(id); 
+                window.renderWarehouseList(id); // Diganti dari renderCompanyWarehouseList
             } else {
                 window.closeCompanyForm();
             }
@@ -1943,7 +1943,7 @@
             window.closeCompanyWarehouseForm();
 
             // INI BAGIAN KUNCINYA: Memanggil fungsi render ulang setelah save
-            window.renderCompanyWarehouseList(companyId);
+            window.renderWarehouseList(companyId); // Diganti dari renderCompanyWarehouseList
 
             window.showCustomAlert('Success', msg, 'success');
             console.log('[WHS Submit]', 'action', { companyId, selectedIndex: newSelectedIndex, rowsLen: rows.length });
@@ -2625,17 +2625,20 @@
 
         if (!window.contentData[CUSTOMER_CATEGORY_KEY]) {
              window.contentData[CUSTOMER_CATEGORY_KEY] = {
+                // FIX: Menghapus div wrapper yang mungkin memiliki background selain putih, dan memastikan konten utama langsung di dalam div.
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
-                    <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
-                    ${window.renderStandardListHeader({
-                        createLabel: "Create New Customer",
-                        onCreate: "showCustomerForm('create')", 
-                        searchId: "customer-search",
-                        searchPlaceholder: "Search customer...",
-                        onSearch: "filterCustomerList"
-                    })}
-                    <div id="customer-list-container" class="overflow-x-auto"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Tambahkan wrapper putih baru -->
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
+                        <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
+                        ${window.renderStandardListHeader({
+                            createLabel: "Create New Customer",
+                            onCreate: "showCustomerForm('create')", 
+                            searchId: "customer-search",
+                            searchPlaceholder: "Search customer...",
+                            onSearch: "filterCustomerList"
+                        })}
+                        <div id="customer-list-container" class="overflow-x-auto"></div>
+                    </div>
 
                     <!-- Customer Form Modal -->
                     <div id="customer-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
@@ -2681,17 +2684,20 @@
         // --- REGISTRATION COMPANY (DIPERBAIKI) ---
         if (!window.contentData[COMPANY_CATEGORY_KEY]) {
             window.contentData[COMPANY_CATEGORY_KEY] = {
+                // FIX: Menghapus div wrapper yang mungkin memiliki background selain putih, dan memastikan konten utama langsung di dalam div.
                 full: `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
-                    <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
-                    ${window.renderStandardListHeader({
-                        createLabel: "Create New Company",
-                        onCreate: "showCompanyForm('create')", 
-                        searchId: "company-search",
-                        searchPlaceholder: "Search company...",
-                        onSearch: "filterCompanyList"
-                    })}
-                    <div id="company-list-container" class="overflow-x-auto"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Tambahkan wrapper putih baru -->
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
+                        <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
+                        ${window.renderStandardListHeader({
+                            createLabel: "Create New Company",
+                            onCreate: "showCompanyForm('create')", 
+                            searchId: "company-search",
+                            searchPlaceholder: "Search company...",
+                            onSearch: "filterCompanyList"
+                        })}
+                        <div id="company-list-container" class="overflow-x-auto"></div>
+                    </div>
 
                     <!-- Company Form Modal -->
                     <div id="company-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
@@ -2787,10 +2793,12 @@
             
             if (companies.length === 0) {
                  targetContainer.innerHTML = `
-                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
-                    <p class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-md mt-4">
-                        <span class="font-bold">Perhatian:</span> Tidak ada Company ditemukan. Harap buat Company terlebih dahulu di menu "Company".
-                    </p>
+                    <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Pastikan wrapper putih -->
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
+                        <p class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-md mt-4">
+                            <span class="font-bold">Perhatian:</span> Tidak ada Company ditemukan. Harap buat Company terlebih dahulu di menu "Company".
+                        </p>
+                    </div>
                  `;
                  return;
             }
@@ -2812,16 +2820,18 @@
             ).join('');
 
             targetContainer.innerHTML = `
-                <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
-                <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-gray-50">
-                    <label for="wh-company-selector" class="font-medium text-sm whitespace-nowrap">Pilih Company Aktif:</label>
-                    <select id="wh-company-selector" class="select select-bordered w-full sm:w-80" onchange="window.handleWarehouseCompanyChange(this.value)">
-                        ${companyOptions}
-                    </select>
-                </div>
-                
-                <div id="warehouse-list-container" class="mt-4">
-                    <!-- List akan di-render di sini oleh renderWarehouseList(selectedCompanyId) -->
+                <div class="bg-white p-6 rounded-lg shadow-lg"> <!-- Pastikan wrapper putih -->
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
+                    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border rounded-md bg-gray-50">
+                        <label for="wh-company-selector" class="font-medium text-sm whitespace-nowrap">Pilih Company Aktif:</label>
+                        <select id="wh-company-selector" class="select select-bordered w-full sm:w-80" onchange="window.handleWarehouseCompanyChange(this.value)">
+                            ${companyOptions}
+                        </select>
+                    </div>
+                    
+                    <div id="warehouse-list-container" class="mt-4">
+                        <!-- List akan di-render di sini oleh renderWarehouseList(selectedCompanyId) -->
+                    </div>
                 </div>
             `;
             
