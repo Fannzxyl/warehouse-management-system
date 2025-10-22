@@ -320,6 +320,13 @@
                                     Manage Customers
                                 </button>
                             </div>
+                            <div class="bg-wise-light-gray p-5 rounded-lg shadow-md">
+                                <h3 class="text-lg font-medium text-wise-dark-gray mb-2">Company Management</h3>
+                                <p class="text-wise-gray text-sm mt-1">Manage company master data, including addresses and nested warehouse configurations.</p>
+                                <button class="mt-4 px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="selectCategory('company')">
+                                    Manage Company
+                                </button>
+                            </div>
                     </div>
                 `,
             },
