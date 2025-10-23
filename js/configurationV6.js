@@ -2522,7 +2522,13 @@
                     <div> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
                         <p class="text-wise-gray mb-4">Manage customer master data...</p>
-                        ${window.renderStandardListHeader({ /* ... */ })}
+                        ${window.renderStandardListHeader({ 
+                            createLabel: "Create New Customer",
+                            onCreate: "showCustomerForm('create')", 
+                            searchId: "customer-search",
+                            searchPlaceholder: "Search customer...",
+                            onSearch: "filterCustomerList" 
+                        })}
                         <div id="customer-list-container" class="overflow-x-auto"></div>
                     </div>
 
@@ -2575,7 +2581,13 @@
                     <div> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
                         <p class="text-wise-gray mb-4">Manage company master data...</p>
-                        ${window.renderStandardListHeader({ /* ... */ })}
+                        ${window.renderStandardListHeader({
+                            createLabel: "Create New Company",
+                            onCreate: "showCompanyForm('create')", 
+                            searchId: "company-search",
+                            searchPlaceholder: "Search company...",
+                            onSearch: "filterCompanyList"
+                        })}
                         <div id="company-list-container" class="overflow-x-auto"></div>
                     </div>
 
