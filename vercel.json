@@ -1,38 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "*.html",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "js/**",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "dist/**",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "public/**",
-            "use": "@vercel/static"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/$1"
-        }
-    ],
-    "headers": [
+    "buildCommand": "npm run build",
+    "outputDirectory": ".",
+    "installCommand": "npm install",
+    "framework": null,
+    "rewrites": [
         {
             "source": "/(.*)",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=0, must-revalidate"
-                }
-            ]
+            "destination": "/$1"
         }
     ]
 }
