@@ -642,7 +642,7 @@
                 `,
             },
             'allocation-location-selection': {
-    full: `
+                full: `
         <style>
             /* kunci page di belakang saat modal terbuka */
             body.modal-open { height: 100vh; overflow: hidden; }
@@ -874,9 +874,9 @@
             </div>
         </div>
     `,
-},
-'allocation-rule-assignment-criteria': {
-    full: `
+            },
+            'allocation-rule-assignment-criteria': {
+                full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Allocation Rule Assignment Criteria</h2>
         <p class="text-wise-gray mb-4">Set criteria, and record type, etc.</p>
         
@@ -990,7 +990,7 @@
             </div>
         </div>
     `,
-},
+            },
         });
 
         // Global flag to track if listeners for ALS form are attached
@@ -1000,7 +1000,7 @@
         // =========================
         // Search registry & menus
         // =========================
-        window.activateUserProfileTab = function(tabId) {
+        window.activateUserProfileTab = function (tabId) {
             const modal = document.getElementById('user-profile-form-modal');
             if (!modal) return;
 
@@ -1027,7 +1027,7 @@
         };
 
         window.handleUserProfileSubmit = async function (event) {
-            event.preventDefault(); 
+            event.preventDefault();
             const form = event.target;
             const userField = form['user'];
             if (!userField.value.trim()) {
@@ -1071,17 +1071,17 @@
                 adjustmentTypeAccessType: form.querySelector('input[name="adjustmentTypeAccessType"]:checked')?.value || 'All',
                 adjustmentTypeAccess: Array.from(form.querySelectorAll('input[name="adjustmentTypeAccess"]:checked')).map(cb => cb.value),
             };
-            
+
             // ambil data dari user defined fields
             for (let i = 1; i <= 8; i++) {
-                if(form[`udf${i}`]) {
-                newProfileData[`udf${i}`] = form[`udf${i}`].value;
+                if (form[`udf${i}`]) {
+                    newProfileData[`udf${i}`] = form[`udf${i}`].value;
                 }
             }
 
             if (mode === 'create') {
                 newProfileData.id = 'UP' + String(Date.now()).slice(-5);
-                if(window.userProfiles) window.userProfiles.push(newProfileData); 
+                if (window.userProfiles) window.userProfiles.push(newProfileData);
                 await window.showCustomAlert('Sukses', 'User profile created successfully!');
             } else {
                 const index = window.userProfiles.findIndex(up => up.id === id);
@@ -1090,8 +1090,8 @@
                     await window.showCustomAlert('Sukses', 'User profile updated succesfully!');
                 }
             }
-            if(window.saveUserProfiles) {
-            window.saveUserProfiles();
+            if (window.saveUserProfiles) {
+                window.saveUserProfiles();
             }
 
             closeUserProfileForm();
@@ -1163,99 +1163,99 @@
 
         // Allocation Location Selection dummy data
         let allocationLocationSelections = JSON.parse(localStorage.getItem('allocationLocationSelections')) || [
-            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'DCB'"}, { type:'rule', logic:'AND', attribute:'Active', op:'=', value:"N'Y'"}], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
-            { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type:'rule', logic:'AND', attribute:'Warehouse', op:'=', value:"N'XYZ'"}], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+            { id: 'ALS001', recordType: 'ALLOC SEL', filterName: 'A - DCB-OPENBOX', description: 'A - DCB-OPENBOX', tableName: 'Location', inactive: false, systemCreated: false, filterRules: [{ type: 'rule', logic: 'AND', attribute: 'Warehouse', op: '=', value: "N'DCB'" }, { type: 'rule', logic: 'AND', attribute: 'Active', op: '=', value: "N'Y'" }], orderBy: [{ attribute: 'LOCATION.LOCATION', direction: 'Ascending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
+            { id: 'ALS002', recordType: 'ALLOC SEL', filterName: 'B - XYZ-CLOSED', description: 'B - XYZ-CLOSED', tableName: 'Location inventory', inactive: false, systemCreated: false, filterRules: [{ type: 'rule', logic: 'AND', attribute: 'Warehouse', op: '=', value: "N'XYZ'" }], orderBy: [{ attribute: 'LOCATION_INVENTORY.INVENTORY_STS', direction: 'Descending' }], udf1: '0.00000', udf2: '0.00000', udf3: '', udf4: '', udf5: '', udf6: '', udf7: '', udf8: '', lastUpdated: '02-08-2017 2:09:32 PM', updatedBy: 'chandra' },
         ];
 
         // ==================================================
-// Allocation Rule Assignment Criteria 
-// ==================================================
-let allocationRuleAssignmentCriteria = JSON.parse(localStorage.getItem('allocationRuleAssignmentCriteria')) || [
-    { 
-        id: 'ARAC001', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.COOKFOOD', 
-        description: 'DCB.COOKFOOD', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: true,
-        rules: []
-    },
-    { 
-        id: 'ARAC002', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.EXT.DRY', 
-        description: 'DCB.EXT.DRY', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-    { 
-        id: 'ARAC003', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.FASHION', 
-        description: 'DCB.FASHION', 
-        tableName: 'Item master',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-    { 
-        id: 'ARAC004', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.RETURN.DRY', 
-        description: 'DCB.RETURN.DRY', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-    { 
-        id: 'ARAC005', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.RETURN.FRS', 
-        description: 'DCB.RETURN.FRS', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-    { 
-        id: 'ARAC006', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.RETURN.FSH', 
-        description: 'DCB.RETURN.FSH', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-    { 
-        id: 'ARAC007', 
-        recordType: 'OUT RS CRIT',
-        filterName: 'DCB.RETURN.VIRTUAL.SHIP', 
-        description: 'DCB.RETURN.VIRTUAL.SHIP', 
-        tableName: 'Shipment detail',
-        systemCreated: false, 
-        inactive: false,
-        rules: []
-    },
-];
+        // Allocation Rule Assignment Criteria 
+        // ==================================================
+        let allocationRuleAssignmentCriteria = JSON.parse(localStorage.getItem('allocationRuleAssignmentCriteria')) || [
+            {
+                id: 'ARAC001',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.COOKFOOD',
+                description: 'DCB.COOKFOOD',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: true,
+                rules: []
+            },
+            {
+                id: 'ARAC002',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.EXT.DRY',
+                description: 'DCB.EXT.DRY',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+            {
+                id: 'ARAC003',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.FASHION',
+                description: 'DCB.FASHION',
+                tableName: 'Item master',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+            {
+                id: 'ARAC004',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.RETURN.DRY',
+                description: 'DCB.RETURN.DRY',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+            {
+                id: 'ARAC005',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.RETURN.FRS',
+                description: 'DCB.RETURN.FRS',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+            {
+                id: 'ARAC006',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.RETURN.FSH',
+                description: 'DCB.RETURN.FSH',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+            {
+                id: 'ARAC007',
+                recordType: 'OUT RS CRIT',
+                filterName: 'DCB.RETURN.VIRTUAL.SHIP',
+                description: 'DCB.RETURN.VIRTUAL.SHIP',
+                tableName: 'Shipment detail',
+                systemCreated: false,
+                inactive: false,
+                rules: []
+            },
+        ];
 
-let currentARACRules = [];
-let selectedARACRuleIndex = -1;
+        let currentARACRules = [];
+        let selectedARACRuleIndex = -1;
 
-window.renderARACList = function (filter = '') {
-    const container = document.getElementById('arac-list-container');
-    if (!container) return;
+        window.renderARACList = function (filter = '') {
+            const container = document.getElementById('arac-list-container');
+            if (!container) return;
 
-    const filteredData = allocationRuleAssignmentCriteria.filter(c =>
-        (c.filterName || '').toLowerCase().includes(filter.toLowerCase()) ||
-        (c.description || '').toLowerCase().includes(filter.toLowerCase())
-    );
+            const filteredData = allocationRuleAssignmentCriteria.filter(c =>
+                (c.filterName || '').toLowerCase().includes(filter.toLowerCase()) ||
+                (c.description || '').toLowerCase().includes(filter.toLowerCase())
+            );
 
-    let tableHtml = `
+            let tableHtml = `
         <table class="min-w-full bg-white rounded-lg shadow-md">
             <thead>
                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
@@ -1269,11 +1269,11 @@ window.renderARACList = function (filter = '') {
             <tbody class="text-wise-gray text-sm font-light">
     `;
 
-    if (filteredData.length === 0) {
-        tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No criteria found.</td></tr>`;
-    } else {
-        filteredData.forEach(c => {
-            tableHtml += `
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center">No criteria found.</td></tr>`;
+            } else {
+                filteredData.forEach(c => {
+                    tableHtml += `
                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
                     <td class="py-3 px-6 text-left font-medium">${c.filterName}</td>
                     <td class="py-3 px-6 text-left">${c.description}</td>
@@ -1291,220 +1291,220 @@ window.renderARACList = function (filter = '') {
                     </td>
                 </tr>
             `;
-        });
-    }
+                });
+            }
 
-    tableHtml += `</tbody></table>`;
-    container.innerHTML = tableHtml;
-};
+            tableHtml += `</tbody></table>`;
+            container.innerHTML = tableHtml;
+        };
 
-window.filterARACList = function (value) {
-    renderARACList(value);
-};
+        window.filterARACList = function (value) {
+            renderARACList(value);
+        };
 
-window.renderARACRules = function() {
-    const display = document.getElementById('arac-rule-display');
-    display.innerHTML = '';
-    let indent = 0;
-    currentARACRules.forEach((rule, index) => {
-        const line = document.createElement('div');
-        line.className = 'cursor-pointer hover:bg-gray-100 px-1 rounded';
-        if (index === selectedARACRuleIndex) {
-            line.className += ' bg-blue-100';
-        }
+        window.renderARACRules = function () {
+            const display = document.getElementById('arac-rule-display');
+            display.innerHTML = '';
+            let indent = 0;
+            currentARACRules.forEach((rule, index) => {
+                const line = document.createElement('div');
+                line.className = 'cursor-pointer hover:bg-gray-100 px-1 rounded';
+                if (index === selectedARACRuleIndex) {
+                    line.className += ' bg-blue-100';
+                }
 
-        if (rule.type === 'rparen') indent = Math.max(0, indent - 1);
-        
-        let textContent = '';
-        const padding = '&nbsp;'.repeat(indent * 4);
-        if (rule.type === 'rule') {
-            const logic = (index > 0 && currentARACRules[index - 1].type !== 'lparen') ? `${rule.logic} ` : '';
-            textContent = `${padding}${logic}${rule.attribute} ${rule.op} ${rule.value}`;
-        } else if (rule.type === 'lparen') {
-            const logic = (index > 0) ? 'AND ' : '';
-            textContent = `${padding}${logic}(`;
-            indent++;
-        } else if (rule.type === 'rparen') {
-            textContent = `${padding})`;
-        }
-        
-        line.innerHTML = textContent;
-        line.onclick = () => {
-            selectedARACRuleIndex = index;
+                if (rule.type === 'rparen') indent = Math.max(0, indent - 1);
+
+                let textContent = '';
+                const padding = '&nbsp;'.repeat(indent * 4);
+                if (rule.type === 'rule') {
+                    const logic = (index > 0 && currentARACRules[index - 1].type !== 'lparen') ? `${rule.logic} ` : '';
+                    textContent = `${padding}${logic}${rule.attribute} ${rule.op} ${rule.value}`;
+                } else if (rule.type === 'lparen') {
+                    const logic = (index > 0) ? 'AND ' : '';
+                    textContent = `${padding}${logic}(`;
+                    indent++;
+                } else if (rule.type === 'rparen') {
+                    textContent = `${padding})`;
+                }
+
+                line.innerHTML = textContent;
+                line.onclick = () => {
+                    selectedARACRuleIndex = index;
+                    renderARACRules();
+                };
+                display.appendChild(line);
+            });
+        };
+
+        window.addARACRule = function () {
+            const logic = document.querySelector('input[name="arac-logic"]:checked').value;
+            const attribute = document.getElementById('arac-attribute').value;
+            const op = document.getElementById('arac-operand').value;
+            const value = document.getElementById('arac-value').value;
+
+            if (!value && op !== 'is null' && op !== 'is not null') {
+                window.showCustomAlert('Error', 'Value is required for this operand.');
+                return;
+            }
+
+            const newRule = { type: 'rule', logic, attribute, op, value };
+
+            if (selectedARACRuleIndex > -1) {
+                currentARACRules.splice(selectedARACRuleIndex + 1, 0, newRule);
+            } else {
+                currentARACRules.push(newRule);
+            }
+            selectedARACRuleIndex++;
             renderARACRules();
         };
-        display.appendChild(line);
-    });
-};
 
-window.addARACRule = function() {
-    const logic = document.querySelector('input[name="arac-logic"]:checked').value;
-    const attribute = document.getElementById('arac-attribute').value;
-    const op = document.getElementById('arac-operand').value;
-    const value = document.getElementById('arac-value').value;
+        window.deleteLastARACRule = function () {
+            if (currentARACRules.length > 0) {
+                currentARACRules.pop();
+                selectedARACRuleIndex = currentARACRules.length - 1;
+                renderARACRules();
+            }
+        };
 
-    if (!value && op !== 'is null' && op !== 'is not null') {
-        window.showCustomAlert('Error', 'Value is required for this operand.');
-        return;
-    }
+        window.deleteSelectedARACRule = function () {
+            if (selectedARACRuleIndex > -1) {
+                currentARACRules.splice(selectedARACRuleIndex, 1);
+                selectedARACRuleIndex = Math.min(selectedARACRuleIndex, currentARACRules.length - 1);
+                renderARACRules();
+            }
+        };
 
-    const newRule = { type: 'rule', logic, attribute, op, value };
-
-    if (selectedARACRuleIndex > -1) {
-        currentARACRules.splice(selectedARACRuleIndex + 1, 0, newRule);
-    } else {
-        currentARACRules.push(newRule);
-    }
-    selectedARACRuleIndex++;
-    renderARACRules();
-};
-
-window.deleteLastARACRule = function() {
-    if (currentARACRules.length > 0) {
-        currentARACRules.pop();
-        selectedARACRuleIndex = currentARACRules.length - 1;
-        renderARACRules();
-    }
-};
-
-window.deleteSelectedARACRule = function() {
-    if (selectedARACRuleIndex > -1) {
-        currentARACRules.splice(selectedARACRuleIndex, 1);
-        selectedARACRuleIndex = Math.min(selectedARACRuleIndex, currentARACRules.length - 1);
-        renderARACRules();
-    }
-};
-
-window.addARACLeftParen = function() {
-    currentARACRules.push({ type: 'lparen' });
-    renderARACRules();
-};
-
-window.addARACRightParen = function() {
-    currentARACRules.push({ type: 'rparen' });
-    renderARACRules();
-};
-
-window.deleteARACParen = function() {
-    for (let i = currentARACRules.length - 1; i >= 0; i--) {
-        if (currentARACRules[i].type === 'lparen' || currentARACRules[i].type === 'rparen') {
-            currentARACRules.splice(i, 1);
+        window.addARACLeftParen = function () {
+            currentARACRules.push({ type: 'lparen' });
             renderARACRules();
-            return;
-        }
-    }
-};
+        };
 
-window.moveARACRule = function(direction) {
-    if (selectedARACRuleIndex < 0) return;
+        window.addARACRightParen = function () {
+            currentARACRules.push({ type: 'rparen' });
+            renderARACRules();
+        };
 
-    if (direction === 'up' && selectedARACRuleIndex > 0) {
-        [currentARACRules[selectedARACRuleIndex - 1], currentARACRules[selectedARACRuleIndex]] = 
-        [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex - 1]];
-        selectedARACRuleIndex--;
-    } else if (direction === 'down' && selectedARACRuleIndex < currentARACRules.length - 1) {
-        [currentARACRules[selectedARACRuleIndex + 1], currentARACRules[selectedARACRuleIndex]] = 
-        [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex + 1]];
-        selectedARACRuleIndex++;
-    }
-    renderARACRules();
-};
+        window.deleteARACParen = function () {
+            for (let i = currentARACRules.length - 1; i >= 0; i--) {
+                if (currentARACRules[i].type === 'lparen' || currentARACRules[i].type === 'rparen') {
+                    currentARACRules.splice(i, 1);
+                    renderARACRules();
+                    return;
+                }
+            }
+        };
 
-window.showARACForm = function (mode, id = null) {
-    const modal = document.getElementById('arac-form-modal');
-    const form = document.getElementById('arac-form');
-    const title = document.getElementById('arac-form-title');
+        window.moveARACRule = function (direction) {
+            if (selectedARACRuleIndex < 0) return;
 
-    form.reset();
-    form.dataset.mode = mode;
-    form.dataset.id = id;
-    
-    selectedARACRuleIndex = -1;
-    currentARACRules = [];
+            if (direction === 'up' && selectedARACRuleIndex > 0) {
+                [currentARACRules[selectedARACRuleIndex - 1], currentARACRules[selectedARACRuleIndex]] =
+                    [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex - 1]];
+                selectedARACRuleIndex--;
+            } else if (direction === 'down' && selectedARACRuleIndex < currentARACRules.length - 1) {
+                [currentARACRules[selectedARACRuleIndex + 1], currentARACRules[selectedARACRuleIndex]] =
+                    [currentARACRules[selectedARACRuleIndex], currentARACRules[selectedARACRuleIndex + 1]];
+                selectedARACRuleIndex++;
+            }
+            renderARACRules();
+        };
 
-    if (mode === 'create') {
-        title.textContent = 'Create New Allocation Rule Assignment Criteria';
-        document.getElementById('arac-record-type').value = 'OUT RS CRIT';
-    } else {
-        title.textContent = 'Edit Allocation Rule Assignment Criteria';
-        const criteria = allocationRuleAssignmentCriteria.find(c => c.id === id);
-        if (criteria) {
-            document.getElementById('arac-record-type').value = criteria.recordType;
-            document.getElementById('arac-filter-name').value = criteria.filterName;
-            document.getElementById('arac-description').value = criteria.description;
-            document.getElementById('arac-table-name').value = criteria.tableName;
-            document.getElementById('arac-inactive').checked = criteria.inactive;
-            document.getElementById('arac-system-created').checked = criteria.systemCreated;
-            currentARACRules = JSON.parse(JSON.stringify(criteria.rules || []));
-        }
-    }
-    renderARACRules();
+        window.showARACForm = function (mode, id = null) {
+            const modal = document.getElementById('arac-form-modal');
+            const form = document.getElementById('arac-form');
+            const title = document.getElementById('arac-form-title');
 
-    // Logika baru untuk menampilkan modal dengan animasi
-    document.body.classList.add('modal-open');
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-        const modalContent = modal.querySelector('.modal-content');
-        modalContent.classList.remove('opacity-0', 'scale-95');
-        // Pastikan ada elemen yang bisa difokus
-        const focusable = modalContent.querySelector('input, select, button');
-        if(focusable) focusable.focus();
-    }, 10);
-};
+            form.reset();
+            form.dataset.mode = mode;
+            form.dataset.id = id;
 
-// Ganti fungsi closeARACForm yang lama
-window.closeARACForm = function () {
-    const modal = document.getElementById('arac-form-modal');
-    const modalContent = modal.querySelector('.modal-content');
-    modalContent.classList.add('opacity-0', 'scale-95');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        document.body.classList.remove('modal-open');
-    }, 300); // Sesuaikan dengan durasi transisi
-};
+            selectedARACRuleIndex = -1;
+            currentARACRules = [];
+
+            if (mode === 'create') {
+                title.textContent = 'Create New Allocation Rule Assignment Criteria';
+                document.getElementById('arac-record-type').value = 'OUT RS CRIT';
+            } else {
+                title.textContent = 'Edit Allocation Rule Assignment Criteria';
+                const criteria = allocationRuleAssignmentCriteria.find(c => c.id === id);
+                if (criteria) {
+                    document.getElementById('arac-record-type').value = criteria.recordType;
+                    document.getElementById('arac-filter-name').value = criteria.filterName;
+                    document.getElementById('arac-description').value = criteria.description;
+                    document.getElementById('arac-table-name').value = criteria.tableName;
+                    document.getElementById('arac-inactive').checked = criteria.inactive;
+                    document.getElementById('arac-system-created').checked = criteria.systemCreated;
+                    currentARACRules = JSON.parse(JSON.stringify(criteria.rules || []));
+                }
+            }
+            renderARACRules();
+
+            // Logika baru untuk menampilkan modal dengan animasi
+            document.body.classList.add('modal-open');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                const modalContent = modal.querySelector('.modal-content');
+                modalContent.classList.remove('opacity-0', 'scale-95');
+                // Pastikan ada elemen yang bisa difokus
+                const focusable = modalContent.querySelector('input, select, button');
+                if (focusable) focusable.focus();
+            }, 10);
+        };
+
+        // Ganti fungsi closeARACForm yang lama
+        window.closeARACForm = function () {
+            const modal = document.getElementById('arac-form-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300); // Sesuaikan dengan durasi transisi
+        };
 
 
-window.handleARACSubmit = async function (event) {
-    event.preventDefault();
-    const form = event.target;
-    const mode = form.dataset.mode;
-    const id = form.dataset.id;
+        window.handleARACSubmit = async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form.dataset.id;
 
-    const newCriteria = {
-        recordType: form['recordType'].value,
-        filterName: form['filterName'].value,
-        description: form['description'].value,
-        tableName: form['tableName'].value,
-        inactive: document.getElementById('arac-inactive').checked,
-    systemCreated: document.getElementById('arac-system-created').checked,
-    rules: currentARACRules,
-};
+            const newCriteria = {
+                recordType: form['recordType'].value,
+                filterName: form['filterName'].value,
+                description: form['description'].value,
+                tableName: form['tableName'].value,
+                inactive: document.getElementById('arac-inactive').checked,
+                systemCreated: document.getElementById('arac-system-created').checked,
+                rules: currentARACRules,
+            };
 
-    if (mode === 'create') {
-        newCriteria.id = 'ARAC' + String(Date.now()).slice(-5);
-        allocationRuleAssignmentCriteria.unshift(newCriteria);
-        await window.showCustomAlert('Success', 'Criteria created successfully!');
-    } else {
-        const index = allocationRuleAssignmentCriteria.findIndex(c => c.id === id);
-        if (index !== -1) {
-            allocationRuleAssignmentCriteria[index] = { ...allocationRuleAssignmentCriteria[index], ...newCriteria };
-            await window.showCustomAlert('Success', 'Criteria updated successfully!');
-        }
-    }
-    saveAllocationRuleAssignmentCriteria();
-    closeARACForm();
-    renderARACList();
-};
+            if (mode === 'create') {
+                newCriteria.id = 'ARAC' + String(Date.now()).slice(-5);
+                allocationRuleAssignmentCriteria.unshift(newCriteria);
+                await window.showCustomAlert('Success', 'Criteria created successfully!');
+            } else {
+                const index = allocationRuleAssignmentCriteria.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    allocationRuleAssignmentCriteria[index] = { ...allocationRuleAssignmentCriteria[index], ...newCriteria };
+                    await window.showCustomAlert('Success', 'Criteria updated successfully!');
+                }
+            }
+            saveAllocationRuleAssignmentCriteria();
+            closeARACForm();
+            renderARACList();
+        };
 
-window.deleteARAC = async function (id) {
-    const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this criteria?');
-    if (confirmed) {
-        allocationRuleAssignmentCriteria = allocationRuleAssignmentCriteria.filter(c => c.id !== id);
-        saveAllocationRuleAssignmentCriteria();
-        renderARACList();
-        await window.showCustomAlert('Deleted', 'Criteria deleted successfully!');
-    }
-};
+        window.deleteARAC = async function (id) {
+            const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this criteria?');
+            if (confirmed) {
+                allocationRuleAssignmentCriteria = allocationRuleAssignmentCriteria.filter(c => c.id !== id);
+                saveAllocationRuleAssignmentCriteria();
+                renderARACList();
+                await window.showCustomAlert('Deleted', 'Criteria deleted successfully!');
+            }
+        };
 
 
         // Persist helpers
@@ -2104,7 +2104,7 @@ window.deleteARAC = async function (id) {
         };
 
         // Custom toggle switch styling and behavior
-        window.toggleSwitch = function(checkbox) {
+        window.toggleSwitch = function (checkbox) {
             const toggleContainer = checkbox.closest('.flex.items-center');
             const block = toggleContainer.querySelector('.block');
             const dot = toggleContainer.querySelector('.dot');
@@ -2212,7 +2212,7 @@ window.deleteARAC = async function (id) {
             form.dataset.mode = mode;
             form.dataset.id = id;
 
-            window.setupTabSwitching('alsModal'); 
+            window.setupTabSwitching('alsModal');
             currentFilterRules = [];
             currentOrderByRules = [];
             selectedFilterRuleIndex = -1;
@@ -2224,9 +2224,9 @@ window.deleteARAC = async function (id) {
                 document.getElementById('als-recType').value = 'ALLOC SEL';
                 document.getElementById('als-inactive').checked = false;
                 document.getElementById('als-systemCreated').checked = false;
-                for (let i = 1; i <= 8; i++) { 
-                    const el = form.querySelector(`#als-udf${i}`); 
-                    if (el) el.value = '0.00000'; 
+                for (let i = 1; i <= 8; i++) {
+                    const el = form.querySelector(`#als-udf${i}`);
+                    if (el) el.value = '0.00000';
                 }
                 lastUpdatedInfo.textContent = '';
             } else {
@@ -2244,7 +2244,7 @@ window.deleteARAC = async function (id) {
                         const el = form.querySelector(`#als-udf${i}`);
                         if (el) el.value = selection[`udf${i}`] || '0.00000';
                     }
-                    currentFilterRules = JSON.parse(JSON.stringify(selection.filterRules || [])); 
+                    currentFilterRules = JSON.parse(JSON.stringify(selection.filterRules || []));
                     currentOrderByRules = JSON.parse(JSON.stringify(selection.orderBy || []));
 
                     lastUpdatedInfo.textContent = `Last updated ${selection.lastUpdated} — User: ${selection.updatedBy}`;
@@ -2337,19 +2337,19 @@ window.deleteARAC = async function (id) {
                     }
                 }
                 if (!deleted) { window.showCustomAlert('Error', 'No parenthesis to delete!'); }
-                selectedFilterRuleIndex = currentFilterRules.length - 1; 
+                selectedFilterRuleIndex = currentFilterRules.length - 1;
                 renderFilterRules();
             };
             document.getElementById('als-btnUpRule').onclick = () => {
                 if (selectedFilterRuleIndex <= 0) return;
                 [currentFilterRules[selectedFilterRuleIndex - 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex - 1]];
-                selectedFilterRuleIndex--; 
+                selectedFilterRuleIndex--;
                 renderFilterRules();
             };
             document.getElementById('als-btnDownRule').onclick = () => {
                 if (selectedFilterRuleIndex < 0 || selectedFilterRuleIndex >= currentFilterRules.length - 1) return;
                 [currentFilterRules[selectedFilterRuleIndex + 1], currentFilterRules[selectedFilterRuleIndex]] = [currentFilterRules[selectedFilterRuleIndex], currentFilterRules[selectedFilterRuleIndex + 1]];
-                selectedFilterRuleIndex++; 
+                selectedFilterRuleIndex++;
                 renderFilterRules();
             };
             document.getElementById('als-btnAddSortCriteria').onclick = () => {
@@ -2506,12 +2506,12 @@ window.deleteARAC = async function (id) {
                 el.className = 'list-row';
                 let text = '';
                 if (r.type === 'lparen') {
-                    const logic = (i > 0) ? 'AND ' : ''; 
+                    const logic = (i > 0) ? 'AND ' : '';
                     text = logic + '(';
                 } else if (r.type === 'rparen') {
                     text = ')';
                 } else {
-                    const lg = (i === 0 || currentFilterRules[i-1]?.type === 'lparen' ? '' : r.logic + ' ');
+                    const lg = (i === 0 || currentFilterRules[i - 1]?.type === 'lparen' ? '' : r.logic + ' ');
                     const v = needsValue(r.op) ? (' ' + (r.value || '')) : '';
                     text = `${lg}${normalizeField(r.attribute, tableName)} ${r.op}${v}`;
                 }
@@ -2594,6 +2594,6 @@ window.deleteARAC = async function (id) {
 
         // Bridge ke halaman configurasi
         window.selectCategory('configuration');
-        console.log('Configuration V2 loaded successfully');
+        // Configuration V2 loaded
     });
 })();

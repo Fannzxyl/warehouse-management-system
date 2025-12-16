@@ -1,16 +1,16 @@
 (function () {
     // Logging sederhana saat file konfigurasi dimuat
-    console.log("Configuration V6 (Customer dan Company) loaded"); 
+    // Configuration V6 (Customer dan Company) loaded
 
     // Memastikan variabel global utama tersedia
     if (typeof window.contentData === 'undefined') window.contentData = {};
     if (typeof window.searchItems === 'undefined') window.searchItems = [];
     if (typeof window.parentMapping === 'undefined') window.parentMapping = {};
     if (typeof window.allMenus === 'undefined') window.allMenus = [];
-    
+
     // Fallback untuk fungsi helper (misalnya, menampilkan notifikasi)
     if (typeof window.showCustomAlert === 'undefined') window.showCustomAlert = (title, message, type = 'info') => console.log(`Alert: ${title} - ${message} (${type})`);
-    
+
     // Mengunci definisi showCustomConfirm agar tidak dapat ditimpa oleh script lain.
     if (typeof window.showCustomConfirm === 'undefined' || window.showCustomConfirm.isSafe !== true) {
         Object.defineProperty(window, 'showCustomConfirm', {
@@ -19,15 +19,15 @@
                 if (ok && typeof onOk === 'function') onOk();
                 return ok;
             },
-            writable: false, 
-            configurable: false 
+            writable: false,
+            configurable: false
         });
         window.showCustomConfirm.isSafe = true; // Menandai versi ini sebagai versi aman
     }
-    
+
     // Fallback fungsi UI helper standar
     if (typeof window.selectCategory === 'undefined') window.selectCategory = (category) => console.log(`Selecting category: ${category}`);
-    
+
     // Render header list standar (Tombol Create, Search bar)
     if (typeof window.renderStandardListHeader === 'undefined') window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
         <div class="flex flex-wrap items-center gap-3 mb-4">
@@ -35,7 +35,7 @@
             <div class="grow"></div>
             <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" onkeydown="if(event.key === 'Enter') ${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
         </div>`;
-        
+
     // Render footer modal standar (Tombol Cancel/OK/Save)
     if (typeof window.renderStandardModalFooter === 'undefined') window.renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK', inactiveCheckboxHtml = '' }) => `
         <div class="px-6 py-4 border-t flex justify-between items-center">
@@ -45,28 +45,28 @@
                 <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
             </div>
         </div>`;
-        
+
     // Debounce function untuk membatasi laju eksekusi saat input
     if (typeof window.debounce === 'undefined') window.debounce = (fn, delay) => {
         let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn.apply(this, args), delay); };
     };
-    
+
     // Aktivasi tab panel UI
     if (typeof window.activateTab === 'undefined') window.activateTab = (tabName, container) => {
         // Reset visual semua tab
         container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2'));
         // Sembunyikan semua tab panel
         container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
-        
+
         // Aktifkan tab yang dipilih
         const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
-        if (activeTab) { 
-            activeTab.classList.add('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2'); 
+        if (activeTab) {
+            activeTab.classList.add('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2');
         }
         // Tampilkan tab panel yang sesuai
         const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
         if (activePane) { activePane.classList.remove('hidden'); }
-        
+
         // Hapus status error visual pada semua tab
         container.querySelectorAll('.tab').forEach(tab => {
             tab.classList.remove('text-red-500', 'border-red-500');
@@ -78,7 +78,7 @@
         // --- KONSTANTA DAN KUNCI STORAGE CUSTOMER ---
         const CUSTOMER_STORAGE_KEY = 'wms_customers_v6';
         const CUSTOMER_ID_PREFIX = 'CUS';
-        const CUSTOMER_CATEGORY_KEY = 'customer'; 
+        const CUSTOMER_CATEGORY_KEY = 'customer';
 
         // --- KONSTANTA DAN KUNCI STORAGE COMPANY ---
         const COMPANY_STORAGE_KEY = 'wms_companies_v6';
@@ -92,37 +92,37 @@
 
         // --- DATA DUMMY DROPDOWN/LIST ---
         const DUMMY_STATE_CODES = [
-            'JAK-PUS','JAKTIM','JAKBAR','JAKSEL','JAKUT',
-            'ACEH','BALI','Bandung','Banten','Bogor',
-            'Brebes','Ciamis','Cianjur'
+            'JAK-PUS', 'JAKTIM', 'JAKBAR', 'JAKSEL', 'JAKUT',
+            'ACEH', 'BALI', 'Bandung', 'Banten', 'Bogor',
+            'Brebes', 'Ciamis', 'Cianjur'
         ];
         const DUMMY_COUNTRIES = [
-            { code: 'ID', name: 'Indonesia' }, 
+            { code: 'ID', name: 'Indonesia' },
             { code: 'CN', name: 'China' }
         ];
         const DUMMY_WAREHOUSES = [
-            'DCB','DCI','DMR','DCS','JKT','BDG', 
-            'DCE', 'DCF', 'DCJ', 'DCK', 'DCL', 'DCM' 
-        ]; 
+            'DCB', 'DCI', 'DMR', 'DCS', 'JKT', 'BDG',
+            'DCE', 'DCF', 'DCJ', 'DCK', 'DCL', 'DCM'
+        ];
 
         const dummyCarriers = ['D8232EC', 'D8375DE', 'D8382EB', 'D8391DA', 'D8434DM', 'D8473FU', 'D8513FU', 'D8517FB'];
         const dummyCompanies = ['DCB', 'DCI', 'DMR', 'DCS', 'DCJ', 'DCK', 'DCL', 'DCM'];
         const dummyContainerClasses = ['Bag', 'Crate', 'Dus', 'Eggs', 'Pallet', 'Roll Cage', 'Tote'];
-        
+
         // Data lengkap semua user untuk tab Assigned Users (Company)
         const ALL_USERS_LIST = [
-            'Abdu23074560', 'Abdul04120625', 'Abdul19100020', 'Abo13080182', 
-            'Absari93030039', 'Achmad00090094', 'Adam18101751', 'ade', 'Ade15040047', 
-            'Ade21120012', 'Ades17080031', 'Adi20100099', 'Adi2020284', 'Adi22110060', 
-            'Adi23070426', 'Adj24070022', 'Administrator', 'ADMReturDCB', 'Affand24051301', 
-            'Affang12050122', 'Agung15050074', 'Agung92060006', 'AgusHD4182', 'Aji18100334', 
-            'Aldi18100012', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079', 
-            'aneu03090082', 'Angga20030129', 'Anggi12020296', 'Anggi224114936', 'Anthony16070099', 
-            'Antonius08030061', 'Anwar08060080', 'Anwar23110223', 'Apep12020068', 'Ariefudin08100941', 
-            'Ari14100032', 'aris03090062', 'Aris09030029', 'Arlan12050176', 'ASEP01100086', 
-            'Asep08060073', 'Asep11010929', 'Asep12040051', 'Asep17040017', 'Asep18050091', 
-            'Asep19030279', 'Asep20072189', 'Asep20103123', 'Atun931', 'Bagus1', 'Bambar', 
-            'Budi08', 'Budi12', 'Budi13', 'Burhani', 'Buyung', 'candra', 'Cece04', 'CecepC', 
+            'Abdu23074560', 'Abdul04120625', 'Abdul19100020', 'Abo13080182',
+            'Absari93030039', 'Achmad00090094', 'Adam18101751', 'ade', 'Ade15040047',
+            'Ade21120012', 'Ades17080031', 'Adi20100099', 'Adi2020284', 'Adi22110060',
+            'Adi23070426', 'Adj24070022', 'Administrator', 'ADMReturDCB', 'Affand24051301',
+            'Affang12050122', 'Agung15050074', 'Agung92060006', 'AgusHD4182', 'Aji18100334',
+            'Aldi18100012', 'Aldi18101752', 'Ali17120115', 'Andri06010006', 'Andri10010079',
+            'aneu03090082', 'Angga20030129', 'Anggi12020296', 'Anggi224114936', 'Anthony16070099',
+            'Antonius08030061', 'Anwar08060080', 'Anwar23110223', 'Apep12020068', 'Ariefudin08100941',
+            'Ari14100032', 'aris03090062', 'Aris09030029', 'Arlan12050176', 'ASEP01100086',
+            'Asep08060073', 'Asep11010929', 'Asep12040051', 'Asep17040017', 'Asep18050091',
+            'Asep19030279', 'Asep20072189', 'Asep20103123', 'Atun931', 'Bagus1', 'Bambar',
+            'Budi08', 'Budi12', 'Budi13', 'Burhani', 'Buyung', 'candra', 'Cece04', 'CecepC',
             'Cheke', 'Cheke'
         ];
 
@@ -130,7 +130,7 @@
         const EMPTY_CUSTOMER = {
             // Data Umum
             id: null, customer: '', shipTo: '', company: '', name: '', parent: '', inactive: false,
-            onHold: false, carriers: [], 
+            onHold: false, carriers: [],
             // Data Alamat Level-atas
             residential: false, address1: '', address2: '', address3: '', city: '', state: '', postalCode: '', country: '', faxNumber: '', phoneNumber: '', emailAddress: '',
             // Kategori (10 field)
@@ -138,7 +138,7 @@
             // Alamat Freight Bill To
             fba_name: '', fba_address1: '', fba_address2: '', fba_address3: '', fba_city: '', fba_state: '', fba_postalCode: '', fba_country: '',
             // Struktur data RFID
-            rfid: { 
+            rfid: {
                 rows: [],
                 selectedIndex: -1, // Status seleksi UI
                 filter: { andOr: 'AND', attribute: '', op: '=', value: '' }
@@ -149,8 +149,9 @@
 
         // Memuat atau inisialisasi data Customer
         let customers = JSON.parse(localStorage.getItem(CUSTOMER_STORAGE_KEY)) || [
-            { id: CUSTOMER_ID_PREFIX + '001', customer: '12160', shipTo: '001', company: 'DCB', name: 'PT MAJU JAYA ABADI', parent: '12160', inactive: false, residential: false, onHold: false, carriers: ['D8232EC'], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, fba_name: 'Freight Bill Co', fba_address1: 'FBA Address 1', fba_city: 'Jakarta', fba_country: 'ID', 
-                rfid: { rows: [{ containerClass: 'Pallet', epcEncoding: 'EPC123', singleItem: true, multiItem: false, udf1: 'A1' }], selectedIndex: -1, filter: EMPTY_CUSTOMER.rfid.filter } 
+            {
+                id: CUSTOMER_ID_PREFIX + '001', customer: '12160', shipTo: '001', company: 'DCB', name: 'PT MAJU JAYA ABADI', parent: '12160', inactive: false, residential: false, onHold: false, carriers: ['D8232EC'], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, fba_name: 'Freight Bill Co', fba_address1: 'FBA Address 1', fba_city: 'Jakarta', fba_country: 'ID',
+                rfid: { rows: [{ containerClass: 'Pallet', epcEncoding: 'EPC123', singleItem: true, multiItem: false, udf1: 'A1' }], selectedIndex: -1, filter: EMPTY_CUSTOMER.rfid.filter }
             },
             { id: CUSTOMER_ID_PREFIX + '002', customer: '12161', shipTo: '001', company: 'DCI', name: 'CV BERKAH MANDIRI', parent: '12161', inactive: false, residential: true, onHold: false, carriers: ['D8375DE', 'D8382EB'], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, rfid: EMPTY_CUSTOMER.rfid },
             { id: CUSTOMER_ID_PREFIX + '003', customer: '12162', shipTo: '002', company: 'DCB', name: 'PT SEJAHTERA SELALU', parent: '12162', inactive: true, residential: false, onHold: true, carriers: [], categories: EMPTY_CUSTOMER.categories, udf: EMPTY_CUSTOMER.udf, rfid: EMPTY_CUSTOMER.rfid }
@@ -164,18 +165,18 @@
         const saveCustomers = () => localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(customers));
 
         // --- MODEL COMPANY DEFAULT ---
-        
+
         // Model Alamat yang terstandarisasi
         const EMPTY_ADDRESS = {
-            name: '', address1: '', address2: '', address3: '', 
-            city: '', statePostalCode: '', postalCode: '', country: 'ID', 
+            name: '', address1: '', address2: '', address3: '',
+            city: '', statePostalCode: '', postalCode: '', country: 'ID',
             attentionTo: '', faxNumber: '', phoneNumber: '', emailAddress: '',
         };
 
         // Model detail Warehouse
         const EMPTY_WAREHOUSE_INFO = {
             id: null,
-            warehouseCode: '', 
+            warehouseCode: '',
             shipFromAddress: { ...EMPTY_ADDRESS },
             warehouseReturnAddress: { ...EMPTY_ADDRESS },
             warehouseFreightBillToAddress: { ...EMPTY_ADDRESS },
@@ -185,12 +186,12 @@
 
         // Model Company utama
         const EMPTY_COMPANY = {
-            id: null, 
-            companyCode: '', 
+            id: null,
+            companyCode: '',
             inactive: false,
-            
+
             // Tab General / Warehouse/company information
-            general: { 
+            general: {
                 uccEanNumber: '', orderIdPrefix: '', receiptIdPrefix: '',
                 purchaseOrderIdPrefix: '', availabilityChecking: false,
             },
@@ -199,7 +200,7 @@
             companyAddress: { ...EMPTY_ADDRESS },
             returnAddress: { ...EMPTY_ADDRESS },
             freightBillToAddress: { ...EMPTY_ADDRESS },
-            
+
             // Tab Internet information & Web header
             webHeader: {
                 leftGraphic: '', centerGraphic: '', rightGraphic: '',
@@ -208,9 +209,9 @@
             internetInfo: {
                 websiteUrl: '', emailSupport: '', phoneSupport: ''
             },
-            
+
             // Tab Assigned users
-            assignedUsers: [], 
+            assignedUsers: [],
 
             // Tab User defined data (8 field)
             udf: Array.from({ length: 8 }, (_, i) => ({ [`udf${i + 1}`]: '' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
@@ -221,21 +222,21 @@
                 selectedIndex: -1
             }
         };
-        
+
         // Memuat atau inisialisasi data Company
         let companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || [
-            { 
-                ...EMPTY_COMPANY, 
-                id: COMPANY_ID_PREFIX + '001', 
-                companyCode: 'DCJ', 
+            {
+                ...EMPTY_COMPANY,
+                id: COMPANY_ID_PREFIX + '001',
+                companyCode: 'DCJ',
                 inactive: false,
-                companyAddress: { 
-                    ...EMPTY_ADDRESS, 
-                    name: 'DC JAKARTA', 
-                    address1: 'JL. ARTERI MANGGA DUA RAYA PUSAT', 
-                    statePostalCode: 'JAK-PUS', 
-                    city: 'JAKARTA', 
-                    postalCode: '10730' 
+                companyAddress: {
+                    ...EMPTY_ADDRESS,
+                    name: 'DC JAKARTA',
+                    address1: 'JL. ARTERI MANGGA DUA RAYA PUSAT',
+                    statePostalCode: 'JAK-PUS',
+                    city: 'JAKARTA',
+                    postalCode: '10730'
                 },
                 assignedUsers: [
                     { userId: 'Anggi12020296', name: 'Anggi12020296' },
@@ -243,30 +244,32 @@
                 ],
                 warehouses: {
                     rows: [
-                        { ...EMPTY_WAREHOUSE_INFO, 
-                            id: WAREHOUSE_ID_PREFIX + '001', 
-                            warehouseCode: 'WHS01', 
+                        {
+                            ...EMPTY_WAREHOUSE_INFO,
+                            id: WAREHOUSE_ID_PREFIX + '001',
+                            warehouseCode: 'WHS01',
                             shipFromAddress: { ...EMPTY_ADDRESS, name: 'DC BUAH BATU WHS', address1: 'Jl. Buah Batu No. 1' }
                         },
-                        { ...EMPTY_WAREHOUSE_INFO, 
-                            id: WAREHOUSE_ID_PREFIX + '002', 
-                            warehouseCode: 'WHS02', 
-                            shipFromAddress: { ...EMPTY_ADDRESS, name: 'DC CIKARANG WHS', address1: 'Jl. Cikarang Utama' } 
+                        {
+                            ...EMPTY_WAREHOUSE_INFO,
+                            id: WAREHOUSE_ID_PREFIX + '002',
+                            warehouseCode: 'WHS02',
+                            shipFromAddress: { ...EMPTY_ADDRESS, name: 'DC CIKARANG WHS', address1: 'Jl. Cikarang Utama' }
                         }
                     ],
                     selectedIndex: -1
                 }
             },
-            { 
-                ...EMPTY_COMPANY, 
-                id: COMPANY_ID_PREFIX + '002', 
-                companyCode: 'DCC', 
-                inactive: true, 
-                assignedUsers: [ { userId: 'Atun931', name: 'Atun931' } ],
+            {
+                ...EMPTY_COMPANY,
+                id: COMPANY_ID_PREFIX + '002',
+                companyCode: 'DCC',
+                inactive: true,
+                assignedUsers: [{ userId: 'Atun931', name: 'Atun931' }],
                 companyAddress: { ...EMPTY_ADDRESS, name: 'DC CIKONENG', address1: 'Jl. Cikoneng No. 10', statePostalCode: 'Bandung', city: 'Bandung' }
             },
         ];
-        
+
         // Helper untuk menyimpan data Company
         const saveCompanies = () => localStorage.setItem(COMPANY_STORAGE_KEY, JSON.stringify(companies));
 
@@ -279,15 +282,15 @@
          * @param {boolean} isNested - Apakah ini form di sub-modal Warehouse.
          */
         const renderGenericAddressForm = (data, type, isNested = false) => {
-            const { name = '', address1 = '', address2 = '', address3 = '', 
-                    city = '', statePostalCode = '', country = 'ID', postalCode = '',
-                    attentionTo = '', faxNumber = '', phoneNumber = '', emailAddress = ''
+            const { name = '', address1 = '', address2 = '', address3 = '',
+                city = '', statePostalCode = '', country = 'ID', postalCode = '',
+                attentionTo = '', faxNumber = '', phoneNumber = '', emailAddress = ''
             } = data;
-            
+
             const prefix = type;
             const labelName = type === 'shipFromAddress' ? 'Ship From Name' : 'Company Name';
             const isCompanyAddressTab = type === 'companyAddress';
-            
+
             // Tombol Copy muncul di alamat selain Company Address, dan di semua alamat Warehouse
             const showCopyButton = (!isNested && !isCompanyAddressTab) || isNested;
 
@@ -296,10 +299,10 @@
                     Copy from Company
                 </button>
             ` : '';
-            
-            const sameAsCheckbox = !isNested && !isCompanyAddressTab ? 
+
+            const sameAsCheckbox = !isNested && !isCompanyAddressTab ?
                 document.getElementById(`${type.replace('Address', '')}-same-as-company`) : null;
-            
+
             const disabledAttr = sameAsCheckbox?.checked && !isNested ? 'disabled' : '';
 
             return `
@@ -363,14 +366,14 @@
                 </div>
             `;
         };
-        
+
         /**
          * Helper untuk menyalin alamat Company ke alamat lain di modal Company atau Sub-modal Warehouse.
          */
-        window.copyCompanyAddress = function(targetType, isNested = false) {
+        window.copyCompanyAddress = function (targetType, isNested = false) {
             const form = isNested ? document.getElementById('warehouse-form') : document.getElementById('company-form');
             const companyId = form.dataset.companyId || form.dataset.id;
-            
+
             const mode = form.dataset.mode;
             let source = {};
 
@@ -382,25 +385,25 @@
                     const key = input.name.replace('companyAddress_', '');
                     source[key] = input.value;
                 });
-                
+
             } else {
                 // Ambil data dari Company yang sudah tersimpan
                 const companyData = companies.find(c => c.id === companyId);
-                if (!companyData) { 
+                if (!companyData) {
                     if (isNested || form.querySelector(`[name="${targetType}_sameAsCompany"]`)) {
                         source = EMPTY_COMPANY.companyAddress;
                     } else {
-                         window.showCustomAlert('Error', 'Company data not found for copying.'); 
-                         return;
+                        window.showCustomAlert('Error', 'Company data not found for copying.');
+                        return;
                     }
                 } else {
                     source = companyData.companyAddress;
                 }
             }
-            
+
             const checkboxId = isNested ? 'whs-same-as-company' : `${targetType.replace('Address', '')}-same-as-company`;
             const sameAsCheckbox = document.getElementById(checkboxId);
-            
+
             const elementsToCopy = [
                 { idSuffix: 'name', name: 'name' }, { idSuffix: 'address1', name: 'address1' },
                 { idSuffix: 'address2', name: 'address2' }, { idSuffix: 'address3', name: 'address3' },
@@ -409,7 +412,7 @@
                 { idSuffix: 'attentionTo', name: 'attentionTo' }, { idSuffix: 'faxNumber', name: 'faxNumber' },
                 { idSuffix: 'phoneNumber', name: 'phoneNumber' }, { idSuffix: 'emailAddress', name: 'emailAddress' },
             ];
-            
+
             // Fungsi untuk mengaktifkan/menonaktifkan field
             const toggleFields = (disabled) => {
                 elementsToCopy.forEach(field => {
@@ -425,16 +428,16 @@
             };
 
             const isChecked = sameAsCheckbox?.checked || false;
-            
+
             if (!isNested) {
                 if (sameAsCheckbox) {
                     toggleFields(isChecked);
                 }
             }
-            
+
             // Salin data
             if (!sameAsCheckbox || isChecked) {
-                 elementsToCopy.forEach(field => {
+                elementsToCopy.forEach(field => {
                     const el = form.querySelector(`[name="${targetType}_${field.idSuffix}"]`);
                     if (el) {
                         el.value = source[field.name] || '';
@@ -442,19 +445,19 @@
                 });
             }
         };
-        
+
         /**
          * Menangani perubahan checkbox "Same as company address" di modal Company.
          */
-        window.handleSameAsCompanyChange = function(type) {
+        window.handleSameAsCompanyChange = function (type) {
             const checkbox = document.getElementById(`${type}-same-as-company`);
             const form = document.getElementById('company-form');
-            
+
             if (checkbox.checked) {
                 window.copyCompanyAddress(`${type}Address`, false);
             } else {
-                const elementsToCopy = [ 'name', 'address1', 'address2', 'address3', 'city', 'statePostalCode', 'postalCode', 'country', 'attentionTo', 'faxNumber', 'phoneNumber', 'emailAddress'];
-                
+                const elementsToCopy = ['name', 'address1', 'address2', 'address3', 'city', 'statePostalCode', 'postalCode', 'country', 'attentionTo', 'faxNumber', 'phoneNumber', 'emailAddress'];
+
                 elementsToCopy.forEach(field => {
                     const el = form.querySelector(`[name="${type}Address_${field}"]`);
                     if (el) {
@@ -474,14 +477,14 @@
             const container = document.getElementById('company-list-container');
             if (!container) return;
             const lowerFilter = filter.toLowerCase();
-            
+
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
 
-            const filteredData = companies.filter(c => 
+            const filteredData = companies.filter(c =>
                 (c.companyCode || '').toLowerCase().includes(lowerFilter) ||
                 (c.companyAddress.name || '').toLowerCase().includes(lowerFilter)
             );
-            
+
             let listWrapperHtml = `
                 <div class="max-h-[60vh] overflow-y-auto border border-wise-border rounded-lg shadow-md">
                 <table class="min-w-full bg-white">
@@ -517,18 +520,18 @@
         };
 
         // Fungsi debounce untuk pencarian Company
-        window.filterCompanyList = window.debounce((value) => window.renderCompanyList(value), 300); 
+        window.filterCompanyList = window.debounce((value) => window.renderCompanyList(value), 300);
 
         // --- VALIDASI FORM COMPANY ---
 
         function validateCompanyForm(modal) {
             const form = document.getElementById('company-form');
-            form.noValidate = true; 
-            
+            form.noValidate = true;
+
             const requiredFields = [
-                { name: 'companyCode', tab: 'general', label: 'Company Code' }, 
-                { name: 'companyAddress_name', tab: 'company-address', label: 'Company Address Name' }, 
-            ]; 
+                { name: 'companyCode', tab: 'general', label: 'Company Code' },
+                { name: 'companyAddress_name', tab: 'company-address', label: 'Company Address Name' },
+            ];
 
             let isValid = true;
             let firstInvalid = null;
@@ -537,16 +540,16 @@
             // Bersihkan error sebelumnya
             form.querySelectorAll('.error-message').forEach(el => el.remove());
             form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-            
+
             const setError = (input, message, tabId) => {
                 let errorEl = document.createElement('p');
                 errorEl.className = 'error-message text-red-500 text-xs mt-1';
                 errorEl.textContent = message;
                 input.parentNode.appendChild(errorEl);
                 input.setAttribute('aria-invalid', 'true');
-                
-                if (!firstInvalid) { 
-                    firstInvalid = input; 
+
+                if (!firstInvalid) {
+                    firstInvalid = input;
                     targetTab = tabId;
                 }
                 isValid = false;
@@ -554,35 +557,35 @@
 
             // Validasi field wajib
             requiredFields.forEach(field => {
-                const el = form.querySelector(`[name="${field.name}"]`); 
+                const el = form.querySelector(`[name="${field.name}"]`);
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
                 // Cek jika field ada dan tidak disabled
                 if (el && !el.disabled) {
-                    if (!el.value.trim()) { 
-                        setError(el, `${field.label} is required.`, field.tab); 
-                        if(tabButton) tabButton.classList.add('text-red-500'); 
+                    if (!el.value.trim()) {
+                        setError(el, `${field.label} is required.`, field.tab);
+                        if (tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
             });
-            
+
             // Validasi format HTML5 lainnya (e.g., email, url, number)
             form.querySelectorAll('input:invalid, select:invalid').forEach(el => {
                 if (el.hasAttribute('aria-invalid') || !el.checkValidity()) {
                     let tabId;
                     let currentElement = el;
-                    while(currentElement && currentElement !== form) {
-                         if (currentElement.getAttribute('role') === 'tabpanel') {
-                             tabId = currentElement.dataset.pane;
-                             break;
-                         }
-                         currentElement = currentElement.parentNode;
+                    while (currentElement && currentElement !== form) {
+                        if (currentElement.getAttribute('role') === 'tabpanel') {
+                            tabId = currentElement.dataset.pane;
+                            break;
+                        }
+                        currentElement = currentElement.parentNode;
                     }
 
                     if (tabId && (!el.checkValidity() || !el.value.trim())) {
-                         const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} ${!el.value.trim() ? 'is required.' : 'format is invalid.'}`, tabId);
-                         const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
-                         if(tabButton) tabButton.classList.add('text-red-500'); 
+                        const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
+                        setError(el, `${label} ${!el.value.trim() ? 'is required.' : 'format is invalid.'}`, tabId);
+                        const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
+                        if (tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
             });
@@ -590,12 +593,12 @@
 
             if (firstInvalid) {
                 if (targetTab) {
-                    window.activateTab(targetTab, modal); 
+                    window.activateTab(targetTab, modal);
                 }
-                
+
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Company:", e); }
-                } , 100); 
+                    try { firstInvalid.focus(); } catch (e) { console.error("Gagal fokus input Company:", e); }
+                }, 100);
 
                 return false;
             }
@@ -608,12 +611,12 @@
 
         function validateWarehouseForm(modal) {
             const form = document.getElementById('warehouse-form');
-            form.noValidate = true; 
-            
+            form.noValidate = true;
+
             const requiredFields = [
-                { name: 'warehouseCode', tab: 'ship-from', label: 'Warehouse Code' }, 
-                { name: 'shipFromAddress_name', tab: 'ship-from', label: 'Ship From Name' }, 
-            ]; 
+                { name: 'warehouseCode', tab: 'ship-from', label: 'Warehouse Code' },
+                { name: 'shipFromAddress_name', tab: 'ship-from', label: 'Ship From Name' },
+            ];
 
             let isValid = true;
             let firstInvalid = null;
@@ -621,48 +624,48 @@
 
             form.querySelectorAll('.error-message').forEach(el => el.remove());
             form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-            
+
             const setError = (input, message, tabId) => {
                 let errorEl = document.createElement('p');
                 errorEl.className = 'error-message text-red-500 text-xs mt-1';
                 errorEl.textContent = message;
                 input.parentNode.appendChild(errorEl);
                 input.setAttribute('aria-invalid', 'true');
-                if (!firstInvalid) { 
-                    firstInvalid = input; 
+                if (!firstInvalid) {
+                    firstInvalid = input;
                     targetTab = tabId;
                 }
                 isValid = false;
             };
 
             requiredFields.forEach(field => {
-                const el = form.querySelector(`[name="${field.name}"]`); 
+                const el = form.querySelector(`[name="${field.name}"]`);
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
                 if (el && !el.disabled) {
-                    if (!el.value.trim()) { 
-                        setError(el, `${field.label} wajib diisi.`, field.tab); 
-                        if(tabButton) tabButton.classList.add('text-red-500');
+                    if (!el.value.trim()) {
+                        setError(el, `${field.label} wajib diisi.`, field.tab);
+                        if (tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
             });
-            
-             // Periksa error HTML5 lainnya
-             form.querySelectorAll('input:invalid, select:invalid').forEach(el => {
+
+            // Periksa error HTML5 lainnya
+            form.querySelectorAll('input:invalid, select:invalid').forEach(el => {
                 if (el.hasAttribute('aria-invalid') || !el.checkValidity()) {
                     let tabId;
                     let currentElement = el;
-                    while(currentElement && currentElement !== form) {
-                         if (currentElement.getAttribute('role') === 'tabpanel') {
-                             tabId = currentElement.dataset.pane;
-                             break;
-                         }
-                         currentElement = currentElement.parentNode;
+                    while (currentElement && currentElement !== form) {
+                        if (currentElement.getAttribute('role') === 'tabpanel') {
+                            tabId = currentElement.dataset.pane;
+                            break;
+                        }
+                        currentElement = currentElement.parentNode;
                     }
                     if (tabId && (!el.checkValidity() || !el.value.trim())) {
-                         const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
-                         setError(el, `${label} ${!el.value.trim() ? 'wajib diisi.' : 'format tidak valid.'}`, tabId); 
-                         const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
-                         if(tabButton) tabButton.classList.add('text-red-500'); 
+                        const label = el.parentNode.querySelector('label')?.textContent.replace(':', '').trim() || 'Field';
+                        setError(el, `${label} ${!el.value.trim() ? 'wajib diisi.' : 'format tidak valid.'}`, tabId);
+                        const tabButton = modal.querySelector(`[role="tab"][data-tab="${tabId}"]`);
+                        if (tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
             });
@@ -670,12 +673,12 @@
 
             if (firstInvalid) {
                 if (targetTab) {
-                    window.activateTab(targetTab, modal); 
+                    window.activateTab(targetTab, modal);
                 }
-                
+
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Warehouse:", e); }
-                }, 100); 
+                    try { firstInvalid.focus(); } catch (e) { console.error("Gagal fokus input Warehouse:", e); }
+                }, 100);
 
                 return false;
             }
@@ -691,17 +694,17 @@
          */
         window.renderCompanyWarehouseList = function (companyId) {
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
-            
+
             const container = document.getElementById('warehouse-list-container');
             const companyIndex = companies.findIndex(c => c.id === companyId);
             const companyData = companies[companyIndex];
-            
+
             if (!companyData || !container) return;
-            
+
             const warehouses = companyData.warehouses.rows || [];
-            
+
             let currentSelectedIndex = companyData.warehouses.selectedIndex;
-            
+
             // Koreksi index jika out-of-bounds (clamp)
             if (warehouses.length > 0 && currentSelectedIndex >= warehouses.length) {
                 currentSelectedIndex = warehouses.length - 1;
@@ -710,8 +713,8 @@
                 currentSelectedIndex = -1;
                 companyData.warehouses.selectedIndex = -1;
             }
-            
-            if(companyData) {
+
+            if (companyData) {
                 companies[companyIndex] = companyData;
                 saveCompanies();
             }
@@ -721,13 +724,13 @@
             const isSelected = currentSelectedIndex !== -1;
             const isFirst = currentSelectedIndex === 0;
             const isLast = currentSelectedIndex === warehouses.length - 1;
-            
+
             const buttonDisabled = isSelected ? '' : 'disabled';
             const buttonDisabledClass = isSelected ? '' : 'btn-disabled';
-            
+
             const upDisabled = isSelected && !isFirst ? '' : 'disabled';
             const upDisabledClass = isSelected && !isFirst ? '' : 'btn-disabled';
-            
+
             const downDisabled = isSelected && !isLast ? '' : 'disabled';
             const downDisabledClass = isSelected && !isLast ? '' : 'btn-disabled';
 
@@ -761,7 +764,7 @@
                             </tr>
                         </thead>
                         <tbody>`;
-            
+
             if (warehouses.length === 0) {
                 listHtml += `<tr><td colspan="3" class="p-4 text-center text-gray-400">No warehouse information found.</td></tr>`;
             } else {
@@ -769,7 +772,7 @@
                     const isRowSelected = index === currentSelectedIndex;
                     const selectedClass = isRowSelected ? 'bg-blue-100 font-medium selected' : '';
                     const whsId = w.id;
-                    
+
                     // Baris tabel dengan event handler seleksi dan edit
                     listHtml += `
                         <tr data-id="${whsId}" onclick="selectWarehouseRow('${companyId}', '${whsId}')" ondblclick="openSelectedWarehouse('${companyId}')" class="border-b hover:bg-gray-50 cursor-pointer ${selectedClass}">
@@ -782,10 +785,10 @@
             }
             listHtml += `</tbody></table></div>`;
             container.innerHTML = listHtml;
-            
+
             // Mengaktifkan keyboard binding untuk navigasi tabel
             bindWarehouseKeys();
-            
+
             // Auto-scroll ke baris baru
             const table = document.getElementById('warehouse-list-table');
             if (currentSelectedIndex !== -1 && warehouses[currentSelectedIndex]) {
@@ -803,7 +806,7 @@
             const selectedIndex = company?.warehouses?.selectedIndex;
 
             if (selectedIndex !== undefined && selectedIndex !== -1) {
-                const warehouseData = company.warehouses.rows[selectedIndex]; 
+                const warehouseData = company.warehouses.rows[selectedIndex];
                 window.showCompanyWarehouseForm('edit', companyId, warehouseData.id);
             } else {
                 window.showCustomAlert('Perhatian', 'Pilih baris warehouse yang ingin dibuka terlebih dahulu.', 'warning');
@@ -819,10 +822,10 @@
 
             const selectedIndex = companies[companyIndex].warehouses.selectedIndex;
             if (selectedIndex === -1) {
-                window.showCustomAlert("Perhatian", "Pilih warehouse dulu", "warning"); 
+                window.showCustomAlert("Perhatian", "Pilih warehouse dulu", "warning");
                 return;
             }
-            
+
             const companyData = companies[companyIndex];
             const src = companyData.warehouses.rows[selectedIndex];
             if (!src) return;
@@ -834,8 +837,8 @@
             };
 
             companyData.warehouses.rows.push(copy);
-            companyData.warehouses.selectedIndex = companyData.warehouses.rows.length - 1; 
-            
+            companyData.warehouses.selectedIndex = companyData.warehouses.rows.length - 1;
+
             saveCompanies();
             window.renderCompanyWarehouseList(companyId);
             window.showCustomAlert('Success', `Warehouse ${src.warehouseCode} berhasil dicopy menjadi ${copy.warehouseCode}.`, 'success');
@@ -847,18 +850,18 @@
         window.deleteSelectedWarehouse = function (companyId) {
             const ci = companies.findIndex(c => c.id === companyId);
             if (ci === -1) return;
-            
+
             const companyData = companies[ci];
             const rows = companyData.warehouses.rows;
             let sel = companyData.warehouses.selectedIndex;
-            
-            if (sel === -1 || sel >= rows.length) { 
-                window.showCustomAlert('Perhatian', 'Pilih baris dulu.', 'warning'); 
-                return; 
+
+            if (sel === -1 || sel >= rows.length) {
+                window.showCustomAlert('Perhatian', 'Pilih baris dulu.', 'warning');
+                return;
             }
 
             const code = rows[sel].warehouseCode;
-            
+
             if (window.confirm(`Yakin hapus warehouse ${code}?`)) {
                 rows.splice(sel, 1);
 
@@ -870,92 +873,92 @@
                 }
 
                 saveCompanies();
-                window.renderCompanyWarehouseList(companyId);                       
+                window.renderCompanyWarehouseList(companyId);
                 window.showCustomAlert('Dihapus', `Warehouse ${code} dihapus.`, 'success');
             }
         };
-        
+
         /**
          * Memindahkan baris ke atas atau ke bawah.
          */
-        window.moveNestedRow = function(companyId, direction) {
+        window.moveNestedRow = function (companyId, direction) {
             const ci = companies.findIndex(c => c.id === companyId);
             if (ci === -1) return;
-            
+
             const companyData = companies[ci];
             const rows = companyData.warehouses.rows;
             const state = companyData.warehouses;
             if (!rows.length) return;
             const i = state.selectedIndex;
             if (i < 0) return;
-            
+
             const j = direction === 'up' ? i - 1 : i + 1;
-            
+
             if (j < 0 || j >= rows.length) return;
 
             [rows[i], rows[j]] = [rows[j], rows[i]];
             state.selectedIndex = j;
-            
+
             saveCompanies();
             window.renderCompanyWarehouseList(companyId);
-            
+
             const table = document.getElementById('warehouse-list-table');
             const selId = rows[j]?.id;
             const tr = table?.querySelector(`tr[data-id="${selId}"]`);
             tr?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         }
-        
+
         /**
          * Mengikat event keyboard pada tabel Warehouse.
          */
-        const bindWarehouseKeys = (function bindWarehouseKeys(){
-          return function() {
-              const wrap = document.getElementById('whs-table-wrapper');
-              if (wrap && wrap._keysBound) {
-                  wrap.removeEventListener('keydown', wrap._keysBound);
-                  wrap._keysBound = false;
-              }
-              
-              if (!wrap) return;
+        const bindWarehouseKeys = (function bindWarehouseKeys() {
+            return function () {
+                const wrap = document.getElementById('whs-table-wrapper');
+                if (wrap && wrap._keysBound) {
+                    wrap.removeEventListener('keydown', wrap._keysBound);
+                    wrap._keysBound = false;
+                }
 
-              wrap.tabIndex = 0; 
+                if (!wrap) return;
 
-              const handler = (e) => {
-                  const form = document.getElementById('company-form');
-                  const companyId = form?.dataset.id || document.getElementById('wh-company-selector')?.value;
+                wrap.tabIndex = 0;
 
-                  if (!companyId) return;
-                  
-                  if (document.activeElement !== wrap) return;
-                  
-                    if (e.key === 'ArrowUp')  { 
+                const handler = (e) => {
+                    const form = document.getElementById('company-form');
+                    const companyId = form?.dataset.id || document.getElementById('wh-company-selector')?.value;
+
+                    if (!companyId) return;
+
+                    if (document.activeElement !== wrap) return;
+
+                    if (e.key === 'ArrowUp') {
                         e.preventDefault();
                         window.moveNestedRow(companyId, 'up');
                     }
-                    if (e.key === 'ArrowDown'){ 
+                    if (e.key === 'ArrowDown') {
                         e.preventDefault();
                         window.moveNestedRow(companyId, 'down');
                     }
-                  
-                  const companyData = companies.find(c => c.id === companyId);
-                  const isSelected = companyData?.warehouses?.selectedIndex !== -1;
-                  
-                  if (isSelected) {
-                      const whsModalVisible = !document.getElementById('warehouse-form-modal').classList.contains('hidden');
-                      if (e.key === 'Enter' && !whsModalVisible) { 
-                          e.preventDefault(); 
-                          window.openSelectedWarehouse(companyId); 
-                      }
-                      if (e.key === 'Delete')   { 
-                          e.preventDefault(); 
-                          window.deleteSelectedWarehouse(companyId); 
-                      }
-                  }
-              };
-              
-              wrap.addEventListener('keydown', handler);
-              wrap._keysBound = handler;
-          };
+
+                    const companyData = companies.find(c => c.id === companyId);
+                    const isSelected = companyData?.warehouses?.selectedIndex !== -1;
+
+                    if (isSelected) {
+                        const whsModalVisible = !document.getElementById('warehouse-form-modal').classList.contains('hidden');
+                        if (e.key === 'Enter' && !whsModalVisible) {
+                            e.preventDefault();
+                            window.openSelectedWarehouse(companyId);
+                        }
+                        if (e.key === 'Delete') {
+                            e.preventDefault();
+                            window.deleteSelectedWarehouse(companyId);
+                        }
+                    }
+                };
+
+                wrap.addEventListener('keydown', handler);
+                wrap._keysBound = handler;
+            };
         })();
 
 
@@ -982,13 +985,13 @@
                 ${renderGenericAddressForm(data, type, false)}
             `;
         };
-        
+
         /**
          * Render tab General di modal Company.
          */
         function renderCompanyGeneralTab(data) {
-            const { companyCode = '' } = data; 
-            
+            const { companyCode = '' } = data;
+
             return `
                 <div class="space-y-4 max-w-lg mb-4">
                     <div>
@@ -999,14 +1002,14 @@
                 </div>
             `;
         }
-        
+
         /**
          * Render tab Warehouse/company information di modal Company.
          */
         function renderCompanyInfoTab(companyData) {
             const { general, id: companyId } = companyData;
             const { uccEanNumber = '', orderIdPrefix = '', receiptIdPrefix = '', purchaseOrderIdPrefix = '', availabilityChecking = false } = general;
-            
+
             const form = document.getElementById('company-form');
             const mode = form.dataset.mode;
             const isNewCompany = mode === 'create';
@@ -1078,8 +1081,8 @@
          * Render tab Web Header di modal Company.
          */
         function renderWebHeaderTab(data) {
-            const { leftGraphic = '', centerGraphic = '', rightGraphic = '', leftUrl = '', centerUrl = '', rightUrl = '' } = data.webHeader; 
-            
+            const { leftGraphic = '', centerGraphic = '', rightGraphic = '', leftUrl = '', centerUrl = '', rightUrl = '' } = data.webHeader;
+
             return `
                 <div class="space-y-6">
                     <fieldset class="border p-4 rounded-md">
@@ -1168,22 +1171,22 @@
             return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${Array.from({ length: 8 }, (_, i) => { // 8 fields
-                        const key = `udf${i + 1}`;
-                        const value = udf[key] || '';
-                        const isDecimal = i >= 6; // UDF 7 dan 8 adalah angka desimal
-                        return `
+                const key = `udf${i + 1}`;
+                const value = udf[key] || '';
+                const isDecimal = i >= 6; // UDF 7 dan 8 adalah angka desimal
+                return `
                         <div>
                             <label for="cmp-${key}" class="block text-sm mb-1">User defined field ${i + 1}: ${isDecimal ? '(Decimal)' : ''}</label>
                             <input type="${isDecimal ? 'number' : 'text'}" step="${isDecimal ? '0.0001' : 'any'}" id="cmp-${key}" name="udf_${key}" class="input" value="${value}">
                         </div>
                     `;
-                    }).join('')}
+            }).join('')}
                 </div>
             `;
         }
 
         // --- HANDLER MODAL UTAMA COMPANY ---
-        
+
         /**
          * Menampilkan modal form Company (Create/Edit).
          */
@@ -1191,16 +1194,16 @@
             const modal = document.getElementById('company-form-modal');
             const form = document.getElementById('company-form');
             const title = document.getElementById('company-form-title');
-            
+
             let companyData = {};
 
             if (mode === 'create') {
-                companyData = JSON.parse(JSON.stringify(EMPTY_COMPANY)); 
-                const tempId = generateUniqueId(COMPANY_ID_PREFIX); 
-                companyData.id = tempId; 
+                companyData = JSON.parse(JSON.stringify(EMPTY_COMPANY));
+                const tempId = generateUniqueId(COMPANY_ID_PREFIX);
+                companyData.id = tempId;
                 form.dataset.tempId = tempId;
             } else if (mode === 'edit' && id) {
-                const found = companies.find(c => c.id === id); 
+                const found = companies.find(c => c.id === id);
                 if (!found) {
                     window.showCustomAlert('Error', 'Company tidak ditemukan!', 'error');
                     return;
@@ -1209,12 +1212,12 @@
             } else {
                 companyData = JSON.parse(JSON.stringify(EMPTY_COMPANY));
             }
-            
+
             // Set data attributes
             form.dataset.id = companyData.id;
             form.dataset.companyId = companyData.id;
             form.dataset.mode = mode;
-            
+
             const headerCode = mode === 'create' ? 'New Company (Unsaved)' : companyData.companyCode;
             title.innerHTML = mode === 'create' ? 'Company - Create New' : `Company - Edit Existing (<span class="font-bold text-blue-600">${headerCode}</span>)`;
 
@@ -1236,32 +1239,34 @@
                 const checkbox = document.getElementById(`${baseType}-same-as-company`);
                 if (checkbox) {
                     const isSameAsCompany = JSON.stringify(companyData.companyAddress) === JSON.stringify(companyData[type]);
-                    checkbox.checked = isSameAsCompany; 
-                    
+                    checkbox.checked = isSameAsCompany;
+
                     if (isSameAsCompany) {
-                        window.copyCompanyAddress(type, false); 
+                        window.copyCompanyAddress(type, false);
                     } else {
                         window.handleSameAsCompanyChange(baseType);
                     }
                 }
             });
-            
+
             if (!modal._listenersAttached) {
-                modal.querySelectorAll('[role="tab"]').forEach(button => { button.onclick = () => {
-                    window.activateTab(button.dataset.tab, modal);
-                    if (button.dataset.tab === 'company-info') {
-                        const currentMode = document.getElementById('company-form').dataset.mode;
-                        if (currentMode !== 'create') {
-                            window.renderCompanyWarehouseList(form.dataset.id); 
-                        }
-                        const whsWrapper = document.getElementById('whs-table-wrapper');
-                        if (whsWrapper) {
-                            setTimeout(() => {
-                                whsWrapper.focus();
-                            }, 50);
+                modal.querySelectorAll('[role="tab"]').forEach(button => {
+                    button.onclick = () => {
+                        window.activateTab(button.dataset.tab, modal);
+                        if (button.dataset.tab === 'company-info') {
+                            const currentMode = document.getElementById('company-form').dataset.mode;
+                            if (currentMode !== 'create') {
+                                window.renderCompanyWarehouseList(form.dataset.id);
+                            }
+                            const whsWrapper = document.getElementById('whs-table-wrapper');
+                            if (whsWrapper) {
+                                setTimeout(() => {
+                                    whsWrapper.focus();
+                                }, 50);
+                            }
                         }
                     }
-                }});
+                });
                 modal._listenersAttached = true;
             }
             window.activateTab('general', modal);
@@ -1273,33 +1278,33 @@
 
             document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
-            
+
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
                 modalContent.classList.add('scale-100', 'opacity-100');
-                
+
                 const companyInput = document.getElementById('companyCode');
                 if (companyInput) {
-                    try { companyInput.focus(); } catch(e) { console.error("Gagal fokus input Company:", e); }
+                    try { companyInput.focus(); } catch (e) { console.error("Gagal fokus input Company:", e); }
                 }
 
                 modal._keydownHandler = (e) => {
                     if (e.key === 'Escape') {
-                         window.closeCompanyForm();
+                        window.closeCompanyForm();
                     }
                 };
                 modal.addEventListener('keydown', modal._keydownHandler);
-                
+
                 if (document.querySelector('[role="tab"][data-tab="company-info"]').classList.contains('tab-active') && mode !== 'create') {
-                     window.renderCompanyWarehouseList(form.dataset.id);
+                    window.renderCompanyWarehouseList(form.dataset.id);
                 }
 
             }, 10);
-            
+
             // Render footer dengan checkbox Inactive
             const modalFooterPlaceholder = document.getElementById('company-form-footer-placeholder');
-            if(modalFooterPlaceholder) {
-                 modalFooterPlaceholder.innerHTML = window.renderStandardModalFooter({
+            if (modalFooterPlaceholder) {
+                modalFooterPlaceholder.innerHTML = window.renderStandardModalFooter({
                     cancelOnclick: "closeCompanyForm()",
                     submitFormId: "company-form",
                     submitLabel: "Save",
@@ -1320,11 +1325,11 @@
             const modalContent = modal.querySelector('.modal-content');
             const form = document.getElementById('company-form');
 
-             if (modal._keydownHandler) {
-                 modal.removeEventListener('keydown', modal._keydownHandler);
-                 delete modal._keydownHandler;
+            if (modal._keydownHandler) {
+                modal.removeEventListener('keydown', modal._keydownHandler);
+                delete modal._keydownHandler;
             }
-            
+
             if (form.dataset.mode === 'create') {
                 delete form.dataset.tempId;
                 form.dataset.id = null;
@@ -1352,7 +1357,7 @@
                 window.showCustomAlert('Aksi Ditolak', 'Harap simpan Company terlebih dahulu sebelum menambahkan Warehouse.', 'error');
                 return;
             }
-            
+
             const companyData = companies.find(c => c.id === companyId);
             if (!companyData) { window.showCustomAlert('Error', 'Company data not found.', 'error'); return; }
 
@@ -1365,7 +1370,7 @@
             let isEditMode = false;
 
             if (mode === 'new' || mode === 'create') {
-                warehouseData = JSON.parse(JSON.stringify(EMPTY_WAREHOUSE_INFO)); 
+                warehouseData = JSON.parse(JSON.stringify(EMPTY_WAREHOUSE_INFO));
                 warehouseData.id = generateUniqueId(WAREHOUSE_ID_PREFIX);
             } else if (mode === 'edit' && warehouseId) {
                 const found = companyData.warehouses.rows.find(w => w.id === warehouseId);
@@ -1376,17 +1381,17 @@
                 warehouseData = JSON.parse(JSON.stringify(found));
                 isEditMode = true;
             } else {
-                 return;
+                return;
             }
 
-            title.innerHTML = isEditMode ? 
-                `Warehouse/company information detail window (<span class="font-bold text-blue-600">${warehouseData.warehouseCode}</span>)` : 
-                'Warehouse/company information detail window (New)'; 
-            
+            title.innerHTML = isEditMode ?
+                `Warehouse/company information detail window (<span class="font-bold text-blue-600">${warehouseData.warehouseCode}</span>)` :
+                'Warehouse/company information detail window (New)';
+
             form.dataset.companyId = companyId;
             form.dataset.warehouseId = warehouseData.id;
             form.dataset.mode = mode;
-            
+
             const companyCodeEl = document.getElementById('whs-company-code-display');
             if (companyCodeEl) {
                 companyCodeEl.textContent = companyData.companyCode;
@@ -1398,11 +1403,11 @@
             document.getElementById('pane-whs-return').innerHTML = renderWarehouseOtherAddressTab(warehouseData.warehouseReturnAddress, 'warehouseReturnAddress', companyData);
             document.getElementById('pane-whs-freight').innerHTML = renderWarehouseOtherAddressTab(warehouseData.warehouseFreightBillToAddress, 'warehouseFreightBillToAddress', companyData);
             document.getElementById('pane-whs-udf').innerHTML = renderWarehouseUdfTab(warehouseData);
-            
+
             // Reset status checkbox 'Same as company address'
             const shipFromCheckbox = document.getElementById('whs-same-as-company');
             if (shipFromCheckbox) {
-                shipFromCheckbox.checked = false; 
+                shipFromCheckbox.checked = false;
             }
 
 
@@ -1417,13 +1422,13 @@
 
             document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
-            
+
             // Pasang listener submit
             form.onsubmit = window.handleWarehouseSubmit;
-            
+
             // Render footer
-            if(footerPlaceholder) {
-                 footerPlaceholder.innerHTML = window.renderStandardModalFooter({
+            if (footerPlaceholder) {
+                footerPlaceholder.innerHTML = window.renderStandardModalFooter({
                     cancelOnclick: "closeCompanyWarehouseForm()",
                     submitFormId: "warehouse-form",
                     submitLabel: "OK"
@@ -1441,13 +1446,13 @@
 
                 modal._keydownHandler = (e) => {
                     if (e.key === 'Escape') {
-                         window.closeCompanyWarehouseForm();
+                        window.closeCompanyWarehouseForm();
                     }
                 };
                 modal.addEventListener('keydown', modal._keydownHandler);
-                
+
             }, 10);
-            
+
         };
 
         /**
@@ -1458,13 +1463,13 @@
             const form = document.getElementById('warehouse-form');
             const modalContent = modal.querySelector('.modal-content');
 
-             if (modal._keydownHandler) {
-                 modal.removeEventListener('keydown', modal._keydownHandler);
-                 delete modal._keydownHandler;
+            if (modal._keydownHandler) {
+                modal.removeEventListener('keydown', modal._keydownHandler);
+                delete modal._keydownHandler;
             }
-            
+
             // Hapus listener onsubmit
-            form.onsubmit = null; 
+            form.onsubmit = null;
 
 
             modalContent.classList.remove('scale-100', 'opacity-100');
@@ -1478,13 +1483,13 @@
                 document.getElementById('company-form-modal').classList.remove('invisible');
             }, 300);
         };
-        
+
         /**
          * Render tab Ship From Address (termasuk kode Warehouse).
          */
         function renderWarehouseShipFromTab(warehouseData, companyData) {
             const { warehouseCode = '' } = warehouseData;
-            
+
             return `
                 <div class="space-y-4">
                     <div class="flex items-center gap-4 mb-4">
@@ -1512,7 +1517,7 @@
                 </div>
             `;
         }
-        
+
         /**
          * Render tab Return/Freight Address Warehouse.
          */
@@ -1533,16 +1538,16 @@
             return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${Array.from({ length: 8 }, (_, i) => { // 8 fields
-                        const key = `udf${i + 1}`;
-                        const value = warehouseUdf[key] || '';
-                        const isDecimal = i >= 6; // UDF 7 dan 8 angka desimal
-                        return `
+                const key = `udf${i + 1}`;
+                const value = warehouseUdf[key] || '';
+                const isDecimal = i >= 6; // UDF 7 dan 8 angka desimal
+                return `
                         <div>
                             <label for="whs-${key}" class="block text-sm mb-1">User defined field ${i + 1}: ${isDecimal ? '(Decimal)' : ''}</label>
                             <input type="${isDecimal ? 'number' : 'text'}" step="${isDecimal ? '0.0001' : 'any'}" id="whs-${key}" name="warehouseUdf_${key}" class="input" value="${value}">
                         </div>
                     `;
-                    }).join('')}
+            }).join('')}
                 </div>
             `;
         }
@@ -1553,7 +1558,7 @@
          * Helper untuk mengumpulkan data form Company ke dalam model yang terstruktur.
          */
         const getCompanyFormData = (form) => {
-             const getAddressData = (prefix) => ({
+            const getAddressData = (prefix) => ({
                 name: form.querySelector(`[name="${prefix}_name"]`)?.value.trim() || '',
                 address1: form.querySelector(`[name="${prefix}_address1"]`)?.value.trim() || '',
                 address2: form.querySelector(`[name="${prefix}_address2"]`)?.value.trim() || '',
@@ -1572,25 +1577,25 @@
             const existingCompany = companies.find(c => c.id === companyId) || EMPTY_COMPANY;
 
             const inactiveStatus = form.querySelector('[name="inactive"]')?.checked || existingCompany.inactive;
-            
+
             const returnSameAsChecked = form.querySelector('[name="returnAddress_sameAsCompany"]')?.checked || false;
             const freightSameAsChecked = form.querySelector('[name="freightBillToAddress_sameAsCompany"]')?.checked || false;
 
             const companyAddress = getAddressData('companyAddress');
-            
-            const returnAddress = returnSameAsChecked ? 
+
+            const returnAddress = returnSameAsChecked ?
                 companyAddress : getAddressData('returnAddress');
-                
-            const freightBillToAddress = freightSameAsChecked ? 
+
+            const freightBillToAddress = freightSameAsChecked ?
                 companyAddress : getAddressData('freightBillToAddress');
-                
+
             const assignedUsers = Array.from(form.querySelectorAll('[name="assignedUsers"]'))
-                                    .filter(el => el.checked)
-                                    .map(el => ({ 
-                                        userId: el.value, 
-                                        name: el.value 
-                                    }));
-                                    
+                .filter(el => el.checked)
+                .map(el => ({
+                    userId: el.value,
+                    name: el.value
+                }));
+
             const udfData = Array.from({ length: 8 }).reduce((acc, _, i) => {
                 const key = `udf${i + 1}`;
                 const input = form.querySelector(`[name="udf_${key}"]`);
@@ -1602,7 +1607,7 @@
                 id: companyId,
                 companyCode: form.querySelector('[name="companyCode"]')?.value.trim() || '',
                 inactive: inactiveStatus,
-                
+
                 general: {
                     uccEanNumber: form.querySelector('[name="general_uccEanNumber"]')?.value.trim() || '',
                     orderIdPrefix: form.querySelector('[name="general_orderIdPrefix"]')?.value.trim() || '',
@@ -1614,7 +1619,7 @@
                 companyAddress: companyAddress,
                 returnAddress: returnAddress,
                 freightBillToAddress: freightBillToAddress,
-                
+
                 webHeader: {
                     leftGraphic: form.querySelector('[name="webHeader_leftGraphic"]')?.value.trim() || '',
                     centerGraphic: form.querySelector('[name="webHeader_centerGraphic"]')?.value.trim() || '',
@@ -1628,10 +1633,10 @@
                     emailSupport: form.querySelector('[name="internetInfo_emailSupport"]')?.value.trim() || '',
                     phoneSupport: form.querySelector('[name="internetInfo_phoneSupport"]')?.value.trim() || '',
                 },
-                
+
                 udf: udfData,
                 assignedUsers: assignedUsers,
-                
+
                 warehouses: existingCompany.warehouses,
             };
         }
@@ -1642,13 +1647,13 @@
         window.handleCompanySubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('company-form-modal');
-            
+
             if (!validateCompanyForm(modal)) { return; }
 
             const form = event.target;
             const mode = form.dataset.mode;
             let id = form.dataset.id;
-            
+
             const formData = getCompanyFormData(form);
             let msg = '';
 
@@ -1657,17 +1662,17 @@
                     window.showCustomAlert('Error', `Company code ${formData.companyCode} sudah ada.`, 'error');
                     return;
                 }
-                
+
                 id = generateUniqueId(COMPANY_ID_PREFIX);
                 formData.id = id;
                 companies.push(formData);
                 msg = `Company ${formData.companyCode} berhasil dibuat.`;
-                
+
                 form.dataset.id = id;
                 form.dataset.companyId = id;
                 form.dataset.mode = 'edit';
                 document.getElementById('company-form-title').innerHTML = `Company - Edit Existing (<span class="font-bold text-blue-600">${formData.companyCode}</span>)`;
-                
+
             } else if (mode === 'edit') {
                 const index = companies.findIndex(c => c.id === id);
                 if (index !== -1) {
@@ -1679,16 +1684,16 @@
                     msg = `Company ${formData.companyCode} berhasil diupdate.`;
                 }
             }
-            
+
             saveCompanies();
-            
+
             if (mode === 'create') {
                 window.activateTab('company-info', modal);
-                window.renderCompanyWarehouseList(id); 
+                window.renderCompanyWarehouseList(id);
             } else {
                 window.closeCompanyForm();
             }
-            
+
             window.renderCompanyList();
             window.showCustomAlert('Success', msg, 'success');
         };
@@ -1702,9 +1707,9 @@
                 saveCompanies();
                 window.renderCompanyList();
                 window.showCustomAlert('Dihapus', 'Company berhasil dihapus!', 'success');
-                
+
                 const modal = document.getElementById('company-form-modal');
-                if(!modal.classList.contains('hidden') && modal.querySelector('#company-form').dataset.id === id) {
+                if (!modal.classList.contains('hidden') && modal.querySelector('#company-form').dataset.id === id) {
                     window.closeCompanyForm();
                 }
             });
@@ -1717,20 +1722,20 @@
          * Helper untuk mengumpulkan data form Warehouse ke dalam model yang terstruktur.
          */
         const getWarehouseFormData = () => {
-             const form = document.getElementById('warehouse-form'); 
-             const pick = (name) => (form.querySelector(`[name="${name}"]`)?.value || "").trim();
-             
-             const readAddr = (prefix) =>({
+            const form = document.getElementById('warehouse-form');
+            const pick = (name) => (form.querySelector(`[name="${name}"]`)?.value || "").trim();
+
+            const readAddr = (prefix) => ({
                 name: pick(`${prefix}_name`), address1: pick(`${prefix}_address1`), address2: pick(`${prefix}_address2`),
                 address3: pick(`${prefix}_address3`), city: pick(`${prefix}_city`), statePostalCode: pick(`${prefix}_statePostalCode`),
                 postalCode: pick(`${prefix}_postalCode`), country: pick(`${prefix}_country`), attentionTo: pick(`${prefix}_attentionTo`),
                 faxNumber: pick(`${prefix}_faxNumber`), phoneNumber: pick(`${prefix}_phoneNumber`), emailAddress: pick(`${prefix}_emailAddress`)
             });
-            
+
             const readUdf = () => {
                 const o = {};
-                for(let i=1; i<=8; i++){ 
-                    o[`udf${i}`] = pick(`warehouseUdf_udf${i}`); 
+                for (let i = 1; i <= 8; i++) {
+                    o[`udf${i}`] = pick(`warehouseUdf_udf${i}`);
                 }
                 return o;
             };
@@ -1798,17 +1803,17 @@
             saveCompanies();
 
             window.closeCompanyWarehouseForm();
-            window.renderCompanyWarehouseList(companyId); 
+            window.renderCompanyWarehouseList(companyId);
 
             window.showCustomAlert('Success', msg, 'success');
         };
-        
+
         // --- End of Company/Warehouse Logic ---
 
         // ====================================================================================
         // --- CUSTOMER LOGIC ---
         // ====================================================================================
-        
+
         /**
          * Render daftar Customer di halaman utama Customer.
          */
@@ -1817,12 +1822,12 @@
             if (!container) return;
             const lowerFilter = filter.toLowerCase();
 
-            const filteredData = customers.filter(c => 
+            const filteredData = customers.filter(c =>
                 (c.customer || '').toLowerCase().includes(lowerFilter) ||
                 (c.name || '').toLowerCase().includes(lowerFilter) ||
                 (c.company || '').toLowerCase().includes(lowerFilter)
             );
-            
+
             let listWrapperHtml = `
                 <div class="max-h-[60vh] overflow-y-auto border border-wise-border rounded-lg shadow-md">
                 <table class="min-w-full bg-white">
@@ -1882,14 +1887,14 @@
          */
         function validateCustomerForm(modal) {
             const form = document.getElementById('customer-form');
-            form.noValidate = true; 
-            
+            form.noValidate = true;
+
             const requiredFields = [
                 { name: 'customer', tab: 'general' },
                 { name: 'shipTo', tab: 'general' },
                 { name: 'company', tab: 'general' },
-                { name: 'name', tab: 'address' } 
-            ]; 
+                { name: 'name', tab: 'address' }
+            ];
 
             let isValid = true;
             let firstInvalid = null;
@@ -1897,54 +1902,54 @@
 
             form.querySelectorAll('.error-message').forEach(el => el.remove());
             form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-            
+
             const setError = (input, message, tabId) => {
                 let errorEl = document.createElement('p');
                 errorEl.className = 'error-message text-red-500 text-xs mt-1';
                 errorEl.textContent = message;
                 input.parentNode.appendChild(errorEl);
                 input.setAttribute('aria-invalid', 'true');
-                if (!firstInvalid) { 
-                    firstInvalid = input; 
+                if (!firstInvalid) {
+                    firstInvalid = input;
                     targetTab = tabId;
                 }
                 isValid = false;
             };
 
             requiredFields.forEach(field => {
-                const el = form.querySelector(`[name="${field.name}"]`); 
+                const el = form.querySelector(`[name="${field.name}"]`);
                 const tabButton = modal.querySelector(`[role="tab"][data-tab="${field.tab}"]`);
                 if (el) {
                     const label = field.name.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').trim();
-                    if (!el.value.trim()) { 
-                        setError(el, `${label} is required.`, field.tab); 
-                        if(tabButton) tabButton.classList.add('text-red-500'); 
+                    if (!el.value.trim()) {
+                        setError(el, `${label} is required.`, field.tab);
+                        if (tabButton) tabButton.classList.add('text-red-500');
                     }
                 }
             });
 
             if (firstInvalid) {
                 if (targetTab) {
-                    window.activateTab(targetTab, modal); 
+                    window.activateTab(targetTab, modal);
                 }
-                
+
                 setTimeout(() => {
-                    try { firstInvalid.focus(); } catch(e) { console.error("Gagal fokus input Customer:", e); }
-                }, 100); 
+                    try { firstInvalid.focus(); } catch (e) { console.error("Gagal fokus input Customer:", e); }
+                }, 100);
 
                 return false;
             }
 
             return true;
         }
-        
+
         /**
          * Menangani submit form Customer (Create/Update).
          */
         window.handleCustomerSubmit = function (event) {
             event.preventDefault();
             const modal = document.getElementById('customer-form-modal');
-            
+
             if (!validateCustomerForm(modal)) { return; }
 
             const form = event.target;
@@ -1959,7 +1964,7 @@
             for (let i = 1; i <= 6; i++) {
                 udf[`udf${i}`] = form[`udf${i}`]?.value || '';
             }
-            
+
             const newCustomer = {
                 id: id,
                 customer: form.customer.value,
@@ -1970,7 +1975,7 @@
                 inactive: form.inactive.checked,
                 onHold: form.onHold.checked,
                 carriers: Array.from(form.querySelectorAll('[name="carriers"]')).filter(el => el.checked).map(el => el.value),
-                
+
                 // Address (top-level)
                 residential: form.residential.checked,
                 address1: form.address1.value,
@@ -1983,9 +1988,9 @@
                 faxNumber: form.faxNumber.value,
                 phoneNumber: form.phoneNumber.value,
                 emailAddress: form.emailAddress.value,
-                
+
                 categories: categories,
-                
+
                 // FBA
                 fba_name: form.fba_name.value,
                 fba_address1: form.fba_address1.value,
@@ -1995,13 +2000,13 @@
                 fba_state: form.fba_state.value,
                 fba_postalCode: form.fba_postalCode.value,
                 fba_country: form.fba_country.value,
-                
+
                 udf: udf,
-                
+
                 // Pertahankan struktur RFID yang ada (karena CRUD-nya nested)
                 rfid: (customers.find(c => c.id === id) || EMPTY_CUSTOMER).rfid
             };
-            
+
             let msg = '';
             if (mode === 'create') {
                 newCustomer.id = generateUniqueId(CUSTOMER_ID_PREFIX);
@@ -2014,13 +2019,13 @@
                     msg = `Customer ${newCustomer.customer} berhasil diupdate.`;
                 }
             }
-            
+
             saveCustomers();
             window.closeCustomerForm();
             window.renderCustomerList();
             window.showCustomAlert('Success', msg, 'success');
         };
-        
+
         /**
          * Menampilkan modal form Customer (Create/Edit).
          */
@@ -2028,11 +2033,11 @@
             const modal = document.getElementById('customer-form-modal');
             const form = document.getElementById('customer-form');
             const title = document.getElementById('customer-form-title');
-            
+
             let customerData = {};
 
             if (mode === 'create') {
-                customerData = JSON.parse(JSON.stringify(EMPTY_CUSTOMER)); 
+                customerData = JSON.parse(JSON.stringify(EMPTY_CUSTOMER));
                 customerData.customer = generateUniqueId('CUS');
             } else if (mode === 'edit' && id) {
                 const found = customers.find(c => c.id === id);
@@ -2046,7 +2051,7 @@
             }
 
             title.textContent = mode === 'create' ? 'Customer - Create New' : `Customer - Edit Existing (${customerData.customer})`;
-            
+
             // Render semua Tab
             document.getElementById('pane-cust-general').innerHTML = renderGeneralTab(customerData);
             document.getElementById('pane-cust-address').innerHTML = renderAddressTab(customerData);
@@ -2064,20 +2069,20 @@
 
             form.dataset.id = customerData.id;
             form.dataset.mode = mode;
-            
+
             const modalContent = modal.querySelector('.modal-content');
 
             document.body.classList.add('modal-open');
             modal.classList.remove('hidden');
-            
+
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
                 modalContent.classList.add('scale-100', 'opacity-100');
             }, 10);
-            
+
             // Render footer
             const modalFooter = document.getElementById('customer-form-footer-placeholder');
-            if(modalFooter) {
+            if (modalFooter) {
                 modalFooter.innerHTML = window.renderStandardModalFooter({
                     cancelOnclick: "closeCustomerForm()",
                     submitFormId: "customer-form",
@@ -2085,7 +2090,7 @@
                 });
             }
         };
-        
+
         /**
          * Menutup modal form Customer.
          */
@@ -2106,8 +2111,8 @@
          * Render tab General Customer.
          */
         function renderGeneralTab(model) {
-             const { customer = '', shipTo = '', company = '', name = '', parent = '', inactive = false, onHold = false, carriers = [] } = model || {};
-             return `
+            const { customer = '', shipTo = '', company = '', name = '', parent = '', inactive = false, onHold = false, carriers = [] } = model || {};
+            return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="customer" class="block text-sm mb-1">Customer: <span class="text-red-500">*</span></label>
@@ -2226,27 +2231,27 @@
          */
         function renderCategoriesTab(model) {
             const { categories = EMPTY_CUSTOMER.categories } = model;
-             return `
+            return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${Array.from({ length: 10 }, (_, i) => {
-                        const key = `category${i + 1}`;
-                        return `
+                const key = `category${i + 1}`;
+                return `
                         <div>
                             <label for="${key}" class="block text-sm mb-1">Category ${i + 1}:</label>
                             <input type="text" id="${key}" name="${key}" class="input" value="${categories[key] || ''}">
                         </div>
                     `;
-                    }).join('')}
+            }).join('')}
                 </div>
             `;
         }
-        
+
         /**
          * Render tab Freight Bill To Address Customer.
          */
         function renderFreightBillTab(model) {
             const { fba_name = '', fba_address1 = '', fba_address2 = '', fba_address3 = '', fba_city = '', fba_state = '', fba_postalCode = '', fba_country = '' } = model || {};
-            
+
             return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
@@ -2295,7 +2300,7 @@
          */
         function renderRFIDTab(model) {
             const { rfid: { rows, selectedIndex, filter } } = model;
-            
+
             const selectedRow = rows[selectedIndex];
 
             return `
@@ -2346,8 +2351,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${rows.length === 0 ? `<tr><td colspan="5" class="p-4 text-center text-gray-400">No RFID rows defined.</td></tr>` : 
-                                    rows.map((row, index) => `
+                                ${rows.length === 0 ? `<tr><td colspan="5" class="p-4 text-center text-gray-400">No RFID rows defined.</td></tr>` :
+                    rows.map((row, index) => `
                                         <tr class="border-t hover:bg-gray-50 cursor-pointer ${index === selectedIndex ? 'bg-blue-100' : ''}" onclick="selectRFIDRow(${index})">
                                             <td class="py-2 px-4">${index + 1}</td>
                                             <td class="py-2 px-4">${row.containerClass}</td>
@@ -2356,7 +2361,7 @@
                                             <td class="py-2 px-4">${row.udf1 || ''}</td>
                                         </tr>
                                     `).join('')
-                                }
+                }
                             </tbody>
                         </table>
                     </div>
@@ -2379,28 +2384,28 @@
          */
         function renderUDFTab(model) {
             const { udf = EMPTY_CUSTOMER.udf } = model;
-            
-             return `
+
+            return `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${Array.from({ length: 6 }, (_, i) => {
-                        const key = `udf${i + 1}`;
-                        return `
+                const key = `udf${i + 1}`;
+                return `
                         <div>
                             <label for="${key}" class="block text-sm mb-1">User defined field ${i + 1}:</label>
                             <input type="text" id="${key}" name="${key}" class="input" value="${udf[key] || ''}">
                         </div>
                     `;
-                    }).join('')}
+            }).join('')}
                 </div>
             `;
         }
 
         // RFID Sub-handlers 
-        
+
         /**
          * Memilih baris RFID, mengisi form, dan me-render ulang list.
          */
-        window.selectRFIDRow = function(index) {
+        window.selectRFIDRow = function (index) {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
             const customerIndex = customers.findIndex(c => c.id === customerId);
@@ -2408,17 +2413,17 @@
             if (customerIndex !== -1) {
                 const rfidData = customers[customerIndex].rfid;
                 rfidData.selectedIndex = index;
-                
+
                 const row = rfidData.rows[index];
                 form.containerClass.value = row.containerClass;
                 form.epcEncoding.value = row.epcEncoding;
                 form.singleItem.checked = row.singleItem;
                 form.multiItem.checked = row.multiItem;
                 form.rfidUdf1.value = row.udf1;
-                
+
                 const modal = document.getElementById('customer-form-modal');
                 modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
-                window.activateTab('rfid', modal); 
+                window.activateTab('rfid', modal);
             }
         };
 
@@ -2436,13 +2441,13 @@
         /**
          * Menambahkan baris RFID baru ke dalam list.
          */
-        window.addRFIDRow = function() {
+        window.addRFIDRow = function () {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
             const customerIndex = customers.findIndex(c => c.id === customerId);
-            
+
             if (customerIndex === -1) { window.showCustomAlert('Error', 'Customer not found.', 'error'); return; }
-            
+
             const newRow = getCurrentRFIDData(form);
             if (!newRow.containerClass || !newRow.epcEncoding) {
                 window.showCustomAlert('Warning', 'Container Class dan EPC Encoding wajib diisi sebelum menambah baris.', 'warning');
@@ -2452,7 +2457,7 @@
             customers[customerIndex].rfid.rows.push(newRow);
             customers[customerIndex].rfid.selectedIndex = -1;
             saveCustomers();
-            
+
             const modal = document.getElementById('customer-form-modal');
             modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
             window.activateTab('rfid', modal);
@@ -2462,13 +2467,13 @@
         /**
          * Mengupdate baris RFID yang sedang dipilih.
          */
-        window.updateRFIDRow = function() {
+        window.updateRFIDRow = function () {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
             const customerIndex = customers.findIndex(c => c.id === customerId);
-            
+
             if (customerIndex === -1) { window.showCustomAlert('Error', 'Customer not found.', 'error'); return; }
-            
+
             const selectedIndex = customers[customerIndex].rfid.selectedIndex;
             if (selectedIndex === -1) { window.showCustomAlert('Warning', 'Pilih baris yang akan diupdate terlebih dahulu.', 'warning'); return; }
 
@@ -2481,7 +2486,7 @@
             customers[customerIndex].rfid.rows[selectedIndex] = updatedRow;
             customers[customerIndex].rfid.selectedIndex = -1;
             saveCustomers();
-            
+
             const modal = document.getElementById('customer-form-modal');
             modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
             window.activateTab('rfid', modal);
@@ -2491,21 +2496,21 @@
         /**
          * Menghapus baris RFID yang sedang dipilih.
          */
-        window.removeRFIDRow = function() {
+        window.removeRFIDRow = function () {
             const form = document.getElementById('customer-form');
             const customerId = form.dataset.id;
             const customerIndex = customers.findIndex(c => c.id === customerId);
-            
+
             if (customerIndex === -1) { window.showCustomAlert('Error', 'Customer not found.', 'error'); return; }
-            
+
             const selectedIndex = customers[customerIndex].rfid.selectedIndex;
             if (selectedIndex === -1) { window.showCustomAlert('Warning', 'Pilih baris yang akan dihapus terlebih dahulu.', 'warning'); return; }
-            
+
             window.showCustomConfirm('Yakin hapus baris RFID yang dipilih?', () => {
                 customers[customerIndex].rfid.rows.splice(selectedIndex, 1);
                 customers[customerIndex].rfid.selectedIndex = -1;
                 saveCustomers();
-                
+
                 const modal = document.getElementById('customer-form-modal');
                 modal.querySelector('#pane-cust-rfid').innerHTML = renderRFIDTab(customers[customerIndex]);
                 window.activateTab('rfid', modal);
@@ -2517,19 +2522,19 @@
         // --- REGISTRASI KONTEN CUSTOMER ---
 
         if (!window.contentData[CUSTOMER_CATEGORY_KEY]) {
-             window.contentData[CUSTOMER_CATEGORY_KEY] = {
+            window.contentData[CUSTOMER_CATEGORY_KEY] = {
                 // Background halaman utama Customer harus putih
                 full: `
                     <div class="bg-white p-6 rounded-lg shadow-lg"> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
                         <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
                         ${window.renderStandardListHeader({
-                            createLabel: "Create New Customer",
-                            onCreate: "showCustomerForm('create')", 
-                            searchId: "customer-search",
-                            searchPlaceholder: "Search customer...",
-                            onSearch: "filterCustomerList"
-                        })}
+                    createLabel: "Create New Customer",
+                    onCreate: "showCustomerForm('create')",
+                    searchId: "customer-search",
+                    searchPlaceholder: "Search customer...",
+                    onSearch: "filterCustomerList"
+                })}
                         <div id="customer-list-container" class="overflow-x-auto"></div>
                     </div>
 
@@ -2570,7 +2575,7 @@
 
             window.searchItems.push({ id: CUSTOMER_CATEGORY_KEY, title: 'Customer', category: 'Configuration', lastUpdated: 'Latest' });
             window.allMenus.push({ id: CUSTOMER_CATEGORY_KEY, name: 'Customer', category: 'configuration' });
-            window.parentMapping[CUSTOMER_CATEGORY_KEY] = 'configuration'; 
+            window.parentMapping[CUSTOMER_CATEGORY_KEY] = 'configuration';
         }
 
 
@@ -2583,12 +2588,12 @@
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
                         <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
                         ${window.renderStandardListHeader({
-                            createLabel: "Create New Company",
-                            onCreate: "showCompanyForm('create')", 
-                            searchId: "company-search",
-                            searchPlaceholder: "Search company...",
-                            onSearch: "filterCompanyList"
-                        })}
+                    createLabel: "Create New Company",
+                    onCreate: "showCompanyForm('create')",
+                    searchId: "company-search",
+                    searchPlaceholder: "Search company...",
+                    onSearch: "filterCompanyList"
+                })}
                         <div id="company-list-container" class="overflow-x-auto"></div>
                     </div>
 
@@ -2669,22 +2674,22 @@
 
             window.searchItems.push({ id: COMPANY_CATEGORY_KEY, title: 'Company', category: 'Configuration', lastUpdated: 'Latest' });
             window.allMenus.push({ id: COMPANY_CATEGORY_KEY, name: 'Company', category: 'configuration' });
-            window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration'; 
+            window.parentMapping[COMPANY_CATEGORY_KEY] = 'configuration';
         }
 
         // --- LOGIKA HALAMAN WAREHOUSE MANDIRI (OPSIONAL) ---
-        
+
         const WAREHOUSE_LAST_COMPANY_KEY = 'wms_whs_last_company_id';
 
-        window.renderWarehousePage = function() {
+        window.renderWarehousePage = function () {
             companies = JSON.parse(localStorage.getItem(COMPANY_STORAGE_KEY)) || companies;
-            
+
             const container = document.getElementById('content-container');
             const targetContainer = container.querySelector(`[data-key="${WAREHOUSE_CATEGORY_KEY}"]`);
             if (!targetContainer) return;
-            
+
             if (companies.length === 0) {
-                 targetContainer.innerHTML = `
+                targetContainer.innerHTML = `
                     <div class="bg-white p-6 rounded-lg shadow-lg"> 
                         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Warehouse/company information</h2>
                         <p class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow-md mt-4">
@@ -2692,7 +2697,7 @@
                         </p>
                     </div>
                  `;
-                 return;
+                return;
             }
 
             let selectedCompanyId = localStorage.getItem(WAREHOUSE_LAST_COMPANY_KEY);
@@ -2703,7 +2708,7 @@
                 localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, selectedCompanyId);
             }
 
-            let companyOptions = companies.map(c => 
+            let companyOptions = companies.map(c =>
                 `<option value="${c.id}" ${c.id === selectedCompanyId ? 'selected' : ''}>${c.companyCode} - ${c.companyAddress.name || 'N/A'}</option>`
             ).join('');
 
@@ -2722,12 +2727,12 @@
                     </div>
                 </div>
             `;
-            
+
             window.renderCompanyWarehouseList(selectedCompanyId);
             window.currentSelectedCompanyId = selectedCompanyId;
         };
-        
-        window.handleWarehouseCompanyChange = function(companyId) {
+
+        window.handleWarehouseCompanyChange = function (companyId) {
             if (!companyId) return;
             localStorage.setItem(WAREHOUSE_LAST_COMPANY_KEY, companyId);
             window.renderCompanyWarehouseList(companyId);
@@ -2735,7 +2740,7 @@
 
 
         // --- PENGENDALIAN AUTORENDER ---
-        
+
         const autoRenderContent = () => {
             const customerContainer = document.getElementById('customer-list-container');
             if (customerContainer && !customerContainer.dataset.bound) {
@@ -2758,7 +2763,7 @@
             });
         });
         observer.observe(document.body, { childList: true, subtree: true });
-        
+
         document.addEventListener('content:rendered', (e) => {
             if (e.detail.key === CUSTOMER_CATEGORY_KEY) {
                 window.renderCustomerList();

@@ -5,7 +5,7 @@
         if (typeof window.searchItems === 'undefined') window.searchItems = [];
         if (typeof window.parentMapping === 'undefined') window.parentMapping = {};
         if (typeof window.allMenus === 'undefined') window.allMenus = [];
-        
+
         // --- UTILITY FUNCTIONS ---
         // Helper untuk memformat tanggal dan waktu
         const formatDate = (date) => {
@@ -18,9 +18,9 @@
             const hours = pad(d.getHours());
             const minutes = pad(d.getMinutes());
             const seconds = pad(d.getSeconds());
-            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`; 
+            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
         };
-        
+
         // Debounce function
         const debounce = window.debounce || ((fn, delay) => {
             let timeoutId;
@@ -32,13 +32,13 @@
 
         // Custom Alert and Confirm to avoid browser pop-ups
         function createCustomModal(id, title, message, isConfirm = false, onOk, onCancel) {
-    let modal = document.getElementById(id);
-    if (modal) modal.remove();
+            let modal = document.getElementById(id);
+            if (modal) modal.remove();
 
-    modal = document.createElement('div');
-    modal.id = id;
-    modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
-    modal.innerHTML = `
+            modal = document.createElement('div');
+            modal.id = id;
+            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
+            modal.innerHTML = `
         <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-auto">
             <h3 class="text-lg font-semibold mb-4">${title}</h3>
             <p class="text-sm text-gray-600 mb-4">${message}</p>
@@ -48,34 +48,34 @@
             </div>
         </div>
     `;
-    document.body.appendChild(modal);
+            document.body.appendChild(modal);
 
-    document.getElementById(`${id}-ok`).onclick = () => {
-        modal.remove();
-        if (onOk) onOk();
-    };
+            document.getElementById(`${id}-ok`).onclick = () => {
+                modal.remove();
+                if (onOk) onOk();
+            };
 
-    if (isConfirm) {
-        document.getElementById(`${id}-cancel`).onclick = () => {
-            modal.remove();
-            if (onCancel) onCancel();
+            if (isConfirm) {
+                document.getElementById(`${id}-cancel`).onclick = () => {
+                    modal.remove();
+                    if (onCancel) onCancel();
+                };
+            }
+        }
+
+        window.showCustomAlert = (title, message) => {
+            return new Promise(resolve => {
+                const modalId = 'custom-alert-modal';
+                createCustomModal(modalId, title, message, false, resolve);
+            });
         };
-    }
-}
 
-window.showCustomAlert = (title, message) => {
-    return new Promise(resolve => {
-        const modalId = 'custom-alert-modal';
-        createCustomModal(modalId, title, message, false, resolve);
-    });
-};
-
-window.showCustomConfirm = (title, message) => {
-    return new Promise(resolve => {
-        const modalId = 'custom-confirm-modal';
-        createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
-    });
-};
+        window.showCustomConfirm = (title, message) => {
+            return new Promise(resolve => {
+                const modalId = 'custom-confirm-modal';
+                createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
+            });
+        };
 
         const showToast = (message, type = 'success') => {
             const toastId = 'toast-notification';
@@ -86,27 +86,27 @@ window.showCustomConfirm = (title, message) => {
                 toast.className = 'fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 aria-live="polite"';
                 document.body.appendChild(toast);
             }
-            
+
             const colorClass = type === 'success' ? 'bg-green-500' : 'bg-red-500';
             toast.className = `fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 ${colorClass}`;
             toast.textContent = message;
             toast.classList.remove('opacity-0');
-            
+
             setTimeout(() => {
                 toast.classList.add('opacity-0');
             }, 3000);
         };
-        
+
         // Helper untuk membuat dropdown panjang yang dapat dicari
         const makeLongDropdown = (selectId, options, currentValue) => {
             const selectEl = document.getElementById(selectId);
             if (!selectEl) return;
             const selectContainer = document.createElement('div');
             selectContainer.className = 'relative w-full';
-            
+
             const inputId = `${selectId}-input`;
             const dropdownId = `${selectId}-dropdown`;
-            
+
             selectContainer.innerHTML = `
                 <input type="text" id="${inputId}" class="input w-full cursor-pointer focus:ring-2 focus:ring-wise-primary" readonly
                        placeholder="-- Pilih --" value="${currentValue || ''}" autocomplete="off" aria-haspopup="listbox" aria-expanded="false">
@@ -118,12 +118,12 @@ window.showCustomConfirm = (title, message) => {
                 </div>
             `;
             selectEl.parentNode.replaceChild(selectContainer, selectEl);
-            
+
             const dropdown = document.getElementById(dropdownId);
             const input = document.getElementById(inputId);
             const filterInput = document.getElementById(`${dropdownId}-filter`);
             const list = document.getElementById(`${dropdownId}-list`);
-            
+
             let filteredOptions = options;
             let activeIndex = -1;
 
@@ -144,7 +144,7 @@ window.showCustomConfirm = (title, message) => {
                 }
                 renderOptions(filteredOptions);
             });
-            
+
             document.addEventListener('click', (e) => {
                 if (!selectContainer.contains(e.target) && !dropdown.classList.contains('hidden')) {
                     dropdown.classList.add('hidden');
@@ -169,7 +169,7 @@ window.showCustomConfirm = (title, message) => {
                     input.dataset.value = value;
                     dropdown.classList.add('hidden');
                     input.setAttribute('aria-expanded', 'false');
-                    
+
                     // Trigger custom change event for reactivity
                     const event = new Event('change', { bubbles: true });
                     input.dispatchEvent(event);
@@ -206,7 +206,7 @@ window.showCustomConfirm = (title, message) => {
 
             renderOptions(options);
         };
-        
+
         // Helper untuk memvalidasi form
         const validateItemForm = () => {
             const form = document.getElementById('item-form');
@@ -269,7 +269,7 @@ window.showCustomConfirm = (title, message) => {
             if (lotControlledCheckbox?.checked && !lotTemplateSelect?.value) {
                 showError(lotTemplateSelect, 'Lot template diperlukan.');
             }
-            
+
             if (gs1EnabledCheckbox?.checked && !gs1TypeRadio?.value) {
                 const radioGroup = form.querySelector('input[name="gs1Type"]');
                 showError(radioGroup, 'Pilih satu opsi GS1.');
@@ -278,17 +278,17 @@ window.showCustomConfirm = (title, message) => {
             }
 
             if (computeQtyAsRadio?.value === 'PERCENTAGE' && numValue(inspectionQtyInput) > 100) {
-                 showError(inspectionQtyInput, 'Inspection Qty tidak boleh > 100%');
+                showError(inspectionQtyInput, 'Inspection Qty tidak boleh > 100%');
             }
-            
+
             const serialFlags = form.querySelector('[name="serialInbound"]').checked ||
-                                form.querySelector('[name="serialInventory"]').checked ||
-                                form.querySelector('[name="serialOutbound"]').checked;
-            
+                form.querySelector('[name="serialInventory"]').checked ||
+                form.querySelector('[name="serialOutbound"]').checked;
+
             if (serialControlledCheckbox?.checked && !serialTemplateSelect?.value) {
-                 showError(serialTemplateSelect, 'Serial template diperlukan.');
+                showError(serialTemplateSelect, 'Serial template diperlukan.');
             } else if (!serialControlledCheckbox?.checked && serialTemplateSelect?.value) {
-                 showError(serialTemplateSelect, 'Kosongkan template karena Serial controlled tidak aktif.');
+                showError(serialTemplateSelect, 'Kosongkan template karena Serial controlled tidak aktif.');
             }
 
 
@@ -304,7 +304,7 @@ window.showCustomConfirm = (title, message) => {
 
             return isValid;
         };
-        
+
         // --- DATA MODELS & SEEDING ---
         let items = JSON.parse(localStorage.getItem('items')) || [];
         // Data dummy untuk Item Cross Reference
@@ -320,18 +320,18 @@ window.showCustomConfirm = (title, message) => {
         ];
 
         let inventoryControlValues = JSON.parse(localStorage.getItem('inventoryControlValues')) || [
-             { id: 10, key: "Whether inventory is being tracked by default", value: "Y", systemValue: "Y", systemCreated: "Yes" },
-             { id: 40, key: "Default inventory status for adjustments", value: "Available", systemValue: "Available", systemCreated: "Yes" },
-             { id: 50, key: "Allow Duplicate Serial Numbers?", value: "N", systemValue: "N", systemCreated: "Yes" },
-             { id: 70, key: "Write Location UM overrides on Item UM Change", value: "N", systemValue: "N", systemCreated: "Yes" },
-             { id: 110, key: "Should item be validated throughout system?", value: "Y", systemValue: "Y", systemCreated: "Yes" },
-             { id: 130, key: "Inventory status for frozen lots", value: "Held", systemValue: "Held", systemCreated: "Yes" }
+            { id: 10, key: "Whether inventory is being tracked by default", value: "Y", systemValue: "Y", systemCreated: "Yes" },
+            { id: 40, key: "Default inventory status for adjustments", value: "Available", systemValue: "Available", systemCreated: "Yes" },
+            { id: 50, key: "Allow Duplicate Serial Numbers?", value: "N", systemValue: "N", systemCreated: "Yes" },
+            { id: 70, key: "Write Location UM overrides on Item UM Change", value: "N", systemValue: "N", systemCreated: "Yes" },
+            { id: 110, key: "Should item be validated throughout system?", value: "Y", systemValue: "Y", systemCreated: "Yes" },
+            { id: 130, key: "Inventory status for frozen lots", value: "Held", systemValue: "Held", systemCreated: "Yes" }
         ];
-        
+
         function saveInventoryControlValues() {
             localStorage.setItem('inventoryControlValues', JSON.stringify(inventoryControlValues));
         }
-        
+
         const uoms = ['PC', 'BOX', 'PLT', 'KG', 'LBS', 'M', 'CM', 'IN', 'FT', 'G', 'LB'];
         const itemClasses = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
         const companies = ['DCB', 'DCI', 'DMR', 'DCS', 'DCJ', 'DCK', 'DCM', 'DCT'];
@@ -343,30 +343,30 @@ window.showCustomConfirm = (title, message) => {
             { value: 'add_bom_components', label: 'Add BOM components as shipment details' },
             { value: 'none', label: 'None' },
         ];
-        
+
         const longRuleList = Array.from({ length: 50 }, (_, i) => `RULE-${i + 1}`);
         const allocationRules = [
             'A-DCB.COOKFOOD', 'A-DCB.DAILYDAIRY', 'A-DCB.EGGS', 'A-DCB.EXP EMPTIES',
             'A-DCB.EXPENSE', 'A-DCB.EXT.DRY', 'A-DCB.FASHION', 'A-DCB.FD.PICK',
-            ...Array.from({length: 20}, (_, i) => `A-DCB.RULE${i+1}`),
+            ...Array.from({ length: 20 }, (_, i) => `A-DCB.RULE${i + 1}`),
         ];
         const locatingRules = [
             'L-DAB.FASHION FACE', 'L-DCB.AISLE 31.61', 'L-DCB.AISLE 32.62', 'L-DCB.AISLE 33.63',
             'L-DCB.AISLE 34.64', 'L-DCB.AISLE 35-39', 'L-DCB.AISLE88 CIGARETTE', 'L-DCB.CFLOW.LT2',
-            ...Array.from({length: 20}, (_, i) => `L-DCB.RULE${i+1}`),
+            ...Array.from({ length: 20 }, (_, i) => `L-DCB.RULE${i + 1}`),
         ];
 
         const packingClasses = ['Default Packing Class', 'CFLOWFD', 'CFLOWLT2FACE', 'CFLOWNF', 'CFLOW14', 'CFLOW15'];
         const storageTemplates = ['PC-PCK', 'PC-PCK-PLT', 'KG', 'PC', 'PLT'];
         const countryList = [
-            {code: 'ID', name: 'Indonesia'}, {code: 'CN', name: 'China'}, {code: 'US', name: 'United States'}
+            { code: 'ID', name: 'Indonesia' }, { code: 'CN', name: 'China' }, { code: 'US', name: 'United States' }
         ];
         const netCostOptions = ['NONE', 'C', 'N'];
         const categoryList = [
-            'A - LADIES', 'A2 - YOUNG', 'A21 - T-SHIRT', 'A21A03 - LONG T-SHIRT', 'A21A03B', 
+            'A - LADIES', 'A2 - YOUNG', 'A21 - T-SHIRT', 'A21A03 - LONG T-SHIRT', 'A21A03B',
             'PC', 'A1', 'B - MENS', 'B3 - SHIRTS', 'C - CHILDREN', 'D - HOMEWARE'
         ];
-        
+
         // Seeding data
         function seedItemData() {
             if (items.length === 0) {
@@ -374,13 +374,13 @@ window.showCustomConfirm = (title, message) => {
                     {
                         id: 'ITM000001',
                         company: 'DCB',
-                        itemCode: '000000002077_1', 
-                        description: '1B RM2003 BO TS SLR01MG LONG T-SHIRT RM2', 
+                        itemCode: '000000002077_1',
+                        description: '1B RM2003 BO TS SLR01MG LONG T-SHIRT RM2',
                         inactive: false,
                         inventoryTracking: true,
                         itemTemplate: '',
-                        
-                        inboundShelfLife: '365D', 
+
+                        inboundShelfLife: '365D',
                         promoItem: 'N',
                         containerType: 'PALLET',
                         tiHi: '8 x 5',
@@ -392,7 +392,7 @@ window.showCustomConfirm = (title, message) => {
                         immediateEligible: true,
                         immediateLocatingRule: 'L-DAB.FASHION FACE',
                         inboundQcStatus: 'Active', // Read-only status
-                        
+
                         cost: 125000.00000,
                         listPrice: 150000.00000,
                         netPrice: 135000.00000,
@@ -407,14 +407,14 @@ window.showCustomConfirm = (title, message) => {
                         itemColor: 'MG',
                         itemStyle: 'LONG',
                         shippingBOM: 'add_bom_components',
-                        
+
                         char2a: 'Value A',
                         char2b: 'Value B',
-                        udf: { 
-                            udf1: 'UDF1', udf2: 'UDF2', udf3: 'UDF3', udf4: 'UDF4', 
-                            udf5: '', udf6: '', udf7: '', udf8: '' 
+                        udf: {
+                            udf1: 'UDF1', udf2: 'UDF2', udf3: 'UDF3', udf4: 'UDF4',
+                            udf5: '', udf6: '', udf7: '', udf8: ''
                         },
-                        
+
                         allocationRule: 'A-DCB.FASHION',
                         locatingRule: 'L-DAB.FASHION FACE',
                         nmfcCode: 'NMFC-123',
@@ -431,7 +431,7 @@ window.showCustomConfirm = (title, message) => {
                         serialInventory: true,
                         serialOutbound: true,
                         serialTemplate: 'Standard',
-                        
+
                         inboundEligible: true,
                         computeQtyAs: 'AMOUNT',
                         inspectionQty: 10.00,
@@ -442,41 +442,41 @@ window.showCustomConfirm = (title, message) => {
                         webThumb: 'http://example.com/thumb.jpg',
                         longDescription: 'Long description for the item goes here.',
                         availableForWebOrder: true,
-                        
+
                         alternateItem: 'ALT-ITEM-1',
                         substituteItem: 'SUB-ITEM-1',
                         substituteList: [
                             { code: 'SUB-A', description: 'Substitute Item A' },
                             { code: 'SUB-B', description: 'Substitute Item B' },
                         ],
-                        
+
                         preferenceCriterion: true,
                         harmonizedCode: 'HS-12345',
                         harmonizedUploaded: true,
                         countryOfOrigin: 'CN',
                         netCost: 'C',
                         countries: [{ code: 'CN', name: 'China' }, { code: 'ID', name: 'Indonesia' }, { code: 'US', name: 'United States' }],
-                        
+
                         categories: {
                             1: 'A - LADIES', 2: 'A2 - YOUNG', 3: 'A21 - T-SHIRT', 4: '', 5: '',
                             6: '', 7: '', 8: '', 9: '', 10: ''
                         },
 
-                        updatedAt: Date.now() 
+                        updatedAt: Date.now()
                     },
                 ];
                 items = dummyData;
                 localStorage.setItem('items', JSON.stringify(items));
             }
         }
-        
+
         function saveItems() {
             localStorage.setItem('items', JSON.stringify(items));
         }
         function saveItemCrossReferences() {
             localStorage.setItem('itemCrossReferences', JSON.stringify(itemCrossReferences));
         }
-        
+
         // --- MODAL AND UI SETUP ---
         const createModal = (id, sizeClass = 'w-[min(1200px,95vw)]') => {
             const modal = document.createElement('div');
@@ -511,7 +511,7 @@ window.showCustomConfirm = (title, message) => {
                 modal.querySelector('.modal-content').focus();
             }, 10);
         };
-        
+
         // --- UTILITY FUNCTIONS FOR STANDARD UI ---
 
         /**
@@ -554,15 +554,15 @@ window.showCustomConfirm = (title, message) => {
 
         // --- ITEM MODAL FUNCTIONS ---
         createModal('item-form-modal');
-        
+
         window.showItemForm = (mode, id = null) => {
-    const modal = document.getElementById('item-form-modal');
-    const title = document.getElementById('item-form-modal-title');
-    const body = document.getElementById('item-form-modal-body');
-    const footer = document.getElementById('item-form-modal-footer');
-    
-    // Render the form HTML inside the modal body
-    body.innerHTML = `
+            const modal = document.getElementById('item-form-modal');
+            const title = document.getElementById('item-form-modal-title');
+            const body = document.getElementById('item-form-modal-body');
+            const footer = document.getElementById('item-form-modal-footer');
+
+            // Render the form HTML inside the modal body
+            body.innerHTML = `
         <form id="item-form" class="h-full" data-mode="${mode}">
             <div role="tablist" id="item-tab-list" class="border-b mb-4 flex flex-wrap gap-4 text-sm font-medium w-full justify-between">
             <button type="button" role="tab" data-tab="item-gen-tab" class="tab-active">General</button>
@@ -591,87 +591,87 @@ window.showCustomConfirm = (title, message) => {
             <input type="hidden" id="item-id" name="id">
         </form>
     `;
-    
-    // Use the new standard footer function
-    footer.innerHTML = renderStandardModalFooter({
-        cancelOnclick: "closeModal('item-form-modal')",
-        submitFormId: "item-form"
-    });
-    
-    // Render content per tab
-    renderTabGeneral(mode);
-    renderTabChar1(mode);
-    renderTabChar2(mode);
-    renderTabHandling1(mode);
-    renderTabHandling2(mode);
-    renderTabInternet(mode);
-    renderTabAlternate(mode);
-    renderTabInternational(mode);
-    renderTabCategories(mode);
-    renderTabUdf(mode);
 
-    // Set modal title and footer buttons
-    title.textContent = mode === 'create' ? 'Create New Item' : (mode === 'edit' ? 'Edit Item' : 'View Item');
-    
-    setupTabSwitching('item-form-modal');
-    
-    let item = {};
-    if (mode !== 'create' && id) {
-        item = items.find(i => i.id === id);
-        if (item) {
-            fillItemForm(item);
-        }
-    } else {
-         applyStateFromForm();
-    }
-    
-    // Add event listeners for dynamic states
-    document.getElementById('item-form').addEventListener('change', (e) => {
-        if (e.target.name === 'lotControlled' || e.target.name === 'serialControlled' || e.target.name === 'gs1GtinEnabled' || e.target.name === 'computeQtyAs') {
-            applyStateFromForm();
-        }
-        // Sinkronisasi Allocation/Locating
-        if (e.target.id === 'item-allocation-rule' || e.target.id === 'item-locating-rule') {
-             syncAllocationLocating(e.target.id, e.target.value);
-        }
-        const longDropdownInputs = ['item-allocation-rule-long', 'item-locating-rule-long', 'item-qc-locating-rule-long'];
-        if(longDropdownInputs.includes(e.target.id)) {
-            if (e.target.id === 'item-allocation-rule-long' || e.target.id === 'item-locating-rule-long') {
-               syncAllocationLocating(e.target.id, e.target.value);
+            // Use the new standard footer function
+            footer.innerHTML = renderStandardModalFooter({
+                cancelOnclick: "closeModal('item-form-modal')",
+                submitFormId: "item-form"
+            });
+
+            // Render content per tab
+            renderTabGeneral(mode);
+            renderTabChar1(mode);
+            renderTabChar2(mode);
+            renderTabHandling1(mode);
+            renderTabHandling2(mode);
+            renderTabInternet(mode);
+            renderTabAlternate(mode);
+            renderTabInternational(mode);
+            renderTabCategories(mode);
+            renderTabUdf(mode);
+
+            // Set modal title and footer buttons
+            title.textContent = mode === 'create' ? 'Create New Item' : (mode === 'edit' ? 'Edit Item' : 'View Item');
+
+            setupTabSwitching('item-form-modal');
+
+            let item = {};
+            if (mode !== 'create' && id) {
+                item = items.find(i => i.id === id);
+                if (item) {
+                    fillItemForm(item);
+                }
+            } else {
+                applyStateFromForm();
             }
-        }
-    });
-    
-    const form = document.getElementById('item-form');
-    if(form) {
-        renderSubstituteTable(item?.substituteList || []);
-        document.getElementById('add-substitute')?.addEventListener('click', addSubstituteItem);
-        document.getElementById('delete-substitute')?.addEventListener('click', deleteSubstituteItem);
-        document.getElementById('up-substitute')?.addEventListener('click', moveSubstituteItemUp);
-        document.getElementById('down-substitute')?.addEventListener('click', moveSubstituteItemDown);
-        document.getElementById('select-all-subs')?.addEventListener('change', (e) => {
-            document.querySelectorAll('#item-substitute-table .subst-select-row')
-                .forEach(cb => cb.checked = e.target.checked);
-        });
-        
-        form.addEventListener('submit', handleItemSubmit);
-    }
 
-    showModal('item-form-modal');
-    
-    // Initialize custom long dropdowns
-    makeLongDropdown('item-company', companies, item.company);
-    makeLongDropdown('item-allocation-rule-long', allocationRules, item.allocationRule);
-    makeLongDropdown('item-locating-rule-long', locatingRules, item.locatingRule);
-    makeLongDropdown('item-packing-class', packingClasses, item.packingClass);
-    makeLongDropdown('item-storage-template', storageTemplates, item.storageTemplate);
-    makeLongDropdown('item-immediate-locating-rule-long', locatingRules, item.immediateLocatingRule);
-    makeLongDropdown('item-qc-locating-rule-long', locatingRules, item.qcLocatingRule);
-    makeLongDropdown('item-lot-template', lotTemplates, item.lotTemplate);
-    makeLongDropdown('item-serial-template', serialTemplates, item.serialTemplate);
-    makeLongDropdown('item-country-origin', countryList.map(c => ({ value: c.code, label: c.name })), item.countryOfOrigin);
-};
-        
+            // Add event listeners for dynamic states
+            document.getElementById('item-form').addEventListener('change', (e) => {
+                if (e.target.name === 'lotControlled' || e.target.name === 'serialControlled' || e.target.name === 'gs1GtinEnabled' || e.target.name === 'computeQtyAs') {
+                    applyStateFromForm();
+                }
+                // Sinkronisasi Allocation/Locating
+                if (e.target.id === 'item-allocation-rule' || e.target.id === 'item-locating-rule') {
+                    syncAllocationLocating(e.target.id, e.target.value);
+                }
+                const longDropdownInputs = ['item-allocation-rule-long', 'item-locating-rule-long', 'item-qc-locating-rule-long'];
+                if (longDropdownInputs.includes(e.target.id)) {
+                    if (e.target.id === 'item-allocation-rule-long' || e.target.id === 'item-locating-rule-long') {
+                        syncAllocationLocating(e.target.id, e.target.value);
+                    }
+                }
+            });
+
+            const form = document.getElementById('item-form');
+            if (form) {
+                renderSubstituteTable(item?.substituteList || []);
+                document.getElementById('add-substitute')?.addEventListener('click', addSubstituteItem);
+                document.getElementById('delete-substitute')?.addEventListener('click', deleteSubstituteItem);
+                document.getElementById('up-substitute')?.addEventListener('click', moveSubstituteItemUp);
+                document.getElementById('down-substitute')?.addEventListener('click', moveSubstituteItemDown);
+                document.getElementById('select-all-subs')?.addEventListener('change', (e) => {
+                    document.querySelectorAll('#item-substitute-table .subst-select-row')
+                        .forEach(cb => cb.checked = e.target.checked);
+                });
+
+                form.addEventListener('submit', handleItemSubmit);
+            }
+
+            showModal('item-form-modal');
+
+            // Initialize custom long dropdowns
+            makeLongDropdown('item-company', companies, item.company);
+            makeLongDropdown('item-allocation-rule-long', allocationRules, item.allocationRule);
+            makeLongDropdown('item-locating-rule-long', locatingRules, item.locatingRule);
+            makeLongDropdown('item-packing-class', packingClasses, item.packingClass);
+            makeLongDropdown('item-storage-template', storageTemplates, item.storageTemplate);
+            makeLongDropdown('item-immediate-locating-rule-long', locatingRules, item.immediateLocatingRule);
+            makeLongDropdown('item-qc-locating-rule-long', locatingRules, item.qcLocatingRule);
+            makeLongDropdown('item-lot-template', lotTemplates, item.lotTemplate);
+            makeLongDropdown('item-serial-template', serialTemplates, item.serialTemplate);
+            makeLongDropdown('item-country-origin', countryList.map(c => ({ value: c.code, label: c.name })), item.countryOfOrigin);
+        };
+
         // Renderers per tab
         const renderTabGeneral = (mode) => {
             const container = document.getElementById('item-gen-tab');
@@ -883,8 +883,8 @@ window.showCustomConfirm = (title, message) => {
         };
 
         const renderTabHandling1 = (mode) => {
-             const container = document.getElementById('item-handling1-tab');
-             container.innerHTML = `
+            const container = document.getElementById('item-handling1-tab');
+            container.innerHTML = `
                 <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Handling(1)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     <div class="md:col-span-2">
@@ -1004,8 +1004,8 @@ window.showCustomConfirm = (title, message) => {
         };
 
         const renderTabInternet = (mode) => {
-             const container = document.getElementById('item-internet-tab');
-             container.innerHTML = `
+            const container = document.getElementById('item-internet-tab');
+            container.innerHTML = `
             <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Internet Information</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -1028,7 +1028,7 @@ window.showCustomConfirm = (title, message) => {
             </div>
              `;
         };
-        
+
         const renderTabAlternate = (mode) => {
             const container = document.getElementById('item-subst-tab');
             container.innerHTML = `
@@ -1073,7 +1073,7 @@ window.showCustomConfirm = (title, message) => {
             </div>
             `;
         };
-        
+
         const renderTabInternational = (mode) => {
             const container = document.getElementById('item-int-tab');
             container.innerHTML = `
@@ -1156,88 +1156,88 @@ window.showCustomConfirm = (title, message) => {
             </div>
             `;
         };
-        
+
         const syncAllocationLocating = (sourceId, value) => {
             const rules = sourceId === 'item-allocation-rule-long' ? allocationRules : locatingRules;
             const targetId = sourceId === 'item-allocation-rule-long' ? 'item-allocation-rule' : 'item-locating-rule';
             const sourceEl = document.getElementById(sourceId);
             const targetEl = document.getElementById(targetId);
-            
+
             if (targetEl) {
-                 const newOption = `<option value="${value}">${value}</option>`;
-                 if (!rules.includes(value) && value) {
-                     if (!targetEl.querySelector(`option[value="${value}"]`)) {
-                         targetEl.insertAdjacentHTML('beforeend', newOption);
-                     }
-                 }
-                 targetEl.value = value;
+                const newOption = `<option value="${value}">${value}</option>`;
+                if (!rules.includes(value) && value) {
+                    if (!targetEl.querySelector(`option[value="${value}"]`)) {
+                        targetEl.insertAdjacentHTML('beforeend', newOption);
+                    }
+                }
+                targetEl.value = value;
             }
         };
 
         const applyStateFromForm = () => {
-             const form = document.getElementById('item-form');
-             if (!form) return;
-             const mode = form.dataset.mode;
-             const isViewMode = mode === 'view';
+            const form = document.getElementById('item-form');
+            if (!form) return;
+            const mode = form.dataset.mode;
+            const isViewMode = mode === 'view';
 
-             // GS1 state
-             const gs1Enabled = form.querySelector('[name="gs1GtinEnabled"]')?.checked;
-             const gs1Radios = form.querySelectorAll('input[name="gs1Type"]');
-             gs1Radios.forEach(radio => {
-                 radio.disabled = isViewMode || !gs1Enabled;
-             });
+            // GS1 state
+            const gs1Enabled = form.querySelector('[name="gs1GtinEnabled"]')?.checked;
+            const gs1Radios = form.querySelectorAll('input[name="gs1Type"]');
+            gs1Radios.forEach(radio => {
+                radio.disabled = isViewMode || !gs1Enabled;
+            });
 
-             // Lot state
-             const lotControlled = form.querySelector('[name="lotControlled"]')?.checked;
-             const lotTemplate = form.querySelector('[name="lotTemplate-input"]');
-             const lotDays = form.querySelector('[name="lotDaysToExpire"]');
-             if (lotTemplate) lotTemplate.disabled = isViewMode || !lotControlled;
-             if (lotDays) lotDays.readOnly = isViewMode || !lotControlled;
+            // Lot state
+            const lotControlled = form.querySelector('[name="lotControlled"]')?.checked;
+            const lotTemplate = form.querySelector('[name="lotTemplate-input"]');
+            const lotDays = form.querySelector('[name="lotDaysToExpire"]');
+            if (lotTemplate) lotTemplate.disabled = isViewMode || !lotControlled;
+            if (lotDays) lotDays.readOnly = isViewMode || !lotControlled;
 
-             // Serial state
-             const serialControlled = form.querySelector('[name="serialControlled"]')?.checked;
-             const serialTemplate = form.querySelector('[name="serialTemplate-input"]');
-             const serialFlags = form.querySelectorAll('#serial-flags-container input[type="checkbox"]');
-             if (serialTemplate) {
-                 serialTemplate.disabled = isViewMode || !serialControlled;
-                 if (!serialControlled) {
-                     const inputEl = document.getElementById('item-serial-template-input');
-                     if(inputEl) inputEl.value = '';
-                 }
-             }
-             serialFlags.forEach(flag => flag.disabled = isViewMode || !serialControlled);
-             if (!serialControlled) {
-                 serialFlags.forEach(flag => flag.checked = false);
-             }
+            // Serial state
+            const serialControlled = form.querySelector('[name="serialControlled"]')?.checked;
+            const serialTemplate = form.querySelector('[name="serialTemplate-input"]');
+            const serialFlags = form.querySelectorAll('#serial-flags-container input[type="checkbox"]');
+            if (serialTemplate) {
+                serialTemplate.disabled = isViewMode || !serialControlled;
+                if (!serialControlled) {
+                    const inputEl = document.getElementById('item-serial-template-input');
+                    if (inputEl) inputEl.value = '';
+                }
+            }
+            serialFlags.forEach(flag => flag.disabled = isViewMode || !serialControlled);
+            if (!serialControlled) {
+                serialFlags.forEach(flag => flag.checked = false);
+            }
 
-             // Inbound QC status (read-only)
-             const inboundEligible = form.querySelector('[name="inboundEligible"]')?.checked;
-             const qcStatusEl = document.getElementById('inbound-qc-status');
-             if (qcStatusEl) {
-                 qcStatusEl.textContent = inboundEligible ? 'Aktif' : 'Tidak Aktif';
-                 qcStatusEl.className = `px-2 py-1 rounded-full text-xs font-semibold ${inboundEligible ? 'bg-green-200 text-green-700' : 'bg-gray-200 text-gray-700'}`;
-             }
+            // Inbound QC status (read-only)
+            const inboundEligible = form.querySelector('[name="inboundEligible"]')?.checked;
+            const qcStatusEl = document.getElementById('inbound-qc-status');
+            if (qcStatusEl) {
+                qcStatusEl.textContent = inboundEligible ? 'Aktif' : 'Tidak Aktif';
+                qcStatusEl.className = `px-2 py-1 rounded-full text-xs font-semibold ${inboundEligible ? 'bg-green-200 text-green-700' : 'bg-gray-200 text-gray-700'}`;
+            }
 
-             // Inbound QC fields
-             const computeQtyAs = form.querySelector('input[name="computeQtyAs"]:checked')?.value;
-             const inspectionQty = form.querySelector('[name="inspectionQty"]');
-             if (inspectionQty) {
-                 if (computeQtyAs === 'PERCENTAGE') {
-                     inspectionQty.placeholder = '0 - 100';
-                 } else {
-                     inspectionQty.placeholder = '';
-                 }
-             }
+            // Inbound QC fields
+            const computeQtyAs = form.querySelector('input[name="computeQtyAs"]:checked')?.value;
+            const inspectionQty = form.querySelector('[name="inspectionQty"]');
+            if (inspectionQty) {
+                if (computeQtyAs === 'PERCENTAGE') {
+                    inspectionQty.placeholder = '0 - 100';
+                } else {
+                    inspectionQty.placeholder = '';
+                }
+            }
         };
 
         const fillItemForm = (item) => {
             const form = document.getElementById('item-form');
             if (!form) return;
             form['id'].value = item.id;
-            
+
             // Text/Checkbox inputs
             const fields = ['itemTemplate', 'itemCode', 'description', 'inactive', 'inventoryTracking',
-                'inboundShelfLife', 'promoItem', 'containerType', 'tiHi', 'primarySupplier', 'mfgExpDate', 
+                'inboundShelfLife', 'promoItem', 'containerType', 'tiHi', 'primarySupplier', 'mfgExpDate',
                 'shelfLife', 'outboundShelfLife', 'immediateEligible', 'inboundEligible', 'catchWeightRequired',
                 'lotControlled', 'lotDaysToExpire', 'serialControlled', 'serialInbound', 'serialInventory', 'serialOutbound',
                 'cost', 'listPrice', 'netPrice', 'companyPrefix', 'itemReference', 'cageCode', 'gs1GtinEnabled',
@@ -1249,11 +1249,11 @@ window.showCustomConfirm = (title, message) => {
                 const el = form.querySelector(`[name="${field}"]`);
                 if (el) {
                     if (el.type === 'checkbox') {
-                         el.checked = !!item[field];
+                        el.checked = !!item[field];
                     } else if (el.type === 'number') {
-                         el.value = item[field] || 0;
+                        el.value = item[field] || 0;
                     } else {
-                         el.value = item[field] || '';
+                        el.value = item[field] || '';
                     }
                 }
             });
@@ -1263,15 +1263,15 @@ window.showCustomConfirm = (title, message) => {
                 const radio = form.querySelector(`input[name="computeQtyAs"][value="${item.computeQtyAs}"]`);
                 if (radio) radio.checked = true;
             }
-             if (item.gs1Type) {
+            if (item.gs1Type) {
                 const radio = form.querySelector(`input[name="gs1Type"][value="${item.gs1Type}"]`);
                 if (radio) radio.checked = true;
             }
-             if (item.shippingBOM) {
+            if (item.shippingBOM) {
                 const radio = form.querySelector(`input[name="shippingBOM"][value="${item.shippingBOM}"]`);
                 if (radio) radio.checked = true;
             }
-            
+
             // Dropdowns (native & long)
             const nativeSelects = ['itemClass', 'inspectionUm', 'netCost'];
             nativeSelects.forEach(selId => {
@@ -1279,8 +1279,8 @@ window.showCustomConfirm = (title, message) => {
                 if (el) el.value = item[selId] || '';
             });
 
-            const longDropdowns = ['company', 'allocationRule', 'locatingRule', 'immediateLocatingRule', 'qcLocatingRule', 
-                                   'packingClass', 'storageTemplate', 'lotTemplate', 'serialTemplate', 'countryOfOrigin'];
+            const longDropdowns = ['company', 'allocationRule', 'locatingRule', 'immediateLocatingRule', 'qcLocatingRule',
+                'packingClass', 'storageTemplate', 'lotTemplate', 'serialTemplate', 'countryOfOrigin'];
             longDropdowns.forEach(field => {
                 const inputEl = document.getElementById(`item-${field.replace(/([A-Z])/g, '-$1').toLowerCase()}-input`);
                 const value = item[field] || '';
@@ -1299,7 +1299,7 @@ window.showCustomConfirm = (title, message) => {
                 const catInput = document.getElementById(`item-cat-${i}`);
                 if (catInput) catInput.value = item.categories[i] || '';
             }
-            
+
             // Tables
             renderSubstituteTable(item.substituteList || []);
             renderCountriesTable(item.countries || []);
@@ -1312,14 +1312,14 @@ window.showCustomConfirm = (title, message) => {
             const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
             const emptyState = document.getElementById('substitute-empty-state');
             if (!tbody || !emptyState) return;
-            
+
             tbody.innerHTML = '';
             if (substitutes.length === 0) {
                 emptyState.classList.remove('hidden');
                 return;
             }
             emptyState.classList.add('hidden');
-            
+
             substitutes.forEach(sub => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-gray-200 hover:bg-gray-50';
@@ -1341,7 +1341,7 @@ window.showCustomConfirm = (title, message) => {
 
             const newItemCode = `SUB_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
             const newItemDesc = `New Substitute`;
-            
+
             const tr = document.createElement('tr');
             tr.className = 'border-b border-gray-200 hover:bg-gray-50';
             tr.innerHTML = `
@@ -1360,19 +1360,19 @@ window.showCustomConfirm = (title, message) => {
                 showToast('Please select items to delete from the list.', 'error');
                 return;
             }
-            
+
             const confirmed = await showCustomConfirm('Confirm Deletion', `Delete ${checked.length} selected substitute item(s) from the list?`);
             if (!confirmed) return;
 
             checked.forEach(cb => cb.closest('tr').remove());
             showToast(`${checked.length} substitute item(s) have been deleted from the list.`);
-            
+
             const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
-            if(tbody && tbody.rows.length === 0) {
+            if (tbody && tbody.rows.length === 0) {
                 document.getElementById('substitute-empty-state').classList.remove('hidden');
             }
         };
-        
+
         window.moveSubstituteItemUp = () => {
             const checked = document.querySelectorAll('#item-substitute-table .subst-select-row:checked');
             if (checked.length !== 1) {
@@ -1409,14 +1409,14 @@ window.showCustomConfirm = (title, message) => {
             const tbody = document.getElementById('item-countries-table')?.querySelector('tbody');
             const emptyState = document.getElementById('countries-empty-state');
             if (!tbody || !emptyState) return;
-            
+
             tbody.innerHTML = '';
             if (countries.length === 0) {
                 emptyState.classList.remove('hidden');
                 return;
             }
             emptyState.classList.add('hidden');
-            
+
             countries.forEach(country => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-gray-200 hover:bg-gray-50';
@@ -1426,164 +1426,164 @@ window.showCustomConfirm = (title, message) => {
         };
 
         window.handleItemSubmit = async (event) => {
-    event.preventDefault();
-    // PERBAIKAN: Mengambil form berdasarkan ID, bukan dari event.target
-    const form = document.getElementById('item-form'); 
-    const mode = form.dataset.mode;
-    const id = form['id'].value;
+            event.preventDefault();
+            // PERBAIKAN: Mengambil form berdasarkan ID, bukan dari event.target
+            const form = document.getElementById('item-form');
+            const mode = form.dataset.mode;
+            const id = form['id'].value;
 
-    if (!validateItemForm()) {
-        showToast('Form not valid. Please fix the errors.', 'error');
-        return;
-    }
+            if (!validateItemForm()) {
+                showToast('Form not valid. Please fix the errors.', 'error');
+                return;
+            }
 
-    const getLongDropdownValue = (id) => document.getElementById(id)?.value || '';
+            const getLongDropdownValue = (id) => document.getElementById(id)?.value || '';
 
-    const company = getLongDropdownValue('item-company-input');
-    const allocationRule = getLongDropdownValue('item-allocation-rule-long-input');
-    const locatingRule = getLongDropdownValue('item-locating-rule-long-input');
-    const immediateLocatingRule = getLongDropdownValue('item-immediate-locating-rule-long-input');
-    const qcLocatingRule = getLongDropdownValue('item-qc-locating-rule-long-input');
-    const packingClass = getLongDropdownValue('item-packing-class-input');
-    const storageTemplate = getLongDropdownValue('item-storage-template-input');
-    const lotTemplate = getLongDropdownValue('item-lot-template-input');
-    const serialTemplate = getLongDropdownValue('item-serial-template-input');
-    const countryOfOrigin = getLongDropdownValue('item-country-origin-input');
-    
-    if (mode === 'create') {
-        const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
-        if (isCodeExist) {
-            showToast('Item with this code and company already exists.', 'error');
-            return;
-        }
-    }
-    
-    const categories = {};
-    for (let i = 1; i <= 10; i++) {
-        categories[i] = form[`categories[${i}]`]?.value || '';
-    }
-    
-    const udf = {};
-    for (let i = 1; i <= 8; i++) {
-        udf[`udf${i}`] = form[`udf${i}`]?.value || '';
-    }
-    
-    const serialControlled = form['serialControlled']?.checked;
-    
-    const newItem = {
-        id: id, 
-        company: company,
-        itemCode: form['itemCode'].value,
-        description: form['description'].value,
-        inactive: form['inactive'].checked,
-        inventoryTracking: form['inventoryTracking'].checked, 
-        inboundShelfLife: form['inboundShelfLife'].value || '',
-        promoItem: form['promoItem'].value || 'N',
-        containerType: form['containerType'].value || '', 
-        tiHi: form['tiHi'].value || '0 x 0',
-        primarySupplier: form['primarySupplier'].value || '',
-        mfgExpDate: form['mfgExpDate'].value || '',
-        shelfLife: parseFloat(form['shelfLife'].value) || 0,
-        outboundShelfLife: form['outboundShelfLife'].value || '',
-        immediateEligible: form['immediateEligible'].checked,
-        immediateLocatingRule: immediateLocatingRule,
-        cost: parseFloat(form['cost'].value) || 0,
-        listPrice: parseFloat(form['listPrice'].value) || 0,
-        netPrice: parseFloat(form['netPrice'].value) || 0,
-        companyPrefix: form['companyPrefix'].value || '',
-        itemReference: form['itemReference'].value || '',
-        cageCode: form['cageCode'].value || '',
-        gs1GtinEnabled: form['gs1GtinEnabled'].checked,
-        gs1Type: form['gs1GtinEnabled'].checked ? form.querySelector('input[name="gs1Type"]:checked')?.value || '' : '',
-        eqValue: parseInt(form['eqValue'].value) || 0,
-        division: form['division'].value || '',
-        itemColor: form['itemColor'].value || '',
-        department: form['department'].value || '',
-        itemStyle: form['itemStyle'].value || '',
-        shippingBOM: form.querySelector('input[name="shippingBOM"]:checked')?.value || 'none',
-        
-        char2a: form['char2a'].value || '',
-        char2b: form['char2b'].value || '',
-        udf: udf,
-        
-        allocationRule: allocationRule,
-        locatingRule: locatingRule,
-        nmfcCode: form['nmfcCode'].value || '',
-        itemClass: form['itemClass'].value || 'GENERAL',
-        packingClass: packingClass,
-        storageTemplate: storageTemplate,
+            const company = getLongDropdownValue('item-company-input');
+            const allocationRule = getLongDropdownValue('item-allocation-rule-long-input');
+            const locatingRule = getLongDropdownValue('item-locating-rule-long-input');
+            const immediateLocatingRule = getLongDropdownValue('item-immediate-locating-rule-long-input');
+            const qcLocatingRule = getLongDropdownValue('item-qc-locating-rule-long-input');
+            const packingClass = getLongDropdownValue('item-packing-class-input');
+            const storageTemplate = getLongDropdownValue('item-storage-template-input');
+            const lotTemplate = getLongDropdownValue('item-lot-template-input');
+            const serialTemplate = getLongDropdownValue('item-serial-template-input');
+            const countryOfOrigin = getLongDropdownValue('item-country-origin-input');
 
-        catchWeightRequired: form['catchWeightRequired'].checked,
-        lotControlled: form['lotControlled'].checked,
-        lotTemplate: form['lotControlled'].checked ? lotTemplate : '',
-        lotDaysToExpire: form['lotControlled'].checked ? parseInt(form['lotDaysToExpire'].value) || 0 : 0,
-        serialControlled: serialControlled,
-        serialInbound: serialControlled ? form['serialInbound'].checked : false,
-        serialInventory: serialControlled ? form['serialInventory'].checked : false,
-        serialOutbound: serialControlled ? form['serialOutbound'].checked : false,
-        serialTemplate: serialControlled ? serialTemplate : '',
-        
-        inboundEligible: form['inboundEligible'].checked,
-        computeQtyAs: form.querySelector('input[name="computeQtyAs"]:checked')?.value || 'AMOUNT',
-        inspectionQty: parseFloat(form['inspectionQty'].value) || 0,
-        inspectionUm: form['inspectionUm'].value || 'PC',
-        qcLocatingRule: qcLocatingRule,
+            if (mode === 'create') {
+                const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
+                if (isCodeExist) {
+                    showToast('Item with this code and company already exists.', 'error');
+                    return;
+                }
+            }
 
-        webImage: form['webImage'].value || '',
-        webThumb: form['webThumb'].value || '',
-        longDescription: form['longDescription'].value || '',
-        availableForWebOrder: form['availableForWebOrder'].checked,
-        
-        alternateItem: form['alternateItem'].value || '',
-        substituteItem: form['substituteItem'].value || '',
-        substituteList: Array.from(document.querySelectorAll('#item-substitute-table tbody tr')).map(row => {
-            const cells = row.querySelectorAll('td');
-            return {
-                code: cells[1].textContent,
-                description: cells[2].textContent
+            const categories = {};
+            for (let i = 1; i <= 10; i++) {
+                categories[i] = form[`categories[${i}]`]?.value || '';
+            }
+
+            const udf = {};
+            for (let i = 1; i <= 8; i++) {
+                udf[`udf${i}`] = form[`udf${i}`]?.value || '';
+            }
+
+            const serialControlled = form['serialControlled']?.checked;
+
+            const newItem = {
+                id: id,
+                company: company,
+                itemCode: form['itemCode'].value,
+                description: form['description'].value,
+                inactive: form['inactive'].checked,
+                inventoryTracking: form['inventoryTracking'].checked,
+                inboundShelfLife: form['inboundShelfLife'].value || '',
+                promoItem: form['promoItem'].value || 'N',
+                containerType: form['containerType'].value || '',
+                tiHi: form['tiHi'].value || '0 x 0',
+                primarySupplier: form['primarySupplier'].value || '',
+                mfgExpDate: form['mfgExpDate'].value || '',
+                shelfLife: parseFloat(form['shelfLife'].value) || 0,
+                outboundShelfLife: form['outboundShelfLife'].value || '',
+                immediateEligible: form['immediateEligible'].checked,
+                immediateLocatingRule: immediateLocatingRule,
+                cost: parseFloat(form['cost'].value) || 0,
+                listPrice: parseFloat(form['listPrice'].value) || 0,
+                netPrice: parseFloat(form['netPrice'].value) || 0,
+                companyPrefix: form['companyPrefix'].value || '',
+                itemReference: form['itemReference'].value || '',
+                cageCode: form['cageCode'].value || '',
+                gs1GtinEnabled: form['gs1GtinEnabled'].checked,
+                gs1Type: form['gs1GtinEnabled'].checked ? form.querySelector('input[name="gs1Type"]:checked')?.value || '' : '',
+                eqValue: parseInt(form['eqValue'].value) || 0,
+                division: form['division'].value || '',
+                itemColor: form['itemColor'].value || '',
+                department: form['department'].value || '',
+                itemStyle: form['itemStyle'].value || '',
+                shippingBOM: form.querySelector('input[name="shippingBOM"]:checked')?.value || 'none',
+
+                char2a: form['char2a'].value || '',
+                char2b: form['char2b'].value || '',
+                udf: udf,
+
+                allocationRule: allocationRule,
+                locatingRule: locatingRule,
+                nmfcCode: form['nmfcCode'].value || '',
+                itemClass: form['itemClass'].value || 'GENERAL',
+                packingClass: packingClass,
+                storageTemplate: storageTemplate,
+
+                catchWeightRequired: form['catchWeightRequired'].checked,
+                lotControlled: form['lotControlled'].checked,
+                lotTemplate: form['lotControlled'].checked ? lotTemplate : '',
+                lotDaysToExpire: form['lotControlled'].checked ? parseInt(form['lotDaysToExpire'].value) || 0 : 0,
+                serialControlled: serialControlled,
+                serialInbound: serialControlled ? form['serialInbound'].checked : false,
+                serialInventory: serialControlled ? form['serialInventory'].checked : false,
+                serialOutbound: serialControlled ? form['serialOutbound'].checked : false,
+                serialTemplate: serialControlled ? serialTemplate : '',
+
+                inboundEligible: form['inboundEligible'].checked,
+                computeQtyAs: form.querySelector('input[name="computeQtyAs"]:checked')?.value || 'AMOUNT',
+                inspectionQty: parseFloat(form['inspectionQty'].value) || 0,
+                inspectionUm: form['inspectionUm'].value || 'PC',
+                qcLocatingRule: qcLocatingRule,
+
+                webImage: form['webImage'].value || '',
+                webThumb: form['webThumb'].value || '',
+                longDescription: form['longDescription'].value || '',
+                availableForWebOrder: form['availableForWebOrder'].checked,
+
+                alternateItem: form['alternateItem'].value || '',
+                substituteItem: form['substituteItem'].value || '',
+                substituteList: Array.from(document.querySelectorAll('#item-substitute-table tbody tr')).map(row => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        code: cells[1].textContent,
+                        description: cells[2].textContent
+                    };
+                }),
+
+                preferenceCriterion: form['preferenceCriterion'].checked,
+                harmonizedCode: form['harmonizedCode'].value || '',
+                harmonizedUploaded: form['harmonizedUploaded'].checked,
+                countryOfOrigin: countryOfOrigin,
+                netCost: form['netCost'].value || 'NONE',
+                countries: [],
+
+                categories: categories,
+
+                updatedAt: Date.now()
             };
-        }), 
-        
-        preferenceCriterion: form['preferenceCriterion'].checked,
-        harmonizedCode: form['harmonizedCode'].value || '',
-        harmonizedUploaded: form['harmonizedUploaded'].checked,
-        countryOfOrigin: countryOfOrigin,
-        netCost: form['netCost'].value || 'NONE',
-        countries: [], 
-        
-        categories: categories,
 
-        updatedAt: Date.now()
-    };
-
-    let msg = '';
-    if (mode === 'create') {
-        const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
-        if (isCodeExist) {
-            showToast('Item with this code and company already exists.', 'error');
-            return;
-        }
-        const maxId = items.reduce((max, item) => {
-            const num = parseInt(item.id.replace('ITM', ''), 10);
-            return Math.max(max, isNaN(num) ? 0 : num);
-        }, 0);
-        newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
-        items.push(newItem);
-        msg = 'Item created successfully!';
-    } else {
-        const index = items.findIndex(i => i.id === id);
-        if (index !== -1) {
-            newItem.substituteList = newItem.substituteList.length > 0 ? newItem.substituteList : items[index].substituteList;
-            newItem.countries = items[index].countries;
-            Object.assign(items[index], newItem);
-            msg = 'Item updated successfully!';
-        }
-    }
-     saveItems();
-    closeModal('item-form-modal');
-    window.renderItemList();
-    await window.showCustomAlert('Success', msg); 
-};
+            let msg = '';
+            if (mode === 'create') {
+                const isCodeExist = items.some(item => item.itemCode === form['itemCode'].value && item.company === company);
+                if (isCodeExist) {
+                    showToast('Item with this code and company already exists.', 'error');
+                    return;
+                }
+                const maxId = items.reduce((max, item) => {
+                    const num = parseInt(item.id.replace('ITM', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newItem.id = 'ITM' + String(maxId + 1).padStart(6, '0');
+                items.push(newItem);
+                msg = 'Item created successfully!';
+            } else {
+                const index = items.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    newItem.substituteList = newItem.substituteList.length > 0 ? newItem.substituteList : items[index].substituteList;
+                    newItem.countries = items[index].countries;
+                    Object.assign(items[index], newItem);
+                    msg = 'Item updated successfully!';
+                }
+            }
+            saveItems();
+            closeModal('item-form-modal');
+            window.renderItemList();
+            await window.showCustomAlert('Success', msg);
+        };
         window.deleteItem = async (id) => {
             const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus Item ini?');
             if (confirmed) {
@@ -1593,12 +1593,12 @@ window.showCustomConfirm = (title, message) => {
                 showToast('Item berhasil dihapus!');
             }
         };
-        
+
         // --- ITEM LIST RENDER & FILTER ---
         window.renderItemList = (filter = '', sortBy = '', sortDir = 'asc') => {
             const container = document.getElementById('item-list-container');
             if (!container) return;
-            
+
             let filteredData = items.filter(item => {
                 const searchable = `${item.itemCode} ${item.company} ${item.description} ${item.itemClass} ${item.nmfcCode} ${item.allocationRule} ${item.locatingRule}`.toLowerCase();
                 return searchable.includes(filter.toLowerCase());
@@ -1634,7 +1634,7 @@ window.showCustomConfirm = (title, message) => {
             if (filteredData.length === 0) {
                 tableHtml += `<tr><td colspan="7" class="py-3 px-6 text-center text-gray-400">Tidak ada data item.</td></tr>`;
             } else {
-                filteredData.forEach(item => { 
+                filteredData.forEach(item => {
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
                             <td class="py-3 px-6 text-left whitespace-nowrap">${item.itemCode}</td>
@@ -1676,13 +1676,13 @@ window.showCustomConfirm = (title, message) => {
         window.filterItemList = (value) => {
             filterItemListDebounced(value);
         };
-        
+
         function setupTabSwitching(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
             const tabButtons = modal.querySelectorAll('[role="tab"]');
             const tabPanes = modal.querySelectorAll('[role="tabpanel"]');
-            
+
             const activateTab = (tabId) => {
                 tabButtons.forEach(btn => {
                     btn.classList.remove('tab-active');
@@ -1705,14 +1705,14 @@ window.showCustomConfirm = (title, message) => {
                     activateTab(tabId);
                 }
             };
-            
+
             const onKeyHandler = (e) => {
                 const activeTab = modal.querySelector('.tab-active');
                 if (!activeTab) return;
                 let newIndex;
                 const tabs = Array.from(tabButtons);
                 const currentIndex = tabs.indexOf(activeTab);
-                
+
                 if (e.key === 'ArrowRight') {
                     newIndex = (currentIndex + 1) % tabs.length;
                     tabs[newIndex].focus();
@@ -1728,118 +1728,118 @@ window.showCustomConfirm = (title, message) => {
                 btn.removeEventListener('click', onClickHandler);
                 btn.addEventListener('click', onClickHandler);
             });
-            
-            if(tabButtons.length > 0) {
-                 activateTab(tabButtons[0].dataset.tab);
+
+            if (tabButtons.length > 0) {
+                activateTab(tabButtons[0].dataset.tab);
             }
         }
-        
+
         // --- IUOM FUNCTIONS ---
         // Helper IUoM
-const IUOM_STORAGE_KEY = 'iuoms_v4';
-const IUOM_SEED_UOMS = ['PC', 'PCK', 'PLT', 'KG', 'LT', 'M', 'CM'];
-const IUOM_SEED_MOVEMENT_CLASSES = ['GRAY', 'WHITE', 'BLACK', 'DEFAULT', 'HEAVY', 'LIGHT'];
-const IUOM_SEED_ITEM_CLASSES = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
+        const IUOM_STORAGE_KEY = 'iuoms_v4';
+        const IUOM_SEED_UOMS = ['PC', 'PCK', 'PLT', 'KG', 'LT', 'M', 'CM'];
+        const IUOM_SEED_MOVEMENT_CLASSES = ['GRAY', 'WHITE', 'BLACK', 'DEFAULT', 'HEAVY', 'LIGHT'];
+        const IUOM_SEED_ITEM_CLASSES = ['GENERAL', 'FOOD', 'NON-FOOD', 'FROZEN'];
 
-const loadIUoMs = () => {
-  try {
-    const data = localStorage.getItem(IUOM_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
-  } catch (e) {
-    console.error("Failed to load IUoMs from localStorage", e);
-    return [];
-  }
-};
+        const loadIUoMs = () => {
+            try {
+                const data = localStorage.getItem(IUOM_STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error("Failed to load IUoMs from localStorage", e);
+                return [];
+            }
+        };
 
-const saveIUoMs = (arr) => {
-  try {
-    localStorage.setItem(IUOM_STORAGE_KEY, JSON.stringify(arr));
-    window.renderIUoMList();
-  } catch (e) {
-    console.error("Failed to save IUoMs to localStorage", e);
-    showToast('Gagal menyimpan data IUoM.', 'error');
-  }
-};
+        const saveIUoMs = (arr) => {
+            try {
+                localStorage.setItem(IUOM_STORAGE_KEY, JSON.stringify(arr));
+                window.renderIUoMList();
+            } catch (e) {
+                console.error("Failed to save IUoMs to localStorage", e);
+                showToast('Gagal menyimpan data IUoM.', 'error');
+            }
+        };
 
-const nextIUoMId = () => {
-  const iuoms = loadIUoMs();
-  const maxId = iuoms.reduce((max, iuom) => {
-    const num = parseInt(iuom.id.replace('IUOM', ''), 10);
-    return Math.max(max, isNaN(num) ? 0 : num);
-  }, 0);
-  return 'IUOM' + String(maxId + 1).padStart(4, '0');
-};
+        const nextIUoMId = () => {
+            const iuoms = loadIUoMs();
+            const maxId = iuoms.reduce((max, iuom) => {
+                const num = parseInt(iuom.id.replace('IUOM', ''), 10);
+                return Math.max(max, isNaN(num) ? 0 : num);
+            }, 0);
+            return 'IUOM' + String(maxId + 1).padStart(4, '0');
+        };
 
-const getCompanies = () => {
-    const items = JSON.parse(localStorage.getItem('items')) || [];
-    return Array.from(new Set(items.map(item => item.company))).filter(Boolean).sort();
-};
+        const getCompanies = () => {
+            const items = JSON.parse(localStorage.getItem('items')) || [];
+            return Array.from(new Set(items.map(item => item.company))).filter(Boolean).sort();
+        };
 
-const getItemCodes = () => {
-    const items = JSON.parse(localStorage.getItem('items')) || [];
-    return items.map(item => item.itemCode).filter(Boolean).sort();
-};
+        const getItemCodes = () => {
+            const items = JSON.parse(localStorage.getItem('items')) || [];
+            return items.map(item => item.itemCode).filter(Boolean).sort();
+        };
 
-const num = (v, d = 0) => {
-  const n = parseFloat(typeof v === 'object' && v && 'value' in v ? v.value : v);
-  return Number.isFinite(n) ? n : d;
-};
+        const num = (v, d = 0) => {
+            const n = parseFloat(typeof v === 'object' && v && 'value' in v ? v.value : v);
+            return Number.isFinite(n) ? n : d;
+        };
 
-const str = (v) => (typeof v === 'object' && v && 'value' in v ? v.value : v || '').toString().trim();
+        const str = (v) => (typeof v === 'object' && v && 'value' in v ? v.value : v || '').toString().trim();
 
-const nowIsoDate = () => new Date().toISOString();
+        const nowIsoDate = () => new Date().toISOString();
 
-// Render IUoM List Page
-window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') => {
-    const iuoms = loadIUoMs();
-    const container = document.getElementById('iuom-list-container');
-    if (!container) return;
-    
-    // Seeding dummy data if empty
-    if (iuoms.length === 0) {
-         const seedData = [{
-            id: 'IUOM0001',
-            scope: 'ITEM',
-            company: 'DCB',
-            itemCode: '0000000053068_1',
-            uom: 'PC',
-            description: 'Piece',
-            conversions: [{
-                seq: 1, quantity: 1, quantityUom: 'PC', conversionQty: 1.00000,
-                length: 1.00, width: 1.00, height: 1.00, weight: 1.00,
-                movementClass: 'GRAY'
-            }],
-            updatedAt: '2023-09-03T09:18:55Z',
-            createdAt: '2023-09-03T09:18:55Z'
-        }];
-        saveIUoMs(seedData);
-        // Recurse to render after seeding
-        renderIUoMList(filter, sortBy, sortDir);
-        return;
-    }
+        // Render IUoM List Page
+        window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') => {
+            const iuoms = loadIUoMs();
+            const container = document.getElementById('iuom-list-container');
+            if (!container) return;
 
-    // Apply search filter
-    let filteredData = iuoms.filter(iuom => {
-        const searchable = `${iuom.scope} ${iuom.company || ''} ${iuom.itemCode || ''} ${iuom.itemClass || ''} ${iuom.uom}`.toLowerCase();
-        return searchable.includes(filter.toLowerCase());
-    });
+            // Seeding dummy data if empty
+            if (iuoms.length === 0) {
+                const seedData = [{
+                    id: 'IUOM0001',
+                    scope: 'ITEM',
+                    company: 'DCB',
+                    itemCode: '0000000053068_1',
+                    uom: 'PC',
+                    description: 'Piece',
+                    conversions: [{
+                        seq: 1, quantity: 1, quantityUom: 'PC', conversionQty: 1.00000,
+                        length: 1.00, width: 1.00, height: 1.00, weight: 1.00,
+                        movementClass: 'GRAY'
+                    }],
+                    updatedAt: '2023-09-03T09:18:55Z',
+                    createdAt: '2023-09-03T09:18:55Z'
+                }];
+                saveIUoMs(seedData);
+                // Recurse to render after seeding
+                renderIUoMList(filter, sortBy, sortDir);
+                return;
+            }
 
-    // Apply sort
-    if (sortBy) {
-        filteredData.sort((a, b) => {
-            const valA = a[sortBy];
-            const valB = b[sortBy];
-            let compare = 0;
-            if (valA === undefined || valA === null) compare = 1;
-            else if (valB === undefined || valB === null) compare = -1;
-            else if (valA > valB) compare = 1;
-            else if (valA < valB) compare = -1;
-            return sortDir === 'asc' ? compare : -compare;
-        });
-    }
+            // Apply search filter
+            let filteredData = iuoms.filter(iuom => {
+                const searchable = `${iuom.scope} ${iuom.company || ''} ${iuom.itemCode || ''} ${iuom.itemClass || ''} ${iuom.uom}`.toLowerCase();
+                return searchable.includes(filter.toLowerCase());
+            });
 
-    // Render table HTML
-    let tableHtml = `
+            // Apply sort
+            if (sortBy) {
+                filteredData.sort((a, b) => {
+                    const valA = a[sortBy];
+                    const valB = b[sortBy];
+                    let compare = 0;
+                    if (valA === undefined || valA === null) compare = 1;
+                    else if (valB === undefined || valB === null) compare = -1;
+                    else if (valA > valB) compare = 1;
+                    else if (valA < valB) compare = -1;
+                    return sortDir === 'asc' ? compare : -compare;
+                });
+            }
+
+            // Render table HTML
+            let tableHtml = `
         <div class="overflow-x-auto border rounded-lg shadow-md">
             <table class="min-w-full bg-white">
                 <thead class="sticky top-0 bg-wise-light-gray text-wise-dark-gray uppercase text-xs leading-normal">
@@ -1856,14 +1856,14 @@ window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') =>
                 <tbody class="text-wise-gray text-sm font-light">
                 `;
 
-    if (filteredData.length === 0) {
-        tableHtml += `<tr><td colspan="7" class="py-10 text-center text-gray-400">
+            if (filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="7" class="py-10 text-center text-gray-400">
             Tidak ada records IUoM. Klik "Create New item unit of measure" untuk menambahkan.
             </td></tr>`;
-    } else {
-        filteredData.forEach(iuom => {
-            const conversionsCount = iuom.conversions?.length || 0;
-            tableHtml += `
+            } else {
+                filteredData.forEach(iuom => {
+                    const conversionsCount = iuom.conversions?.length || 0;
+                    tableHtml += `
                 <tr class="border-b border-wise-border hover:bg-wise-light-gray">
                     <td class="py-2 px-4 text-left whitespace-nowrap">${iuom.scope}</td>
                     <td class="py-2 px-4 text-left whitespace-nowrap">${iuom.itemCode || iuom.itemClass || 'N/A'}</td>
@@ -1883,45 +1883,45 @@ window.renderIUoMList = (filter = '', sortBy = 'updatedAt', sortDir = 'desc') =>
                     </td>
                 </tr>
             `;
-        });
-    }
-    tableHtml += `</tbody></table></div>`;
-    container.innerHTML = tableHtml;
-};
+                });
+            }
+            tableHtml += `</tbody></table></div>`;
+            container.innerHTML = tableHtml;
+        };
 
-let currentIUoMSort = { column: 'updatedAt', direction: 'desc' };
-window.sortIUoMList = (column) => {
-    if (currentIUoMSort.column === column) {
-        currentIUoMSort.direction = currentIUoMSort.direction === 'asc' ? 'desc' : 'asc';
-    } else {
-        currentIUoMSort = { column, direction: 'asc' };
-    }
-    const searchValue = document.getElementById('iuom-search').value;
-    renderIUoMList(searchValue, currentIUoMSort.column, currentIUoMSort.direction);
-};
-const filterIUoMListDebounced = debounce(value => renderIUoMList(value, currentIUoMSort.column, currentIUoMSort.direction), 300);
-window.filterIUoMList = (value) => {
-    filterIUoMListDebounced(value);
-};
+        let currentIUoMSort = { column: 'updatedAt', direction: 'desc' };
+        window.sortIUoMList = (column) => {
+            if (currentIUoMSort.column === column) {
+                currentIUoMSort.direction = currentIUoMSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentIUoMSort = { column, direction: 'asc' };
+            }
+            const searchValue = document.getElementById('iuom-search').value;
+            renderIUoMList(searchValue, currentIUoMSort.column, currentIUoMSort.direction);
+        };
+        const filterIUoMListDebounced = debounce(value => renderIUoMList(value, currentIUoMSort.column, currentIUoMSort.direction), 300);
+        window.filterIUoMList = (value) => {
+            filterIUoMListDebounced(value);
+        };
 
-// Render IUoM Form Modal
-createModal('iuom-form-modal', 'w-[min(1100px,95vw)]');
-window.showIUoMForm = (mode, id = null) => {
-    const modal = document.getElementById('iuom-form-modal');
-    const titleEl = document.getElementById('iuom-form-modal-title');
-    const bodyEl = document.getElementById('iuom-form-modal-body');
-    const footerEl = document.getElementById('iuom-form-modal-footer');
-    
-    const iuoms = loadIUoMs();
-    const iuom = iuoms.find(i => i.id === id) || {
-        scope: 'ITEM_CLASS', itemClass: '', itemCode: '', company: '', uom: '', description: '', conversions: []
-    };
+        // Render IUoM Form Modal
+        createModal('iuom-form-modal', 'w-[min(1100px,95vw)]');
+        window.showIUoMForm = (mode, id = null) => {
+            const modal = document.getElementById('iuom-form-modal');
+            const titleEl = document.getElementById('iuom-form-modal-title');
+            const bodyEl = document.getElementById('iuom-form-modal-body');
+            const footerEl = document.getElementById('iuom-form-modal-footer');
 
-    titleEl.textContent = mode === 'create' ? 'Create New IUoM' : `Edit IUoM: ${iuom.id}`;
-    
-    // --- AWAL PERUBAHAN ---
-    // Struktur HTML di bawah ini dirombak total untuk memperbaiki layout
-    bodyEl.innerHTML = `
+            const iuoms = loadIUoMs();
+            const iuom = iuoms.find(i => i.id === id) || {
+                scope: 'ITEM_CLASS', itemClass: '', itemCode: '', company: '', uom: '', description: '', conversions: []
+            };
+
+            titleEl.textContent = mode === 'create' ? 'Create New IUoM' : `Edit IUoM: ${iuom.id}`;
+
+            // --- AWAL PERUBAHAN ---
+            // Struktur HTML di bawah ini dirombak total untuk memperbaiki layout
+            bodyEl.innerHTML = `
         <form id="iuom-form" data-mode="${mode}" class="h-full space-y-6">
             <input type="hidden" id="iuom-id" value="${iuom.id || ''}">
             <div class="p-4 rounded-xl bg-gray-50 border border-gray-200">
@@ -1990,116 +1990,116 @@ window.showIUoMForm = (mode, id = null) => {
             </div>
         </form>
     `;
-    
-    // Use the new standard footer function
-    footerEl.innerHTML = renderStandardModalFooter({
-        cancelOnclick: "closeModal('iuom-form-modal')",
-        submitFormId: "iuom-form",
-        submitButtonId: "iuom-submit-btn"
-    });
 
-    // Initialize custom dropdowns
-    makeLongDropdown('iuom-item-code-select', getItemCodes(), iuom.itemCode);
-    makeLongDropdown('iuom-company-select', getCompanies(), iuom.company);
-    makeLongDropdown('iuom-item-class-select', IUOM_SEED_ITEM_CLASSES, iuom.itemClass);
+            // Use the new standard footer function
+            footerEl.innerHTML = renderStandardModalFooter({
+                cancelOnclick: "closeModal('iuom-form-modal')",
+                submitFormId: "iuom-form",
+                submitButtonId: "iuom-submit-btn"
+            });
 
-    prefillIUoMForm(iuom);
-    
-    document.getElementById('iuom-form').addEventListener('input', validateIUoMForm);
-    document.getElementById('iuom-form').addEventListener('change', validateIUoMForm);
-    document.getElementById('iuom-form').addEventListener('submit', handleIUoMSubmit);
+            // Initialize custom dropdowns
+            makeLongDropdown('iuom-item-code-select', getItemCodes(), iuom.itemCode);
+            makeLongDropdown('iuom-company-select', getCompanies(), iuom.company);
+            makeLongDropdown('iuom-item-class-select', IUOM_SEED_ITEM_CLASSES, iuom.itemClass);
 
-    document.removeEventListener('keydown', handleIUoMKeyboardShortcuts); // Hapus listener lama
-    document.addEventListener('keydown', handleIUoMKeyboardShortcuts);
-    
-    document.getElementById('scope-item-class').focus();
-    
-    showModal('iuom-form-modal');
-};
+            prefillIUoMForm(iuom);
 
-window.toggleIUoMScope = () => {
-    const scopeItemClassRadio = document.getElementById('scope-item-class');
-    const scopeItemFields = document.getElementById('scope-item-fields');
-    const scopeItemClassFields = document.getElementById('scope-item-class-fields');
-    
-    if (scopeItemClassRadio.checked) {
-        scopeItemFields.classList.add('hidden');
-        scopeItemClassFields.classList.remove('hidden');
-    } else {
-        scopeItemClassFields.classList.add('hidden');
-        scopeItemFields.classList.remove('hidden');
-    }
-    validateIUoMForm();
-};
+            document.getElementById('iuom-form').addEventListener('input', validateIUoMForm);
+            document.getElementById('iuom-form').addEventListener('change', validateIUoMForm);
+            document.getElementById('iuom-form').addEventListener('submit', handleIUoMSubmit);
 
-const prefillIUoMForm = (data) => {
-    const form = document.getElementById('iuom-form');
-    if (!form) return;
+            document.removeEventListener('keydown', handleIUoMKeyboardShortcuts); // Hapus listener lama
+            document.addEventListener('keydown', handleIUoMKeyboardShortcuts);
 
-    form.querySelector('input[name="scope"][value="' + data.scope + '"]').checked = true;
-    document.getElementById('iuom-id').value = data.id || '';
-    document.getElementById('iuom-description').value = data.description || '';
-    document.getElementById('iuom-uom-select').value = data.uom || '';
-    
-    const itemClassInput = document.getElementById('iuom-item-class-select-input');
-    const itemCodeInput = document.getElementById('iuom-item-code-select-input');
-    const companyInput = document.getElementById('iuom-company-select-input');
-    if(itemClassInput) itemClassInput.value = data.itemClass || '-- Pilih --';
-    if(itemCodeInput) itemCodeInput.value = data.itemCode || '-- Pilih --';
-    if(companyInput) companyInput.value = data.company || '-- Pilih --';
+            document.getElementById('scope-item-class').focus();
 
-    toggleIUoMScope();
-    renderIUoMConversionsTable(data.conversions);
-};
+            showModal('iuom-form-modal');
+        };
 
-const validateIUoMForm = () => {
-    const form = document.getElementById('iuom-form'); if (!form) return false;
-    form.querySelectorAll('.error-message').forEach(el => el.remove());
-    let isValid = true;
-    
-    const showError = (el, message) => {
-        if (!el) return;
-        el.classList.add('border-red-500');
-        const errorEl = document.createElement('p');
-        errorEl.className = 'error-message text-red-500 text-xs mt-1';
-        errorEl.textContent = message;
-        el.parentElement.appendChild(errorEl);
-        isValid = false;
-    };
-    
-    const scope = form.querySelector('input[name="scope"]:checked')?.value;
-    const itemClassInput = document.getElementById('iuom-item-class-select-input');
-    const itemCodeInput = document.getElementById('iuom-item-code-select-input');
-    const companyInput = document.getElementById('iuom-company-select-input');
-    const uomSelect = document.getElementById('iuom-uom-select');
+        window.toggleIUoMScope = () => {
+            const scopeItemClassRadio = document.getElementById('scope-item-class');
+            const scopeItemFields = document.getElementById('scope-item-fields');
+            const scopeItemClassFields = document.getElementById('scope-item-class-fields');
 
-    if (scope === 'ITEM_CLASS' && !itemClassInput.value) showError(itemClassInput, 'Item Class wajib diisi.');
-    if (scope === 'ITEM' && !itemCodeInput.value) showError(itemCodeInput, 'Item wajib diisi.');
-    if (scope === 'ITEM' && !companyInput.value) showError(companyInput, 'Company wajib diisi.');
-    if (!uomSelect.value) showError(uomSelect, 'UoM wajib diisi.');
-    
-    document.getElementById('iuom-submit-btn').disabled = !isValid;
-    return isValid;
-};
+            if (scopeItemClassRadio.checked) {
+                scopeItemFields.classList.add('hidden');
+                scopeItemClassFields.classList.remove('hidden');
+            } else {
+                scopeItemClassFields.classList.add('hidden');
+                scopeItemFields.classList.remove('hidden');
+            }
+            validateIUoMForm();
+        };
 
-const renderIUoMConversionsTable = (conversions) => {
-    const tbody = document.getElementById('iuom-conversions-body');
-    const emptyState = document.getElementById('iuom-conversions-empty-state');
-    if (!tbody) return;
+        const prefillIUoMForm = (data) => {
+            const form = document.getElementById('iuom-form');
+            if (!form) return;
 
-    tbody.innerHTML = '';
-    if (!conversions || conversions.length === 0) {
-        // Tampilkan pesan kosong jika tidak ada konversi
-        const emptyRow = document.createElement('tr');
-        emptyRow.id = 'iuom-conversions-empty-state';
-        emptyRow.innerHTML = `<td colspan="10" class="p-8 text-center text-gray-400">No conversions. Click '+ Add Row' to start.</td>`;
-        tbody.appendChild(emptyRow);
-    } else {
-        conversions.forEach((conv, index) => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-gray-200 hover:bg-gray-50';
-            row.dataset.index = index;
-            row.innerHTML = `
+            form.querySelector('input[name="scope"][value="' + data.scope + '"]').checked = true;
+            document.getElementById('iuom-id').value = data.id || '';
+            document.getElementById('iuom-description').value = data.description || '';
+            document.getElementById('iuom-uom-select').value = data.uom || '';
+
+            const itemClassInput = document.getElementById('iuom-item-class-select-input');
+            const itemCodeInput = document.getElementById('iuom-item-code-select-input');
+            const companyInput = document.getElementById('iuom-company-select-input');
+            if (itemClassInput) itemClassInput.value = data.itemClass || '-- Pilih --';
+            if (itemCodeInput) itemCodeInput.value = data.itemCode || '-- Pilih --';
+            if (companyInput) companyInput.value = data.company || '-- Pilih --';
+
+            toggleIUoMScope();
+            renderIUoMConversionsTable(data.conversions);
+        };
+
+        const validateIUoMForm = () => {
+            const form = document.getElementById('iuom-form'); if (!form) return false;
+            form.querySelectorAll('.error-message').forEach(el => el.remove());
+            let isValid = true;
+
+            const showError = (el, message) => {
+                if (!el) return;
+                el.classList.add('border-red-500');
+                const errorEl = document.createElement('p');
+                errorEl.className = 'error-message text-red-500 text-xs mt-1';
+                errorEl.textContent = message;
+                el.parentElement.appendChild(errorEl);
+                isValid = false;
+            };
+
+            const scope = form.querySelector('input[name="scope"]:checked')?.value;
+            const itemClassInput = document.getElementById('iuom-item-class-select-input');
+            const itemCodeInput = document.getElementById('iuom-item-code-select-input');
+            const companyInput = document.getElementById('iuom-company-select-input');
+            const uomSelect = document.getElementById('iuom-uom-select');
+
+            if (scope === 'ITEM_CLASS' && !itemClassInput.value) showError(itemClassInput, 'Item Class wajib diisi.');
+            if (scope === 'ITEM' && !itemCodeInput.value) showError(itemCodeInput, 'Item wajib diisi.');
+            if (scope === 'ITEM' && !companyInput.value) showError(companyInput, 'Company wajib diisi.');
+            if (!uomSelect.value) showError(uomSelect, 'UoM wajib diisi.');
+
+            document.getElementById('iuom-submit-btn').disabled = !isValid;
+            return isValid;
+        };
+
+        const renderIUoMConversionsTable = (conversions) => {
+            const tbody = document.getElementById('iuom-conversions-body');
+            const emptyState = document.getElementById('iuom-conversions-empty-state');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            if (!conversions || conversions.length === 0) {
+                // Tampilkan pesan kosong jika tidak ada konversi
+                const emptyRow = document.createElement('tr');
+                emptyRow.id = 'iuom-conversions-empty-state';
+                emptyRow.innerHTML = `<td colspan="10" class="p-8 text-center text-gray-400">No conversions. Click '+ Add Row' to start.</td>`;
+                tbody.appendChild(emptyRow);
+            } else {
+                conversions.forEach((conv, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                    row.dataset.index = index;
+                    row.innerHTML = `
                 <td class="py-2 px-4"><input type="checkbox" class="iuom-conv-select" data-index="${index}"></td>
                 <td class="py-2 px-4 text-left">${index + 1}</td>
                 <td class="py-2 px-4 text-left"><div class="flex items-center gap-2"><input type="number" name="quantity" class="input w-16 text-right" value="${conv.quantity || 1}"><select name="quantityUom" class="select w-24"><option value="">--</option>${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${u === conv.quantityUom ? 'selected' : ''}>${u}</option>`).join('')}</select></div></td>
@@ -2111,156 +2111,156 @@ const renderIUoMConversionsTable = (conversions) => {
                 <td class="py-2 px-4 text-left"><select name="movementClass" class="select w-24"><option value="">--</option>${IUOM_SEED_MOVEMENT_CLASSES.map(mc => `<option value="${mc}" ${mc === conv.movementClass ? 'selected' : ''}>${mc}</option>`).join('')}</select></td>
                 <td class="py-2 px-4 text-left"><select name="toUom" class="select w-24"><option value="">--</option>${IUOM_SEED_UOMS.map(u => `<option value="${u}" ${u === conv.toUom ? 'selected' : ''}>${u}</option>`).join('')}</select></td>
             `;
-            tbody.appendChild(row);
-        });
-    }
-};
-
-const getIUoMConversionsFromForm = () => {
-    const conversions = [];
-    document.querySelectorAll('#iuom-conversions-body tr').forEach(row => {
-        if (row.id === 'iuom-conversions-empty-state') return;
-        const rowData = {
-            seq: parseInt(row.querySelector('td:nth-child(2)').textContent),
-            quantity: num(row.querySelector('[name="quantity"]')),
-            quantityUom: str(row.querySelector('[name="quantityUom"]')),
-            conversionQty: num(row.querySelector('[name="conversionQty"]')),
-            length: num(row.querySelector('[name="length"]')),
-            width: num(row.querySelector('[name="width"]')),
-            height: num(row.querySelector('[name="height"]')),
-            weight: num(row.querySelector('[name="weight"]')),
-            movementClass: str(row.querySelector('[name="movementClass"]')),
-            toUom: str(row.querySelector('[name="toUom"]'))
+                    tbody.appendChild(row);
+                });
+            }
         };
-        conversions.push(rowData);
-    });
-    return conversions;
-};
 
-window.addConversionRow = () => {
-    const conversions = getIUoMConversionsFromForm();
-    const newSeq = conversions.length > 0 ? conversions[conversions.length - 1].seq + 1 : 1;
-    const newConversion = {
-        seq: newSeq, quantity: 1, quantityUom: '', conversionQty: 1,
-        length: 0, width: 0, height: 0, weight: 0, movementClass: ''
-    };
-    conversions.push(newConversion);
-    renderIUoMConversionsTable(conversions);
-    showToast('Row added successfully!');
-};
+        const getIUoMConversionsFromForm = () => {
+            const conversions = [];
+            document.querySelectorAll('#iuom-conversions-body tr').forEach(row => {
+                if (row.id === 'iuom-conversions-empty-state') return;
+                const rowData = {
+                    seq: parseInt(row.querySelector('td:nth-child(2)').textContent),
+                    quantity: num(row.querySelector('[name="quantity"]')),
+                    quantityUom: str(row.querySelector('[name="quantityUom"]')),
+                    conversionQty: num(row.querySelector('[name="conversionQty"]')),
+                    length: num(row.querySelector('[name="length"]')),
+                    width: num(row.querySelector('[name="width"]')),
+                    height: num(row.querySelector('[name="height"]')),
+                    weight: num(row.querySelector('[name="weight"]')),
+                    movementClass: str(row.querySelector('[name="movementClass"]')),
+                    toUom: str(row.querySelector('[name="toUom"]'))
+                };
+                conversions.push(rowData);
+            });
+            return conversions;
+        };
 
-window.deleteSelectedConversionRows = () => {
-    const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
-    if (checkboxes.length === 0) { showToast('Pilih setidaknya satu baris untuk dihapus.', 'error'); return; }
-    window.showCustomConfirm('Konfirmasi Hapus', `Hapus ${checkboxes.length} baris konversi?`).then(confirmed => {
-        if (confirmed) {
-            let currentConversions = getIUoMConversionsFromForm();
-            const indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index, 10)).sort((a,b) => b-a);
-            for (const index of indicesToDelete) { currentConversions.splice(index, 1); }
-            currentConversions.forEach((conv, idx) => conv.seq = idx + 1);
-            renderIUoMConversionsTable(currentConversions);
-            showToast(`${indicesToDelete.length} baris berhasil dihapus.`);
-        }
-    });
-};
+        window.addConversionRow = () => {
+            const conversions = getIUoMConversionsFromForm();
+            const newSeq = conversions.length > 0 ? conversions[conversions.length - 1].seq + 1 : 1;
+            const newConversion = {
+                seq: newSeq, quantity: 1, quantityUom: '', conversionQty: 1,
+                length: 0, width: 0, height: 0, weight: 0, movementClass: ''
+            };
+            conversions.push(newConversion);
+            renderIUoMConversionsTable(conversions);
+            showToast('Row added successfully!');
+        };
 
-window.moveConversionRowUp = () => {
-    const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
-    if (checkboxes.length !== 1) { showToast('Pilih tepat satu baris untuk dipindahkan.', 'error'); return; }
-    let conversions = getIUoMConversionsFromForm();
-    const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
-    if (selectedIndex > 0) {
-        [conversions[selectedIndex - 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex - 1]];
-        conversions.forEach((c, i) => c.seq = i + 1);
-        renderIUoMConversionsTable(conversions);
-        document.querySelector(`[data-index="${selectedIndex - 1}"]`).checked = true;
-    }
-};
+        window.deleteSelectedConversionRows = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length === 0) { showToast('Pilih setidaknya satu baris untuk dihapus.', 'error'); return; }
+            window.showCustomConfirm('Konfirmasi Hapus', `Hapus ${checkboxes.length} baris konversi?`).then(confirmed => {
+                if (confirmed) {
+                    let currentConversions = getIUoMConversionsFromForm();
+                    const indicesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index, 10)).sort((a, b) => b - a);
+                    for (const index of indicesToDelete) { currentConversions.splice(index, 1); }
+                    currentConversions.forEach((conv, idx) => conv.seq = idx + 1);
+                    renderIUoMConversionsTable(currentConversions);
+                    showToast(`${indicesToDelete.length} baris berhasil dihapus.`);
+                }
+            });
+        };
 
-window.moveConversionRowDown = () => {
-    const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
-    if (checkboxes.length !== 1) { showToast('Pilih tepat satu baris untuk dipindahkan.', 'error'); return; }
-    let conversions = getIUoMConversionsFromForm();
-    const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
-    if (selectedIndex < conversions.length - 1) {
-        [conversions[selectedIndex + 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex + 1]];
-        conversions.forEach((c, i) => c.seq = i + 1);
-        renderIUoMConversionsTable(conversions);
-        document.querySelector(`[data-index="${selectedIndex + 1}"]`).checked = true;
-    }
-};
+        window.moveConversionRowUp = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length !== 1) { showToast('Pilih tepat satu baris untuk dipindahkan.', 'error'); return; }
+            let conversions = getIUoMConversionsFromForm();
+            const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
+            if (selectedIndex > 0) {
+                [conversions[selectedIndex - 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex - 1]];
+                conversions.forEach((c, i) => c.seq = i + 1);
+                renderIUoMConversionsTable(conversions);
+                document.querySelector(`[data-index="${selectedIndex - 1}"]`).checked = true;
+            }
+        };
 
-window.toggleAllConversions = (checked) => {
-    document.querySelectorAll('.iuom-conv-select').forEach(cb => cb.checked = checked);
-};
+        window.moveConversionRowDown = () => {
+            const checkboxes = document.querySelectorAll('.iuom-conv-select:checked');
+            if (checkboxes.length !== 1) { showToast('Pilih tepat satu baris untuk dipindahkan.', 'error'); return; }
+            let conversions = getIUoMConversionsFromForm();
+            const selectedIndex = parseInt(checkboxes[0].dataset.index, 10);
+            if (selectedIndex < conversions.length - 1) {
+                [conversions[selectedIndex + 1], conversions[selectedIndex]] = [conversions[selectedIndex], conversions[selectedIndex + 1]];
+                conversions.forEach((c, i) => c.seq = i + 1);
+                renderIUoMConversionsTable(conversions);
+                document.querySelector(`[data-index="${selectedIndex + 1}"]`).checked = true;
+            }
+        };
 
-window.handleIUoMSubmit = (event) => {
-    event.preventDefault();
-    if (!validateIUoMForm()) { showToast('Form tidak valid.', 'error'); return; }
-    
-    const form = event.target;
-    const mode = form.dataset.mode;
-    let iuoms = loadIUoMs();
-    const id = form['iuom-id'].value;
-    
-    const scope = form.querySelector('input[name="scope"]:checked')?.value;
-    const itemClass = document.getElementById('iuom-item-class-select-input')?.value;
-    const itemCode = document.getElementById('iuom-item-code-select-input')?.value;
-    const company = document.getElementById('iuom-company-select-input')?.value;
-    const uom = document.getElementById('iuom-uom-select')?.value;
-    const description = form.querySelector('[name="description"]')?.value;
+        window.toggleAllConversions = (checked) => {
+            document.querySelectorAll('.iuom-conv-select').forEach(cb => cb.checked = checked);
+        };
 
-    const newIUoM = {
-        id: id, scope: scope,
-        company: scope === 'ITEM' ? company : undefined,
-        itemClass: scope === 'ITEM_CLASS' ? itemClass : undefined,
-        itemCode: scope === 'ITEM' ? itemCode : undefined,
-        uom: uom, description: description,
-        conversions: getIUoMConversionsFromForm(),
-        updatedAt: nowIsoDate()
-    };
-    
-    if (mode === 'create') {
-        newIUoM.id = nextIUoMId();
-        newIUoM.createdAt = nowIsoDate();
-        iuoms.push(newIUoM);
-        showToast('IUoM berhasil dibuat!');
-    } else {
-        const index = iuoms.findIndex(i => i.id === id);
-        if (index !== -1) {
-            iuoms[index] = { ...iuoms[index], ...newIUoM };
-            showToast('IUoM berhasil diperbarui!');
-        }
-    }
-    
-    saveIUoMs(iuoms);
-    closeModal('iuom-form-modal');
-};
+        window.handleIUoMSubmit = (event) => {
+            event.preventDefault();
+            if (!validateIUoMForm()) { showToast('Form tidak valid.', 'error'); return; }
 
-const handleIUoMKeyboardShortcuts = (e) => {
-    const isModalOpen = !document.getElementById('iuom-form-modal')?.classList.contains('hidden');
-    if (isModalOpen && (e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'Enter')) {
-        e.preventDefault();
-        document.getElementById('iuom-submit-btn').click();
-    }
-};
+            const form = event.target;
+            const mode = form.dataset.mode;
+            let iuoms = loadIUoMs();
+            const id = form['iuom-id'].value;
 
-window.deleteIUoM = async (id) => {
-    const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Hapus Item Unit of Measure ini?');
-    if (confirmed) {
-        let iuoms = loadIUoMs();
-        iuoms = iuoms.filter(iuom => iuom.id !== id);
-        saveIUoMs(iuoms);
-        showToast('IUoM berhasil dihapus!');
-    }
-};
+            const scope = form.querySelector('input[name="scope"]:checked')?.value;
+            const itemClass = document.getElementById('iuom-item-class-select-input')?.value;
+            const itemCode = document.getElementById('iuom-item-code-select-input')?.value;
+            const company = document.getElementById('iuom-company-select-input')?.value;
+            const uom = document.getElementById('iuom-uom-select')?.value;
+            const description = form.querySelector('[name="description"]')?.value;
 
-        
+            const newIUoM = {
+                id: id, scope: scope,
+                company: scope === 'ITEM' ? company : undefined,
+                itemClass: scope === 'ITEM_CLASS' ? itemClass : undefined,
+                itemCode: scope === 'ITEM' ? itemCode : undefined,
+                uom: uom, description: description,
+                conversions: getIUoMConversionsFromForm(),
+                updatedAt: nowIsoDate()
+            };
+
+            if (mode === 'create') {
+                newIUoM.id = nextIUoMId();
+                newIUoM.createdAt = nowIsoDate();
+                iuoms.push(newIUoM);
+                showToast('IUoM berhasil dibuat!');
+            } else {
+                const index = iuoms.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    iuoms[index] = { ...iuoms[index], ...newIUoM };
+                    showToast('IUoM berhasil diperbarui!');
+                }
+            }
+
+            saveIUoMs(iuoms);
+            closeModal('iuom-form-modal');
+        };
+
+        const handleIUoMKeyboardShortcuts = (e) => {
+            const isModalOpen = !document.getElementById('iuom-form-modal')?.classList.contains('hidden');
+            if (isModalOpen && (e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'Enter')) {
+                e.preventDefault();
+                document.getElementById('iuom-submit-btn').click();
+            }
+        };
+
+        window.deleteIUoM = async (id) => {
+            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Hapus Item Unit of Measure ini?');
+            if (confirmed) {
+                let iuoms = loadIUoMs();
+                iuoms = iuoms.filter(iuom => iuom.id !== id);
+                saveIUoMs(iuoms);
+                showToast('IUoM berhasil dihapus!');
+            }
+        };
+
+
         // --- ITEM CROSS REFERENCE FUNCTIONS ---
         window.renderItemCrossReferenceList = (filter = '') => {
             const container = document.getElementById('item-cross-reference-list-container');
             if (!container) return;
-            
+
             let filteredData = itemCrossReferences.filter(icr => {
                 const searchable = `${icr.item} ${icr.company} ${icr.crossReferenceItemNumber} ${icr.quantityUm}`.toLowerCase();
                 return searchable.includes(filter.toLowerCase());
@@ -2284,7 +2284,7 @@ window.deleteIUoM = async (id) => {
             if (filteredData.length === 0) {
                 tableHtml += `<tr><td colspan="6" class="py-3 px-6 text-center text-gray-400">Tidak ada data Item Cross Reference.</td></tr>`;
             } else {
-                filteredData.forEach(icr => { 
+                filteredData.forEach(icr => {
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
                             <td class="py-3 px-6 text-left whitespace-nowrap">${icr.item}</td>
@@ -2322,11 +2322,11 @@ window.deleteIUoM = async (id) => {
             const titleEl = document.getElementById('item-cross-reference-form-modal-title');
             const bodyEl = document.getElementById('item-cross-reference-form-modal-body');
             const footerEl = document.getElementById('item-cross-reference-form-modal-footer');
-            
+
             const icr = itemCrossReferences.find(i => i.id === id) || {};
 
             titleEl.textContent = mode === 'create' ? 'Create New Item Cross Reference' : `Edit Item Cross Reference - Edit existing`;
-            
+
             bodyEl.innerHTML = `
                 <form id="item-cross-reference-form" data-mode="${mode}">
                     <div role="tablist" id="icr-tab-list" class="border-b mb-4 flex gap-4 text-sm font-medium">
@@ -2386,8 +2386,8 @@ window.deleteIUoM = async (id) => {
             if (form) {
                 document.getElementById('icr-gtin-enabled').checked = icr.gtinEnabled || false;
                 for (let i = 1; i <= 8; i++) {
-                     const udfEl = document.getElementById(`icr-udf${i}`);
-                     if (udfEl) udfEl.value = icr.userDefined?.[`udf${i}`] || '';
+                    const udfEl = document.getElementById(`icr-udf${i}`);
+                    if (udfEl) udfEl.value = icr.userDefined?.[`udf${i}`] || '';
                 }
                 form.addEventListener('submit', handleItemCrossReferenceSubmit);
             }
@@ -2397,86 +2397,86 @@ window.deleteIUoM = async (id) => {
         };
 
         window.handleItemCrossReferenceSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const mode = form.dataset.mode;
-    const id = form['id'].value;
+            event.preventDefault();
+            const form = event.target;
+            const mode = form.dataset.mode;
+            const id = form['id'].value;
 
-    const now = new Date();
-    const lastUpdatedString = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} AM`;
-    const currentUser = 'ILSSRV';
+            const now = new Date();
+            const lastUpdatedString = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} AM`;
+            const currentUser = 'ILSSRV';
 
-    const userDefined = {};
-    for (let i = 1; i <= 8; i++) {
-        userDefined[`udf${i}`] = form[`udf${i}`].value;
-    }
+            const userDefined = {};
+            for (let i = 1; i <= 8; i++) {
+                userDefined[`udf${i}`] = form[`udf${i}`].value;
+            }
 
-    const newICR = {
-        id: id,
-        item: form['item'].value,
-        company: form['company'].value,
-        crossReferenceItemNumber: form['crossReferenceItemNumber'].value,
-        quantityUm: form['quantityUm'].value,
-        gtinEnabled: form['gtinEnabled'].checked,
-        lastUpdated: lastUpdatedString,
-        user: currentUser,
-        userDefined: userDefined,
-    };
+            const newICR = {
+                id: id,
+                item: form['item'].value,
+                company: form['company'].value,
+                crossReferenceItemNumber: form['crossReferenceItemNumber'].value,
+                quantityUm: form['quantityUm'].value,
+                gtinEnabled: form['gtinEnabled'].checked,
+                lastUpdated: lastUpdatedString,
+                user: currentUser,
+                userDefined: userDefined,
+            };
 
-    let msg = '';
-    if (mode === 'create') {
-        const maxId = itemCrossReferences.reduce((max, icr) => {
-            const num = parseInt(icr.id.replace('ICR', ''), 10);
-            return Math.max(max, isNaN(num) ? 0 : num);
-        }, 0);
-        newICR.id = 'ICR' + String(maxId + 1).padStart(3, '0');
-        itemCrossReferences.push(newICR);
-        msg = 'Item Cross Reference created successfully!';
-    } else {
-        const index = itemCrossReferences.findIndex(icr => icr.id === id);
-        if (index !== -1) {
-            itemCrossReferences[index] = { ...itemCrossReferences[index], ...newICR };
-            msg = 'Item Cross Reference updated successfully!';
-        }
-    }
-    saveItemCrossReferences();
-    closeModal('item-cross-reference-form-modal');
-    window.renderItemCrossReferenceList();
-    await window.showCustomAlert('Success', msg);
-};
+            let msg = '';
+            if (mode === 'create') {
+                const maxId = itemCrossReferences.reduce((max, icr) => {
+                    const num = parseInt(icr.id.replace('ICR', ''), 10);
+                    return Math.max(max, isNaN(num) ? 0 : num);
+                }, 0);
+                newICR.id = 'ICR' + String(maxId + 1).padStart(3, '0');
+                itemCrossReferences.push(newICR);
+                msg = 'Item Cross Reference created successfully!';
+            } else {
+                const index = itemCrossReferences.findIndex(icr => icr.id === id);
+                if (index !== -1) {
+                    itemCrossReferences[index] = { ...itemCrossReferences[index], ...newICR };
+                    msg = 'Item Cross Reference updated successfully!';
+                }
+            }
+            saveItemCrossReferences();
+            closeModal('item-cross-reference-form-modal');
+            window.renderItemCrossReferenceList();
+            await window.showCustomAlert('Success', msg);
+        };
 
-window.deleteItemCrossReference = async (id) => {
-    const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah kamu yakin ingin menghapus Item Cross Reference ini?');
-    if (confirmed) {
-        itemCrossReferences = itemCrossReferences.filter(icr => icr.id !== id);
-        saveItemCrossReferences();
-        window.renderItemCrossReferenceList();
-        await window.showCustomAlert('Deleted', 'Item Cross Reference deleted successfully!');
-    }
-};
+        window.deleteItemCrossReference = async (id) => {
+            const confirmed = await window.showCustomConfirm('Konfirmasi Hapus', 'Apakah kamu yakin ingin menghapus Item Cross Reference ini?');
+            if (confirmed) {
+                itemCrossReferences = itemCrossReferences.filter(icr => icr.id !== id);
+                saveItemCrossReferences();
+                window.renderItemCrossReferenceList();
+                await window.showCustomAlert('Deleted', 'Item Cross Reference deleted successfully!');
+            }
+        };
 
-window.closeModal = (id) => {
-    const modal = document.getElementById(id);
-    const modalContent = modal.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.classList.remove('scale-100', 'opacity-100');
-        modalContent.classList.add('scale-95', 'opacity-0');
-    }
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        document.body.classList.remove('modal-open');
-    }, 300);
-};
+        window.closeModal = (id) => {
+            const modal = document.getElementById(id);
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        };
 
         // --- INVENTORY CONTROL VALUES FUNCTIONS ---
         createModal('icv-form-modal');
-        
+
         window.showInventoryControlValuesForm = (mode, id = null) => {
             const modal = document.getElementById('icv-form-modal');
             const titleEl = document.getElementById('icv-form-modal-title');
             const bodyEl = document.getElementById('icv-form-modal-body');
             const footerEl = document.getElementById('icv-form-modal-footer');
-            
+
             const icv = inventoryControlValues.find(v => v.id === id) || {};
 
             titleEl.textContent = mode === 'create' ? 'Create New Inventory Control Value' : `Edit Inventory Control Value`;
@@ -2506,7 +2506,7 @@ window.closeModal = (id) => {
                     </div>
                 </form>
             `;
-            
+
             footerEl.innerHTML = renderStandardModalFooter({
                 cancelOnclick: "closeModal('icv-form-modal')",
                 submitFormId: "icv-form"
@@ -2525,7 +2525,7 @@ window.closeModal = (id) => {
             const form = event.target;
             const mode = form.dataset.mode;
             const id = form.id.value;
-            
+
             const newValue = {
                 id: id,
                 key: form.key.value,
@@ -2533,7 +2533,7 @@ window.closeModal = (id) => {
                 description: form.description.value,
                 systemCreated: form.systemCreated.checked ? "Yes" : "No"
             };
-            
+
             let msg = '';
             if (mode === 'create') {
                 const maxId = inventoryControlValues.reduce((max, val) => Math.max(max, val.id), 0);
@@ -2571,7 +2571,7 @@ window.closeModal = (id) => {
                 const searchable = `${icv.key} ${icv.value} ${icv.description} ${icv.systemValue}`.toLowerCase();
                 return searchable.includes(filter.toLowerCase());
             });
-            
+
             let tableHtml = `
                 <table class="min-w-full bg-white rounded-lg shadow-md">
                     <thead class="sticky top-0 bg-white">
@@ -2589,7 +2589,7 @@ window.closeModal = (id) => {
             if (filteredData.length === 0) {
                 tableHtml += `<tr><td colspan="5" class="py-3 px-6 text-center text-gray-400">Tidak ada nilai kontrol inventaris yang ditemukan.</td></tr>`;
             } else {
-                filteredData.forEach(icv => { 
+                filteredData.forEach(icv => {
                     tableHtml += `
                         <tr class="border-b border-wise-border hover:bg-wise-light-gray">
                             <td class="py-3 px-6 text-left whitespace-nowrap">${icv.id}</td>
@@ -2613,28 +2613,28 @@ window.closeModal = (id) => {
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
-        
+
         const filterInventoryControlValuesDebounced = debounce(value => window.renderInventoryControlValuesList(value), 300);
         window.filterInventoryControlValuesList = (value) => {
-             filterInventoryControlValuesDebounced(value);
+            filterInventoryControlValuesDebounced(value);
         };
-        
+
         // --- ROUTING & REGISTRATION ---
         window.contentData['item'] = {
             full: `
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item</h2>
                 <p class="text-wise-gray mb-4">Kelola semua item dalam inventaris.</p>
                 ${renderStandardListHeader({
-                    createLabel: "Create New Item",
-                    onCreate: "showItemForm('create')",
-                    searchId: "item-search",
-                    searchPlaceholder: "Search...",
-                    onSearch: "filterItemList"
-                })}
+                createLabel: "Create New Item",
+                onCreate: "showItemForm('create')",
+                searchId: "item-search",
+                searchPlaceholder: "Search...",
+                onSearch: "filterItemList"
+            })}
                 <div id="item-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
-        
+
         window.contentData['item-unit-of-measure'] = {
             full: `
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Unit of Measure</h2>
@@ -2642,12 +2642,12 @@ window.closeModal = (id) => {
                     Mengelola unit pengukuran dan faktor konversi untuk item atau kelas item.
                 </p>
                 ${renderStandardListHeader({
-                    createLabel: "Create New Item Unit of Measure",
-                    onCreate: "showIUoMForm('create')",
-                    searchId: "iuom-search",
-                    searchPlaceholder: "Search...",
-                    onSearch: "filterIUoMList"
-                })}
+                createLabel: "Create New Item Unit of Measure",
+                onCreate: "showIUoMForm('create')",
+                searchId: "iuom-search",
+                searchPlaceholder: "Search...",
+                onSearch: "filterIUoMList"
+            })}
                 <div id="iuom-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
@@ -2659,12 +2659,12 @@ window.closeModal = (id) => {
                     Kelola referensi silang untuk item (misalnya, nomor bagian yang berbeda).
                 </p>
                 ${renderStandardListHeader({
-                    createLabel: "Create New Item Cross Reference",
-                    onCreate: "showItemCrossReferenceForm('create')",
-                    searchId: "item-cross-reference-search",
-                    searchPlaceholder: "Search...",
-                    onSearch: "filterItemCrossReferenceList"
-                })}
+                createLabel: "Create New Item Cross Reference",
+                onCreate: "showItemCrossReferenceForm('create')",
+                searchId: "item-cross-reference-search",
+                searchPlaceholder: "Search...",
+                onSearch: "filterItemCrossReferenceList"
+            })}
                 <div id="item-cross-reference-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
@@ -2674,12 +2674,12 @@ window.closeModal = (id) => {
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Inventory Control Values</h2>
                 <p class="text-wise-gray mb-4">Manage system-wide inventory control settings and defaults.</p>
                 ${renderStandardListHeader({
-                    createLabel: "Create New Value",
-                    onCreate: "showInventoryControlValuesForm('create')",
-                    searchId: "icv-search",
-                    searchPlaceholder: "Search inventory control values...",
-                    onSearch: "filterInventoryControlValuesList"
-                })}
+                createLabel: "Create New Value",
+                onCreate: "showInventoryControlValuesForm('create')",
+                searchId: "icv-search",
+                searchPlaceholder: "Search inventory control values...",
+                onSearch: "filterInventoryControlValuesList"
+            })}
                 <div id="icv-list-container" class="max-h-[70vh] overflow-y-auto overflow-x-auto border border-wise-border rounded-lg bg-white"></div>
             `
         };
@@ -2707,11 +2707,11 @@ window.closeModal = (id) => {
                 'location', 'location-class', 'location-status', 'location-template', 'location-type',
                 'lot-template', 'movement-class', 'serial-number-template', 'storage-template',
                 'zone', 'zone-type'
-            ].sort(); 
-            
-            const invMeta = { 
+            ].sort();
+
+            const invMeta = {
                 ...(window.invMeta || {}),
-                'item': ['Item', 'Kelola data master item dan atributnya.'], 
+                'item': ['Item', 'Kelola data master item dan atributnya.'],
                 'item-unit-of-measure': ['Item Unit of Measure', 'Kelola UoM dan konversi untuk item/kelas item.'],
                 'item-cross-reference': ['Item Cross Reference', 'Kelola referensi silang untuk item.'],
                 'adjustment-type': ['Adjustment Type', 'Tentukan jenis untuk penyesuaian inventaris.'],
@@ -2734,7 +2734,7 @@ window.closeModal = (id) => {
                 'zone': ['Zone', 'Kelola zona logis di dalam gudang.'],
                 'zone-type': ['Zone Type', 'Tentukan jenis zona dalam tata letak gudang.']
             };
-            
+
             window.contentData['inventory-control'].full = `
                 <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
                     Inventory Control
@@ -2742,8 +2742,8 @@ window.closeModal = (id) => {
                 <p class="text-wise-gray mb-6">Pilih sub-kategori untuk mengelola kontrol inventaris.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${invChildren.map(k => {
-                        const meta = invMeta[k] || [k, ''];
-                        return `
+                const meta = invMeta[k] || [k, ''];
+                return `
                         <div class="bg-wise-light-gray p-5 rounded-lg shadow-md hover:shadow-lg transition">
                             <h3 class="text-lg font-medium text-wise-dark-gray mb-2">${meta[0]}</h3>
                             <p class="text-wise-gray text-sm">${meta[1]}</p>
@@ -2753,11 +2753,11 @@ window.closeModal = (id) => {
                             </button>
                         </div>
                     `;
-                    }).join('')}
+            }).join('')}
                 </div>`;
             window.parentMapping['item'] = 'inventory-control';
         }
-        
+
         const autoRenderItem = () => {
             const container = document.getElementById('item-list-container');
             if (container && !container.dataset.bound) {
@@ -2768,13 +2768,13 @@ window.closeModal = (id) => {
         };
 
         const autoRenderIUoM = () => {
-             const container = document.getElementById('iuom-list-container');
-             if (container && !container.dataset.bound) {
-                 renderIUoMList();
-                 container.dataset.bound = '1';
-             }
+            const container = document.getElementById('iuom-list-container');
+            if (container && !container.dataset.bound) {
+                renderIUoMList();
+                container.dataset.bound = '1';
+            }
         };
-        
+
         const autoRenderICR = () => {
             const container = document.getElementById('item-cross-reference-list-container');
             if (container && !container.dataset.bound) {
@@ -2786,8 +2786,8 @@ window.closeModal = (id) => {
         const autoRenderICV = () => {
             const container = document.getElementById('icv-list-container');
             if (container && !container.dataset.bound) {
-                 window.renderInventoryControlValuesList();
-                 container.dataset.bound = '1';
+                window.renderInventoryControlValuesList();
+                container.dataset.bound = '1';
             }
         };
 
@@ -2814,13 +2814,13 @@ window.closeModal = (id) => {
                 window.renderInventoryControlValuesList();
             }
         });
-        
+
         const originalSelectCategory = window.selectCategory;
-        window.selectCategory = function(category) {
+        window.selectCategory = function (category) {
             originalSelectCategory(category);
             document.dispatchEvent(new CustomEvent('content:rendered', { detail: { key: category } }));
         };
-        
+
         // Listen for Esc key to close modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -2830,19 +2830,19 @@ window.closeModal = (id) => {
                 }
             }
         });
-        
+
         window.navigateToHome();
 
-        console.log('Configuration V4 (Item & IUoM) loaded successfully');
+        // Configuration V4 (Item & IUoM) loaded
     });
 })();
 
-window.closeSidebar = function() {
+window.closeSidebar = function () {
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const mainContent = document.getElementById('main-content');
     const header = document.querySelector('header');
-    
+
     if (sidebar) sidebar.classList.remove('translate-x-0');
     if (sidebar) sidebar.classList.add('-translate-x-full');
     if (mainContent) mainContent.classList.remove('md:ml-64');
@@ -2856,7 +2856,7 @@ window.closeSidebar = function() {
 
 //     if (window.contentData[category]) {
 //         if (mainContent) mainContent.innerHTML = window.contentData[category].full;
-        
+
 //         if (category === 'item') {
 //             window.renderItemList();
 //         } else if (category === 'item-unit-of-measure') {
@@ -2875,7 +2875,7 @@ window.closeSidebar = function() {
 //         if (window.innerWidth < 768) {
 //             window.closeSidebar();
 //         }
-        
+
 //         if (categoryMenu) {
 //             const menuItems = categoryMenu.querySelectorAll('button');
 //             menuItems.forEach(item => {
@@ -2892,11 +2892,15 @@ window.closeSidebar = function() {
 //     }
 // };
 
-window.goBack = function() {
-    console.log("Go back function not yet implemented.");
+window.goBack = function () {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.selectCategory('configuration');
+    }
 };
 
-window.navigateToHome = function() {
+window.navigateToHome = function () {
     const mainContent = document.getElementById('main-content');
     const homeContent = `<div class="p-6">
         <h1 class="text-3xl font-bold mb-4">Welcome to Wise Configuration</h1>

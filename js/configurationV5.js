@@ -2,7 +2,7 @@
     // FIX: Perbaikan bug debounce. Mengganti parameter yang salah dan memastikan 'this' dipertahankan.
     function debounce(func, delay) {
         let timeout;
-        return function(...args) {
+        return function (...args) {
             const context = this;
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(context, args), delay);
@@ -28,7 +28,7 @@
          * @param {string} onSearch - The JS function call for the search input's oninput event.
          * @returns {string} The HTML string for the header.
          */
-        window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) =>`
+        window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
             <div class="flex flex-wrap items-center gap-3 mb-4">
               <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="${onCreate}">${createLabel}</button>
               <div class="grow"></div>
@@ -40,7 +40,7 @@
               </div>
             </div>
         `;
-        
+
         /**
          * Renders a standard modal footer with Cancel and OK buttons.
          * @param {string} cancelOnclick - The JS function call for the cancel button.
@@ -67,14 +67,14 @@
                 activePane.classList.remove('hidden');
             }
         }
-        
+
         // =======================================================================
         // BAGIAN 1: SERIAL NUMBER TEMPLATE
         // =======================================================================
         const SNT_STORAGE_KEY = 'serialNumberTemplates_v5';
         const snt_initialData = [
-            { id: 'SNT001', name: 'STD_SERIAL', description: 'Standard Serial Number', allowDuplicates: false, allowRangeEntry: true, inactive: false, patternFields: [{type: 'Alphanumeric', length: 10, value: ''}], userDefined: {} },
-            { id: 'SNT002', name: 'DATE_BASED', description: 'Date Based Serial', allowDuplicates: true, allowRangeEntry: false, inactive: false, patternFields: [{type: 'Date', length: 8, value: 'YYYYMMDD'}, {type: 'Sequence', length: 4, value: ''}], userDefined: {} }
+            { id: 'SNT001', name: 'STD_SERIAL', description: 'Standard Serial Number', allowDuplicates: false, allowRangeEntry: true, inactive: false, patternFields: [{ type: 'Alphanumeric', length: 10, value: '' }], userDefined: {} },
+            { id: 'SNT002', name: 'DATE_BASED', description: 'Date Based Serial', allowDuplicates: true, allowRangeEntry: false, inactive: false, patternFields: [{ type: 'Date', length: 8, value: 'YYYYMMDD' }, { type: 'Sequence', length: 4, value: '' }], userDefined: {} }
         ];
         const snt_loadData = () => JSON.parse(localStorage.getItem(SNT_STORAGE_KEY)) || snt_initialData;
         const snt_saveData = (data) => localStorage.setItem(SNT_STORAGE_KEY, JSON.stringify(data));
@@ -97,9 +97,9 @@
         // =======================================================================
         const ILC_STORAGE_KEY = 'itemLocationCapacities_v5';
         const ilc_initialData = [
-            { 
+            {
                 id: 'ILC001', item: '000000000140_1', company: 'GBG', itemClass: 'CLASS_A',
-                capacityDetails: [ { detailId: 'D01', locationType: 'CARTON FLOW 5 SLOT', warehouse: 'GBG', location: '', minQty: 20, maxQty: 20, quantityUm: 'PCK', itemCapacityId: 88139 } ],
+                capacityDetails: [{ detailId: 'D01', locationType: 'CARTON FLOW 5 SLOT', warehouse: 'GBG', location: '', minQty: 20, maxQty: 20, quantityUm: 'PCK', itemCapacityId: 88139 }],
                 userDefined: { udf1: 'Data UDF 1' }
             }
         ];
@@ -113,19 +113,19 @@
         // =======================================================================
         const IT_STORAGE_KEY = 'itemTemplates_v5';
         const it_initialData = [
-            { 
+            {
                 id: 'IT001', itemTemplate: 'DEFAULT', separatorCharacter: '.', inactive: false,
-                fields: [ { length: 4, type: 'Alpha' }, { length: 8, type: 'Num' }, { length: 2, type: 'Alpha' } ],
+                fields: [{ length: 4, type: 'Alpha' }, { length: 8, type: 'Num' }, { length: 2, type: 'Alpha' }],
                 userDefined: { udf1: 'Default Template UDF' }
             }
         ];
         const it_loadData = () => JSON.parse(localStorage.getItem(IT_STORAGE_KEY)) || it_initialData;
         const it_saveData = (data) => localStorage.setItem(IT_STORAGE_KEY, JSON.stringify(data));
-        
+
         const LOC_STORAGE_KEY = 'locations_v5';
         const loc_initialData = [
-            { 
-                id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01', 
+            {
+                id: 'LOC001', locationTemplate: 'STANDARD', warehouse: 'DCB', aisle: '01', bay: '01', level: '1', slot: '01',
                 locatingZone: 'L-DCB.FD.DD.FA...', allocationZone: 'A-DCB.B8.FACE', workZone: 'W-DCB.DRY.FACE',
                 inactive: false,
                 general: { locationClass: 'Inventory Storage', locationSubclass: 'Inventory', locationType: 'DOUBLE.DEEP-FACE', movementClass: '', locationStatus: 'Empty', realTimeReplenishment: false, lastCycleCountDate: null, maxNumberOfLots: 0, allowInTransit: true, multiItem: true, trackLicensePlates: false },
@@ -150,12 +150,12 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Serial Number Template</h2>
                     <p class="text-wise-gray mb-4">Manage templates for serial number generation.</p>
                     ${renderStandardListHeader({
-                        createLabel: "Create New Template",
-                        onCreate: "showSerialNumberTemplateForm('create')",
-                        searchId: "snt-search",
-                        searchPlaceholder: "Search template name...",
-                        onSearch: "filterSerialNumberTemplateList"
-                    })}
+                    createLabel: "Create New Template",
+                    onCreate: "showSerialNumberTemplateForm('create')",
+                    searchId: "snt-search",
+                    searchPlaceholder: "Search template name...",
+                    onSearch: "filterSerialNumberTemplateList"
+                })}
                     <div id="snt-list-container" class="overflow-x-auto"></div>
                     <div id="snt-form-modal" class="hidden fixed inset-0 z-[60] flex items-start justify-center p-4 md:p-6 bg-black/40 overflow-y-auto">
                         <div class="modal-content w-[min(1000px,95vw)] bg-white rounded-xl shadow-2xl flex flex-col max-h-[95vh] transition-all duration-300 opacity-0 scale-95">
@@ -233,7 +233,7 @@
                                     </div>
 
                                     <div id="pane-ud" role="tabpanel" data-pane="ud" class="hidden grid gap-3 md:grid-cols-2">
-                                        ${Array.from({length: 8}, (_, i) => `<div><label for="snt-udf${i+1}" class="block text-sm mb-1">User defined field ${i+1}:</label><input id="snt-udf${i+1}" name="udf${i+1}" type="text" class="input"></div>`).join('')}
+                                        ${Array.from({ length: 8 }, (_, i) => `<div><label for="snt-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input id="snt-udf${i + 1}" name="udf${i + 1}" type="text" class="input"></div>`).join('')}
                                     </div>
                                 </form>
                             </div>
@@ -251,12 +251,12 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Location Assignment</h2>
                     <p class="text-wise-gray mb-4">Manage item assignments to specific warehouse locations.</p>
                     ${renderStandardListHeader({
-                        createLabel: "Create New Assignment",
-                        onCreate: "showItemLocationAssignmentForm('create')",
-                        searchId: "ila-search",
-                        searchPlaceholder: "Search assignment...",
-                        onSearch: "filterItemLocationAssignmentList"
-                    })}
+                    createLabel: "Create New Assignment",
+                    onCreate: "showItemLocationAssignmentForm('create')",
+                    searchId: "ila-search",
+                    searchPlaceholder: "Search assignment...",
+                    onSearch: "filterItemLocationAssignmentList"
+                })}
                     <div id="item-location-assignment-list-container" class="overflow-x-auto"></div>
                     <div id="ila-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/30">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
@@ -281,9 +281,9 @@
                                 </div></div>
                             </form></div>
                             ${renderStandardModalFooter({
-                                cancelOnclick: "closeItemLocationAssignmentForm()",
-                                submitFormId: "ila-form"
-                            })}
+                    cancelOnclick: "closeItemLocationAssignmentForm()",
+                    submitFormId: "ila-form"
+                })}
                         </div>
                     </div>
                 `
@@ -293,12 +293,12 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Location Capacity</h2>
                     <p class="text-wise-gray mb-4">Manage item capacity settings for specific locations or location types.</p>
                     ${renderStandardListHeader({
-                        createLabel: "Create New",
-                        onCreate: "showItemLocationCapacityForm('create')",
-                        searchId: "ilc-search",
-                        searchPlaceholder: "Search by item or company...",
-                        onSearch: "filterItemLocationCapacityList"
-                    })}
+                    createLabel: "Create New",
+                    onCreate: "showItemLocationCapacityForm('create')",
+                    searchId: "ilc-search",
+                    searchPlaceholder: "Search by item or company...",
+                    onSearch: "filterItemLocationCapacityList"
+                })}
                     <div id="ilc-list-container" class="overflow-x-auto"></div>
                     <div id="ilc-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh]">
@@ -329,9 +329,9 @@
                                 <div id="pane-user-defined" role="tabpanel" data-pane="user-defined" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${Array.from({ length: 8 }, (_, i) => `<div><label for="ilc-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="ilc-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}</div></div>
                             </form></div>
                             ${renderStandardModalFooter({
-                                cancelOnclick: "closeItemLocationCapacityForm()",
-                                submitFormId: "ilc-form"
-                            })}
+                    cancelOnclick: "closeItemLocationCapacityForm()",
+                    submitFormId: "ilc-form"
+                })}
                         </div>
                     </div>
                     <div id="ilc-location-lookup-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/40">
@@ -352,12 +352,12 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Item Template</h2>
                     <p class="text-wise-gray mb-4">Manage templates for creating new items.</p>
                     ${renderStandardListHeader({
-                        createLabel: "Create New Template",
-                        onCreate: "showItemTemplateForm('create')",
-                        searchId: "it-search",
-                        searchPlaceholder: "Search by template name...",
-                        onSearch: "filterItemTemplateList"
-                    })}
+                    createLabel: "Create New Template",
+                    onCreate: "showItemTemplateForm('create')",
+                    searchId: "it-search",
+                    searchPlaceholder: "Search by template name...",
+                    onSearch: "filterItemTemplateList"
+                })}
                     <div id="it-list-container" class="overflow-x-auto"></div>
                     <div id="it-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
                         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
@@ -379,9 +379,9 @@
                                 <div id="pane-user-defined" role="tabpanel" data-pane="user-defined" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${Array.from({ length: 8 }, (_, i) => `<div><label for="it-udf${i + 1}" class="block text-sm mb-1">User defined field ${i + 1}:</label><input type="text" id="it-udf${i + 1}" name="udf${i + 1}" class="input"></div>`).join('')}</div></div>
                             </form></div>
                             ${renderStandardModalFooter({
-                                cancelOnclick: "closeItemTemplateForm()",
-                                submitFormId: "it-form"
-                            })}
+                    cancelOnclick: "closeItemTemplateForm()",
+                    submitFormId: "it-form"
+                })}
                         </div>
                     </div>
                 `
@@ -391,12 +391,12 @@
                     <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Location</h2>
                     <p class="text-wise-gray mb-4">Manage all physical storage locations within the warehouse.</p>
                     ${renderStandardListHeader({
-                        createLabel: "Create New Location",
-                        onCreate: "showLocationForm('create')",
-                        searchId: "loc-search",
-                        searchPlaceholder: "Search by warehouse or location...",
-                        onSearch: "filterLocationList"
-                    })}
+                    createLabel: "Create New Location",
+                    onCreate: "showLocationForm('create')",
+                    searchId: "loc-search",
+                    searchPlaceholder: "Search by warehouse or location...",
+                    onSearch: "filterLocationList"
+                })}
                     
                     <div id="loc-table-desktop" class="hidden md:block border border-wise-border rounded-lg shadow-md overflow-hidden min-h-0">
                         <div id="loc-list-container-desktop" class="h-[70vh] overflow-auto"></div>
@@ -536,19 +536,19 @@
                             </div>
                             <div class="px-6 py-4 border-t flex justify-end items-center">
                                 ${renderStandardModalFooter({
-                                    cancelOnclick: "closeLocationForm()",
-                                    submitFormId: "loc-form"
-                                })}
+                    cancelOnclick: "closeLocationForm()",
+                    submitFormId: "loc-form"
+                })}
                             </div>
                         </div>
                     </div>
                 `
             },
-        });  
+        });
         // =======================================================================
         // FUNGSI-FUNGSI: SEMUA FITUR
         // =======================================================================
-        
+
         function activateTab(tabName, container) {
             container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active'));
             container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
@@ -565,7 +565,7 @@
         // =======================================================================
         // FUNGSI-FUNGSI: SERIAL NUMBER TEMPLATE
         // =======================================================================
-        window.renderSerialNumberTemplateList = function(filter = '') {
+        window.renderSerialNumberTemplateList = function (filter = '') {
             const container = document.getElementById('snt-list-container'); if (!container) return;
             const templates = snt_loadData();
             const filteredData = templates.filter(t => t.name.toLowerCase().includes(filter.toLowerCase()) || t.description.toLowerCase().includes(filter.toLowerCase()));
@@ -578,7 +578,7 @@
         function renderSNT_Patterns() {
             const container = document.getElementById('snt-patterns-list'); if (!container) return;
             container.innerHTML = '';
-            if(currentSNT_PatternFields.length === 0) { container.innerHTML = '<div class="p-4 text-center text-gray-400 text-sm">No pattern fields added.</div>'; return; }
+            if (currentSNT_PatternFields.length === 0) { container.innerHTML = '<div class="p-4 text-center text-gray-400 text-sm">No pattern fields added.</div>'; return; }
             currentSNT_PatternFields.forEach((pattern, index) => {
                 const div = document.createElement('div');
                 div.className = 'list-row p-2'; div.dataset.index = index;
@@ -589,7 +589,7 @@
                     document.getElementById('snt-pattern-type').value = pattern.type;
                     document.getElementById('snt-pattern-length').value = pattern.length || '';
                     document.getElementById('snt-pattern-value').value = pattern.value || '';
-                    renderSNT_Patterns(); 
+                    renderSNT_Patterns();
                 };
                 container.appendChild(div);
             });
@@ -634,7 +634,7 @@
                 renderSNT_Patterns();
             }
         }
-        window.showSerialNumberTemplateForm = function(mode, id = null) {
+        window.showSerialNumberTemplateForm = function (mode, id = null) {
             const modal = document.getElementById('snt-form-modal');
             const form = document.getElementById('snt-form');
             const title = document.getElementById('snt-form-title');
@@ -678,13 +678,13 @@
                 }
             }, 10);
         };
-        window.closeSerialNumberTemplateForm = function() {
+        window.closeSerialNumberTemplateForm = function () {
             const modal = document.getElementById('snt-form-modal');
             const modalContent = modal.querySelector('.modal-content');
             modalContent.classList.add('opacity-0', 'scale-95');
             setTimeout(() => { modal.classList.add('hidden'); document.body.classList.remove('modal-open'); }, 300);
         };
-        window.handleSerialNumberTemplateSubmit = async function(event) {
+        window.handleSerialNumberTemplateSubmit = async function (event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
@@ -706,7 +706,7 @@
             renderSerialNumberTemplateList();
             await window.showCustomAlert('Success', msg);
         };
-        window.deleteSerialNumberTemplate = async function(id) {
+        window.deleteSerialNumberTemplate = async function (id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this template?');
             if (confirmed) {
                 let data = snt_loadData();
@@ -720,7 +720,7 @@
         // =======================================================================
         // FUNGSI-FUNGSI: ITEM LOCATION ASSIGNMENT
         // =======================================================================
-        window.renderItemLocationAssignmentList = function(filter = '') {
+        window.renderItemLocationAssignmentList = function (filter = '') {
             const container = document.getElementById('item-location-assignment-list-container');
             if (!container) return;
             let assignments = ila_loadData();
@@ -731,18 +731,20 @@
             }
             else {
                 filteredData.forEach(ila => {
-                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${ila.item}</td><td class="py-3 px-6 text-left">${ila.company}</td><td class="py-3 px-6 text-left">${ila.warehouse}</td><td class="py-3 px-6 text-left">${ila.permanentLocation}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationAssignmentForm('edit', '${ila.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationAssignment('${ila.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${ila.item}</td><td class="py-3 px-6 text-left">${ila.company}</td><td class="py-3 px-6 text-left">${ila.warehouse}</td><td class="py-3 px-6 text-left">${ila.permanentLocation}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationAssignmentForm('edit', '${ila.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationAssignment('${ila.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`;
+                });
+            }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
         window.filterItemLocationAssignmentList = debounce((value) => renderItemLocationAssignmentList(value), 300);
-        window.closeItemLocationAssignmentForm = function() { document.getElementById('ila-form-modal').classList.add('hidden'); };
-        window.applyLookupLocation = function() {
+        window.closeItemLocationAssignmentForm = function () { document.getElementById('ila-form-modal').classList.add('hidden'); };
+        window.applyLookupLocation = function () {
             const lookupValue = document.getElementById('lookup-location').value;
             if (lookupValue.trim()) { document.getElementById('ila-permanent-location').value = lookupValue; window.showCustomAlert('Info', `Location '${lookupValue}' has been applied.`); document.querySelector('#ila-form-modal [role="tab"][data-tab="general"]').click(); }
             else { window.showCustomAlert('Warning', 'Please enter a location.'); }
         };
-        window.showItemLocationAssignmentForm = function(mode, id = null) {
+        window.showItemLocationAssignmentForm = function (mode, id = null) {
             const modal = document.getElementById('ila-form-modal');
             const form = document.getElementById('ila-form');
             const title = document.getElementById('ila-form-title');
@@ -755,7 +757,7 @@
             }
             activateTab('general', modal);
             // FIX: Perbaikan typo "Lockup" menjadi "Lookup"
-            modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location'; 
+            modal.querySelector('[data-tab="lookup"]').textContent = 'Lookup UI Location';
             if (mode === 'create') {
                 title.textContent = 'Create New Item Location Assignment';
             }
@@ -776,7 +778,7 @@
             }
             modal.classList.remove('hidden');
         };
-        window.handleItemLocationAssignmentSubmit = async function(event) {
+        window.handleItemLocationAssignmentSubmit = async function (event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
@@ -807,7 +809,7 @@
             renderItemLocationAssignmentList();
             await window.showCustomAlert('Success', msg);
         };
-        window.deleteItemLocationAssignment = async function(id) {
+        window.deleteItemLocationAssignment = async function (id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure?');
             if (confirmed) {
                 let assignments = ila_loadData();
@@ -821,7 +823,7 @@
         // =======================================================================
         // FUNGSI-FUNGSI: ITEM LOCATION CAPACITY
         // =======================================================================
-        window.renderItemLocationCapacityList = function(filter = '') {
+        window.renderItemLocationCapacityList = function (filter = '') {
             const container = document.getElementById('ilc-list-container');
             if (!container) return;
             let data = ilc_loadData();
@@ -832,7 +834,9 @@
             }
             else {
                 filteredData.forEach(d => {
-                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${d.item}</td><td class="py-3 px-6 text-left">${d.company}</td><td class="py-3 px-6 text-left">${d.itemClass}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationCapacityForm('edit', '${d.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationCapacity('${d.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${d.item}</td><td class="py-3 px-6 text-left">${d.company}</td><td class="py-3 px-6 text-left">${d.itemClass}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemLocationCapacityForm('edit', '${d.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemLocationCapacity('${d.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`;
+                });
+            }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
@@ -840,7 +844,7 @@
         function renderCapacityDetailsTable() {
             const container = document.getElementById('ilc-detail-table-container');
             let tableHtml = `<table class="min-w-full text-sm"><thead><tr class="bg-gray-100 sticky top-0"><th class="py-2 px-4 text-left">Location Type</th><th class="py-2 px-4 text-left">Location</th><th class="py-2 px-4 text-right">Max Qty</th><th class="py-2 px-4 text-left">UM</th><th class="py-2 px-4 text-center">...</th></tr></thead><tbody>`;
-            if(currentCapacityDetails.length === 0) {
+            if (currentCapacityDetails.length === 0) {
                 tableHtml += `<tr><td colspan="5" class="p-4 text-center text-gray-400">No details.</td></tr>`;
             }
             else {
@@ -851,7 +855,7 @@
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         }
-        window.selectDetailToEdit = function(index) {
+        window.selectDetailToEdit = function (index) {
             selectedDetailIndex = index;
             const detail = currentCapacityDetails[index];
             document.getElementById('detail-max-qty').value = detail.maxQty;
@@ -860,7 +864,7 @@
             document.getElementById('detail-location').value = detail.location;
             renderCapacityDetailsTable();
         }
-        window.clearDetailForm = function() {
+        window.clearDetailForm = function () {
             selectedDetailIndex = -1;
             document.getElementById('detail-max-qty').value = '';
             document.getElementById('detail-um').value = 'Pack';
@@ -868,25 +872,25 @@
             document.getElementById('detail-location').value = '';
             renderCapacityDetailsTable();
         }
-        window.addOrUpdateDetail = function() {
+        window.addOrUpdateDetail = function () {
             const newDetail = { maxQty: document.getElementById('detail-max-qty').value, quantityUm: document.getElementById('detail-um').value, locationType: document.getElementById('detail-location-type').value, location: document.getElementById('detail-location').value, minQty: 0, warehouse: document.getElementById('ilc-company').value, itemCapacityId: Math.floor(Math.random() * 90000) + 10000 };
             if (selectedDetailIndex > -1) {
                 // FIX: Perbaikan bug spread object
-                currentCapacityDetails[selectedDetailIndex] = {...currentCapacityDetails[selectedDetailIndex], ...newDetail};
+                currentCapacityDetails[selectedDetailIndex] = { ...currentCapacityDetails[selectedDetailIndex], ...newDetail };
             } else {
                 newDetail.detailId = 'D' + Date.now();
                 currentCapacityDetails.push(newDetail);
             }
             clearDetailForm();
         }
-        window.deleteDetail = async function(index) {
+        window.deleteDetail = async function (index) {
             const confirmed = await window.showCustomConfirm('Delete Detail', 'Remove this detail?');
-            if(confirmed) {
+            if (confirmed) {
                 currentCapacityDetails.splice(index, 1);
                 clearDetailForm();
             }
         }
-        window.window.showItemLocationCapacityForm = function(mode, id = null) {
+        window.showItemLocationCapacityForm = function (mode, id = null) {
             const modal = document.getElementById('ilc-form-modal');
             const form = document.getElementById('ilc-form');
             const title = document.getElementById('ilc-form-title');
@@ -925,24 +929,24 @@
             }
 
             if (!modal._listenersAttached) {
-                modal.querySelectorAll('[role="tab"]').forEach(button => { 
-                    button.onclick = () => activateTab(button.dataset.tab, modal) 
+                modal.querySelectorAll('[role="tab"]').forEach(button => {
+                    button.onclick = () => activateTab(button.dataset.tab, modal)
                 });
                 modal._listenersAttached = true;
             }
             activateTab('general', modal);
             clearDetailForm();
-            
+
             // Siapin data lokasi buat dropdown
             const allLocations = loc_loadData().map(loc => {
                 const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
                 return { value: combinedLocation, label: combinedLocation };
             });
             // Bikin dropdown canggihnya
-            if(window.makeLongDropdown) {
+            if (window.makeLongDropdown) {
                 window.makeLongDropdown('detail-location', allLocations, '');
             }
-            
+
             modal.classList.remove('hidden');
         };
 
@@ -953,7 +957,7 @@
             document.getElementById('detail-location').value = `LOC.${document.getElementById('lookup-location').value}`;
             closeIlcLocationLookup();
         };
-        window.handleItemLocationCapacitySubmit = async function(event) {
+        window.handleItemLocationCapacitySubmit = async function (event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
@@ -967,13 +971,13 @@
                     userDefined[`udf${i}`] = udfInput.value;
                 }
             }
-            
-            const formData = { 
-                item: form.item.value, 
-                company: form.company.value, 
-                itemClass: form.itemClass.value, 
-                capacityDetails: currentCapacityDetails, 
-                userDefined: userDefined 
+
+            const formData = {
+                item: form.item.value,
+                company: form.company.value,
+                itemClass: form.itemClass.value,
+                capacityDetails: currentCapacityDetails,
+                userDefined: userDefined
             };
 
             let msg = '';
@@ -993,7 +997,7 @@
             renderItemLocationCapacityList();
             await window.showCustomAlert('Success', msg);
         };
-        window.deleteItemLocationCapacity = async function(id) {
+        window.deleteItemLocationCapacity = async function (id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this record?');
             if (confirmed) {
                 let data = ilc_loadData();
@@ -1007,7 +1011,7 @@
         // =======================================================================
         // FUNGSI-FUNGSI: ITEM TEMPLATE
         // =======================================================================
-        window.renderItemTemplateList = function(filter = '') {
+        window.renderItemTemplateList = function (filter = '') {
             const container = document.getElementById('it-list-container');
             if (!container) return;
             let templates = it_loadData();
@@ -1018,7 +1022,9 @@
             }
             else {
                 filteredData.forEach(t => {
-                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`; }); }
+                    tableHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray"><td class="py-3 px-6 text-left whitespace-nowrap">${t.itemTemplate}</td><td class="py-3 px-6 text-left">${t.separatorCharacter}</td><td class="py-3 px-6 text-left">${t.fields[0].type}</td><td class="py-3 px-6 text-left">${t.fields[0].length}</td><td class="py-3 px-6 text-center"><div class="flex item-center justify-center"><button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="showItemTemplateForm('edit', '${t.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button><button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="deleteItemTemplate('${t.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></td></tr>`;
+                });
+            }
             tableHtml += `</tbody></table>`;
             container.innerHTML = tableHtml;
         };
@@ -1041,7 +1047,7 @@
                 container.insertAdjacentHTML('beforeend', fieldHtml);
             });
         }
-        window.showItemTemplateForm = function(mode, id = null) {
+        window.showItemTemplateForm = function (mode, id = null) {
             const modal = document.getElementById('it-form-modal');
             const form = document.getElementById('it-form');
             const title = document.getElementById('it-form-title');
@@ -1061,7 +1067,7 @@
                     form.inactive.checked = template.inactive;
                     renderTemplateFields(template.fields);
                     if (template.userDefined) {
-                        for(let i = 1; i <= 8; i++) {
+                        for (let i = 1; i <= 8; i++) {
                             form[`udf${i}`].value = template.userDefined[`udf${i}`] || '';
                         }
                     }
@@ -1075,7 +1081,7 @@
             modal.classList.remove('hidden');
         };
         window.closeItemTemplateForm = () => document.getElementById('it-form-modal').classList.add('hidden');
-        window.handleItemTemplateSubmit = async function(event) {
+        window.handleItemTemplateSubmit = async function (event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
@@ -1085,7 +1091,7 @@
                 fields.push({ length: parseInt(form[`field_length_${i}`].value) || 0, type: form[`field_type_${i}`].value });
             }
             const userDefined = {};
-            for(let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 8; i++) {
                 userDefined[`udf${i}`] = form[`udf${i}`].value;
             }
             const formData = { itemTemplate: form.itemTemplate.value, separatorCharacter: form.separatorCharacter.value, inactive: form.inactive.checked, fields, userDefined };
@@ -1106,7 +1112,7 @@
             renderItemTemplateList();
             await window.showCustomAlert('Success', msg);
         };
-        window.deleteItemTemplate = async function(id) {
+        window.deleteItemTemplate = async function (id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Delete this template?');
             if (confirmed) {
                 let data = it_loadData();
@@ -1120,7 +1126,7 @@
         // =======================================================================
         // FUNGSI-FUNGSI: LOCATION
         // =======================================================================
-        window.renderLocationList = function(filter = '') {
+        window.renderLocationList = function (filter = '') {
             const containerDesktop = document.getElementById('loc-list-container-desktop');
             const containerMobile = document.getElementById('loc-list-container-mobile');
             if (!containerDesktop || !containerMobile) return;
@@ -1151,8 +1157,8 @@
             } else {
                 filteredData.forEach(loc => {
                     const combinedLocation = `${loc.aisle || ''}.${loc.bay || ''}.${loc.level || ''}.${loc.slot || ''}`;
-                    
-                    {/* DITAMBAH: class 'group' pada <tr> */}
+
+                    {/* DITAMBAH: class 'group' pada <tr> */ }
                     tableHtml += `<tr class="border-b hover:bg-gray-50 group">
                         <td class="py-2 px-4 text-left whitespace-nowrap">${loc.warehouse}</td>
                         <td class="py-2 px-4 text-left font-semibold text-wise-dark-gray whitespace-nowrap">${combinedLocation}</td>
@@ -1226,7 +1232,7 @@
             });
         }
 
-        window.showLocationForm = function(mode, id = null) {
+        window.showLocationForm = function (mode, id = null) {
             const modal = document.getElementById('loc-form-modal');
             const form = document.getElementById('loc-form');
             const title = document.getElementById('loc-form-title');
@@ -1244,7 +1250,7 @@
             activateTab('general', modal);
 
             let loc;
-            const defaultLoc = { 
+            const defaultLoc = {
                 general: {}, zones: {}, work: {}, dock: {}, userDefined: {}, quantityUmList: [],
                 locationTemplate: '', warehouse: '', aisle: '', bay: '', level: '', slot: '', inactive: false,
                 locatingZone: '', allocationZone: '', workZone: ''
@@ -1268,7 +1274,7 @@
                 loc.userDefined = { ...defaultLoc.userDefined, ...foundLoc.userDefined };
                 currentLocationQtyUmList = JSON.parse(JSON.stringify(loc.quantityUmList || []));
             }
-            
+
             const setField = (name, value, isCheckbox = false) => {
                 const el = form.querySelector(`[name="${name}"]`);
                 if (el) {
@@ -1276,7 +1282,7 @@
                     else el.value = value || '';
                 }
             };
-            
+
             const setRadio = (name, value) => {
                 if (value) {
                     const el = form.querySelector(`[name="${name}"][value="${value}"]`);
@@ -1295,7 +1301,7 @@
             setField('locatingZone', loc.locatingZone);
             setField('allocationZone', loc.allocationZone);
             setField('workZone', loc.workZone);
-            
+
             const g = loc.general;
             setField('locationClass', g.locationClass);
             setField('locationSubclass', g.locationSubclass);
@@ -1319,7 +1325,7 @@
             setField('pickingSequence', w.pickingSequence);
             setField('putawaySequence', w.putawaySequence);
             setField('vectorCoordinate', w.vectorCoordinate);
-            
+
             const d = loc.dock;
             setRadio('dockLocationType', d.dockLocationType);
             setRadio('dockAreaSize', d.dockAreaSize);
@@ -1341,11 +1347,11 @@
         };
 
 
-        window.closeLocationForm = function() {
+        window.closeLocationForm = function () {
             document.getElementById('loc-form-modal').classList.add('hidden');
         };
 
-        window.handleLocationSubmit = async function(event) {
+        window.handleLocationSubmit = async function (event) {
             event.preventDefault();
             const form = event.target;
             const mode = form.dataset.mode;
@@ -1360,7 +1366,7 @@
                 const el = form.querySelector(`[name="udf${i}"]`);
                 if (el) userDefined[`udf${i}`] = el.value;
             }
-            
+
             const newLocation = {
                 id: id,
                 locationTemplate: form.querySelector('[name="locationTemplate"]')?.value,
@@ -1410,7 +1416,7 @@
                 },
                 userDefined: userDefined
             };
-            
+
             let locations = loc_loadData();
             let msg = '';
             if (mode === 'create') {
@@ -1430,7 +1436,7 @@
             await window.showCustomAlert('Success', msg);
         };
 
-        window.deleteLocation = async function(id) {
+        window.deleteLocation = async function (id) {
             const confirmed = await window.showCustomConfirm('Confirm Delete', 'Are you sure you want to delete this location?');
             if (confirmed) {
                 let locations = loc_loadData();
@@ -1441,7 +1447,7 @@
             }
         };
 
-        window.applyLocationLookup = function() {
+        window.applyLocationLookup = function () {
             const combinedValue = document.getElementById('lookup-loc-combined').value;
             if (!combinedValue.trim()) {
                 window.showCustomAlert('Peringatan', 'Masukkan lokasi terlebih dahulu.');
@@ -1483,16 +1489,16 @@
                 renderLocationList();
             } // Pemicu untuk fitur baru
         });
-        
+
     });
 })();
 
-window.closeSidebar = function() {
+window.closeSidebar = function () {
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const mainContent = document.getElementById('main-content');
     const header = document.querySelector('header');
-    
+
     if (sidebar) sidebar.classList.remove('translate-x-0');
     if (sidebar) sidebar.classList.add('-translate-x-full');
     if (mainContent) mainContent.classList.remove('md:ml-64');
@@ -1503,7 +1509,7 @@ window.closeSidebar = function() {
 // --- BAGIAN INI YANG DIPERBAIKI ---
 const originalSelectCategoryV5 = window.selectCategory; // <-- TAMBAHAN: Menyimpan fungsi selectCategory dari V4
 
-window.selectCategory = function(category) {
+window.selectCategory = function (category) {
     // Panggil fungsi aslinya dulu (dari V4) biar "sinyal"-nya terkirim
     if (typeof originalSelectCategoryV5 === 'function') {
         originalSelectCategoryV5(category); // <-- TAMBAHAN: Ini yang paling penting
@@ -1533,12 +1539,12 @@ window.selectCategory = function(category) {
     if (childElement) {
         childElement.classList.add('bg-gray-100', 'font-medium', 'text-wise-dark-gray');
         childElement.classList.remove('text-wise-gray');
-        
+
         const parentId = parentMapping[category];
         if (parentId) {
             const parentElement = document.getElementById(parentId);
             const parentChildrenContainer = document.getElementById(parentId + '-children');
-            
+
             if (parentElement) {
                 parentElement.classList.add('bg-wise-light-gray', 'font-semibold');
             }
@@ -1548,7 +1554,7 @@ window.selectCategory = function(category) {
         }
     } else {
         const mainElement = document.getElementById(category);
-        if(mainElement) {
+        if (mainElement) {
             mainElement.classList.add('bg-wise-light-gray', 'font-semibold');
         }
     }
@@ -1577,7 +1583,7 @@ window.selectCategory = function(category) {
     else if (category === 'allocation-rule-assignment-criteria') renderARACList();
     else if (category === 'zone-type') renderZoneTypeList();
     else if (category === 'location') renderLocationList();
-    else if (category === 'customer') renderCustomerList(); 
+    else if (category === 'customer') renderCustomerList();
 
     // document.dispatchEvent(...) Dihapus dari sini karena sudah ditangani oleh fungsi V4 yang kita panggil di atas
 
@@ -1586,11 +1592,15 @@ window.selectCategory = function(category) {
     }
 };
 
-window.goBack = function() {
-    console.log("Go back function not yet implemented.");
+window.goBack = function () {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.selectCategory('configuration');
+    }
 };
 
-window.navigateToHome = function() {
+window.navigateToHome = function () {
     const mainContent = document.getElementById('main-content');
     const homeContent = `<div class="p-6">
         <h1 class="text-3xl font-bold mb-4">Welcome to Wise Configuration</h1>
