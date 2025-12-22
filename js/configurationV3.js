@@ -9,98 +9,14 @@
         if (typeof window.allMenus === 'undefined') window.allMenus = [];
 
         // --- UTILITY FUNCTIONS ---
-        // Debounce function to limit how often a function is called
-        function debounce(func, delay) {
-            let timeout;
-            return function (...args) {
-                const context = this;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(context, args), delay);
-            };
-        }
-
-        // Trap focus inside modal. Returns a cleanup function.
-        function trapFocus(modal) {
-            const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-            const focusableContent = modal.querySelectorAll(focusableElements);
-            if (focusableContent.length === 0) return () => { }; // No focusable elements, do nothing.
-
-            const firstFocusableElement = focusableContent[0];
-            const lastFocusableElement = focusableContent[focusableContent.length - 1];
-
-            const keydownHandler = (e) => {
-                if (e.key === 'Tab') {
-                    if (e.shiftKey) { // Shift + Tab
-                        if (document.activeElement === firstFocusableElement) {
-                            lastFocusableElement.focus();
-                            e.preventDefault();
-                        }
-                    } else { // Tab
-                        if (document.activeElement === lastFocusableElement) {
-                            firstFocusableElement.focus();
-                            e.preventDefault();
-                        }
-                    }
-                }
-            };
-
-            modal.addEventListener('keydown', keydownHandler);
-            firstFocusableElement.focus();
-
-            // Return cleanup function to remove the listener
-            return () => {
-                modal.removeEventListener('keydown', keydownHandler);
-            };
-        }
-
-        // Helper function for custom alerts/confirms
-        // Mengimplementasikan pop-up kustom untuk menggantikan alert() dan console.log()
-        window.showCustomAlert = async (title, message) => {
-            return new Promise((resolve) => {
-                const modalHtml = `
-                    <div id="custom-alert-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
-                        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
-                            <h3 class="text-lg font-bold mb-2">${title}</h3>
-                            <p class="text-sm text-gray-700 mb-4">${message}</p>
-                            <div class="flex justify-end">
-                                <button id="custom-alert-ok-button" class="btn btn-primary">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                document.getElementById('custom-alert-ok-button').addEventListener('click', () => {
-                    document.getElementById('custom-alert-modal').remove();
-                    resolve();
-                });
-            });
-        };
-
-        window.showCustomConfirm = async (title, message) => {
-            return new Promise((resolve) => {
-                const modalHtml = `
-                    <div id="custom-confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
-                        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
-                            <h3 class="text-lg font-bold mb-2">${title}</h3>
-                            <p class="text-sm text-gray-700 mb-4">${message}</p>
-                            <div class="flex justify-end gap-2">
-                                <button id="custom-confirm-cancel-button" class="btn">Cancel</button>
-                                <button id="custom-confirm-ok-button" class="btn btn-primary">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                document.getElementById('custom-confirm-ok-button').addEventListener('click', () => {
-                    document.getElementById('custom-confirm-modal').remove();
-                    resolve(true);
-                });
-                document.getElementById('custom-confirm-cancel-button').addEventListener('click', () => {
-                    document.getElementById('custom-confirm-modal').remove();
-                    resolve(false);
-                });
-            });
-        };
+        // NOTE: Fungsi utility berikut sekarang tersedia dari utils.js:
+        // - window.debounce()
+        // - window.trapFocus()
+        // - window.showCustomAlert()
+        // - window.showCustomConfirm()
+        // Gunakan referensi lokal untuk backward compatibility
+        const debounce = window.debounce;
+        const trapFocus = window.trapFocus;
 
         // --- DUMMY DATA ---
         window._adjUsers = [

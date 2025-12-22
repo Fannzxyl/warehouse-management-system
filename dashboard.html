@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style type="text/tailwindcss">
@@ -227,47 +229,69 @@
         }
     </script>
 </head>
+
 <body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
     <!-- Header -->
-    <header class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
+    <header
+        class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
         <div class="flex items-center justify-between w-full gap-6">
             <div class="flex justify-start items-center gap-4">
-                <button 
-                    id="sidebar-toggle-btn" 
+                <button id="sidebar-toggle-btn"
                     class="text-wise-dark-gray focus:outline-none md:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 transition-all-smooth active-press"
-                    aria-label="Toggle sidebar"
-                >
+                    aria-label="Toggle sidebar">
                     <i class="fas fa-bars w-6 h-6 flex items-center justify-center transition-transform-smooth"></i>
                 </button>
-                
+
                 <a href="dashboard.html" class="ml-4 flex items-center">
-  <img src="public/images/wise.png" alt="WISE Logo" class="h-6 w-auto object-contain" />
-</a>
+                    <img src="public/images/wise.png" alt="WISE Logo" class="h-6 w-auto object-contain" />
+                </a>
                 <div class="hidden md:flex items-center gap-2 ml-4">
                     <div class="relative">
-                        <button 
-                            id="config-dropdown-toggle"
+                        <button id="config-dropdown-toggle"
                             class="flex items-center px-4 py-2 bg-white text-wise-dark-gray rounded-lg border border-wise-border shadow-sm hover:bg-gray-50 transition-all-smooth active-press whitespace-nowrap"
-                            onclick="toggleConfigDropdown()"
-                            aria-label="DCS menu"
-                        >
+                            onclick="toggleConfigDropdown()" aria-label="DCS menu">
                             <span id="dcs-text-display" class="font-medium text-sm">DCS</span>
                             <i class="fas fa-chevron-down ml-2 text-wise-gray text-xs"></i>
                         </button>
-                        <div id="config-dropdown" class="absolute left-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
+                        <div id="config-dropdown"
+                            class="absolute left-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
                             <div class="p-2">
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCC')">DCC</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCE')">DCE</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCF')">DCF</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCJ')">DCJ</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCK')">DCK</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCL')">DCL</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCM')">DCM</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCP')">DCP</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCS')">DCS</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCT')">DCT</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('DCY')">DCY</a>
-                                <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="selectConfigOption('GBG')">GBG</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCC')">DCC</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCE')">DCE</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCF')">DCF</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCJ')">DCJ</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCK')">DCK</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCL')">DCL</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCM')">DCM</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCP')">DCP</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCS')">DCS</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCT')">DCT</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('DCY')">DCY</a>
+                                <a href="#"
+                                    class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                                    onclick="selectConfigOption('GBG')">GBG</a>
                             </div>
                         </div>
                     </div>
@@ -276,19 +300,17 @@
 
             <div class="flex-1 flex justify-center">
                 <div class="relative w-full max-w-lg">
-                    <div class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
+                    <div
+                        class="flex items-center bg-white rounded-xl border border-wise-border overflow-hidden shadow-card w-full focus-within:ring-2 focus-within:ring-wise-primary/20 focus-within:border-wise-primary transition-all-smooth">
                         <div class="pl-4">
                             <i class="fas fa-search text-wise-gray"></i>
                         </div>
-                        <input 
-                            type="text" 
-                            id="search-input"
-                            placeholder="Search now..."
+                        <input type="text" id="search-input" placeholder="Search now..."
                             class="flex-1 px-3 py-2.5 focus:outline-none text-sm placeholder-wise-gray bg-transparent text-wise-dark-gray"
-                            oninput="handleSearch(this.value)"
-                            aria-label="Search dashboard"
-                        />
-                        <button class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press rounded-r-lg" aria-label="Search button">
+                            oninput="handleSearch(this.value)" aria-label="Search dashboard" />
+                        <button
+                            class="bg-wise-dark-gray text-white px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition-all-smooth active-press rounded-r-lg"
+                            aria-label="Search button">
                             <span class="hidden sm:inline">Search</span>
                             <i class="fas fa-search sm:hidden"></i>
                         </button>
@@ -300,21 +322,23 @@
                 <span class="text-wise-dark-gray font-medium text-sm hidden lg:block">
                     Welcome, <span id="username-display" class="font-semibold text-wise-primary">SuperAdmin</span>
                 </span>
-                <div
-                    class="w-9 h-9 bg-wise-dark-gray rounded-full flex items-center justify-center shadow-card cursor-pointer hover-lift transition-all-smooth active-press"
-                    onclick="toggleUserDropdown()"
-                    aria-label="User menu"
-                >
+                <div class="w-9 h-9 bg-wise-dark-gray rounded-full flex items-center justify-center shadow-card cursor-pointer hover-lift transition-all-smooth active-press"
+                    onclick="toggleUserDropdown()" aria-label="User menu">
                     <i class="fas fa-user text-white"></i>
                 </div>
-                
-                <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
+
+                <div id="user-dropdown"
+                    class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-wise-border hidden z-50 overflow-hidden animate-slide-up">
                     <div class="p-2">
-                        <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="navigateToProfile()">
+                        <a href="#"
+                            class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                            onclick="navigateToProfile()">
                             <i class="fas fa-user-circle mr-3 text-wise-gray"></i>
                             Profile
                         </a>
-                        <a href="#" class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth" onclick="handleLogout()">
+                        <a href="#"
+                            class="flex items-center px-3 py-2 text-sm text-wise-dark-gray hover:bg-wise-light-gray rounded-lg transition-all-smooth"
+                            onclick="handleLogout()">
                             <i class="fas fa-sign-out-alt mr-3 text-wise-gray"></i>
                             Log Out
                         </a>
@@ -325,15 +349,20 @@
     </header>
 
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-25 hidden md:hidden transition-all-smooth" onclick="closeSidebar()" aria-label="Close sidebar"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-25 hidden md:hidden transition-all-smooth"
+        onclick="closeSidebar()" aria-label="Close sidebar"></div>
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+        <aside id="sidebar"
+            class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
             <div class="pt-20 md:pt-24 p-6">
                 <div class="space-y-2">
                     <!-- Dashboard Button (Always visible) -->
-                    <div id="sidebar-dashboard-main" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press hover-scale" onclick="selectCategory('dashboard')" tabindex="0" role="button" aria-label="Select Dashboard category">
+                    <div id="sidebar-dashboard-main"
+                        class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press hover-scale"
+                        onclick="selectCategory('dashboard')" tabindex="0" role="button"
+                        aria-label="Select Dashboard category">
                         <div class="w-6 h-6 flex items-center justify-center">
                             <i class="fas fa-tachometer-alt text-wise-primary"></i>
                         </div>
@@ -342,7 +371,9 @@
 
                     <!-- Configuration Link in Sidebar -->
                     <div class="sidebar-section">
-                        <a href="configuration.html" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" tabindex="0" role="button" aria-label="Go to Configuration page">
+                        <a href="configuration.html"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            tabindex="0" role="button" aria-label="Go to Configuration page">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-cogs text-wise-gray"></i>
                             </div>
@@ -375,430 +406,869 @@
 
                     <!-- Transaction Menu (DCS) -->
                     <div class="sidebar-section">
-                        <div id="DCS" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('DCS')" tabindex="0" role="button" aria-expanded="false" aria-controls="DCS-children" aria-label="Toggle DCS sub-menu">
+                        <div id="DCS"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('DCS')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="DCS-children" aria-label="Toggle DCS sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-exchange-alt text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Transaction Menu</span>
-                            <i id="DCS-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="DCS-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="DCS-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="DCS">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCC')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCC</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCE')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCE</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCF')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCF</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCJ')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCJ</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCK')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCK</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCL')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCL</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCM')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCM</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCP')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCP</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCT')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCT</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('DCY')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCY</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('GBG')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">GBG</span></div>
+                        <div id="DCS-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth"
+                            role="group" aria-labelledby="DCS">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCC')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCC</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCE')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCE</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCF')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCF</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCJ')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCJ</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCK')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCK</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCL')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCL</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCM')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCM</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCP')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCP</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCT')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCT</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('DCY')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">DCY</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('GBG')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">GBG</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Yard Management -->
                     <div class="sidebar-section">
-                        <div id="yard-management" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('yard-management')" tabindex="0" role="button" aria-expanded="false" aria-controls="yard-management-children" aria-label="Toggle Yard Management sub-menu">
+                        <div id="yard-management"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('yard-management')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="yard-management-children" aria-label="Toggle Yard Management sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-warehouse text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Yard Management</span>
-                            <i id="yard-management-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="yard-management-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="yard-management-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="yard-management">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('yard-vehicles')" onmouseenter="showPreview('yard-vehicles', event)" tabindex="0" role="button" aria-label="Select Vehicles">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Vehicles</span>
+                        <div id="yard-management-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="yard-management">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('yard-vehicles')"
+                                onmouseenter="showPreview('yard-vehicles', event)" tabindex="0" role="button"
+                                aria-label="Select Vehicles">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Vehicles</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('yard-equipment')" onmouseenter="showPreview('yard-equipment', event)" tabindex="0" role="button" aria-label="Select Equipment">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Equipment</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('yard-equipment')"
+                                onmouseenter="showPreview('yard-equipment', event)" tabindex="0" role="button"
+                                aria-label="Select Equipment">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Equipment</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('yard-personnel')" onmouseenter="showPreview('yard-personnel', event)" tabindex="0" role="button" aria-label="Select Personnel">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Personnel</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('yard-personnel')"
+                                onmouseenter="showPreview('yard-personnel', event)" tabindex="0" role="button"
+                                aria-label="Select Personnel">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Personnel</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Receiving -->
                     <div class="sidebar-section">
-                        <div id="receiving" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('receiving')" tabindex="0" role="button" aria-expanded="false" aria-controls="receiving-children" aria-label="Toggle Receiving sub-menu">
+                        <div id="receiving"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('receiving')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="receiving-children" aria-label="Toggle Receiving sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-truck-loading text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Receiving</span>
-                            <i id="receiving-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="receiving-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="receiving-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="receiving">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-open-box-balance-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Open/Box Balance Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-po-quick-find')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Purchase order quick find</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-closet-supplier')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Closet By Supplier</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-container-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Container Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-explorer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Explorer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-monitoring-close')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Monitoring/Close Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-no-close')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt No/Close Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-open-closed')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Open And Closed Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-receipt-shipment-closed')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt Shipment Closed Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-performance-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receiving Performance Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receiving workbench</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-shipment-closed-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Closed Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('receiving-virtual-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Virtual Receiving Viewer</span></div>
+                        <div id="receiving-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="receiving">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-open-box-balance-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Open/Box
+                                    Balance Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-po-quick-find')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Purchase
+                                    order quick find</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-closet-supplier')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Closet By Supplier</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-container-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Container Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-explorer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Explorer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-monitoring-close')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Monitoring/Close Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-no-close')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    No/Close Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-open-closed')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Open And Closed Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-receipt-shipment-closed')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receipt
+                                    Shipment Closed Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-performance-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receiving
+                                    Performance Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-workbench')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Receiving
+                                    workbench</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-shipment-closed-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    Closed Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('receiving-virtual-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Virtual
+                                    Receiving Viewer</span></div>
                         </div>
                     </div>
 
                     <!-- Order Planning -->
                     <div class="sidebar-section">
-                        <div id="order-planning" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('order-planning')" tabindex="0" role="button" aria-expanded="false" aria-controls="order-planning-children" aria-label="Toggle Order Planning sub-menu">
+                        <div id="order-planning"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('order-planning')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="order-planning-children" aria-label="Toggle Order Planning sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-clipboard-list text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Order Planning</span>
-                            <i id="order-planning-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="order-planning-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="order-planning-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="order-planning">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('order-planning-consolidated-shipment-history')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Consolidated Shipment History</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('order-planning-order-entry')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Order entry</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('order-planning-wave-explorer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave explorer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('order-planning-wave-quick-find')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave quick find</span></div>
+                        <div id="order-planning-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="order-planning">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('order-planning-consolidated-shipment-history')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Consolidated
+                                    Shipment History</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('order-planning-order-entry')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Order
+                                    entry</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('order-planning-wave-explorer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave
+                                    explorer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('order-planning-wave-quick-find')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave
+                                    quick find</span></div>
                         </div>
                     </div>
 
                     <!-- Shipping -->
                     <div class="sidebar-section">
-                        <div id="shipping" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('shipping')" tabindex="0" role="button" aria-expanded="false" aria-controls="shipping-children" aria-label="Toggle Shipping sub-menu">
+                        <div id="shipping"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('shipping')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="shipping-children" aria-label="Toggle Shipping sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-shipping-fast text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Shipping</span>
-                            <i id="shipping-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="shipping-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="shipping-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="shipping">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-close-container')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Close container</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-consolidated-container-location-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Consolidated container location viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-containers-delivered')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Containers Delivered</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-outbound-surplus-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Outbound Surplus Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-dock-scheduler')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Dock scheduler</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-load-close-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load Close Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-load-count-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load Count Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-load-explorer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load Explorer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-maxi-high-container-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Maxi High Container Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-multiple-order-pallet-close')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Multiple order pallet close</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-oos-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">OOS Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-operator-surplus-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Operator Surplus Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-pallet-close')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Pallet Close</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-pallet-in-staging-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Pallet In Staging Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-put-to-store-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Put to store Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-qc-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">QC workbench</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-detail-allocation-rejection')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment detail allocation rejection viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-explorer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment explorer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-quick-find')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment quick find</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-start-pick-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Start/Pick Viewer</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-shipment-stop-tuk-viewer')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment Stop/Tuk Viewer</span></span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-container-identification')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping container identification</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-container-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping container workbench</span></div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('shipping-sit-workbench')"><span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">SIT workbench</span></div>
+                        <div id="shipping-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="shipping">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-close-container')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Close
+                                    container</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-consolidated-container-location-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Consolidated
+                                    container location viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-containers-delivered')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Containers
+                                    Delivered</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-outbound-surplus-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Outbound
+                                    Surplus Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-dock-scheduler')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Dock
+                                    scheduler</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-load-close-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load
+                                    Close Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-load-count-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load
+                                    Count Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-load-explorer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Load
+                                    Explorer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-maxi-high-container-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Maxi High
+                                    Container Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-multiple-order-pallet-close')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Multiple
+                                    order pallet close</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-oos-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">OOS
+                                    Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-operator-surplus-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Operator
+                                    Surplus Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-pallet-close')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Pallet
+                                    Close</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-pallet-in-staging-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Pallet In
+                                    Staging Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-put-to-store-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Put to
+                                    store Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-qc-workbench')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">QC
+                                    workbench</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-shipment-detail-allocation-rejection')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    detail allocation rejection viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-shipment-explorer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    explorer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-shipment-quick-find')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    quick find</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-shipment-start-pick-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    Start/Pick Viewer</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-shipment-stop-tuk-viewer')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipment
+                                    Stop/Tuk Viewer</span></span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-container-identification')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping
+                                    container identification</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-container-workbench')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Shipping
+                                    container workbench</span></div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('shipping-sit-workbench')"><span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">SIT
+                                    workbench</span></div>
                         </div>
                     </div>
 
                     <!-- Work -->
                     <div class="sidebar-section">
-                        <div id="work" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('work')" tabindex="0" role="button" aria-expanded="false" aria-controls="work-children" aria-label="Toggle Work sub-menu">
+                        <div id="work"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('work')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="work-children" aria-label="Toggle Work sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-tasks text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Work</span>
-                            <i id="work-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="work-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="work-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="work">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-label-reprint-utility')" tabindex="0" role="button" aria-label="Select Label Reprint Utility">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Label Reprint Utility</span>
+                        <div id="work-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth"
+                            role="group" aria-labelledby="work">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-label-reprint-utility')" tabindex="0" role="button"
+                                aria-label="Select Label Reprint Utility">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Label
+                                    Reprint Utility</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-picking-management-explorer')" tabindex="0" role="button" aria-label="Select Picking management explorer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Picking management explorer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-picking-management-explorer')" tabindex="0" role="button"
+                                aria-label="Select Picking management explorer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Picking
+                                    management explorer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-picking-sigtion')" tabindex="0" role="button" aria-label="Select Picking sigtion">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Picking sigtion</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-picking-sigtion')" tabindex="0" role="button"
+                                aria-label="Select Picking sigtion">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Picking
+                                    sigtion</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-execution')" tabindex="0" role="button" aria-label="Select Work execution">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work execution</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-execution')" tabindex="0" role="button"
+                                aria-label="Select Work execution">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    execution</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-explorer')" tabindex="0" role="button" aria-label="Select Work explorer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work explorer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-explorer')" tabindex="0" role="button"
+                                aria-label="Select Work explorer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    explorer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-insight')" tabindex="0" role="button" aria-label="Select Work insight">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work insight</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-insight')" tabindex="0" role="button"
+                                aria-label="Select Work insight">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    insight</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-monitoring-customer')" tabindex="0" role="button" aria-label="Select Work monitoring: Customer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work monitoring: Customer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-monitoring-customer')" tabindex="0" role="button"
+                                aria-label="Select Work monitoring: Customer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    monitoring: Customer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-monitoring-group')" tabindex="0" role="button" aria-label="Select Work monitoring: Group">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work monitoring: Group</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-monitoring-group')" tabindex="0" role="button"
+                                aria-label="Select Work monitoring: Group">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    monitoring: Group</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('work-quick-find')" tabindex="0" role="button" aria-label="Select Work quick find">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work quick find</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('work-quick-find')" tabindex="0" role="button"
+                                aria-label="Select Work quick find">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Work
+                                    quick find</span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Cross Application -->
                     <div class="sidebar-section">
-                        <div id="cross-application" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('cross-application')" tabindex="0" role="button" aria-expanded="false" aria-controls="cross-application-children" aria-label="Toggle Cross Application sub-menu">
+                        <div id="cross-application"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('cross-application')" tabindex="0" role="button"
+                            aria-expanded="false" aria-controls="cross-application-children"
+                            aria-label="Toggle Cross Application sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-exchange-alt text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Cross Application</span>
-                            <i id="cross-application-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="cross-application-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="cross-application-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="cross-application">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-ar-upload-interface-data-viewer')" tabindex="0" role="button" aria-label="Select AR Upload interface data viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">AR Upload interface data viewer</span>
+                        <div id="cross-application-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="cross-application">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-ar-upload-interface-data-viewer')" tabindex="0"
+                                role="button" aria-label="Select AR Upload interface data viewer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">AR
+                                    Upload interface data viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-background-job-request-viewer')" tabindex="0" role="button" aria-label="Select Background Job Request Viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Background Job Request Viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-background-job-request-viewer')" tabindex="0"
+                                role="button" aria-label="Select Background Job Request Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Background
+                                    Job Request Viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-configurations')" tabindex="0" role="button" aria-label="Select Configurations">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Configurations</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-configurations')" tabindex="0" role="button"
+                                aria-label="Select Configurations">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Configurations</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-interface-data')" tabindex="0" role="button" aria-label="Select Interface data">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interface data</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-interface-data')" tabindex="0" role="button"
+                                aria-label="Select Interface data">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interface
+                                    data</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-interface-error-viewer')" tabindex="0" role="button" aria-label="Select Interface error viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interface error viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-interface-error-viewer')" tabindex="0" role="button"
+                                aria-label="Select Interface error viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interface
+                                    error viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-progistics')" tabindex="0" role="button" aria-label="Select Progistics">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Progistics</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-progistics')" tabindex="0" role="button"
+                                aria-label="Select Progistics">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Progistics</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-reupload-interface-data-viewer')" tabindex="0" role="button" aria-label="Select ReUpload interface data viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">ReUpload interface data viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-reupload-interface-data-viewer')" tabindex="0"
+                                role="button" aria-label="Select ReUpload interface data viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">ReUpload
+                                    interface data viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-rf')" tabindex="0" role="button" aria-label="Select RF">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">RF</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-rf')" tabindex="0" role="button"
+                                aria-label="Select RF">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">RF</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-trading-partner-management')" tabindex="0" role="button" aria-label="Select Trading partner management">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Trading partner management</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-trading-partner-management')" tabindex="0"
+                                role="button" aria-label="Select Trading partner management">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Trading
+                                    partner management</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-transaction-and-process-history')" tabindex="0" role="button" aria-label="Select Transaction and process history">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Transaction and process history</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-transaction-and-process-history')" tabindex="0"
+                                role="button" aria-label="Select Transaction and process history">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Transaction
+                                    and process history</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-upload-interface-data-viewer')" tabindex="0" role="button" aria-label="Select Upload interface data viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Upload interface data viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-upload-interface-data-viewer')" tabindex="0"
+                                role="button" aria-label="Select Upload interface data viewer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Upload
+                                    interface data viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-wave-repost-ptl-rabbitmq')" tabindex="0" role="button" aria-label="Select Wave repost only for PTL Messages to RabbitMQ">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave repost only for PTL Messages to RabbitMQ</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-wave-repost-ptl-rabbitmq')" tabindex="0"
+                                role="button" aria-label="Select Wave repost only for PTL Messages to RabbitMQ">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Wave
+                                    repost only for PTL Messages to RabbitMQ</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('cross-app-web-statistics-generation')" tabindex="0" role="button" aria-label="Select Web statistics generation">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Web statistics generation</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('cross-app-web-statistics-generation')" tabindex="0"
+                                role="button" aria-label="Select Web statistics generation">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Web
+                                    statistics generation</span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Inventory -->
                     <div class="sidebar-section">
-                        <div id="inventory" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('inventory')" tabindex="0" role="button" aria-expanded="false" aria-controls="inventory-children" aria-label="Toggle Inventory sub-menu">
+                        <div id="inventory"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('inventory')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="inventory-children" aria-label="Toggle Inventory sub-menu">
                             <div class="w-6 h-6 flex items-center justify-center">
                                 <i class="fas fa-boxes text-wise-gray"></i>
                             </div>
                             <span class="text-wise-dark-gray font-medium text-sm flex-1">Inventory</span>
-                            <i id="inventory-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                            <i id="inventory-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
                         </div>
-                        <div id="inventory-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="inventory">
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-cycle-count-explorer')" tabindex="0" role="button" aria-label="Select Cycle count explorer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Cycle count explorer</span>
+                        <div id="inventory-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="inventory">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-cycle-count-explorer')" tabindex="0" role="button"
+                                aria-label="Select Cycle count explorer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Cycle
+                                    count explorer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-cycle-count-viewer')" tabindex="0" role="button" aria-label="Select Cycle Count Viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Cycle Count Viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-cycle-count-viewer')" tabindex="0" role="button"
+                                aria-label="Select Cycle Count Viewer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Cycle
+                                    Count Viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-edit-customer-shelflife')" tabindex="0" role="button" aria-label="Select Edit Customer Shelflife">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Edit Customer Shelflife</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-edit-customer-shelflife')" tabindex="0" role="button"
+                                aria-label="Select Edit Customer Shelflife">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Edit
+                                    Customer Shelflife</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-finished-item-breakdown')" tabindex="0" role="button" aria-label="Select Finished item breakdown">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Finished item breakdown</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-finished-item-breakdown')" tabindex="0" role="button"
+                                aria-label="Select Finished item breakdown">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Finished
+                                    item breakdown</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-immediate-needs-insight')" tabindex="0" role="button" aria-label="Select Immediate needs insight">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Immediate needs insight</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-immediate-needs-insight')" tabindex="0" role="button"
+                                aria-label="Select Immediate needs insight">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Immediate
+                                    needs insight</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-immediate-needs-viewer')" tabindex="0" role="button" aria-label="Select Immediate needs viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Immediate needs viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-immediate-needs-viewer')" tabindex="0" role="button"
+                                aria-label="Select Immediate needs viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Immediate
+                                    needs viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-interdept')" tabindex="0" role="button" aria-label="Select Interdept">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interdept</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-interdept')" tabindex="0" role="button"
+                                aria-label="Select Interdept">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Interdept</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-adjustment-viewer')" tabindex="0" role="button" aria-label="Select Inventory Adjustment Viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory Adjustment Viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-adjustment-viewer')" tabindex="0" role="button"
+                                aria-label="Select Inventory Adjustment Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory
+                                    Adjustment Viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-insight')" tabindex="0" role="button" aria-label="Select Inventory insight">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory insight</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-insight')" tabindex="0" role="button"
+                                aria-label="Select Inventory insight">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory
+                                    insight</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-management')" tabindex="0" role="button" aria-label="Select Inventory management">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory management</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-management')" tabindex="0" role="button"
+                                aria-label="Select Inventory management">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory
+                                    management</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-item-master-viewer')" tabindex="0" role="button" aria-label="Select Item Master Viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item Master Viewer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-item-master-viewer')" tabindex="0" role="button"
+                                aria-label="Select Item Master Viewer">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Item
+                                    Master Viewer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-location-explorer')" tabindex="0" role="button" aria-label="Select Location explorer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location explorer</span>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-location-explorer')" tabindex="0" role="button"
+                                aria-label="Select Location explorer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location
+                                    explorer</span>
                             </div>
-                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-location-inventory-attribute-viewer')" tabindex="0" role="button" aria-label="Select Location Inventory Attribute Viewer">
-                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Inventory Attribute Viewer</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-location-inventory-viewer')" tabindex="0" role="button" aria-label="Select Location Inventory Viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Inventory Viewer</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-location-master-viewer')" tabindex="0" role="button" aria-label="Select Location Master Viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location Master Viewer</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-location-quick-find')" tabindex="0" role="button" aria-label="Select Location quick find">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location quick find</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-lot-freight')" tabindex="0" role="button" aria-label="Select Lot freight">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Lot freight</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-lot-workbench')" tabindex="0" role="button" aria-label="Select Lot workbench">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Lot workbench</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('inventory-mismatch-company-viewer')" tabindex="0" role="button" aria-label="Select Mismatch Company Viewer">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Mismatch Company Viewer</span>
-                                </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-location-inventory-attribute-viewer')" tabindex="0"
+                                role="button" aria-label="Select Location Inventory Attribute Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location
+                                    Inventory Attribute Viewer</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-location-inventory-viewer')" tabindex="0"
+                                role="button" aria-label="Select Location Inventory Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location
+                                    Inventory Viewer</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-location-master-viewer')" tabindex="0" role="button"
+                                aria-label="Select Location Master Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location
+                                    Master Viewer</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-location-quick-find')" tabindex="0" role="button"
+                                aria-label="Select Location quick find">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Location
+                                    quick find</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-lot-freight')" tabindex="0" role="button"
+                                aria-label="Select Lot freight">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Lot
+                                    freight</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-lot-workbench')" tabindex="0" role="button"
+                                aria-label="Select Lot workbench">
+                                <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Lot
+                                    workbench</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('inventory-mismatch-company-viewer')" tabindex="0" role="button"
+                                aria-label="Select Mismatch Company Viewer">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Mismatch
+                                    Company Viewer</span>
                             </div>
                         </div>
-                        
-                        <!-- Performance Management -->
-                        <div class="sidebar-section">
-                            <div id="performance-management" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('performance-management')" tabindex="0" role="button" aria-expanded="false" aria-controls="performance-management-children" aria-label="Toggle Performance Management sub-menu">
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-chart-line text-wise-gray"></i>
-                                </div>
-                                <span class="text-wise-dark-gray font-medium text-sm flex-1">Performance Management</span>
-                                <i id="performance-management-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
-                            </div>
-                            <div id="performance-management-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="performance-management">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-kpis')" tabindex="0" role="button" aria-label="Select KPIs">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">KPIs</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-analytics')" tabindex="0" role="button" aria-label="Select Analytics">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Analytics</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('performance-goals')" tabindex="0" role="button" aria-label="Select Goals">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Goals</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- System Management -->
-                        <div class="sidebar-section">
-                            <div id="system-management" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('system-management')" tabindex="0" role="button" aria-expanded="false" aria-controls="system-management-children" aria-label="Toggle System Management sub-menu">
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-server text-wise-gray"></i>
-                                </div>
-                                <span class="text-wise-dark-gray font-medium text-sm flex-1">System Management</span>
-                                <i id="system-management-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
-                            </div>
-                            <div id="system-management-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="system-management">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-users')" tabindex="0" role="button" aria-label="Select Users">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Users</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-logs')" tabindex="0" role="button" aria-label="Select Logs">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Logs</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('system-management-backup')" tabindex="0" role="button" aria-label="Select Backup">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Backup</span>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
 
-                        <!-- Setting Optimization -->
-                        <div class="sidebar-section">
-                            <div id="setting-optimization" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('setting-optimization')" tabindex="0" role="button" aria-expanded="false" aria-controls="setting-optimization-children" aria-label="Toggle Setting Optimization sub-menu">
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-sliders-h text-wise-gray"></i>
-                                </div>
-                                <span class="text-wise-dark-gray font-medium text-sm flex-1">Setting Optimization</span>
-                                <i id="setting-optimization-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                    <!-- Performance Management -->
+                    <div class="sidebar-section">
+                        <div id="performance-management"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('performance-management')" tabindex="0" role="button"
+                            aria-expanded="false" aria-controls="performance-management-children"
+                            aria-label="Toggle Performance Management sub-menu">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-wise-gray"></i>
                             </div>
-                            <div id="setting-optimization-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="setting-optimization">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-general')" tabindex="0" role="button" aria-label="Select General Settings">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">General</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-performance')" tabindex="0" role="button" aria-label="Select Performance">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Performance</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('setting-optimization-notifications')" tabindex="0" role="button" aria-label="Select Notifications">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Notifications</span>
-                                </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Performance Management</span>
+                            <i id="performance-management-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                        </div>
+                        <div id="performance-management-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="performance-management">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('performance-kpis')" tabindex="0" role="button"
+                                aria-label="Select KPIs">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">KPIs</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('performance-analytics')" tabindex="0" role="button"
+                                aria-label="Select Analytics">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Analytics</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('performance-goals')" tabindex="0" role="button"
+                                aria-label="Select Goals">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Goals</span>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Data Archiving -->
-                        <div class="sidebar-section">
-                            <div id="data-archiving" class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press" onclick="toggleChildren('data-archiving')" tabindex="0" role="button" aria-expanded="false" aria-controls="data-archiving-children" aria-label="Toggle Data Archiving sub-menu">
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-archive text-wise-gray"></i>
-                                </div>
-                                <span class="text-wise-dark-gray font-medium text-sm flex-1">Data Archiving</span>
-                                <i id="data-archiving-arrow" class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                    <!-- System Management -->
+                    <div class="sidebar-section">
+                        <div id="system-management"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('system-management')" tabindex="0" role="button"
+                            aria-expanded="false" aria-controls="system-management-children"
+                            aria-label="Toggle System Management sub-menu">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-server text-wise-gray"></i>
                             </div>
-                            <div id="data-archiving-children" class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group" aria-labelledby="data-archiving">
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('archive-documents')" tabindex="0" role="button" aria-label="Select Documents">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Documents</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('archive-media')" tabindex="0" role="button" aria-label="Select Media">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Media</span>
-                                </div>
-                                <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth" onclick="selectCategory('archive-financial')" tabindex="0" role="button" aria-label="Select Financial">
-                                    <span class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Financial</span>
-                                </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">System Management</span>
+                            <i id="system-management-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                        </div>
+                        <div id="system-management-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="system-management">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('system-management-users')" tabindex="0" role="button"
+                                aria-label="Select Users">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Users</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('system-management-logs')" tabindex="0" role="button"
+                                aria-label="Select Logs">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Logs</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('system-management-backup')" tabindex="0" role="button"
+                                aria-label="Select Backup">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Backup</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Setting Optimization -->
+                    <div class="sidebar-section">
+                        <div id="setting-optimization"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('setting-optimization')" tabindex="0" role="button"
+                            aria-expanded="false" aria-controls="setting-optimization-children"
+                            aria-label="Toggle Setting Optimization sub-menu">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-sliders-h text-wise-gray"></i>
+                            </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Setting Optimization</span>
+                            <i id="setting-optimization-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                        </div>
+                        <div id="setting-optimization-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="setting-optimization">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('setting-optimization-general')" tabindex="0" role="button"
+                                aria-label="Select General Settings">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">General</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('setting-optimization-performance')" tabindex="0" role="button"
+                                aria-label="Select Performance">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Performance</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('setting-optimization-notifications')" tabindex="0"
+                                role="button" aria-label="Select Notifications">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Notifications</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Archiving -->
+                    <div class="sidebar-section">
+                        <div id="data-archiving"
+                            class="sidebar-item p-3 rounded-xl cursor-pointer hover:bg-wise-light-gray transition-all-smooth flex items-center space-x-3 active-press"
+                            onclick="toggleChildren('data-archiving')" tabindex="0" role="button" aria-expanded="false"
+                            aria-controls="data-archiving-children" aria-label="Toggle Data Archiving sub-menu">
+                            <div class="w-6 h-6 flex items-center justify-center">
+                                <i class="fas fa-archive text-wise-gray"></i>
+                            </div>
+                            <span class="text-wise-dark-gray font-medium text-sm flex-1">Data Archiving</span>
+                            <i id="data-archiving-arrow"
+                                class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>
+                        </div>
+                        <div id="data-archiving-children"
+                            class="ml-9 mt-2 space-y-1 hidden overflow-hidden transition-all-smooth" role="group"
+                            aria-labelledby="data-archiving">
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('archive-documents')" tabindex="0" role="button"
+                                aria-label="Select Documents">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Documents</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('archive-media')" tabindex="0" role="button"
+                                aria-label="Select Media">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Media</span>
+                            </div>
+                            <div class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth"
+                                onclick="selectCategory('archive-financial')" tabindex="0" role="button"
+                                aria-label="Select Financial">
+                                <span
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Financial</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </aside>
+            </div>
+        </aside>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth min-w-0" role="main">
-                <div id="default-content-area" class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
-                    <!-- Content will be loaded here by JavaScript -->
+        <!-- Main Content Area -->
+        <main class="flex-1 ml-0 md:ml-64 p-4 md:p-6 transition-all-smooth min-w-0" role="main">
+            <div id="default-content-area"
+                class="bg-white rounded-xl border border-wise-border min-h-[500px] shadow-lg p-6 text-wise-dark-gray animate-fade-in">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Custom Alert/Confirm Modal -->
+            <div id="custom-modal-overlay"
+                class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden"
+                role="dialog" aria-modal="true" aria-labelledby="custom-modal-title"
+                aria-describedby="custom-modal-message">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
+                    <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
+                    <p id="custom-modal-message" class="text-wise-gray mb-6"></p>
+                    <div class="flex justify-end space-x-3">
+                        <button id="custom-modal-cancel-btn"
+                            class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press">Cancel</button>
+                        <button id="custom-modal-ok-btn"
+                            class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-all-smooth active-press">OK</button>
+                    </div>
                 </div>
+            </div>
 
-                <!-- Custom Alert/Confirm Modal -->
-                <div id="custom-modal-overlay" class="fixed inset-0 backdrop-blur-overlay z-50 flex items-center justify-center p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title" aria-describedby="custom-modal-message">
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm animate-slide-up">
-                        <h3 id="custom-modal-title" class="text-lg font-semibold text-wise-dark-gray mb-4"></h3>
-                        <p id="custom-modal-message" class="text-wise-gray mb-6"></p>
-                        <div class="flex justify-end space-x-3">
-                            <button id="custom-modal-cancel-btn" class="px-4 py-2 border border-wise-border rounded-lg text-wise-gray hover:bg-wise-light-gray transition-all-smooth active-press">Cancel</button>
-                            <button id="custom-modal-ok-btn" class="px-4 py-2 bg-wise-primary text-white rounded-lg hover:bg-blue-700 transition-all-smooth active-press">OK</button>
+            <!-- Search Overlay -->
+            <div id="search-overlay" role="dialog" aria-modal="true" aria-label="Search overlay"
+                class="fixed inset-0 z-[60] hidden transition-all-smooth">
+                <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-all-smooth"
+                    onclick="closeSearchOverlay()"></div>
+                <div id="search-dialog"
+                    class="relative md:fixed md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-[92vw] max-w-[720px] rounded-xl border border-gray-200/70 bg-white/80 shadow-lg search-overlay-card flex flex-col md:max-h-[80vh] md:h-auto h-[88vh] md:p-6 p-4 mt-20 md:mt-0">
+                    <div class="flex items-center gap-3 p-4 border-b md:p-0 md:border-b-0">
+                        <div class="relative flex-1 flex items-center">
+                            <i class="fas fa-search absolute left-4 text-wise-gray pointer-events-none"></i>
+                            <input id="overlay-search-input"
+                                class="w-full pl-10 pr-10 py-3 rounded-full border border-wise-border focus:outline-none focus:ring-2 focus:ring-wise-primary/50 text-base placeholder-wise-gray bg-gray-50 transition-all-smooth"
+                                placeholder="Search modules, pages, settings…" autocomplete="off"
+                                oninput="handleSearch(this.value)" role="combobox" aria-expanded="true"
+                                aria-controls="overlay-search-results-list-panel" type="text"
+                                aria-autocomplete="list" />
+                        </div>
+                        <button id="close-overlay-btn"
+                            class="hidden md:flex px-4 py-2 text-sm text-wise-gray rounded-lg hover:bg-gray-100 transition-all-smooth"
+                            aria-label="Tutup" onclick="closeSearchOverlay()">Tutup</button>
+                        <button id="close-overlay-mobile-btn" class="md:hidden text-wise-gray text-2xl"
+                            aria-label="Tutup" onclick="closeSearchOverlay()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div id="overlay-search-results-list-panel" role="listbox"
+                        class="flex-1 mt-4 space-y-2 max-h-[60vh] overflow-y-auto no-scrollbar px-2 pb-2 transition-all-smooth">
+                    </div>
+                    <div
+                        class="mt-4 pt-4 border-t border-wise-border text-sm text-wise-gray hidden md:flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> untuk navigasi</span>
+                            <span><kbd class="kbd">Enter</kbd> untuk buka</span>
+                            <span><kbd class="kbd">Esc</kbd> untuk tutup</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-wise-gray">Shortcut: <kbd class="kbd">Ctrl</kbd> + <kbd
+                                    class="kbd">K</kbd></span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Search Overlay -->
-                <div id="search-overlay" role="dialog" aria-modal="true" aria-label="Search overlay" class="fixed inset-0 z-[60] hidden transition-all-smooth">
-                    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-all-smooth" onclick="closeSearchOverlay()"></div>
-                    <div id="search-dialog" class="relative md:fixed md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-[92vw] max-w-[720px] rounded-xl border border-gray-200/70 bg-white/80 shadow-lg search-overlay-card flex flex-col md:max-h-[80vh] md:h-auto h-[88vh] md:p-6 p-4 mt-20 md:mt-0">
-                        <div class="flex items-center gap-3 p-4 border-b md:p-0 md:border-b-0">
-                            <div class="relative flex-1 flex items-center">
-                                <i class="fas fa-search absolute left-4 text-wise-gray pointer-events-none"></i>
-                                <input id="overlay-search-input" class="w-full pl-10 pr-10 py-3 rounded-full border border-wise-border focus:outline-none focus:ring-2 focus:ring-wise-primary/50 text-base placeholder-wise-gray bg-gray-50 transition-all-smooth" placeholder="Search modules, pages, settings…" autocomplete="off" oninput="handleSearch(this.value)" role="combobox" aria-expanded="true" aria-controls="overlay-search-results-list-panel" type="text" aria-autocomplete="list"/>
-                            </div>
-                            <button id="close-overlay-btn" class="hidden md:flex px-4 py-2 text-sm text-wise-gray rounded-lg hover:bg-gray-100 transition-all-smooth" aria-label="Tutup" onclick="closeSearchOverlay()">Tutup</button>
-                            <button id="close-overlay-mobile-btn" class="md:hidden text-wise-gray text-2xl" aria-label="Tutup" onclick="closeSearchOverlay()"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div id="overlay-search-results-list-panel" role="listbox" class="flex-1 mt-4 space-y-2 max-h-[60vh] overflow-y-auto no-scrollbar px-2 pb-2 transition-all-smooth">
-                            </div>
-                        <div class="mt-4 pt-4 border-t border-wise-border text-sm text-wise-gray hidden md:flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> untuk navigasi</span>
-                                <span><kbd class="kbd">Enter</kbd> untuk buka</span>
-                                <span><kbd class="kbd">Esc</kbd> untuk tutup</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xs text-wise-gray">Shortcut: <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">K</kbd></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-        <script src="./js/dashboard.js"></script>
-        <script src="./js/dashboardV2.js"></script
+            </div>
+        </main>
+    </div>
+    <script src="./js/auth-guard.js"></script>
+    <script src="./js/dashboard.js"></script>
+    <script src="./js/dashboardV2.js"></script
     </body>
 </html>

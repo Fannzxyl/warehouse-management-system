@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - Warehouse Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -15,27 +17,31 @@
                         'inter': ['Inter', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        'primary-blue': '#4F46E5', 
-                        'soft-gray': '#F8FAFC', 
-                        'text-dark': '#1A202C', 
-                        'text-light': '#6B7280', 
-                        'border-light': '#E5E7EB', 
-                        'accent-purple': '#6D28D9', 
+                        'primary-blue': '#4F46E5',
+                        'soft-gray': '#F8FAFC',
+                        'text-dark': '#1A202C',
+                        'text-light': '#6B7280',
+                        'border-light': '#E5E7EB',
+                        'accent-purple': '#6D28D9',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-soft-gray min-h-screen font-inter antialiased">
     <div class="bg-white border-b border-border-light shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
-                    <button id="backToDashboardBtn" class="inline-flex items-center text-text-light hover:text-text-dark transition-colors duration-200">
+                    <button id="backToDashboardBtn"
+                        class="inline-flex items-center text-text-light hover:text-text-dark transition-colors duration-200">
                         <i class="fas fa-arrow-left w-4 h-4 mr-3"></i>
                         <span class="font-medium">Back to Dashboard</span>
                     </button>
@@ -59,10 +65,12 @@
                     <p class="mt-2 text-text-light">Manage your account settings and view system activity</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <div class="bg-green-50 border border-green-200 rounded-full px-3 py-1.5 text-sm font-medium text-green-800 flex items-center">
+                    <div
+                        class="bg-green-50 border border-green-200 rounded-full px-3 py-1.5 text-sm font-medium text-green-800 flex items-center">
                         <i class="fas fa-circle w-2 h-2 mr-2"></i>Active
                     </div>
-                    <button id="editProfileButton" class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
+                    <button id="editProfileButton"
+                        class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
                         <i class="fas fa-edit w-4 h-4 mr-2"></i>
                         Edit Profile
                     </button>
@@ -75,13 +83,16 @@
                 <div class="bg-white border border-border-light rounded-xl shadow-sm">
                     <div class="px-6 py-6 border-b border-border-light">
                         <div class="flex items-start space-x-6">
-                            <div class="bg-black p-6 rounded-full flex-shrink-0 flex items-center justify-center w-24 h-24">
+                            <div
+                                class="bg-black p-6 rounded-full flex-shrink-0 flex items-center justify-center w-24 h-24">
                                 <i class="fas fa-user text-4xl text-white"></i>
                             </div>
                             <div class="flex-1 min-w-0 pt-2">
                                 <div class="flex items-center space-x-3 mb-2">
-                                    <h2 id="usernameDisplay" class="text-2xl font-semibold text-text-dark">Warehouse User</h2>
-                                    <span class="inline-flex items-center bg-accent-purple bg-opacity-10 text-accent-purple px-2.5 py-0.5 rounded-full text-sm font-medium">
+                                    <h2 id="usernameDisplay" class="text-2xl font-semibold text-text-dark">Warehouse
+                                        User</h2>
+                                    <span
+                                        class="inline-flex items-center bg-accent-purple bg-opacity-10 text-accent-purple px-2.5 py-0.5 rounded-full text-sm font-medium">
                                         <i class="fas fa-hard-hat w-3 h-3 mr-1.5"></i>
                                         Warehouse Staff
                                     </span>
@@ -89,27 +100,32 @@
                                 <div class="grid grid-cols-2 gap-x-4 gap-y-2 mt-4">
                                     <div>
                                         <p class="text-sm text-text-light">Employee ID</p>
-                                        <p id="employeeIdDisplay" class="font-mono text-base font-medium text-text-dark mt-1 bg-soft-gray px-2 py-1 rounded border border-border-light">WH-EMP-12345</p>
+                                        <p id="employeeIdDisplay"
+                                            class="font-mono text-base font-medium text-text-dark mt-1 bg-soft-gray px-2 py-1 rounded border border-border-light">
+                                            WH-EMP-12345</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-text-light">Join Date</p>
-                                        <p id="joinDateDisplay" class="text-base font-medium text-text-dark mt-1">January 15, 2024</p>
+                                        <p id="joinDateDisplay" class="text-base font-medium text-text-dark mt-1">
+                                            January 15, 2024</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="px-6 py-6 border-b border-border-light">
                         <h3 class="text-lg font-semibold text-text-dark mb-4">Contact Information</h3>
                         <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <dt class="text-sm font-medium text-text-light mb-1">Email Address</dt>
-                                <dd id="emailDisplay" class="text-base text-text-dark font-medium">user@warehouse.com</dd>
+                                <dd id="emailDisplay" class="text-base text-text-dark font-medium">user@warehouse.com
+                                </dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-text-light mb-1">Phone Number</dt>
-                                <dd id="phoneDisplay" class="text-base text-text-dark font-medium">+62 812 3456 7890</dd>
+                                <dd id="phoneDisplay" class="text-base text-text-dark font-medium">+62 812 3456 7890
+                                </dd>
                             </div>
                         </dl>
                     </div>
@@ -119,21 +135,24 @@
                         <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <dt class="text-sm font-medium text-text-light mb-1">Current Shift</dt>
-                                <dd id="shiftDisplay" class="text-base text-text-dark font-medium">Morning Shift (08:00 - 16:00)</dd>
+                                <dd id="shiftDisplay" class="text-base text-text-dark font-medium">Morning Shift (08:00
+                                    - 16:00)</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-text-light mb-1">Assigned Location</dt>
-                                <dd id="locationDisplay" class="text-base text-text-dark font-medium">Warehouse A, Block 3</dd>
+                                <dd id="locationDisplay" class="text-base text-text-dark font-medium">Warehouse A, Block
+                                    3</dd>
                             </div>
                         </dl>
                     </div>
                 </div>
-                
+
                 <!-- Password Change Section -->
                 <div class="bg-white border border-border-light rounded-xl shadow-sm">
                     <div class="px-6 py-4 flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-text-dark">Change Password</h3>
-                        <button id="changePasswordButton" class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
+                        <button id="changePasswordButton"
+                            class="bg-primary-blue hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md inline-flex items-center">
                             <i class="fas fa-lock w-4 h-4 mr-2"></i>
                             Change Password
                         </button>
@@ -178,14 +197,15 @@
                         <h3 class="text-lg font-semibold text-text-dark">Current Status</h3>
                     </div>
                     <div class="p-6 space-y-4">
-                        <div class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div
+                            class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                             <div class="flex items-center space-x-3">
                                 <div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
                                 <span class="text-sm font-medium text-text-dark">On Duty</span>
                             </div>
                             <span class="text-xs text-green-700 font-medium">07:55 AM</span>
                         </div>
-                        
+
                         <div class="space-y-2">
                             <div class="flex justify-between text-sm">
                                 <span class="text-text-light">Today's Hours</span>
@@ -242,50 +262,57 @@
     </div>
 
     <!-- Edit Profile Modal -->
-    <div id="editModal" class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
-            <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
+    <div id="editModal"
+        class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <div
+                class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
                 <h3 class="text-xl font-semibold text-text-dark">Edit Profile Information</h3>
                 <button id="closeModalButton" class="text-text-light hover:text-text-dark transition-colors">
                     <i class="fas fa-times w-5 h-5"></i>
                 </button>
             </div>
-            
+
             <div class="px-6 py-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="editUsername" class="block text-sm font-medium text-text-dark mb-2">Full Name</label>
-                        <input type="text" id="editUsername" placeholder="Enter your full name" 
-                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                        <label for="editUsername" class="block text-sm font-medium text-text-dark mb-2">Full
+                            Name</label>
+                        <input type="text" id="editUsername" placeholder="Enter your full name"
+                            class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
-                    
+
                     <div>
-                        <label for="editEmail" class="block text-sm font-medium text-text-dark mb-2">Email Address</label>
+                        <label for="editEmail" class="block text-sm font-medium text-text-dark mb-2">Email
+                            Address</label>
                         <input type="email" id="editEmail" placeholder="Enter your email"
-                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
-                    
+
                     <div>
-                        <label for="editPhone" class="block text-sm font-medium text-text-dark mb-2">Phone Number</label>
+                        <label for="editPhone" class="block text-sm font-medium text-text-dark mb-2">Phone
+                            Number</label>
                         <input type="text" id="editPhone" placeholder="Enter your phone number"
-                               class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                     </div>
-                    
+
                     <div>
                         <label for="editShift" class="block text-sm font-medium text-text-dark mb-2">Work Shift</label>
-                        <select id="editShift" 
-                                class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                        <select id="editShift"
+                            class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                             <option value="">Select your shift</option>
                             <option value="Morning Shift (08:00 - 16:00)">Morning Shift (08:00 - 16:00)</option>
                             <option value="Afternoon Shift (16:00 - 00:00)">Afternoon Shift (16:00 - 00:00)</option>
                             <option value="Night Shift (00:00 - 08:00)">Night Shift (00:00 - 08:00)</option>
                         </select>
                     </div>
-                    
+
                     <div class="md:col-span-2">
-                        <label for="editLocation" class="block text-sm font-medium text-text-dark mb-2">Assigned Location</label>
+                        <label for="editLocation" class="block text-sm font-medium text-text-dark mb-2">Assigned
+                            Location</label>
                         <select id="editLocation"
-                                class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            class="w-full px-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                             <option value="">Select your location</option>
                             <option value="Warehouse A, Block 1">Warehouse A, Block 1</option>
                             <option value="Warehouse A, Block 2">Warehouse A, Block 2</option>
@@ -296,12 +323,15 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="sticky bottom-0 bg-soft-gray px-6 py-4 flex justify-end space-x-3 rounded-b-xl border-t border-border-light">
-                <button id="cancelButton" class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
+
+            <div
+                class="sticky bottom-0 bg-soft-gray px-6 py-4 flex justify-end space-x-3 rounded-b-xl border-t border-border-light">
+                <button id="cancelButton"
+                    class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
                     Cancel
                 </button>
-                <button id="saveChangesButton" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm">
+                <button id="saveChangesButton"
+                    class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm">
                     Save Changes
                 </button>
             </div>
@@ -309,9 +339,12 @@
     </div>
 
     <!-- Change Password Modal -->
-    <div id="changePasswordModal" class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
-            <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
+    <div id="changePasswordModal"
+        class="fixed inset-0 bg-text-dark bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300 ease-out">
+            <div
+                class="sticky top-0 bg-white px-6 py-4 flex items-center justify-between rounded-t-xl border-b border-border-light">
                 <h3 class="text-xl font-semibold text-text-dark">Change Password</h3>
                 <button id="closePasswordModal" class="text-text-light hover:text-text-dark transition-colors">
                     <i class="fas fa-times w-5 h-5"></i>
@@ -320,49 +353,64 @@
             <form id="changePasswordForm" class="p-6">
                 <div class="space-y-5">
                     <div>
-                        <label for="currentPassword" class="block text-sm font-medium text-text-dark mb-2">Current Password</label>
+                        <label for="currentPassword" class="block text-sm font-medium text-text-dark mb-2">Current
+                            Password</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                 <i class="fas fa-lock text-text-light"></i>
                             </span>
-                            <input type="password" id="currentPassword" required class="w-full pl-10 pr-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            <input type="password" id="currentPassword" required
+                                class="w-full pl-10 pr-3 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
                         </div>
                     </div>
                     <div>
-                        <label for="newPassword" class="block text-sm font-medium text-text-dark mb-2">New Password</label>
+                        <label for="newPassword" class="block text-sm font-medium text-text-dark mb-2">New
+                            Password</label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                 <i class="fas fa-lock text-text-light"></i>
                             </span>
-                            <input type="password" id="newPassword" required minlength="6" class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
-                            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark" onclick="togglePasswordVisibility('newPassword', this)">
+                            <input type="password" id="newPassword" required minlength="6"
+                                class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            <button type="button"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark"
+                                onclick="togglePasswordVisibility('newPassword', this)">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
                         <p class="text-xs text-text-light mt-2">Must be at least 6 characters long.</p>
                         <div class="mt-2 h-2 bg-border-light rounded-full overflow-hidden">
-                            <div id="passwordStrengthBar" class="h-full bg-red-500 transition-all duration-300" style="width: 0%;"></div>
+                            <div id="passwordStrengthBar" class="h-full bg-red-500 transition-all duration-300"
+                                style="width: 0%;"></div>
                         </div>
                     </div>
                     <div>
-                        <label for="confirmNewPassword" class="block text-sm font-medium text-text-dark mb-2">Confirm New Password</label>
+                        <label for="confirmNewPassword" class="block text-sm font-medium text-text-dark mb-2">Confirm
+                            New Password</label>
                         <div class="relative">
-                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                 <i class="fas fa-lock text-text-light"></i>
                             </span>
-                            <input type="password" id="confirmNewPassword" required class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
-                            <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark" onclick="togglePasswordVisibility('confirmNewPassword', this)">
+                            <input type="password" id="confirmNewPassword" required
+                                class="w-full pl-10 pr-10 py-2 border border-border-light rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-colors text-sm">
+                            <button type="button"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-light hover:text-text-dark"
+                                onclick="togglePasswordVisibility('confirmNewPassword', this)">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <p id="passwordMismatchError" class="text-xs text-red-600 mt-2 hidden">Passwords do not match.</p>
+                        <p id="passwordMismatchError" class="text-xs text-red-600 mt-2 hidden">Passwords do not match.
+                        </p>
                     </div>
                 </div>
                 <div class="flex justify-end space-x-3 mt-8">
-                    <button type="button" id="cancelPasswordButton" class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
+                    <button type="button" id="cancelPasswordButton"
+                        class="px-4 py-2 text-text-light bg-white border border-border-light rounded-lg hover:bg-slate-50 font-medium transition-colors text-sm">
                         Cancel
                     </button>
-                    <button type="submit" id="savePasswordButton" class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm" disabled>
+                    <button type="submit" id="savePasswordButton"
+                        class="px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-indigo-700 font-medium transition-colors text-sm"
+                        disabled>
                         Save New Password
                     </button>
                 </div>
@@ -370,6 +418,8 @@
         </div>
     </div>
 
+    <script src="./js/auth-guard.js"></script>
     <script src="./js/profile.js"></script>
 </body>
+
 </html>

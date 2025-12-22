@@ -7,95 +7,16 @@
         if (typeof window.allMenus === 'undefined') window.allMenus = [];
 
         // --- UTILITY FUNCTIONS ---
-        // Helper untuk memformat tanggal dan waktu
-        const formatDate = (date) => {
-            if (!date) return 'N/A';
-            const d = new Date(date);
-            const pad = (n) => n < 10 ? `0${n}` : n;
-            const day = pad(d.getDate());
-            const month = pad(d.getMonth() + 1);
-            const year = d.getFullYear();
-            const hours = pad(d.getHours());
-            const minutes = pad(d.getMinutes());
-            const seconds = pad(d.getSeconds());
-            return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-        };
-
-        // Debounce function
-        const debounce = window.debounce || ((fn, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => fn.apply(this, args), delay);
-            };
-        });
-
-        // Custom Alert and Confirm to avoid browser pop-ups
-        function createCustomModal(id, title, message, isConfirm = false, onOk, onCancel) {
-            let modal = document.getElementById(id);
-            if (modal) modal.remove();
-
-            modal = document.createElement('div');
-            modal.id = id;
-            modal.className = 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50';
-            modal.innerHTML = `
-        <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-auto">
-            <h3 class="text-lg font-semibold mb-4">${title}</h3>
-            <p class="text-sm text-gray-600 mb-4">${message}</p>
-            <div class="flex justify-end gap-2">
-                ${isConfirm ? `<button id="${id}-cancel" class="px-4 py-2 text-sm rounded-md hover:bg-gray-200">Batal</button>` : ''}
-                <button id="${id}-ok" class="px-4 py-2 text-sm bg-wise-primary text-white rounded-md hover:bg-blue-600">OK</button>
-            </div>
-        </div>
-    `;
-            document.body.appendChild(modal);
-
-            document.getElementById(`${id}-ok`).onclick = () => {
-                modal.remove();
-                if (onOk) onOk();
-            };
-
-            if (isConfirm) {
-                document.getElementById(`${id}-cancel`).onclick = () => {
-                    modal.remove();
-                    if (onCancel) onCancel();
-                };
-            }
-        }
-
-        window.showCustomAlert = (title, message) => {
-            return new Promise(resolve => {
-                const modalId = 'custom-alert-modal';
-                createCustomModal(modalId, title, message, false, resolve);
-            });
-        };
-
-        window.showCustomConfirm = (title, message) => {
-            return new Promise(resolve => {
-                const modalId = 'custom-confirm-modal';
-                createCustomModal(modalId, title, message, true, () => resolve(true), () => resolve(false));
-            });
-        };
-
-        const showToast = (message, type = 'success') => {
-            const toastId = 'toast-notification';
-            let toast = document.getElementById(toastId);
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = toastId;
-                toast.className = 'fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 aria-live="polite"';
-                document.body.appendChild(toast);
-            }
-
-            const colorClass = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-            toast.className = `fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 ${colorClass}`;
-            toast.textContent = message;
-            toast.classList.remove('opacity-0');
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-            }, 3000);
-        };
+        // NOTE: Fungsi utility berikut sekarang tersedia dari utils.js:
+        // - window.debounce()
+        // - window.showCustomAlert()
+        // - window.showCustomConfirm()
+        // - window.showToast()
+        // - window.formatDate()
+        // Gunakan referensi lokal untuk backward compatibility
+        const debounce = window.debounce;
+        const formatDate = window.formatDate;
+        const showToast = window.showToast;
 
         // Helper untuk membuat dropdown panjang yang dapat dicari
         const makeLongDropdown = (selectId, options, currentValue) => {
@@ -206,6 +127,8 @@
 
             renderOptions(options);
         };
+        // Export to window for use by other scripts (e.g., configurationV5.js)
+        window.makeLongDropdown = makeLongDropdown;
 
         // Helper untuk memvalidasi form
         const validateItemForm = () => {
@@ -676,97 +599,135 @@
         const renderTabGeneral = (mode) => {
             const container = document.getElementById('item-gen-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">General</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-1">
-                    <label for="item-template" class="block text-sm mb-1">Item template:</label>
-                    <input type="text" id="item-template" name="itemTemplate" class="input bg-gray-100 cursor-not-allowed" value="PC-PCK-PLT" readonly>
+            <!-- Section: General Info -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    General
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-template" class="block text-sm font-medium text-gray-600 mb-1.5">Item template</label>
+                        <input type="text" id="item-template" name="itemTemplate" class="input bg-gray-50 cursor-not-allowed" value="PC-PCK-PLT" readonly>
+                    </div>
+                    <div>
+                        <label for="item-company" class="block text-sm font-medium text-gray-600 mb-1.5">Company <span class="text-red-500">*</span></label>
+                        <select id="item-company" name="company" class="select" required ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label for="item-code" class="block text-sm font-medium text-gray-600 mb-1.5">Item <span class="text-red-500">*</span></label>
+                        <input type="text" id="item-code" name="itemCode" class="input" required ${mode === 'view' || mode === 'edit' ? 'readonly' : ''}>
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <label for="item-description" class="block text-sm font-medium text-gray-600 mb-1.5">Description</label>
+                        <input type="text" id="item-description" name="description" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
                 </div>
-                <div class="md:col-span-1">
-                    <label for="item-company" class="block text-sm mb-1">Company:</label>
-                    <select id="item-company" name="company" class="select" required ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div class="md:col-span-2">
-                    <label for="item-code" class="block text-sm mb-1">Item:</label>
-                    <input type="text" id="item-code" name="itemCode" class="input" required ${mode === 'view' || mode === 'edit' ? 'readonly' : ''}>
-                </div>
-                <div class="md:col-span-4">
-                    <label for="item-description" class="block text-sm mb-1">Description:</label>
-                    <input type="text" id="item-description" name="description" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-            </div>
-            <div class="md:col-span-4 flex gap-4 mt-2 mb-6">
-                <label class="flex items-center gap-2 text-sm">
-                    <input type="checkbox" id="item-inactive" name="inactive" ${mode === 'view' ? 'disabled' : ''}> Inactive
-                </label>
-                <label class="flex items-center gap-2 text-sm">
-                    <input type="checkbox" id="item-inventory-tracking" name="inventoryTracking" ${mode === 'view' ? 'disabled' : ''}> Inventory tracking
-                </label>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Logistics Data</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="item-inbound-shelf-life" class="block text-sm mb-1">Inbound shelf life:</label>
-                    <input type="text" id="item-inbound-shelf-life" name="inboundShelfLife" class="input" placeholder="e.g., 365D" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-promo-item" class="block text-sm mb-1">Promo item:</label>
-                    <select id="item-promo-item" name="promoItem" class="select" ${mode === 'view' ? 'disabled' : ''}>
-                        <option value="N">N</option>
-                        <option value="Y">Y</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="item-ti-hi" class="block text-sm mb-1">TI x HI:</label>
-                    <input type="text" id="item-ti-hi" name="tiHi" class="input" placeholder="e.g., 0 x 0" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-primary-supplier" class="block text-sm mb-1">Primary supplier:</label>
-                    <input type="text" id="item-primary-supplier" name="primarySupplier" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-mfg-exp-date" class="block text-sm mb-1">Mfg / Exp Date:</label>
-                    <input type="text" id="item-mfg-exp-date" name="mfgExpDate" class="input" placeholder="e.g., Mfg" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-shelf-life" class="block text-sm mb-1">Shelf life:</label>
-                    <input type="number" step="0.00001" id="item-shelf-life" name="shelfLife" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-outbound-shelf-life" class="block text-sm mb-1">Outbound shelf life:</label>
-                    <input type="text" id="item-outbound-shelf-life" name="outboundShelfLife" class="input" placeholder="e.g., 0.00000" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                 <div class="md:col-span-1">
-                    <label for="item-container-type" class="block text-sm mb-1">Container Type:</label>
-                    <input type="text" id="item-container-type" name="containerType" class="input" placeholder="e.g., PALLET" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Handling Rules</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                 <div class="md:col-span-2">
-                    <label for="item-allocation-rule-long" class="block text-sm mb-1">Allocation rule:</label>
-                    <select id="item-allocation-rule-long" name="allocationRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div class="md:col-span-2">
-                    <label for="item-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
-                    <select id="item-locating-rule-long" name="locatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Immediate needs</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-1">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-immediate-eligible" name="immediateEligible" ${mode === 'view' ? 'disabled' : ''}> Eligible
+                <div class="flex flex-wrap gap-6 mt-5 pt-4 border-t border-gray-100">
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                        <input type="checkbox" id="item-inactive" name="inactive" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                        <span>Inactive</span>
+                    </label>
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                        <input type="checkbox" id="item-inventory-tracking" name="inventoryTracking" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                        <span>Inventory tracking</span>
                     </label>
                 </div>
-                <div class="md:col-span-3">
-                    <label for="item-immediate-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
-                    <select id="item-immediate-locating-rule-long" name="immediateLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+            </div>
+
+            <!-- Section: Logistics Data -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                    Logistics Data
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-inbound-shelf-life" class="block text-sm font-medium text-gray-600 mb-1.5">Inbound shelf life</label>
+                        <input type="text" id="item-inbound-shelf-life" name="inboundShelfLife" class="input" placeholder="e.g., 365D" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-promo-item" class="block text-sm font-medium text-gray-600 mb-1.5">Promo item</label>
+                        <select id="item-promo-item" name="promoItem" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                            <option value="N">N</option>
+                            <option value="Y">Y</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="item-ti-hi" class="block text-sm font-medium text-gray-600 mb-1.5">TI x HI</label>
+                        <input type="text" id="item-ti-hi" name="tiHi" class="input" placeholder="e.g., 0 x 0" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-primary-supplier" class="block text-sm font-medium text-gray-600 mb-1.5">Primary supplier</label>
+                        <input type="text" id="item-primary-supplier" name="primarySupplier" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-mfg-exp-date" class="block text-sm font-medium text-gray-600 mb-1.5">Mfg / Exp Date</label>
+                        <input type="text" id="item-mfg-exp-date" name="mfgExpDate" class="input" placeholder="e.g., Mfg" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-shelf-life" class="block text-sm font-medium text-gray-600 mb-1.5">Shelf life</label>
+                        <input type="number" step="0.00001" id="item-shelf-life" name="shelfLife" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-outbound-shelf-life" class="block text-sm font-medium text-gray-600 mb-1.5">Outbound shelf life</label>
+                        <input type="text" id="item-outbound-shelf-life" name="outboundShelfLife" class="input" placeholder="e.g., 0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-container-type" class="block text-sm font-medium text-gray-600 mb-1.5">Container Type</label>
+                        <input type="text" id="item-container-type" name="containerType" class="input" placeholder="e.g., PALLET" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
                 </div>
             </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Inbound QC</h4>
-            <div class="flex items-center gap-2 text-sm">
-                Status: <span id="inbound-qc-status" class="px-2 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-700">Inactive</span>
+
+            <!-- Section: Handling Rules -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Handling Rules
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-allocation-rule-long" class="block text-sm font-medium text-gray-600 mb-1.5">Allocation rule</label>
+                        <select id="item-allocation-rule-long" name="allocationRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div>
+                        <label for="item-locating-rule-long" class="block text-sm font-medium text-gray-600 mb-1.5">Locating rule</label>
+                        <select id="item-locating-rule-long" name="locatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Immediate Needs -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Immediate Needs
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4 items-end">
+                    <div class="flex items-center h-10">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="checkbox" id="item-immediate-eligible" name="immediateEligible" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>Eligible</span>
+                        </label>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label for="item-immediate-locating-rule-long" class="block text-sm font-medium text-gray-600 mb-1.5">Locating rule</label>
+                        <select id="item-immediate-locating-rule-long" name="immediateLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Inbound QC Preview -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Inbound QC
+                </h4>
+                <div class="flex items-center gap-3">
+                    <span class="text-sm text-gray-600">Status:</span>
+                    <span id="inbound-qc-status" class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">Inactive</span>
+                </div>
             </div>
             `;
         };
@@ -774,110 +735,157 @@
         const renderTabChar1 = (mode) => {
             const container = document.getElementById('item-char1-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Values</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="item-cost" class="block text-sm mb-1">Cost:</label>
-                    <input type="number" step="0.00001" id="item-cost" name="cost" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-list-price" class="block text-sm mb-1">List price:</label>
-                    <input type="number" step="0.00001" id="item-list-price" name="listPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-net-price" class="block text-sm mb-1">Net price:</label>
-                    <input type="number" step="0.00001" id="item-net-price" name="netPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">EPC</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="item-company-prefix" class="block text-sm mb-1">Company prefix:</label>
-                    <input type="text" id="item-company-prefix" name="companyPrefix" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-reference" class="block text-sm mb-1">Item reference:</label>
-                    <input type="text" id="item-reference" name="itemReference" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-cage-code" class="block text-sm mb-1">CAGE code:</label>
-                    <input type="text" id="item-cage-code" name="cageCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">GS1</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-1">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-gs1-gtin-enabled" name="gs1GtinEnabled" ${mode === 'view' ? 'disabled' : ''}> GTIN enabled
-                    </label>
-                </div>
-                <div class="flex items-center space-x-4 md:col-span-3">
-                   <div class="flex items-center">
-                       <input type="radio" id="gs1-type-01ai" name="gs1Type" value="01AI" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
-                       <label for="gs1-type-01ai" class="ml-2 text-sm text-wise-dark-gray">01 AI</label>
-                   </div>
-                   <div class="flex items-center">
-                       <input type="radio" id="gs1-type-02ai" name="gs1Type" value="02AI" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
-                       <label for="gs1-type-02ai" class="ml-2 text-sm text-wise-dark-gray">02 AI</label>
-                   </div>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Item Characteristics</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label for="item-eq-value" class="block text-sm mb-1">EQ Value:</label>
-                    <input type="number" id="item-eq-value" name="eqValue" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-division" class="block text-sm mb-1">Division:</label>
-                    <input type="text" id="item-division" name="division" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-color" class="block text-sm mb-1">Item color:</label>
-                    <input type="text" id="item-color" name="itemColor" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-department" class="block text-sm mb-1">Department:</label>
-                    <input type="text" id="item-department" name="department" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-style" class="block text-sm mb-1">Item style:</label>
-                    <input type="text" id="item-style" name="itemStyle" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-            </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Shipping BOM Action</h4>
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                ${shippingBOMOptions.map(option => `
-                    <div class="flex items-center">
-                        <input type="radio" id="shipping-bom-${option.value}" name="shippingBOM" value="${option.value}" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
-                        <label for="shipping-bom-${option.value}" class="ml-2 text-sm text-wise-dark-gray">${option.label}</label>
+            <!-- Section: Values -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Values
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-cost" class="block text-sm font-medium text-gray-600 mb-1.5">Cost</label>
+                        <input type="number" step="0.00001" id="item-cost" name="cost" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
                     </div>
-                `).join('')}
-             </div>
+                    <div>
+                        <label for="item-list-price" class="block text-sm font-medium text-gray-600 mb-1.5">List price</label>
+                        <input type="number" step="0.00001" id="item-list-price" name="listPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-net-price" class="block text-sm font-medium text-gray-600 mb-1.5">Net price</label>
+                        <input type="number" step="0.00001" id="item-net-price" name="netPrice" class="input" value="0.00000" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: EPC -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                    EPC
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-company-prefix" class="block text-sm font-medium text-gray-600 mb-1.5">Company prefix</label>
+                        <input type="text" id="item-company-prefix" name="companyPrefix" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-reference" class="block text-sm font-medium text-gray-600 mb-1.5">Item reference</label>
+                        <input type="text" id="item-reference" name="itemReference" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-cage-code" class="block text-sm font-medium text-gray-600 mb-1.5">CAGE code</label>
+                        <input type="text" id="item-cage-code" name="cageCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: GS1 -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                    GS1
+                </h4>
+                <div class="flex flex-wrap items-center gap-6">
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                        <input type="checkbox" id="item-gs1-gtin-enabled" name="gs1GtinEnabled" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                        <span>GTIN enabled</span>
+                    </label>
+                    <div class="flex gap-4">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="radio" id="gs1-type-01ai" name="gs1Type" value="01AI" class="w-4 h-4 border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>01 AI</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="radio" id="gs1-type-02ai" name="gs1Type" value="02AI" class="w-4 h-4 border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>02 AI</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Item Characteristics -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                    Item Characteristics
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-eq-value" class="block text-sm font-medium text-gray-600 mb-1.5">EQ Value</label>
+                        <input type="number" id="item-eq-value" name="eqValue" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-division" class="block text-sm font-medium text-gray-600 mb-1.5">Division</label>
+                        <input type="text" id="item-division" name="division" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-color" class="block text-sm font-medium text-gray-600 mb-1.5">Item color</label>
+                        <input type="text" id="item-color" name="itemColor" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-department" class="block text-sm font-medium text-gray-600 mb-1.5">Department</label>
+                        <input type="text" id="item-department" name="department" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-style" class="block text-sm font-medium text-gray-600 mb-1.5">Item style</label>
+                        <input type="text" id="item-style" name="itemStyle" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Shipping BOM Action -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                    Shipping BOM Action
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    ${shippingBOMOptions.map(option => `
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors p-2 rounded-md hover:bg-gray-50">
+                            <input type="radio" id="shipping-bom-${option.value}" name="shippingBOM" value="${option.value}" class="w-4 h-4 border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>${option.label}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
             `;
         };
 
         const renderTabChar2 = (mode) => {
             const container = document.getElementById('item-char2-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">User defined data</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label for="item-char2a" class="block text-sm mb-1">Char 2A:</label>
-                    <input type="text" id="item-char2a" name="char2a" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-char2b" class="block text-sm mb-1">Char 2B:</label>
-                    <input type="text" id="item-char2b" name="char2b" class="input" ${mode === 'view' ? 'readonly' : ''}>
+            <!-- Section: Char 2 Data -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Char 2 Data
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-char2a" class="block text-sm font-medium text-gray-600 mb-1.5">Char 2A</label>
+                        <input type="text" id="item-char2a" name="char2a" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-char2b" class="block text-sm font-medium text-gray-600 mb-1.5">Char 2B</label>
+                        <input type="text" id="item-char2b" name="char2b" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                ${Array.from({ length: 8 }, (_, i) => `
-                     <div>
-                        <label for="item-udf${i + 1}" class="block text-sm mb-1">UDF${i + 1}:</label>
-                        <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                    </div>
-                `).join('')}
+
+            <!-- Section: User Defined Data -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    User Defined Data (UDF)
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                    ${Array.from({ length: 8 }, (_, i) => `
+                        <div>
+                            <label for="item-udf${i + 1}" class="block text-sm font-medium text-gray-600 mb-1.5">UDF ${i + 1}</label>
+                            <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
             `;
         };
@@ -885,119 +893,181 @@
         const renderTabHandling1 = (mode) => {
             const container = document.getElementById('item-handling1-tab');
             container.innerHTML = `
-                <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Handling(1)</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                    <div class="md:col-span-2">
-                        <label for="item-allocation-rule" class="block text-sm mb-1">Allocation Rule:</label>
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Handling Rules
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-allocation-rule" class="block text-sm font-medium text-gray-600 mb-1.5">Allocation Rule</label>
                         <select id="item-allocation-rule" name="allocationRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="item-locating-rule" class="block text-sm mb-1">Locating Rule:</label>
+                    <div>
+                        <label for="item-locating-rule" class="block text-sm font-medium text-gray-600 mb-1.5">Locating Rule</label>
                         <select id="item-locating-rule" name="locatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="item-nmfc-code" class="block text-sm mb-1">NMFC code:</label>
+                    <div>
+                        <label for="item-nmfc-code" class="block text-sm font-medium text-gray-600 mb-1.5">NMFC code</label>
                         <input type="text" id="item-nmfc-code" name="nmfcCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="item-class" class="block text-sm mb-1">Item class:</label>
+                    <div>
+                        <label for="item-class" class="block text-sm font-medium text-gray-600 mb-1.5">Item class</label>
                         <select id="item-class" name="itemClass" class="select" ${mode === 'view' ? 'disabled' : ''}>
                             <option value="">-- Select --</option>
                             ${itemClasses.map(c => `<option value="${c}">${c}</option>`).join('')}
                         </select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="item-packing-class" class="block text-sm mb-1">Packing class:</label>
+                    <div>
+                        <label for="item-packing-class" class="block text-sm font-medium text-gray-600 mb-1.5">Packing class</label>
                         <select id="item-packing-class" name="packingClass" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
                     </div>
-                    <div class="md:col-span-2">
-                        <label for="item-storage-template" class="block text-sm mb-1">Storage template:</label>
+                    <div>
+                        <label for="item-storage-template" class="block text-sm font-medium text-gray-600 mb-1.5">Storage template</label>
                         <select id="item-storage-template" name="storageTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                     </div>
-                     <div class="md:col-span-4 mt-2">
-                        <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox" id="item-inventory-tracking-h1" name="inventoryTracking" ${mode === 'view' ? 'disabled' : ''}> Inventory Tracking
-                        </label>
                     </div>
                 </div>
-             `;
+                <div class="mt-5 pt-4 border-t border-gray-100">
+                    <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                        <input type="checkbox" id="item-inventory-tracking-h1" name="inventoryTracking" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                        <span>Inventory Tracking</span>
+                    </label>
+                </div>
+            </div>
+            `;
         };
 
         const renderTabHandling2 = (mode) => {
             const container = document.getElementById('item-handling2-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Inbound QC</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-1">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-inbound-eligible" name="inboundEligible" ${mode === 'view' ? 'disabled' : ''}> Eligible
-                    </label>
-                </div>
-                <div class="md:col-span-1 flex flex-col justify-center">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="radio" id="item-compute-qty-amount" name="computeQtyAs" value="AMOUNT" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
-                        <span class="ml-2">Amount</span>
-                    </label>
-                    <label class="flex items-center gap-2 text-sm mt-1">
-                        <input type="radio" id="item-compute-qty-percentage" name="computeQtyAs" value="PERCENTAGE" class="custom-radio" ${mode === 'view' ? 'disabled' : ''}>
-                        <span class="ml-2">Percentage</span>
-                    </label>
-                </div>
-                <div>
-                    <label for="item-inspection-qty" class="block text-sm mb-1">Inspection Qty:</label>
-                    <input type="number" step="0.01" id="item-inspection-qty" name="inspectionQty" class="input" value="0.00" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-inspection-um" class="block text-sm mb-1">UM:</label>
-                    <select id="item-inspection-um" name="inspectionUm" class="select" ${mode === 'view' ? 'disabled' : ''}>
-                        <option value="">-- Pilih --</option>
-                        ${inspectionUms.map(um => `<option value="${um}">${um}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="md:col-span-4">
-                    <label for="item-qc-locating-rule-long" class="block text-sm mb-1">Locating rule:</label>
-                    <select id="item-qc-locating-rule-long" name="qcLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div class="md:col-span-4 flex items-center gap-2 text-sm">
-                    <input type="checkbox" id="item-catch-weight-required" name="catchWeightRequired" ${mode === 'view' ? 'disabled' : ''}> Catch Weight Required
-                </label>
+            <!-- Section: Inbound QC -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Inbound QC
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 items-start">
+                    <!-- Eligible Checkbox -->
+                    <div class="flex items-center h-10 pt-6">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="checkbox" id="item-inbound-eligible" name="inboundEligible" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>Eligible</span>
+                        </label>
+                    </div>
+                    
+                    <!-- Amount/Percentage Radio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Compute Qty As</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                <input type="radio" id="item-compute-qty-amount" name="computeQtyAs" value="AMOUNT" class="w-4 h-4 border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                <span>Amount</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                <input type="radio" id="item-compute-qty-percentage" name="computeQtyAs" value="PERCENTAGE" class="w-4 h-4 border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                <span>Percentage</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Inspection Qty -->
+                    <div>
+                        <label for="item-inspection-qty" class="block text-sm font-medium text-gray-600 mb-1.5">Inspection Qty</label>
+                        <input type="number" step="0.01" id="item-inspection-qty" name="inspectionQty" class="input" value="0.00" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    
+                    <!-- UM Dropdown -->
+                    <div>
+                        <label for="item-inspection-um" class="block text-sm font-medium text-gray-600 mb-1.5">UM</label>
+                        <select id="item-inspection-um" name="inspectionUm" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                            <option value="">-- Pilih --</option>
+                            ${inspectionUms.map(um => `<option value="${um}">${um}</option>`).join('')}
+                        </select>
+                    </div>
+                    
+                    <!-- Locating Rule (Full Width) -->
+                    <div class="md:col-span-2 lg:col-span-4">
+                        <label for="item-qc-locating-rule-long" class="block text-sm font-medium text-gray-600 mb-1.5">Locating rule</label>
+                        <select id="item-qc-locating-rule-long" name="qcLocatingRule" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    
+                    <!-- Catch Weight Required -->
+                    <div class="md:col-span-2 lg:col-span-4 pt-2">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="checkbox" id="item-catch-weight-required" name="catchWeightRequired" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>Catch Weight Required</span>
+                        </label>
+                    </div>
                 </div>
             </div>
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4 mt-6">Lot & Serial</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-1">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-lot-controlled" name="lotControlled" ${mode === 'view' ? 'disabled' : ''}> Lot controlled
-                    </label>
+
+            <!-- Section: Lot & Serial -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                    Lot & Serial
+                </h4>
+                
+                <!-- Lot Section -->
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-4 mb-4">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-wise-primary rounded-full"></span>
+                        Lot Control
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4 items-end">
+                        <div class="flex items-center h-10">
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                <input type="checkbox" id="item-lot-controlled" name="lotControlled" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                <span>Lot controlled</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="item-lot-template" class="block text-sm font-medium text-gray-600 mb-1.5">Lot template</label>
+                            <select id="item-lot-template" name="lotTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                        </div>
+                        <div>
+                            <label for="item-lot-days" class="block text-sm font-medium text-gray-600 mb-1.5">Days to expire</label>
+                            <input type="number" id="item-lot-days" name="lotDaysToExpire" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
+                        </div>
+                        <div></div>
+                    </div>
                 </div>
-                <div class="md:col-span-1">
-                    <label for="item-lot-template" class="block text-sm mb-1">Lot template:</label>
-                    <select id="item-lot-template" name="lotTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div class="md:col-span-1">
-                    <label for="item-lot-days" class="block text-sm mb-1">Days to expire:</label>
-                    <input type="number" id="item-lot-days" name="lotDaysToExpire" class="input" value="0" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div class="md:col-span-1"></div>
-                <div class="md:col-span-1">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-serial-controlled" name="serialControlled" ${mode === 'view' ? 'disabled' : ''}> Serial controlled
-                    </label>
-                </div>
-                <div class="md:col-span-1">
-                    <label for="item-serial-template" class="block text-sm mb-1">Template:</label>
-                    <select id="item-serial-template" name="serialTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div class="md:col-span-2 grid grid-cols-3 gap-4" id="serial-flags-container">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-serial-inbound" name="serialInbound" ${mode === 'view' ? 'disabled' : ''}> Inbound
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-serial-inventory" name="serialInventory" ${mode === 'view' ? 'disabled' : ''}> Inventory
-                    </label>
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-serial-outbound" name="serialOutbound" ${mode === 'view' ? 'disabled' : ''}> Outbound
-                    </label>
+                
+                <!-- Serial Section -->
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-4">
+                    <h5 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Serial Control
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4 items-end">
+                        <div class="flex items-center h-10">
+                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                <input type="checkbox" id="item-serial-controlled" name="serialControlled" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                <span>Serial controlled</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="item-serial-template" class="block text-sm font-medium text-gray-600 mb-1.5">Template</label>
+                            <select id="item-serial-template" name="serialTemplate" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">Apply to</label>
+                            <div class="flex flex-wrap gap-4">
+                                <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                    <input type="checkbox" id="item-serial-inbound" name="serialInbound" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                    <span>Inbound</span>
+                                </label>
+                                <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                    <input type="checkbox" id="item-serial-inventory" name="serialInventory" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                    <span>Inventory</span>
+                                </label>
+                                <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                                    <input type="checkbox" id="item-serial-outbound" name="serialOutbound" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                                    <span>Outbound</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             `;
@@ -1032,84 +1102,127 @@
         const renderTabAlternate = (mode) => {
             const container = document.getElementById('item-subst-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Alternate / Substitute</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label for="item-alternate" class="block text-sm mb-1">Alternate item:</label>
-                    <input type="text" id="item-alternate" name="alternateItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label for="item-substitute" class="block text-sm mb-1">Substitute item:</label>
-                    <input type="text" id="item-substitute" name="substituteItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
+            <!-- Section: Alternate / Substitute -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    Alternate / Substitute
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="item-alternate" class="block text-sm font-medium text-gray-600 mb-1.5">Alternate item</label>
+                        <input type="text" id="item-alternate" name="alternateItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div>
+                        <label for="item-substitute" class="block text-sm font-medium text-gray-600 mb-1.5">Substitute item</label>
+                        <input type="text" id="item-substitute" name="substituteItem" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
                 </div>
             </div>
             
-            <div class="flex justify-between items-center mb-2">
-                <h5 class="font-medium text-wise-dark-gray">Substitute List</h5>
+            <!-- Section: Substitute List -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-md font-semibold text-wise-dark-gray flex items-center gap-2">
+                        <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                        Substitute List
+                    </h4>
+                    <div class="flex gap-2">
+                        <button type="button" id="btn-add-substitute" class="btn btn-sm btn-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Add
+                        </button>
+                        <button type="button" class="btn btn-sm" onclick="deleteSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Delete</button>
+                        <button type="button" class="btn btn-sm" onclick="moveSubstituteItemUp()" ${mode === 'view' ? 'disabled' : ''}>Up</button>
+                        <button type="button" class="btn btn-sm" onclick="moveSubstituteItemDown()" ${mode === 'view' ? 'disabled' : ''}>Down</button>
+                    </div>
+                </div>
                 
-                <div class="flex gap-2">
-                    <button type="button" class="btn btn-sm" onclick="addSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Add</button>
-                    <button type="button" class="btn btn-sm" onclick="deleteSubstituteItem()" ${mode === 'view' ? 'disabled' : ''}>Delete</button>
-                    <button type="button" class="btn btn-sm" onclick="moveSubstituteItemUp()" ${mode === 'view' ? 'disabled' : ''}>Up</button>
-                    <button type="button" class="btn btn-sm" onclick="moveSubstituteItemDown()" ${mode === 'view' ? 'disabled' : ''}>Down</button>
+                <div class="border rounded-md max-h-[200px] overflow-y-auto">
+                    <table id="item-substitute-table" class="min-w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 sticky top-0">
+                                <th class="py-2 px-4 text-left w-12"><input type="checkbox" id="select-all-subs"></th>
+                                <th class="py-2 px-4 text-left">Code</th>
+                                <th class="py-2 px-4 text-left">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-                </div>
-            
-            <div class="border rounded-md max-h-[200px] overflow-y-auto">
-                <table id="item-substitute-table" class="min-w-full text-sm">
-                    <thead>
-                        <tr class="bg-gray-100 sticky top-0">
-                            <th class="py-2 px-4 text-left w-12"><input type="checkbox" id="select-all-subs"></th>
-                            <th class="py-2 px-4 text-left">Code</th>
-                            <th class="py-2 px-4 text-left">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-                 <div id="substitute-empty-state" class="text-center py-8 text-gray-400 hidden">
+                <div id="substitute-empty-state" class="text-center py-8 text-gray-400">
+                    <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     <p>No substitute items added.</p>
                 </div>
             </div>
             `;
+
+            // Add event listener for Add button
+            const addBtn = container.querySelector('#btn-add-substitute');
+            if (addBtn) {
+                addBtn.addEventListener('click', addSubstituteItem);
+            }
         };
 
         const renderTabInternational = (mode) => {
             const container = document.getElementById('item-int-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">International</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div class="md:col-span-2">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-preference-criterion" name="preferenceCriterion" ${mode === 'view' ? 'disabled' : ''}> Preference Criterion
-                    </label>
-                </div>
-                <div>
-                    <label for="item-harmonized-code" class="block text-sm mb-1">Harmonized code:</label>
-                    <input type="text" id="item-harmonized-code" name="harmonizedCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                </div>
-                <div>
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" id="item-harmonized-uploaded" name="harmonizedUploaded" ${mode === 'view' ? 'disabled' : ''}> Uploaded
-                    </label>
-                </div>
-                <div>
-                    <label for="item-country-origin" class="block text-sm mb-1">Country of origin:</label>
-                    <select id="item-country-origin" name="countryOfOrigin" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
-                </div>
-                <div>
-                    <label for="item-net-cost" class="block text-sm mb-1">Net cost:</label>
-                    <select id="item-net-cost" name="netCost" class="select" ${mode === 'view' ? 'disabled' : ''}>
-                         ${netCostOptions.map(o => `<option value="${o}">${o}</option>`).join('')}
-                    </select>
+            <!-- Section: International -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                    International
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div class="md:col-span-2">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="checkbox" id="item-preference-criterion" name="preferenceCriterion" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>Preference Criterion</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="item-harmonized-code" class="block text-sm font-medium text-gray-600 mb-1.5">Harmonized code</label>
+                        <input type="text" id="item-harmonized-code" name="harmonizedCode" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                    </div>
+                    <div class="flex items-end pb-1">
+                        <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer hover:text-wise-primary transition-colors">
+                            <input type="checkbox" id="item-harmonized-uploaded" name="harmonizedUploaded" class="w-4 h-4 rounded border-gray-300 text-wise-primary focus:ring-wise-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <span>Uploaded</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="item-country-origin" class="block text-sm font-medium text-gray-600 mb-1.5">Country of origin</label>
+                        <select id="item-country-origin" name="countryOfOrigin" class="select" ${mode === 'view' ? 'disabled' : ''}></select>
+                    </div>
+                    <div>
+                        <label for="item-net-cost" class="block text-sm font-medium text-gray-600 mb-1.5">Net cost</label>
+                        <select id="item-net-cost" name="netCost" class="select" ${mode === 'view' ? 'disabled' : ''}>
+                             ${netCostOptions.map(o => `<option value="${o}">${o}</option>`).join('')}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <h5 class="font-medium text-wise-dark-gray mb-2">Countries</h5>
+
+            <!-- Section: Countries List -->
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-md font-semibold text-wise-dark-gray flex items-center gap-2">
+                        <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+                        Countries
+                    </h4>
+                    <div class="flex gap-2">
+                        <button type="button" id="btn-add-country" class="btn btn-sm btn-primary" ${mode === 'view' ? 'disabled' : ''}>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Add
+                        </button>
+                        <button type="button" id="btn-delete-country" class="btn btn-sm" ${mode === 'view' ? 'disabled' : ''}>Delete</button>
+                    </div>
+                </div>
                 <div class="border rounded-md max-h-[150px] overflow-y-auto">
                     <table id="item-countries-table" class="min-w-full text-sm">
                         <thead>
                             <tr class="bg-gray-100 sticky top-0">
+                                <th class="py-2 px-4 text-left w-12"><input type="checkbox" id="select-all-countries"></th>
                                 <th class="py-2 px-4 text-left">Code</th>
                                 <th class="py-2 px-4 text-left">Name</th>
                             </tr>
@@ -1117,27 +1230,47 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                 <div id="countries-empty-state" class="text-center py-4 text-gray-400 hidden">
-                     <span class="text-3xl">🌍</span><br>Tidak ada negara terkait.
+                <div id="item-countries-empty" class="text-center py-6 text-gray-400">
+                    <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                    <p>Tidak ada negara terkait.</p>
                 </div>
             </div>
             `;
+
+            // Add event listeners
+            const addBtn = container.querySelector('#btn-add-country');
+            const deleteBtn = container.querySelector('#btn-delete-country');
+            const selectAll = container.querySelector('#select-all-countries');
+
+            if (addBtn) addBtn.addEventListener('click', addCountryItem);
+            if (deleteBtn) deleteBtn.addEventListener('click', deleteCountryItem);
+            if (selectAll) {
+                selectAll.addEventListener('change', (e) => {
+                    const checkboxes = container.querySelectorAll('.country-select-row');
+                    checkboxes.forEach(cb => cb.checked = e.target.checked);
+                });
+            }
         };
 
         const renderTabCategories = (mode) => {
             const container = document.getElementById('item-cats-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">Categories</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                ${Array.from({ length: 10 }, (_, i) => `
-                    <div>
-                        <label for="item-cat-${i + 1}" class="block text-sm mb-1">Category ${i + 1}:</label>
-                        <input type="text" id="item-cat-${i + 1}" name="categories[${i + 1}]" class="input" list="category-list" ${mode === 'view' ? 'readonly' : ''}>
-                    </div>
-                `).join('')}
-                <datalist id="category-list">
-                    ${categoryList.map(c => `<option value="${c}">`).join('')}
-                </datalist>
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                    Categories
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    ${Array.from({ length: 10 }, (_, i) => `
+                        <div>
+                            <label for="item-cat-${i + 1}" class="block text-sm font-medium text-gray-600 mb-1.5">Category ${i + 1}</label>
+                            <input type="text" id="item-cat-${i + 1}" name="categories[${i + 1}]" class="input" list="category-list" ${mode === 'view' ? 'readonly' : ''}>
+                        </div>
+                    `).join('')}
+                    <datalist id="category-list">
+                        ${categoryList.map(c => `<option value="${c}">`).join('')}
+                    </datalist>
+                </div>
             </div>
             `;
         };
@@ -1145,14 +1278,19 @@
         const renderTabUdf = (mode) => {
             const container = document.getElementById('item-udf-tab');
             container.innerHTML = `
-            <h4 class="text-md font-semibold text-wise-dark-gray mb-4">User defined data</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                ${Array.from({ length: 8 }, (_, i) => `
-                     <div>
-                        <label for="item-udf${i + 1}" class="block text-sm mb-1">UDF${i + 1}:</label>
-                        <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
-                    </div>
-                `).join('')}
+            <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                <h4 class="text-md font-semibold text-wise-dark-gray mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-wise-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    User Defined Data (UDF)
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                    ${Array.from({ length: 8 }, (_, i) => `
+                        <div>
+                            <label for="item-udf${i + 1}" class="block text-sm font-medium text-gray-600 mb-1.5">UDF ${i + 1}</label>
+                            <input id="item-udf${i + 1}" name="udf${i + 1}" type="text" class="input" ${mode === 'view' ? 'readonly' : ''}>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
             `;
         };
@@ -1332,12 +1470,13 @@
             });
         };
 
-        window.addSubstituteItem = async () => {
-            const confirmed = await showCustomConfirm('Add Substitute Item', 'This will open a lookup form. Add a dummy row for now?');
-            if (!confirmed) return;
-
+        window.addSubstituteItem = () => {
             const tbody = document.getElementById('item-substitute-table')?.querySelector('tbody');
-            if (!tbody) return;
+            const emptyState = document.getElementById('substitute-empty-state');
+            if (!tbody) {
+                showToast('Table not found. Please try again.', 'error');
+                return;
+            }
 
             const newItemCode = `SUB_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
             const newItemDesc = `New Substitute`;
@@ -1350,8 +1489,8 @@
                 <td class="py-2 px-4">${newItemDesc}</td>
             `;
             tbody.appendChild(tr);
-            showToast('Dummy substitute item added to the list.');
-            document.getElementById('substitute-empty-state').classList.add('hidden');
+            if (emptyState) emptyState.classList.add('hidden');
+            showToast('Substitute item added to the list.');
         };
 
         window.deleteSubstituteItem = async () => {
@@ -1407,7 +1546,7 @@
 
         window.renderCountriesTable = (countries) => {
             const tbody = document.getElementById('item-countries-table')?.querySelector('tbody');
-            const emptyState = document.getElementById('countries-empty-state');
+            const emptyState = document.getElementById('item-countries-empty');
             if (!tbody || !emptyState) return;
 
             tbody.innerHTML = '';
@@ -1420,9 +1559,88 @@
             countries.forEach(country => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b border-gray-200 hover:bg-gray-50';
-                tr.innerHTML = `<td class="py-2 px-4">${country.code}</td><td class="py-2 px-4">${country.name}</td>`;
+                tr.innerHTML = `
+                    <td class="py-2 px-4"><input type="checkbox" class="country-select-row" value="${country.code}"></td>
+                    <td class="py-2 px-4">${country.code}</td>
+                    <td class="py-2 px-4">${country.name}</td>
+                `;
                 tbody.appendChild(tr);
             });
+        };
+
+        // Country list for selection
+        const availableCountries = [
+            { code: 'ID', name: 'Indonesia' },
+            { code: 'US', name: 'United States' },
+            { code: 'CN', name: 'China' },
+            { code: 'JP', name: 'Japan' },
+            { code: 'KR', name: 'South Korea' },
+            { code: 'SG', name: 'Singapore' },
+            { code: 'MY', name: 'Malaysia' },
+            { code: 'TH', name: 'Thailand' },
+            { code: 'VN', name: 'Vietnam' },
+            { code: 'PH', name: 'Philippines' },
+            { code: 'AU', name: 'Australia' },
+            { code: 'DE', name: 'Germany' },
+            { code: 'GB', name: 'United Kingdom' },
+            { code: 'FR', name: 'France' },
+            { code: 'IT', name: 'Italy' },
+        ];
+
+        window.addCountryItem = () => {
+            const tbody = document.getElementById('item-countries-table')?.querySelector('tbody');
+            const emptyState = document.getElementById('item-countries-empty');
+            if (!tbody) {
+                showToast('Table not found. Please try again.', 'error');
+                return;
+            }
+
+            // Get existing country codes
+            const existingCodes = Array.from(tbody.querySelectorAll('tr')).map(row =>
+                row.children[1]?.textContent?.trim()
+            ).filter(Boolean);
+
+            // Find countries that are not already in the list
+            const available = availableCountries.filter(c => !existingCodes.includes(c.code));
+
+            if (available.length === 0) {
+                showToast('All available countries are already added.', 'info');
+                return;
+            }
+
+            // Add the first available country (simple approach)
+            const newCountry = available[0];
+
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-gray-200 hover:bg-gray-50';
+            tr.innerHTML = `
+                <td class="py-2 px-4"><input type="checkbox" class="country-select-row" value="${newCountry.code}"></td>
+                <td class="py-2 px-4">${newCountry.code}</td>
+                <td class="py-2 px-4">${newCountry.name}</td>
+            `;
+            tbody.appendChild(tr);
+            if (emptyState) emptyState.classList.add('hidden');
+            showToast(`Country "${newCountry.name}" added to the list.`);
+        };
+
+        window.deleteCountryItem = async () => {
+            const checked = document.querySelectorAll('#item-countries-table .country-select-row:checked');
+            if (!checked.length) {
+                showToast('Please select countries to delete from the list.', 'error');
+                return;
+            }
+
+            const confirmed = await showCustomConfirm('Confirm Deletion', `Delete ${checked.length} selected country(ies) from the list?`);
+            if (!confirmed) return;
+
+            checked.forEach(cb => cb.closest('tr').remove());
+            showToast(`${checked.length} country(ies) have been deleted from the list.`);
+
+            const tbody = document.getElementById('item-countries-table')?.querySelector('tbody');
+            const emptyState = document.getElementById('item-countries-empty');
+            if (tbody && tbody.rows.length === 0 && emptyState) {
+                emptyState.classList.remove('hidden');
+            }
         };
 
         window.handleItemSubmit = async (event) => {

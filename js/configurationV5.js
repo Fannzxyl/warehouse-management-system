@@ -1,13 +1,12 @@
 (function () {
-    // FIX: Perbaikan bug debounce. Mengganti parameter yang salah dan memastikan 'this' dipertahankan.
-    function debounce(func, delay) {
-        let timeout;
-        return function (...args) {
-            const context = this;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
+    // --- UTILITY FUNCTIONS ---
+    // NOTE: Fungsi utility berikut sekarang tersedia dari utils.js:
+    // - window.debounce()
+    // - window.renderStandardListHeader()
+    // - window.renderStandardModalFooter()
+    // - window.activateTab()
+    // Gunakan referensi lokal untuk backward compatibility
+    const debounce = window.debounce;
 
     document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.contentData === 'undefined') window.contentData = {};
@@ -17,56 +16,13 @@
 
         // =======================================================================
         // UTILITY FUNCTIONS FOR STANDARD UI
+        // NOTE: renderStandardListHeader, renderStandardModalFooter, activateTab
+        // sekarang tersedia dari utils.js (activateTab is also defined locally in this file)
         // =======================================================================
+        // const activateTab = window.activateTab; // REMOVED - defined locally below
+        const renderStandardListHeader = window.renderStandardListHeader;
+        const renderStandardModalFooter = window.renderStandardModalFooter;
 
-        /**
-         * Renders a standard list header with a "Create New" button and a search input.
-         * @param {string} createLabel - Label for the create button.
-         * @param {string} onCreate - The JS function call for the create button.
-         * @param {string} searchId - The ID for the search input.
-         * @param {string} searchPlaceholder - Placeholder text for the search input.
-         * @param {string} onSearch - The JS function call for the search input's oninput event.
-         * @returns {string} The HTML string for the header.
-         */
-        window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
-            <div class="flex flex-wrap items-center gap-3 mb-4">
-              <button class="px-4 py-2 bg-wise-primary text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-md active-press transform" onclick="${onCreate}">${createLabel}</button>
-              <div class="grow"></div>
-              <div class="relative">
-                <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-        `;
-
-        /**
-         * Renders a standard modal footer with Cancel and OK buttons.
-         * @param {string} cancelOnclick - The JS function call for the cancel button.
-         * @param {string} submitFormId - The ID of the form to be submitted.
-         * @param {string} submitLabel - Label for the submit button (default: 'OK').
-         * @returns {string} The HTML string for the footer.
-         */
-        window.renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK' }) => `
-            <div class="px-6 py-4 border-t flex justify-end gap-3">
-                <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
-                <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
-            </div>
-        `;
-
-        function activateTab(tabName, container) {
-            container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active'));
-            container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
-            const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
-            if (activeTab) {
-                activeTab.classList.add('tab-active');
-            }
-            const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
-            if (activePane) {
-                activePane.classList.remove('hidden');
-            }
-        }
 
         // =======================================================================
         // BAGIAN 1: SERIAL NUMBER TEMPLATE
@@ -861,7 +817,15 @@
             document.getElementById('detail-max-qty').value = detail.maxQty;
             document.getElementById('detail-um').value = detail.quantityUm;
             document.getElementById('detail-location-type').value = detail.locationType;
-            document.getElementById('detail-location').value = detail.location;
+            // Handle both regular select and custom dropdown input
+            const locationSelect = document.getElementById('detail-location');
+            const locationInput = document.getElementById('detail-location-input');
+            if (locationInput) {
+                locationInput.value = detail.location;
+                locationInput.dataset.value = detail.location;
+            } else if (locationSelect) {
+                locationSelect.value = detail.location;
+            }
             renderCapacityDetailsTable();
         }
         window.clearDetailForm = function () {
@@ -869,11 +833,32 @@
             document.getElementById('detail-max-qty').value = '';
             document.getElementById('detail-um').value = 'Pack';
             document.getElementById('detail-location-type').value = '';
-            document.getElementById('detail-location').value = '';
+            // Handle both regular select and custom dropdown input
+            const locationSelect = document.getElementById('detail-location');
+            const locationInput = document.getElementById('detail-location-input');
+            if (locationInput) {
+                locationInput.value = '';
+                locationInput.dataset.value = '';
+            } else if (locationSelect) {
+                locationSelect.value = '';
+            }
             renderCapacityDetailsTable();
         }
         window.addOrUpdateDetail = function () {
-            const newDetail = { maxQty: document.getElementById('detail-max-qty').value, quantityUm: document.getElementById('detail-um').value, locationType: document.getElementById('detail-location-type').value, location: document.getElementById('detail-location').value, minQty: 0, warehouse: document.getElementById('ilc-company').value, itemCapacityId: Math.floor(Math.random() * 90000) + 10000 };
+            // Handle both regular select and custom dropdown input for location
+            const locationSelect = document.getElementById('detail-location');
+            const locationInput = document.getElementById('detail-location-input');
+            const locationValue = locationInput ? (locationInput.dataset.value || locationInput.value) : (locationSelect ? locationSelect.value : '');
+
+            const newDetail = {
+                maxQty: document.getElementById('detail-max-qty').value,
+                quantityUm: document.getElementById('detail-um').value,
+                locationType: document.getElementById('detail-location-type').value,
+                location: locationValue,
+                minQty: 0,
+                warehouse: document.getElementById('ilc-company').value,
+                itemCapacityId: Math.floor(Math.random() * 90000) + 10000
+            };
             if (selectedDetailIndex > -1) {
                 // FIX: Perbaikan bug spread object
                 currentCapacityDetails[selectedDetailIndex] = { ...currentCapacityDetails[selectedDetailIndex], ...newDetail };

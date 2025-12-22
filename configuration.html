@@ -1076,9 +1076,7 @@
                 window.showCustomAlert('Profile', 'Navigasi ke halaman Profil (Demo).');
             };
 
-            window.handleLogout = function () {
-                window.showCustomAlert('Logout', 'Anda telah berhasil Logout (Demo).');
-            };
+            // handleLogout is defined in auth-guard.js - no demo override here
 
             window.toggleUserDropdown = function () {
                 document.getElementById('user-dropdown').classList.toggle('hidden');
@@ -1182,6 +1180,8 @@
             window.addEventListener('load', window.navigateToHome);
 
         </script>
+        <script src="./js/auth-guard.js"></script>
+        <script src="./js/utils.js"></script>
         <script src="./js/configuration.js"></script>
         <script src="./js/configurationV2.js"></script>
         <script src="./js/configurationV3.js"></script>

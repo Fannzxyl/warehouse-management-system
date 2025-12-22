@@ -1,6 +1,12 @@
 (function () {
-    // Logging sederhana saat file konfigurasi dimuat
-    // Configuration V6 (Customer dan Company) loaded
+    // Configuration V6 (Customer dan Company)
+    // NOTE: Fungsi utility berikut sekarang tersedia dari utils.js:
+    // - window.debounce()
+    // - window.showCustomAlert()
+    // - window.showCustomConfirm()
+    // - window.renderStandardListHeader()
+    // - window.renderStandardModalFooter()
+    // - window.activateTab()
 
     // Memastikan variabel global utama tersedia
     if (typeof window.contentData === 'undefined') window.contentData = {};
@@ -8,70 +14,8 @@
     if (typeof window.parentMapping === 'undefined') window.parentMapping = {};
     if (typeof window.allMenus === 'undefined') window.allMenus = [];
 
-    // Fallback untuk fungsi helper (misalnya, menampilkan notifikasi)
-    if (typeof window.showCustomAlert === 'undefined') window.showCustomAlert = (title, message, type = 'info') => console.log(`Alert: ${title} - ${message} (${type})`);
-
-    // Mengunci definisi showCustomConfirm agar tidak dapat ditimpa oleh script lain.
-    if (typeof window.showCustomConfirm === 'undefined' || window.showCustomConfirm.isSafe !== true) {
-        Object.defineProperty(window, 'showCustomConfirm', {
-            value: (message, onOk) => {
-                const ok = window.confirm(message);
-                if (ok && typeof onOk === 'function') onOk();
-                return ok;
-            },
-            writable: false,
-            configurable: false
-        });
-        window.showCustomConfirm.isSafe = true; // Menandai versi ini sebagai versi aman
-    }
-
-    // Fallback fungsi UI helper standar
+    // Fallback untuk selectCategory (fungsi khusus dari configuration.js)
     if (typeof window.selectCategory === 'undefined') window.selectCategory = (category) => console.log(`Selecting category: ${category}`);
-
-    // Render header list standar (Tombol Create, Search bar)
-    if (typeof window.renderStandardListHeader === 'undefined') window.renderStandardListHeader = ({ createLabel, onCreate, searchId, searchPlaceholder, onSearch }) => `
-        <div class="flex flex-wrap items-center gap-3 mb-4">
-            <button onclick="${onCreate}" class="px-4 py-2 bg-blue-500 text-white rounded-md">${createLabel}</button>
-            <div class="grow"></div>
-            <input id="${searchId}" type="text" placeholder="${searchPlaceholder}" oninput="${onSearch}(this.value)" onkeydown="if(event.key === 'Enter') ${onSearch}(this.value)" class="input w-full sm:w-72 pl-10" />
-        </div>`;
-
-    // Render footer modal standar (Tombol Cancel/OK/Save)
-    if (typeof window.renderStandardModalFooter === 'undefined') window.renderStandardModalFooter = ({ cancelOnclick, submitFormId, submitLabel = 'OK', inactiveCheckboxHtml = '' }) => `
-        <div class="px-6 py-4 border-t flex justify-between items-center">
-            ${inactiveCheckboxHtml}
-            <div class="flex justify-end gap-3 w-full">
-                <button type="button" class="btn" onclick="${cancelOnclick}">Cancel</button>
-                <button type="submit" form="${submitFormId}" class="btn btn-primary">${submitLabel}</button>
-            </div>
-        </div>`;
-
-    // Debounce function untuk membatasi laju eksekusi saat input
-    if (typeof window.debounce === 'undefined') window.debounce = (fn, delay) => {
-        let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn.apply(this, args), delay); };
-    };
-
-    // Aktivasi tab panel UI
-    if (typeof window.activateTab === 'undefined') window.activateTab = (tabName, container) => {
-        // Reset visual semua tab
-        container.querySelectorAll('[role="tab"]').forEach(tab => tab.classList.remove('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2'));
-        // Sembunyikan semua tab panel
-        container.querySelectorAll('[role="tabpanel"]').forEach(pane => pane.classList.add('hidden'));
-
-        // Aktifkan tab yang dipilih
-        const activeTab = container.querySelector(`[role="tab"][data-tab="${tabName}"]`);
-        if (activeTab) {
-            activeTab.classList.add('tab-active', 'border-blue-500', 'text-blue-600', 'border-b-2');
-        }
-        // Tampilkan tab panel yang sesuai
-        const activePane = container.querySelector(`[role="tabpanel"][data-pane="${tabName}"]`);
-        if (activePane) { activePane.classList.remove('hidden'); }
-
-        // Hapus status error visual pada semua tab
-        container.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('text-red-500', 'border-red-500');
-        });
-    };
 
 
     document.addEventListener('DOMContentLoaded', () => {

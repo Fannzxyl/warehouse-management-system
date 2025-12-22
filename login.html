@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="font-inter">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Page - WISE</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <script>
@@ -30,54 +32,223 @@
   </script>
 
   <style>
-    .input-field-wrapper{position:relative}
-    .input-icon{position:absolute;top:50%;right:1rem;transform:translateY(-50%);color:#6B7280;cursor:pointer;transition:color .2s}
-    .input-icon:hover{color:#374151}
+    .input-field-wrapper {
+      position: relative
+    }
 
-    .login-container{min-height:100vh;overflow:hidden}
-    .form-input{transition:all .2s}
-    .form-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
-    .form-input:hover{border-color:#9CA3AF}
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      color: #6B7280;
+      cursor: pointer;
+      transition: color .2s;
+      z-index: 10
+    }
 
-    .btn-login{transition:all .18s}
-    .btn-login:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,99,235,.25)}
-    .btn-login:active{transform:translateY(0)}
-    .btn-login:disabled{opacity:.6;cursor:not-allowed}
+    .input-icon:hover {
+      color: #374151
+    }
 
-    .loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid #fff;border-radius:50%;border-top-color:transparent;animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .login-container {
+      min-height: 100vh;
+      overflow: hidden
+    }
 
-    .message-box{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:.875rem 1.25rem .875rem 2.75rem;border-radius:.5rem;font-weight:600;opacity:0;transition:opacity .3s,transform .3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.1);background:#fff;border:1px solid #e5e7eb}
-    .message-box.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .message-box.success{background:#D1FAE5;color:#065F46;border-color:#34D399}
-    .message-box.error{background:#FEE2E2;color:#991B1B;border-color:#F87171}
+    .form-input {
+      transition: all .2s
+    }
 
-    input[type="checkbox"]{appearance:none;width:1.1rem;height:1.1rem;border:2px solid #cbd5e1;border-radius:.375rem;background:#fff;position:relative;cursor:pointer;transition:all .2s}
-    input[type="checkbox"]:hover{border-color:#94a3b8}
-    input[type="checkbox"]:checked{background:#2563eb;border-color:#2563eb}
-    input[type="checkbox"]:checked::after{content:"";position:absolute;top:50%;left:50%;width:.35rem;height:.6rem;border:2px solid #fff;border-top:0;border-left:0;transform:translate(-50%,-60%) rotate(45deg)}
+    .form-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .15)
+    }
+
+    .form-input:hover {
+      border-color: #9CA3AF
+    }
+
+    .btn-login {
+      transition: all .18s
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(37, 99, 235, .25)
+    }
+
+    .btn-login:active {
+      transform: translateY(0)
+    }
+
+    .btn-login:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .message-box {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: .875rem 1.25rem .875rem 2.75rem;
+      border-radius: .5rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+      background: #fff;
+      border: 1px solid #e5e7eb
+    }
+
+    .message-box.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    .message-box.success {
+      background: #D1FAE5;
+      color: #065F46;
+      border-color: #34D399
+    }
+
+    .message-box.error {
+      background: #FEE2E2;
+      color: #991B1B;
+      border-color: #F87171
+    }
+
+    input[type="checkbox"] {
+      appearance: none;
+      width: 1.1rem;
+      height: 1.1rem;
+      border: 2px solid #cbd5e1;
+      border-radius: .375rem;
+      background: #fff;
+      position: relative;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    input[type="checkbox"]:hover {
+      border-color: #94a3b8
+    }
+
+    input[type="checkbox"]:checked {
+      background: #2563eb;
+      border-color: #2563eb
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: .35rem;
+      height: .6rem;
+      border: 2px solid #fff;
+      border-top: 0;
+      border-left: 0;
+      transform: translate(-50%, -60%) rotate(45deg)
+    }
 
     /* RESPONSIVE */
-    @media (max-width:1024px){.form-section{width:100%;max-width:100%;border-radius:0;box-shadow:none}}
-    @media (max-width:768px){.login-container{flex-direction:column}.image-section{height:38vh;flex:none}.form-section{width:100%;flex:1;padding:2rem 1.25rem}}
-    @media (max-width:480px){.image-section{height:32vh}.form-section{padding:1.25rem 1rem}.form-section h1{font-size:1.25rem}.form-section img{width:9.5rem}}
+    @media (max-width:1024px) {
+      .form-section {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none
+      }
+    }
+
+    @media (max-width:768px) {
+      .login-container {
+        flex-direction: column
+      }
+
+      .image-section {
+        height: 38vh;
+        flex: none
+      }
+
+      .form-section {
+        width: 100%;
+        flex: 1;
+        padding: 2rem 1.25rem
+      }
+    }
+
+    @media (max-width:480px) {
+      .image-section {
+        height: 32vh
+      }
+
+      .form-section {
+        padding: 1.25rem 1rem
+      }
+
+      .form-section h1 {
+        font-size: 1.25rem
+      }
+
+      .form-section img {
+        width: 9.5rem
+      }
+    }
 
     /* Modal animation */
-    .modal-enter{transform:scale(.98);opacity:0}
-    .modal-enter-active{transform:scale(1);opacity:1;transition:all .18s ease}
-    .backdrop-enter{opacity:0}
-    .backdrop-enter-active{opacity:1;transition:opacity .18s ease}
+    .modal-enter {
+      transform: scale(.98);
+      opacity: 0
+    }
+
+    .modal-enter-active {
+      transform: scale(1);
+      opacity: 1;
+      transition: all .18s ease
+    }
+
+    .backdrop-enter {
+      opacity: 0
+    }
+
+    .backdrop-enter-active {
+      opacity: 1;
+      transition: opacity .18s ease
+    }
   </style>
 </head>
+
 <body class="login-container flex font-inter bg-gray-50">
   <!-- Left image -->
-  <div class="image-section relative flex-1 bg-cover bg-no-repeat overflow-hidden" style="background-image:url('./public/images/warehouse.png');background-position:center;background-size:cover;">
+  <div class="image-section relative flex-1 bg-cover bg-no-repeat overflow-hidden"
+    style="background-image:url('./public/images/warehouse.png');background-position:center;background-size:cover;">
     <div class="absolute inset-0 bg-gradient-to-br from-black/50 to-black/30"></div>
     <div class="absolute inset-y-0 right-0 w-px bg-gray-200/70"></div>
   </div>
 
   <!-- Right form -->
-  <div class="form-section w-full lg:w-[480px] bg-white flex flex-col justify-center items-center px-8 py-12 shadow-2xl rounded-lg z-20">
+  <div
+    class="form-section w-full lg:w-[480px] bg-white flex flex-col justify-center items-center px-8 py-12 shadow-2xl rounded-lg z-20">
     <div class="w-full max-w-sm">
       <!-- Header -->
       <div class="text-center mb-3">
@@ -86,18 +257,27 @@
         <h1 class="mt-1 mb-2 text-xl sm:text-2xl font-extrabold text-gray-800 tracking-tight">LOGIN</h1>
       </div>
 
+      <!-- Access Denied message (shown when redirected from protected pages) -->
+      <div id="access-denied-message"
+        class="hidden mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center font-semibold">
+        Access Denied: Please log in to continue
+      </div>
+
       <!-- Message box -->
       <div id="message-box" class="message-box hidden"></div>
 
       <!-- Form -->
       <form class="space-y-5 w-full mt-1" id="loginForm">
-        <input type="text" name="company" id="company" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="text" name="company" id="company" class="hidden" tabindex="-1" autocomplete="off"
+          aria-hidden="true">
 
         <!-- Username -->
         <div>
           <label for="username" class="block text-base font-semibold text-gray-700 mb-2">Username or email</label>
           <div class="input-field-wrapper">
-            <input type="text" id="username" required class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white outline-none text-base focus:ring-2 focus:ring-blue-500" placeholder="Enter your email or username" autocomplete="username email">
+            <input type="text" id="username" required
+              class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white outline-none text-base focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email or username" autocomplete="username email">
             <div class="input-icon pointer-events-none"><i class="fa fa-user"></i></div>
           </div>
         </div>
@@ -106,16 +286,22 @@
         <div>
           <div class="flex items-center justify-between mb-2">
             <label for="password" class="block text-base font-semibold text-gray-700">Password</label>
-            <button type="button" id="forgotPasswordLink" class="text-xs sm:text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline">Forgot password?</button>
+            <button type="button" id="forgotPasswordLink"
+              class="text-xs sm:text-sm text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline">Forgot
+              password?</button>
           </div>
           <div class="input-field-wrapper">
-            <input type="password" id="password" required minlength="6" class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white outline-none text-base focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" autocomplete="current-password">
-            <button type="button" id="togglePassword" class="input-icon" aria-label="Show password"><i class="fa fa-eye"></i></button>
+            <input type="password" id="password" required minlength="6"
+              class="form-input w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg bg-white outline-none text-base focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" id="togglePassword" class="input-icon" aria-label="Show password"><i
+                class="fa fa-eye"></i></button>
           </div>
         </div>
 
         <!-- Submit -->
-        <button type="submit" id="loginButton" class="btn-login w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-base font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+        <button type="submit" id="loginButton"
+          class="btn-login w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-base font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
           <span id="loginText">Log In</span>
           <span id="loadingSpinner" class="loading-spinner hidden ml-2"></span>
         </button>
@@ -136,7 +322,7 @@
     <div id="backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm backdrop-enter"></div>
 
     <div role="dialog" aria-modal="true" aria-labelledby="fp-title"
-         class="relative bg-white rounded-xl shadow-xl w-[92vw] max-w-md mx-auto max-h-[85vh] overflow-auto my-6 modal-enter p-6">
+      class="relative bg-white rounded-xl shadow-xl w-[92vw] max-w-md mx-auto max-h-[85vh] overflow-auto my-6 modal-enter p-6">
       <div class="flex justify-between items-center border-b pb-3">
         <h2 id="fp-title" class="text-lg font-semibold text-gray-800">Password Reset Request</h2>
         <button id="closeForgotModal" class="text-gray-500 hover:text-gray-700" aria-label="Close">✕</button>
@@ -145,75 +331,42 @@
       <form id="forgotForm" class="mt-4 space-y-4">
         <div>
           <label for="forgotEmail" class="text-sm text-gray-600">Your Email</label>
-          <input type="email" id="forgotEmail" required class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
+          <input type="email" id="forgotEmail" required
+            class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
         </div>
         <div>
           <label for="adminEmail" class="text-sm text-gray-600">Supervisor/Admin Email</label>
-          <input type="email" id="adminEmail" required class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
+          <input type="email" id="adminEmail" required
+            class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" />
         </div>
         <div>
           <label for="reason" class="text-sm text-gray-600">Reason</label>
-          <textarea id="reason" rows="2" class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600" placeholder="Tell us briefly why you need a reset…"></textarea>
+          <textarea id="reason" rows="2"
+            class="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-600"
+            placeholder="Tell us briefly why you need a reset…"></textarea>
         </div>
-        <button type="submit" class="w-full h-11 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700">Send Request</button>
+        <button type="submit"
+          class="w-full h-11 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700">Send Request</button>
       </form>
       <p class="text-xs text-gray-500 mt-4">This request will be reviewed by your direct supervisor or admin.</p>
     </div>
   </div>
 
+  <!-- Load the actual login authentication script -->
+  <script src="./js/login.js"></script>
+
   <script>
-    // Password toggle
-    const passEl = document.getElementById('password');
-    const toggleBtn = document.getElementById('togglePassword');
-    toggleBtn.addEventListener('click', () => {
-      const isPwd = passEl.type === 'password';
-      passEl.type = isPwd ? 'text' : 'password';
-      toggleBtn.innerHTML = isPwd ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
-      toggleBtn.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
-    });
-
-    // Modal controls (single source of truth to avoid double-binding)
-    const modal = document.getElementById('forgotPasswordModal');
-    const backdrop = document.getElementById('backdrop');
-    const openLink = document.getElementById('forgotPasswordLink');
-    const closeBtn = document.getElementById('closeForgotModal');
-
-    function openModal(){
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      requestAnimationFrame(()=>{
-        backdrop.classList.add('backdrop-enter-active');
-        modal.querySelector('[role="dialog"]').classList.add('modal-enter-active');
-      });
-      document.body.style.overflow='hidden';
+    // Check if user was redirected from a protected page (auth-guard)
+    const authRedirectReason = sessionStorage.getItem('authRedirectReason');
+    if (authRedirectReason === 'access_denied') {
+      const accessDeniedEl = document.getElementById('access-denied-message');
+      if (accessDeniedEl) {
+        accessDeniedEl.classList.remove('hidden');
+      }
+      // Clear the flag so it doesn't show again on refresh
+      sessionStorage.removeItem('authRedirectReason');
     }
-    function closeModal(){
-      backdrop.classList.remove('backdrop-enter-active');
-      modal.querySelector('[role="dialog"]').classList.remove('modal-enter-active');
-      setTimeout(()=>{
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.body.style.overflow='';
-      }, 160);
-    }
-
-    openLink.addEventListener('click', (e)=>{ e.preventDefault(); openModal(); });
-    backdrop.addEventListener('click', closeModal);
-    closeBtn.addEventListener('click', closeModal);
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) closeModal(); });
-
-    // Demo submit handlers
-    document.getElementById('loginForm').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      // TODO: Integrate real auth
-      window.location.href = 'dashboard.html';
-    });
-    document.getElementById('forgotForm').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const btn = e.target.querySelector('button[type="submit"]');
-      btn.disabled = true; btn.textContent = 'Sending…';
-      setTimeout(()=>{ btn.disabled=false; btn.textContent='Send Request'; closeModal(); alert('Request sent!'); }, 800);
-    });
   </script>
 </body>
+
 </html>
