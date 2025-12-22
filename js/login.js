@@ -71,15 +71,65 @@
 
   // === Utils ===
   function showMessage(type, message) {
-    messageBox.textContent = message;
-    messageBox.classList.remove('hidden', 'success', 'error');
+    // Configuration for different notification types
+    const config = {
+      success: {
+        icon: 'fa-check',
+        title: 'Success!' 
+      },
+      error: {
+        icon: 'fa-xmark',
+        title: 'Oops!'
+      },
+      warning: {
+        icon: 'fa-exclamation',
+        title: 'Warning'
+      },
+      info: {
+        icon: 'fa-info',
+        title: 'Info'
+      }
+    };
+
+    const { icon, title } = config[type] || config.info;
+
+    // Build the notification HTML structure
+    messageBox.innerHTML = `
+      <div class="message-box-content">
+        <div class="message-box-icon">
+          <i class="fa ${icon}"></i>
+        </div>
+        <div class="message-box-text">
+          <div class="message-box-title">${title}</div>
+          <div class="message-box-message">${message}</div>
+        </div>
+      </div>
+      <button class="message-box-close" onclick="this.parentElement.classList.remove('show')" aria-label="Close">
+        <i class="fa fa-times"></i>
+      </button>
+      <div class="message-box-progress"></div>
+    `;
+
+    // Apply styling
+    messageBox.classList.remove('hidden', 'success', 'error', 'warning', 'info', 'shake');
     messageBox.classList.add(type, 'show');
+
+    // Add shake animation for errors
+    if (type === 'error') {
+      setTimeout(() => {
+        messageBox.classList.add('shake');
+      }, 100);
+    }
+
+    // Auto-hide after 5 seconds
     clearTimeout(showMessage._t);
     showMessage._t = setTimeout(hideMessage, 5000);
   }
+
   function hideMessage() {
-    messageBox.classList.remove('show');
+    messageBox.classList.remove('show', 'shake');
   }
+
   function setLoading(isLoading) {
     loginButton.disabled = isLoading;
     loginText.textContent = isLoading ? 'Logging in...' : 'Log In';
