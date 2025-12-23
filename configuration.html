@@ -674,17 +674,12 @@
 
 
                             <div id="inventory-control"
-                                class="sidebar-item p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center space-x-3 active-press"
-                                onclick="toggleChildren('inventory-control'); selectCategory('inventory-control')"
-                                tabindex="0" role="button" aria-expanded="false"
-                                aria-controls="inventory-control-children"
+                                class="sidebar-child p-2.5 rounded-lg cursor-pointer hover:bg-gray-50 transition-all-smooth flex items-center justify-between"
+                                onclick="toggleChildren('inventory-control');" tabindex="0" role="button"
+                                aria-expanded="false" aria-controls="inventory-control-children"
                                 aria-label="Toggle Inventory Control sub-menu">
-
-                                <div class="w-6 h-6 flex items-center justify-center">
-                                    <i class="fas fa-boxes text-wise-gray text-sm"></i>
-                                </div>
                                 <span
-                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors flex-1">Inventory
+                                    class="text-wise-gray text-sm hover:text-wise-dark-gray transition-colors">Inventory
                                     Control</span>
                                 <i id="inventory-control-arrow"
                                     class="fas fa-chevron-down w-4 h-4 text-wise-gray transform transition-transform-smooth rotate-0"></i>

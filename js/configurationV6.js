@@ -2470,7 +2470,9 @@
                 // Background halaman utama Customer harus putih
                 full: `
                     <div class="bg-white p-6 rounded-lg shadow-lg"> 
-                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
+                            <i class="fas fa-users mr-2 text-wise-primary"></i>Customer
+                        </h2>
                         <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
                         ${window.renderStandardListHeader({
                     createLabel: "Create New Customer",
@@ -2529,7 +2531,9 @@
                 // Background halaman utama Company harus putih
                 full: `
                     <div class="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
+                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
+                            <i class="fas fa-building mr-2 text-wise-primary"></i>Company
+                        </h2>
                         <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
                         ${window.renderStandardListHeader({
                     createLabel: "Create New Company",
@@ -2721,6 +2725,24 @@
             }
             */
         });
+
+        // --- INJECT SIDEBAR ICONS ---
+        // Karena sidebar hardcoded di HTML, kita inject icon secara manual saat script dimuat
+        const updateSidebarIcon = (key, iconClass) => {
+            const el = document.querySelector(`.sidebar-child[onclick="selectCategory('${key}')"]`);
+            if (el && !el.querySelector('i')) {
+                const icon = document.createElement('i');
+                icon.className = `${iconClass} w-5 text-center text-wise-gray mr-3 transition-colors group-hover:text-wise-dark-gray`;
+                el.insertBefore(icon, el.firstChild);
+                el.classList.add('flex', 'items-center', 'group'); // Pastikan layout flex
+            }
+        };
+
+        // Delay sedikit untuk memastikan DOM ready (walaupun load di body bottom)
+        setTimeout(() => {
+            updateSidebarIcon(CUSTOMER_CATEGORY_KEY, 'fas fa-users');
+            updateSidebarIcon(COMPANY_CATEGORY_KEY, 'fas fa-building');
+        }, 100);
 
     });
 })();

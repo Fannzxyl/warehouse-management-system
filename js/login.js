@@ -4,7 +4,7 @@
   const loginButton = document.getElementById('loginButton');
   const loginText = document.getElementById('loginText');
   const loadingSpinner = document.getElementById('loadingSpinner');
-  const messageBox = document.getElementById('message-box');
+  // messageBox removed
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
   const rememberMeInput = document.getElementById('remember-me');
@@ -32,7 +32,8 @@
     'admin@gmail.com': '123456',
     'user@wise.com': 'password123',
     'demo@wise.com': 'demo123',
-    'alfan': '12345678' // TestSprite test account
+    'alfan': '12345678',
+    'test': '123455678'
   };
   const DEFAULT_CREDENTIALS = {
     'admin@gmail.com': '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', // password: 123456
@@ -70,65 +71,7 @@
   }
 
   // === Utils ===
-  function showMessage(type, message) {
-    // Configuration for different notification types
-    const config = {
-      success: {
-        icon: 'fa-check',
-        title: 'Success!' 
-      },
-      error: {
-        icon: 'fa-xmark',
-        title: 'Oops!'
-      },
-      warning: {
-        icon: 'fa-exclamation',
-        title: 'Warning'
-      },
-      info: {
-        icon: 'fa-info',
-        title: 'Info'
-      }
-    };
-
-    const { icon, title } = config[type] || config.info;
-
-    // Build the notification HTML structure
-    messageBox.innerHTML = `
-      <div class="message-box-content">
-        <div class="message-box-icon">
-          <i class="fa ${icon}"></i>
-        </div>
-        <div class="message-box-text">
-          <div class="message-box-title">${title}</div>
-          <div class="message-box-message">${message}</div>
-        </div>
-      </div>
-      <button class="message-box-close" onclick="this.parentElement.classList.remove('show')" aria-label="Close">
-        <i class="fa fa-times"></i>
-      </button>
-      <div class="message-box-progress"></div>
-    `;
-
-    // Apply styling
-    messageBox.classList.remove('hidden', 'success', 'error', 'warning', 'info', 'shake');
-    messageBox.classList.add(type, 'show');
-
-    // Add shake animation for errors
-    if (type === 'error') {
-      setTimeout(() => {
-        messageBox.classList.add('shake');
-      }, 100);
-    }
-
-    // Auto-hide after 5 seconds
-    clearTimeout(showMessage._t);
-    showMessage._t = setTimeout(hideMessage, 5000);
-  }
-
-  function hideMessage() {
-    messageBox.classList.remove('show', 'shake');
-  }
+  // showMessage and hideMessage functions removed in favor of window.showToast from utils.js
 
   function setLoading(isLoading) {
     loginButton.disabled = isLoading;
@@ -279,22 +222,22 @@
       return;
     }
     if (honeypot && honeypot.value) {
-      showMessage('error', 'Request blocked.');
+      window.showToast('Request blocked.', 'error');
       console.log('[Login] Honeypot detected');
       return;
     }
-    hideMessage();
+    // hideMessage() call removed
 
     const left = remainingCooldownMs();
     if (left > 0) {
-      showMessage('error', `Too many attempts. Try again in ${formatMs(left)}.`);
+      window.showToast(`Too many attempts. Try again in ${formatMs(left)}.`, 'error');
       console.log('[Login] Rate limited, cooldown remaining:', left);
       return;
     }
     if (getAttempts() >= MAX_ATTEMPTS) {
       setCooldownUntil(getNow() + COOLDOWN_MS);
       setAttempts(0);
-      showMessage('error', `Too many attempts. Try again in ${formatMs(COOLDOWN_MS)}.`);
+      window.showToast(`Too many attempts. Try again in ${formatMs(COOLDOWN_MS)}.`, 'error');
       console.log('[Login] Max attempts reached, setting cooldown');
       return;
     }
@@ -306,7 +249,7 @@
 
     const validationErrors = validateForm(username, password);
     if (validationErrors.length > 0) {
-      showMessage('error', validationErrors[0]);
+      window.showToast(validationErrors[0], 'error');
       console.log('[Login] Validation errors:', validationErrors);
       return;
     }
@@ -338,7 +281,7 @@
         const tries = getAttempts() + 1;
         setAttempts(tries);
         setLoading(false);
-        showMessage('error', `Invalid username/email or password. Attempts left: ${MAX_ATTEMPTS - tries}.`);
+        window.showToast(`Invalid username/email or password. Attempts left: ${MAX_ATTEMPTS - tries}.`, 'error');
         return;
       }
 
@@ -372,7 +315,7 @@
 
       if (ok) {
         console.log('[Login] Authentication successful!');
-        showMessage('success', 'Login Successful! Welcome to your dashboard');
+        window.showToast('Login Successful! Welcome to your dashboard', 'success');
 
         // Store session info - use correct keys that auth-guard.js expects
         try {
@@ -412,15 +355,15 @@
         if (tries >= MAX_ATTEMPTS) {
           setCooldownUntil(getNow() + COOLDOWN_MS);
           setAttempts(0);
-          showMessage('error', `Too many attempts. Try again in ${formatMs(COOLDOWN_MS)}.`);
+          window.showToast(`Too many attempts. Try again in ${formatMs(COOLDOWN_MS)}.`, 'error');
         } else {
-          showMessage('error', `Invalid username/email or password. Attempts left: ${MAX_ATTEMPTS - tries}.`);
+          window.showToast(`Invalid username/email or password. Attempts left: ${MAX_ATTEMPTS - tries}.`, 'error');
         }
       }
     } catch (err) {
       console.error('[Login] Login error:', err);
       console.error('[Login] Error stack:', err.stack);
-      showMessage('error', 'An error occurred during login. Please try again.');
+      window.showToast('An error occurred during login. Please try again.', 'error');
     } finally {
       setLoading(false);
       console.log('[Login] handleLogin completed');
@@ -438,7 +381,7 @@
       card.classList.add('modal-enter-active');
     });
     document.body.style.overflow = 'hidden';
-    hideMessage();
+    // hideMessage() removed
   }
 
   function closeForgotPasswordModal() {
@@ -463,7 +406,7 @@
     const body = encodeURIComponent(`User: ${email}\nReason: ${reason}\n\nPlease assist with password reset.`);
     window.location.href = `mailto:${admin}?subject=${subject}&body=${body}`;
 
-    showMessage('success', "Your request has been prepared. Please confirm it in your email client.");
+    window.showToast("Your request has been prepared. Please confirm it in your email client.", 'success');
     closeForgotPasswordModal();
   }
 
@@ -481,14 +424,18 @@
     onResize();
   }
   function onResize() { document.body.style.overflow = window.innerWidth < 768 ? 'auto' : 'hidden'; }
-  function onInputChange() { hideMessage(); }
+  function onInputChange() { /* hideMessage removed */ }
   function togglePasswordVisibility() {
     const isHidden = passwordInput.type === 'password';
     passwordInput.type = isHidden ? 'text' : 'password';
     togglePasswordBtn.setAttribute('aria-pressed', String(isHidden));
     togglePasswordBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-    // Update the icon using innerHTML since eye-open/eye-closed elements don't exist
-    togglePasswordBtn.innerHTML = isHidden ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+    // Toggle icon class instead of replacing innerHTML to avoid reflow/repaint
+    const icon = togglePasswordBtn.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-eye', !isHidden);
+      icon.classList.toggle('fa-eye-slash', isHidden);
+    }
   }
 
   // Wire up
