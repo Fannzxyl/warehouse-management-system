@@ -5,49 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuration - WISE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="./dist/output.css" as="style">
+
+    <!-- Compiled Tailwind CSS -->
+    <link rel="stylesheet" href="./dist/output.css">
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style type="text/tailwindcss">
+    <style>
         @layer base {
             body {
                 font-family: 'Inter', sans-serif;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
             }
-            
+
             * {
                 scroll-behavior: smooth;
             }
-            .modal-open { 
-                overflow: hidden; 
+
+            .modal-open {
+                overflow: hidden;
             }
         }
-        
+
         @layer utilities {
             ::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
             }
-            
+
             ::-webkit-scrollbar-track {
                 background: transparent;
                 border-radius: 10px;
             }
-            
+
             ::-webkit-scrollbar-thumb {
-                background: rgba(156, 163, 175, 0.4); 
+                background: rgba(156, 163, 175, 0.4);
                 border-radius: 10px;
                 transition: all 0.2s ease;
             }
-            
+
             ::-webkit-scrollbar-thumb:hover {
-                background: rgba(156, 163, 175, 0.7); 
+                background: rgba(156, 163, 175, 0.7);
             }
-            
+
             html {
                 scrollbar-width: thin;
                 scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
@@ -56,7 +66,7 @@
             .transition-all-smooth {
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            
+
             .transition-transform-smooth {
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
@@ -66,7 +76,7 @@
                 -webkit-backdrop-filter: blur(12px);
                 background: rgba(255, 255, 255, 0.85);
             }
-            
+
             .backdrop-blur-overlay {
                 backdrop-filter: blur(8px);
                 -webkit-backdrop-filter: blur(8px);
@@ -76,27 +86,29 @@
             .sidebar-slide-in {
                 animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
-            
+
             .sidebar-slide-out {
                 animation: slideOutLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
-            
+
             @keyframes slideInLeft {
                 from {
                     transform: translateX(-100%);
                     opacity: 0;
                 }
+
                 to {
                     transform: translateX(0);
                     opacity: 1;
                 }
             }
-            
+
             @keyframes slideOutLeft {
                 from {
                     transform: translateX(0);
                     opacity: 1;
                 }
+
                 to {
                     transform: translateX(-100%);
                     opacity: 0;
@@ -107,7 +119,7 @@
                 transform: translateY(-1px);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
-            
+
             .hover-scale:hover {
                 transform: scale(1.02);
             }
@@ -119,7 +131,7 @@
             .gradient-primary {
                 background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
             }
-            
+
             .gradient-secondary {
                 background: linear-gradient(135deg, #8B5CF6 0%, #F5576C 100%);
             }
@@ -127,7 +139,7 @@
             .shadow-card {
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
             }
-            
+
             .shadow-card-hover:hover {
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05);
             }
@@ -137,10 +149,15 @@
                 background-size: 200% 100%;
                 animation: loading 1.5s infinite;
             }
-            
+
             @keyframes loading {
-                0% { background-position: 200% 0; }
-                100% { background-position: -200% 0; }
+                0% {
+                    background-position: 200% 0;
+                }
+
+                100% {
+                    background-position: -200% 0;
+                }
             }
 
             @media (max-width: 768px) {
@@ -149,54 +166,13 @@
                     margin-left: calc(-1 * (100vw - 100%) / 2);
                 }
             }
-            .fas, .fa-solid {
+
+            .fas,
+            .fa-solid {
                 font-weight: 900;
             }
         }
     </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        wise: {
-                            'light-gray': '#FAFAFA',
-                            'gray': '#6B7280',
-                            'dark-gray': '#1F2937',
-                            'border': '#E5E7EB',
-                            'pink': '#FEE2E2',
-                            'brown': '#991B1B',
-                            'primary': '#3B82F6',
-                            'secondary': '#8B5CF6',
-                            'success': '#10B981',
-                            'warning': '#F59E0B',
-                            'error': '#EF4444',
-                            'info': '#06B6D4',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-in-out',
-                        'slide-up': 'slideUp 0.3s ease-out',
-                        'bounce-subtle': 'bounceSubtle 0.6s ease-in-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        bounceSubtle: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-2px)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         :root {
             --ring: rgba(99, 102, 241, .35);
@@ -474,6 +450,14 @@
 </head>
 
 <body class="font-inter bg-wise-light-gray flex flex-col min-h-screen overflow-x-hidden">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner-container">
+            <div class="loading-spinner-ring"></div>
+            <span class="loading-text">Loading Configuration...</span>
+        </div>
+    </div>
+
     <header
         class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
         <div class="flex items-center justify-between w-full gap-6">
@@ -549,7 +533,7 @@
         </div>
     </header>
 
-    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-25 hidden md:hidden transition-all-smooth"
+    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-[25] hidden md:hidden transition-all-smooth"
         onclick="closeSidebar()" aria-label="Close sidebar"></div>
 
     <div class="flex flex-1 pt-20 md:pt-24">
@@ -1175,6 +1159,7 @@
             window.addEventListener('load', window.navigateToHome);
 
         </script>
+        <script src="./js/loading.js"></script>
         <script src="./js/auth-guard.js"></script>
         <script src="./js/utils.js"></script>
         <script src="./js/configuration.js"></script>

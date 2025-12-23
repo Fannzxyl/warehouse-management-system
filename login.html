@@ -5,107 +5,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Page - WISE</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Preload critical resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="./dist/output.css" as="style">
+
+  <!-- Compiled Tailwind CSS -->
+  <link rel="stylesheet" href="./dist/output.css">
+
+  <!-- Google Fonts with display=swap -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
+
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            wise: {
-              'light-gray': '#FAFAFA',
-              'gray': '#6B7280',
-              'dark-gray': '#1F2937',
-              'border': '#E5E7EB',
-              'primary': '#3B82F6',
-              'secondary': '#6366F1'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    .input-field-wrapper {
-      position: relative
-    }
-
-    .input-icon {
-      position: absolute;
-      top: 50%;
-      right: 1rem;
-      transform: translateY(-50%);
-      color: #6B7280;
-      cursor: pointer;
-      transition: color .2s;
-      z-index: 10
-    }
-
-    .input-icon:hover {
-      color: #374151
-    }
-
-    .login-container {
-      min-height: 100vh;
-      overflow: hidden
-    }
-
-    .form-input {
-      transition: all .2s
-    }
-
-    .form-input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, .15)
-    }
-
-    .form-input:hover {
-      border-color: #9CA3AF
-    }
-
-    .btn-login {
-      transition: all .18s
-    }
-
-    .btn-login:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(37, 99, 235, .25)
-    }
-
-    .btn-login:active {
-      transform: translateY(0)
-    }
-
-    .btn-login:disabled {
-      opacity: .6;
-      cursor: not-allowed
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s linear infinite
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg)
-      }
-    }
-  </style>
 </head>
 
 <body class="login-container flex font-inter bg-gray-50">
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner-container">
+      <div class="loading-spinner-ring"></div>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </div>
+
   <!-- Left image -->
   <div class="image-section relative flex-1 bg-cover bg-no-repeat overflow-hidden"
     style="background-image:url('./public/images/warehouse.png');background-position:center;background-size:cover;">
@@ -218,6 +143,8 @@
     </div>
   </div>
 
+  <!-- Loading Script (first for fast overlay) -->
+  <script src="./js/loading.js"></script>
   <!-- Utility Script (Toast, etc.) -->
   <script src="./js/utils.js"></script>
   <!-- Load the actual login authentication script -->

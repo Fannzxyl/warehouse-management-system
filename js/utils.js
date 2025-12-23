@@ -117,25 +117,97 @@
     // TOAST NOTIFICATION
     // Menampilkan pesan singkat di pojok kanan bawah layar
     // =======================================================================
+    // =======================================================================
+    // TOAST NOTIFICATION SYSTEM
+    // Professional, stackable, and accessible toast notifications
+    // =======================================================================
     window.showToast = function (message, type = 'success') {
-        const toastId = 'toast-notification';
-        let toast = document.getElementById(toastId);
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = toastId;
-            toast.className = 'fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300';
-            toast.setAttribute('aria-live', 'polite');
-            document.body.appendChild(toast);
+        // Container setup
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'fixed bottom-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none';
+            document.body.appendChild(container);
         }
 
-        const colorClass = type === 'success' ? 'bg-green-500' : (type === 'error' ? 'bg-red-500' : 'bg-blue-500');
-        toast.className = `fixed bottom-4 right-4 z-[99] p-4 rounded-md shadow-lg text-white transition-opacity duration-300 ${colorClass}`;
-        toast.textContent = message;
-        toast.classList.remove('opacity-0');
+        // Configuration based on type
+        const config = {
+            success: {
+                icon: '<i class="fas fa-check-circle text-2xl"></i>',
+                color: 'bg-green-500',
+                borderColor: 'border-green-500',
+                textColor: 'text-green-600',
+                title: 'Success'
+            },
+            error: {
+                icon: '<i class="fas fa-times-circle text-2xl"></i>',
+                color: 'bg-red-500',
+                borderColor: 'border-red-500',
+                textColor: 'text-red-600',
+                title: 'Error'
+            },
+            info: {
+                icon: '<i class="fas fa-info-circle text-2xl"></i>',
+                color: 'bg-blue-500',
+                borderColor: 'border-blue-500',
+                textColor: 'text-blue-600',
+                title: 'Information'
+            },
+            warning: {
+                icon: '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+                color: 'bg-yellow-500',
+                borderColor: 'border-yellow-500',
+                textColor: 'text-yellow-600',
+                title: 'Warning'
+            }
+        };
 
+        const theme = config[type] || config.info;
+
+        // Toast element creation
+        const toast = document.createElement('div');
+        toast.className = `
+            pointer-events-auto 
+            w-full max-w-sm 
+            bg-white 
+            border-l-4 ${theme.borderColor} 
+            shadow-lg rounded-r-lg 
+            flex items-center gap-4 p-4 
+            transform transition-all duration-300 ease-out 
+            translate-x-full opacity-0
+        `;
+        toast.setAttribute('role', 'alert');
+
+        toast.innerHTML = `
+            <div class="${theme.textColor}">
+                ${theme.icon}
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-gray-900 text-sm mb-0.5">${theme.title}</p>
+                <p class="text-gray-600 text-sm leading-tight break-words">${message}</p>
+            </div>
+            <button class="text-gray-400 hover:text-gray-600 focus:outline-none transition-colors" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Add to container
+        container.appendChild(toast);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-x-full', 'opacity-0');
+        });
+
+        // Auto remove
         setTimeout(() => {
-            toast.classList.add('opacity-0');
-        }, 3000);
+            toast.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+                if (container.children.length === 0) container.remove();
+            }, 300);
+        }, 5000);
     };
 
     // =======================================================================

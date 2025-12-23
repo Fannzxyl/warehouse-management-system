@@ -1,50 +1,103 @@
-Project Warehouse Management System Wise (Warehouse Integrated System & Execution).
+WISE - Warehouse Integrated System & Execution
 
-description:
-     Aplikasi ini adalah hasil protofipe dari desain figma dengan nama FigmaWISE. Tujuan aplikasi ini dibuat adalah untuk memenuhi langkah awal dari pembuatan aplikasi WMS WISE, oleh perusahaan Yogya Group.
-
-
-Bahasa pemrograman yang digunakan:
-1. Html
-2. Tailwindcss
-3. JavaScript 
-
-Cara instalasi:
-1. lakukan git clone https://github.com/Fannzxyl/warehouse-management-system <pilih folder tujuan>.
-2. lakukan npm install untuk menginstall tailwindcss.
-
-Fitur-fitur yang dimiliki:
-1. Fitur login dan juga logout.
-2. Fitur dashboard untuk menghandle fitur-fitur seperti yard management hingga data archiving, dan juga konfigurasi.
-3. Fitur setting profile
-
-Cara melakukan pengujian:
-1. Jalankan kode npm run dev, dan juga jalankan f5. Pilih ingin menjalankan kode di Chrome, Brave, atau bahkan Edge. Disarankan menggunakan Chrome.
-2. Atau bisa di test langsung menggunakan extension Live Server.
+A modern, responsive Warehouse Management System prototype built with Tailwind CSS
 
 
-Akun untuk melakukan uji coba:
-	Username: admin@gmail.com
-	Password: 123456
+About
 
-Apa saja yang baru:
+WISE (Warehouse Integrated System & Execution) is a frontend prototype for a Warehouse Management System, developed based on a Figma design for Yogya Group. This application serves as the initial step in developing a full-featured WMS solution.
 
-1. perbaikan pada struktur folder
 
-Apa saja kendala yang dihadapi:
+Features
 
-1. fitur searchbar tidak menampilkan histori pencarian
-2. kesusahan dalam menyesuaikan logo di background foto di login dan tidak mirip sama desain dari figma
-3. ada beberapa kode yang tidak mendapatkan komentar dikarenakan terlalu banyak dan developer merasa kelelahan
+- Authentication: Secure login/logout with password hashing
+- Dashboard: Comprehensive overview with metrics and quick actions
+- Configuration: System settings and preferences management
+- Profile Management: User profile settings and password change
+- Search: Quick search with keyboard shortcut (Ctrl+K)
+- Responsive Design: Works on desktop, tablet, and mobile
 
-Team developer (dibawah bimbingan dan arahan Bapak Michael Suryadi sebagai pembimbing):
 
-1. Alfan
-2. Evita
-3. Fajar
+Getting Started
 
-Link desain figma:
+Prerequisites:
+- Node.js (v14 or higher)
+- npm (comes with Node.js)
 
+Installation:
+
+1. Clone the repository
+   git clone https://github.com/Fannzxyl/warehouse-management-system.git
+
+2. Navigate to project directory
+   cd warehouse-management-system
+
+3. Install dependencies
+   npm install
+
+4. Build Tailwind CSS
+   npm run build
+
+5. Start development server
+   npm run dev
+
+Alternatively, open login.html directly in your browser or use the Live Server extension in VS Code.
+
+
+Demo Credentials
+
+Username              Password
+admin@gmail.com       123456
+user@wise.com         password123
+demo@wise.com         demo1234
+
+
+Project Structure
+
+warehouse-management-system/
+├── dist/              - Compiled CSS output
+├── js/                - JavaScript modules
+│   ├── auth-guard.js  - Route protection
+│   ├── login.js       - Login functionality
+│   ├── dashboard.js   - Dashboard logic
+│   ├── profile.js     - Profile management
+│   └── utils.js       - Shared utilities
+├── public/images/     - Static assets
+├── src/               - Source files
+│   └── input.css      - Tailwind input
+├── login.html         - Login page
+├── dashboard.html     - Main dashboard
+├── configuration.html - Settings page
+├── profile.html       - User profile
+└── tailwind.config.js - Tailwind configuration
+
+
+Tech Stack
+
+Technology          Purpose
+HTML5               Structure
+Tailwind CSS        Styling
+JavaScript          Interactivity
+Font Awesome        Icons
+Google Fonts        Typography (Inter)
+
+
+Design
+
+Based on Figma design: 
 https://www.figma.com/design/8kgArRlq0qhsHK5Wcpt8Rh/FigmaWISE?node-id=0-1&t=TnBF9cen4lW0fhj2-1
 
-Catatan: di desain figma, di bagian sidebar belum ditambahin fitur configuration, sedangkan di coding ada fitur configuration di sidebar
+
+Development Team
+
+Developed under the guidance of Michael Suryadi
+
+Name      Role
+Alfan     Developer
+Evita     Developer
+Fajar     Developer
+
+
+License
+
+This project is developed for Yogya Group as part of an internal WMS initiative.
