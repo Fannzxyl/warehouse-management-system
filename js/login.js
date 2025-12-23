@@ -209,6 +209,36 @@
     return res === 0;
   }
 
+  // === Initialize Form (Remember Me auto-fill) ===
+  function initializeForm() {
+    // Check if user previously selected "Remember Me"
+    const rememberedUser = localStorage.getItem('rememberedUser');
+    const wasRemembered = localStorage.getItem('rememberMe') === 'true';
+
+    if (rememberedUser && wasRemembered) {
+      // Auto-fill username
+      if (usernameInput) {
+        usernameInput.value = rememberedUser;
+        console.log('[Login] Auto-filled remembered username:', rememberedUser);
+      }
+      // Check the Remember Me checkbox
+      if (rememberMeInput) {
+        rememberMeInput.checked = true;
+      }
+      // Focus on password field for quick login
+      if (passwordInput) {
+        passwordInput.focus();
+      }
+    } else {
+      // Focus on username field
+      if (usernameInput) {
+        usernameInput.focus();
+      }
+    }
+
+    console.log('[Login] Form initialized. Remember Me:', wasRemembered);
+  }
+
   // === Handlers ===
   async function handleLogin(e) {
     e.preventDefault();

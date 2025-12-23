@@ -14,6 +14,68 @@ async function sha256Hex(text) {
     return ('00000000' + (h >>> 0).toString(16)).slice(-8).repeat(8).slice(0, 64);
 }
 
+// --- Profile Photo Upload Handler ---
+const PROFILE_PHOTO_KEY = 'profilePhoto';
+
+function handlePhotoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        window.showToast('Please select an image file', 'error');
+        return;
+    }
+
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+        window.showToast('Image size must be less than 2MB', 'error');
+        return;
+    }
+
+    // Read and display the image
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const imageData = e.target.result;
+
+        // Update UI
+        const preview = document.getElementById('photoPreview');
+        const placeholder = document.getElementById('photoPlaceholder');
+
+        if (preview && placeholder) {
+            preview.src = imageData;
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+
+        // Save to localStorage
+        try {
+            localStorage.setItem(PROFILE_PHOTO_KEY, imageData);
+            window.showToast('Profile photo updated!', 'success');
+        } catch (e) {
+            console.warn('[Profile] Could not save photo to localStorage:', e);
+            window.showToast('Photo displayed but could not be saved', 'warning');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Load saved profile photo on page load
+function loadProfilePhoto() {
+    const savedPhoto = localStorage.getItem(PROFILE_PHOTO_KEY);
+    if (savedPhoto) {
+        const preview = document.getElementById('photoPreview');
+        const placeholder = document.getElementById('photoPlaceholder');
+
+        if (preview && placeholder) {
+            preview.src = savedPhoto;
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+    }
+}
+
 // --- Local storage keys ---
 const HASHED_CREDENTIALS_KEY = 'user_credentials';
 
@@ -80,6 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closePasswordModal) closePasswordModal.addEventListener('click', closeChangePasswordModal);
     if (cancelPasswordButton) cancelPasswordButton.addEventListener('click', closeChangePasswordModal);
     if (changePasswordForm) changePasswordForm.addEventListener('submit', handleChangePassword);
+
+    // Load saved profile photo
+    loadProfilePhoto();
 
     // Close modal if clicking outside of it
     if (editModal) editModal.addEventListener('click', function (e) {

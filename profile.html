@@ -73,9 +73,21 @@
                 <div class="bg-white border border-border-light rounded-xl shadow-sm">
                     <div class="px-6 py-6 border-b border-border-light">
                         <div class="flex items-start space-x-6">
-                            <div
-                                class="bg-black p-6 rounded-full flex-shrink-0 flex items-center justify-center w-24 h-24">
-                                <i class="fas fa-user text-4xl text-white"></i>
+                            <!-- Profile Photo Upload -->
+                            <div class="relative group cursor-pointer"
+                                onclick="document.getElementById('photoInput').click()">
+                                <div id="photoContainer"
+                                    class="bg-black rounded-full flex-shrink-0 flex items-center justify-center w-24 h-24 overflow-hidden transition-all duration-200 group-hover:ring-4 group-hover:ring-primary-blue group-hover:ring-opacity-50">
+                                    <i id="photoPlaceholder" class="fas fa-user text-4xl text-white"></i>
+                                    <img id="photoPreview" src="" alt="Profile Photo"
+                                        class="hidden w-full h-full object-cover">
+                                </div>
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <i class="fas fa-camera text-white text-xl"></i>
+                                </div>
+                                <input type="file" id="photoInput" accept="image/*" class="hidden"
+                                    onchange="handlePhotoUpload(event)">
                             </div>
                             <div class="flex-1 min-w-0 pt-2">
                                 <div class="flex items-center space-x-3 mb-2">
@@ -408,6 +420,7 @@
         </div>
     </div>
 
+    <script src="./js/api.js"></script>
     <script src="./js/loading.js"></script>
     <script src="./js/auth-guard.js"></script>
     <script src="./js/utils.js"></script>

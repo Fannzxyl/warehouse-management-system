@@ -459,7 +459,7 @@
     </div>
 
     <header
-        class="bg-white/90 backdrop-blur-glass border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
+        class="bg-white border-b border-wise-border px-4 py-3 md:px-6 md:py-4 fixed top-0 left-0 right-0 z-30 shadow-sm transition-all-smooth">
         <div class="flex items-center justify-between w-full gap-6">
             <div class="flex justify-start items-center gap-4">
                 <button id="sidebar-toggle-btn"
@@ -533,12 +533,13 @@
         </div>
     </header>
 
-    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-[25] hidden md:hidden transition-all-smooth"
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/20 z-[25] hidden md:hidden transition-all-smooth"
         onclick="closeSidebar()" aria-label="Close sidebar"></div>
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <aside id="sidebar"
-            class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+            class="w-64 bg-white border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth"
+            style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; will-change: transform; backface-visibility: hidden;">
             <div class="pt-20 md:pt-24 p-6">
                 <div class="space-y-2">
                     <div class="sidebar-section">
@@ -1159,6 +1160,7 @@
             window.addEventListener('load', window.navigateToHome);
 
         </script>
+        <script src="./js/api.js"></script>
         <script src="./js/loading.js"></script>
         <script src="./js/auth-guard.js"></script>
         <script src="./js/utils.js"></script>

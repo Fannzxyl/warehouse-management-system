@@ -285,5 +285,111 @@
         return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     };
 
+    // =======================================================================
+    // SIDEBAR SEARCH FUNCTION
+    // Filter sidebar menu items based on search query
+    // =======================================================================
+
+    // Store original sidebar state
+    let originalSidebarHTML = null;
+
+    window.handleSearch = function (query) {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        // Store original state on first search
+        if (!originalSidebarHTML) {
+            originalSidebarHTML = sidebar.innerHTML;
+        }
+
+        const sidebarItems = sidebar.querySelectorAll('.sidebar-item');
+        const subMenuItems = sidebar.querySelectorAll('[id$="-children"] a');
+        const searchTerm = query.toLowerCase().trim();
+
+        // If empty search, restore original state
+        if (!searchTerm) {
+            sidebarItems.forEach(item => {
+                item.style.display = '';
+                item.classList.remove('search-highlight');
+            });
+            subMenuItems.forEach(item => {
+                item.style.display = '';
+                item.classList.remove('search-highlight');
+            });
+            // Collapse all submenus
+            sidebar.querySelectorAll('[id$="-children"]').forEach(submenu => {
+                submenu.classList.add('hidden');
+            });
+            return;
+        }
+
+        let matchCount = 0;
+
+        // Search through main sidebar items
+        sidebarItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            const parentId = item.id;
+            const childContainer = document.getElementById(`${parentId}-children`);
+
+            if (text.includes(searchTerm)) {
+                item.style.display = '';
+                item.classList.add('search-highlight');
+                matchCount++;
+                // Expand submenu if parent matches
+                if (childContainer) {
+                    childContainer.classList.remove('hidden');
+                }
+            } else {
+                item.classList.remove('search-highlight');
+                // Check if any child matches
+                let hasMatchingChild = false;
+                if (childContainer) {
+                    const children = childContainer.querySelectorAll('a');
+                    children.forEach(child => {
+                        if (child.textContent.toLowerCase().includes(searchTerm)) {
+                            hasMatchingChild = true;
+                            child.style.display = '';
+                            child.classList.add('search-highlight');
+                            matchCount++;
+                        } else {
+                            child.style.display = 'none';
+                            child.classList.remove('search-highlight');
+                        }
+                    });
+                }
+
+                if (hasMatchingChild) {
+                    item.style.display = '';
+                    childContainer.classList.remove('hidden');
+                } else {
+                    item.style.display = 'none';
+                    if (childContainer) {
+                        childContainer.classList.add('hidden');
+                    }
+                }
+            }
+        });
+
+        // Show "no results" toast if nothing found
+        if (matchCount === 0 && searchTerm.length > 2) {
+            // Only show once per search session
+            if (!window._lastNoResultQuery || window._lastNoResultQuery !== searchTerm) {
+                window._lastNoResultQuery = searchTerm;
+                // Uncomment to show toast: window.showToast(`No results for "${searchTerm}"`, 'info');
+            }
+        } else {
+            window._lastNoResultQuery = null;
+        }
+    };
+
+    // Clear search and restore sidebar
+    window.clearSearch = function () {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = '';
+            window.handleSearch('');
+        }
+    };
+
     console.log('[WISE Utils] Shared utilities loaded successfully.');
 })();

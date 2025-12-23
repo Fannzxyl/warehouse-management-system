@@ -74,6 +74,17 @@
     }
 }
 
+/* Search highlight for sidebar items */
+.search-highlight {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    border-left: 3px solid #3B82F6 !important;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.search-highlight:hover {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+}
+
 /* ===== BASE STYLES ===== */
 @layer base {
     body {
