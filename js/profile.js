@@ -1,21 +1,20 @@
-// --- Unified SHA-256 helper (same semantics as login.js) ---
+// --- SHA-256 helper using native crypto.subtle API ---
+// This MUST produce the same hash as login.js for password verification to work
 async function sha256Hex(text) {
-    if (window.crypto?.subtle) {
-        const enc = new TextEncoder().encode(text);
-        const buf = await window.crypto.subtle.digest('SHA-256', enc);
-        const arr = Array.from(new Uint8Array(buf));
-        return arr.map((b) => b.toString(16).padStart(2, '0')).join('');
-    }
-    let h = 0;
-    for (let i = 0; i < text.length; i++) {
-        h = (h << 5) - h + text.charCodeAt(i);
-        h |= 0;
-    }
-    return ('00000000' + (h >>> 0).toString(16)).slice(-8).repeat(8).slice(0, 64);
+    // Use native crypto.subtle API (produces correct SHA-256)
+    const msgUint8 = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
 }
 
 // --- Profile Photo Upload Handler ---
-const PROFILE_PHOTO_KEY = 'profilePhoto';
+// Helper function to get per-user photo key
+function getProfilePhotoKey() {
+    const currentUser = sessionStorage.getItem('authUser') || localStorage.getItem('authUser');
+    return currentUser ? `profilePhoto_${currentUser}` : 'profilePhoto';
+}
 
 function handlePhotoUpload(event) {
     const file = event.target.files[0];
@@ -49,9 +48,11 @@ function handlePhotoUpload(event) {
             placeholder.classList.add('hidden');
         }
 
-        // Save to localStorage
+        // Save to localStorage per-user
         try {
-            localStorage.setItem(PROFILE_PHOTO_KEY, imageData);
+            const photoKey = getProfilePhotoKey();
+            localStorage.setItem(photoKey, imageData);
+            console.log('[Profile] Photo saved with key:', photoKey);
             window.showToast('Profile photo updated!', 'success');
         } catch (e) {
             console.warn('[Profile] Could not save photo to localStorage:', e);
@@ -61,9 +62,12 @@ function handlePhotoUpload(event) {
     reader.readAsDataURL(file);
 }
 
-// Load saved profile photo on page load
+// Load saved profile photo on page load (per-user)
 function loadProfilePhoto() {
-    const savedPhoto = localStorage.getItem(PROFILE_PHOTO_KEY);
+    const photoKey = getProfilePhotoKey();
+    const savedPhoto = localStorage.getItem(photoKey);
+    console.log('[Profile] Loading photo with key:', photoKey, 'Found:', !!savedPhoto);
+
     if (savedPhoto) {
         const preview = document.getElementById('photoPreview');
         const placeholder = document.getElementById('photoPlaceholder');
@@ -132,6 +136,79 @@ document.addEventListener('DOMContentLoaded', () => {
     const changePasswordForm = document.getElementById('changePasswordForm');
     const editModal = document.getElementById('editModal');
 
+    // --- Load User Profile from Login Session ---
+    function loadUserProfileFromSession() {
+        // Get current user from auth (same as auth-guard.js)
+        const currentUser = sessionStorage.getItem('authUser') || localStorage.getItem('authUser');
+
+        if (currentUser) {
+            // Extract friendly name from email
+            let displayName = currentUser;
+            if (currentUser.includes('@')) {
+                displayName = currentUser.split('@')[0];
+            }
+            // Capitalize first letter
+            displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
+            // Load saved profile data for this specific user
+            const profileKey = `profile_${currentUser}`;
+            let savedProfile = null;
+            try {
+                savedProfile = JSON.parse(localStorage.getItem(profileKey));
+            } catch (e) {
+                console.warn('[Profile] Could not load saved profile:', e);
+            }
+
+            // Update profile displays with saved data or defaults
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            const emailDisplay = document.getElementById('emailDisplay');
+            const phoneDisplay = document.getElementById('phoneDisplay');
+            const shiftDisplay = document.getElementById('shiftDisplay');
+            const locationDisplay = document.getElementById('locationDisplay');
+            const employeeIdDisplay = document.getElementById('employeeIdDisplay');
+
+            if (usernameDisplay) {
+                usernameDisplay.textContent = savedProfile?.displayName || displayName;
+            }
+            if (emailDisplay) {
+                emailDisplay.textContent = currentUser;
+            }
+            if (phoneDisplay && savedProfile?.phone) {
+                phoneDisplay.textContent = savedProfile.phone;
+            }
+            if (shiftDisplay && savedProfile?.shift) {
+                shiftDisplay.textContent = savedProfile.shift;
+            }
+            if (locationDisplay && savedProfile?.location) {
+                locationDisplay.textContent = savedProfile.location;
+            }
+            if (employeeIdDisplay && savedProfile?.employeeId) {
+                employeeIdDisplay.textContent = savedProfile.employeeId;
+            }
+
+            console.log('[Profile] Loaded user data:', { displayName, email: currentUser, savedProfile });
+        }
+    }
+
+    // --- Save User Profile to localStorage ---
+    function saveUserProfile(profileData) {
+        const currentUser = sessionStorage.getItem('authUser') || localStorage.getItem('authUser');
+        if (!currentUser) {
+            console.warn('[Profile] Cannot save profile: no user logged in');
+            return false;
+        }
+
+        const profileKey = `profile_${currentUser}`;
+        try {
+            localStorage.setItem(profileKey, JSON.stringify(profileData));
+            console.log('[Profile] Saved profile for:', currentUser, profileData);
+            return true;
+        } catch (e) {
+            console.error('[Profile] Could not save profile:', e);
+            return false;
+        }
+    }
+
     // --- Event Listeners ---
     if (editProfileButton) editProfileButton.addEventListener('click', openEditModal);
     if (closeModalButton) closeModalButton.addEventListener('click', closeEditModal);
@@ -143,8 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelPasswordButton) cancelPasswordButton.addEventListener('click', closeChangePasswordModal);
     if (changePasswordForm) changePasswordForm.addEventListener('submit', handleChangePassword);
 
-    // Load saved profile photo
+    // Load saved profile photo and user data from session
     loadProfilePhoto();
+    loadUserProfileFromSession();
 
     // Close modal if clicking outside of it
     if (editModal) editModal.addEventListener('click', function (e) {
@@ -152,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             closeEditModal();
         }
     });
+
 
     // --- Edit Profile Functions ---
     function openEditModal() {
@@ -181,11 +260,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveChanges() {
-        document.getElementById('usernameDisplay').textContent = document.getElementById('editUsername').value;
-        document.getElementById('emailDisplay').textContent = document.getElementById('editEmail').value;
-        document.getElementById('phoneDisplay').textContent = document.getElementById('editPhone').value;
-        document.getElementById('shiftDisplay').textContent = document.getElementById('editShift').value;
-        document.getElementById('locationDisplay').textContent = document.getElementById('editLocation').value;
+        const newDisplayName = document.getElementById('editUsername').value;
+        const newEmail = document.getElementById('editEmail').value;
+        const newPhone = document.getElementById('editPhone').value;
+        const newShift = document.getElementById('editShift').value;
+        const newLocation = document.getElementById('editLocation').value;
+
+        // Update UI
+        document.getElementById('usernameDisplay').textContent = newDisplayName;
+        document.getElementById('emailDisplay').textContent = newEmail;
+        document.getElementById('phoneDisplay').textContent = newPhone;
+        document.getElementById('shiftDisplay').textContent = newShift;
+        document.getElementById('locationDisplay').textContent = newLocation;
+
+        // Save to localStorage per-user
+        const profileData = {
+            displayName: newDisplayName,
+            phone: newPhone,
+            shift: newShift,
+            location: newLocation,
+            employeeId: document.getElementById('employeeIdDisplay')?.textContent || ''
+        };
+        saveUserProfile(profileData);
 
         closeEditModal();
         showNotification('Profile updated successfully!', 'success');
@@ -268,8 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentPassword = document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
         const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-        // Check both localStorage and sessionStorage for currentUser
-        const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+        // Check both sessionStorage and localStorage for authUser (consistent with auth-guard.js)
+        const currentUser = sessionStorage.getItem('authUser') || localStorage.getItem('authUser');
 
         if (!currentUser) {
             showNotification('Error: No user logged in.', 'error');
@@ -287,6 +383,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const HASHED_CREDENTIALS = getCredentials();
         const hashedCurrentPassword = await sha256Hex(currentPassword);
+
+        // Debug logging
+        console.log('[Profile] Change Password Debug:');
+        console.log('[Profile] Current User:', currentUser);
+        console.log('[Profile] Hashed Input:', hashedCurrentPassword);
+        console.log('[Profile] Stored Hash:', HASHED_CREDENTIALS[currentUser]);
+        console.log('[Profile] All credentials:', Object.keys(HASHED_CREDENTIALS));
+        console.log('[Profile] Hash match:', hashedCurrentPassword === HASHED_CREDENTIALS[currentUser]);
 
         if (hashedCurrentPassword !== HASHED_CREDENTIALS[currentUser]) {
             showNotification('Current password is incorrect.', 'error');

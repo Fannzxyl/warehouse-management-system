@@ -1,4 +1,4 @@
-(function() {
+(function () {
     document.addEventListener('DOMContentLoaded', () => {
 
         const mainContent = document.getElementById('default-content-area');
@@ -19,7 +19,7 @@
         const customModalOkBtn = document.getElementById('custom-modal-ok-btn');
         const customModalCancelBtn = document.getElementById('custom-modal-cancel-btn');
 
-        window.showCustomAlert = function(title, message) {
+        window.showCustomAlert = function (title, message) {
             customModalTitle.textContent = title;
             // customModalMessage.textContent = message;
             // UBAH JADI .innerHTML agar bisa merender tag HTML
@@ -40,9 +40,9 @@
             });
         };
 
-        window.showCustomConfirm = function(title, message) {
+        window.showCustomConfirm = function (title, message) {
             customModalTitle.textContent = title;
-            
+
             // UBAH JUGA BAGIAN INI DARI .textContent MENJADI .innerHTML
             customModalMessage.innerHTML = message;
             customModalCancelBtn.classList.remove('hidden');
@@ -71,14 +71,14 @@
         };
 
         // Fungsi untuk menoggle tampilan elemen anak (sub-menu)
-        window.toggleChildren = function(parentId) {
+        window.toggleChildren = function (parentId) {
             const childrenContainer = document.getElementById(`${parentId}-children`); // Kontainer sub-menu
             const parentElement = document.getElementById(parentId);                   // Item menu utama yang diklik
             const arrowIcon = document.getElementById(`${parentId}-arrow`);            // Icon panah
 
             if (childrenContainer && parentElement && arrowIcon) { // Pastikan semua elemen ditemukan
                 const isHidden = childrenContainer.classList.toggle('hidden'); // Toggle visibilitas sub-menu
-                
+
                 // Update aria-expanded attribute
                 parentElement.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
 
@@ -90,7 +90,7 @@
                     arrowIcon.classList.remove('rotate-0');
                     arrowIcon.classList.add('rotate-180');
                 }
-                
+
                 console.log(`Sub-menu untuk ID "${parentId}" berhasil di-toggle. Status expanded: ${!isHidden}`);
             } else {
                 console.warn(`Elemen anak dengan ID "${parentId}-children", parent dengan ID "${parentId}", atau panah dengan ID "${parentId}-arrow" tidak ditemukan.`);
@@ -129,7 +129,7 @@
         /**
          * Membuka atau menutup bagian filter di halaman Receipt Explorer.
          */
-        window.toggleFilterSection = function() {
+        window.toggleFilterSection = function () {
             const filterContent = document.getElementById('collapsible-filter-area');
             const filterArrow = document.getElementById('filter-arrow');
 
@@ -395,7 +395,7 @@
             },
             // START: Konten Receipt Explorer yang Diperbarui (Tampilan Lebih Rapi)
             'receiving-receipt-explorer': {
-    full: `
+                full: `
         <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Receiving - Receipt Explorer</h2>
         <p class="text-wise-gray mb-6">Jelajahi detail penerimaan dengan filter dan tabel yang intuitif.</p>
 
@@ -511,7 +511,7 @@
                 </div>
         </div>
     `,
-},
+            },
             // END: Konten Receipt Explorer yang Diperbarui
             'receiving-receipt-monitoring-close': {
                 full: `
@@ -1657,7 +1657,7 @@
          * Memilih kategori sidebar dan menampilkan konten yang sesuai.
          * @param {string} category - ID kategori yang dipilih.
          */
-        window.selectCategory = function(category) {
+        window.selectCategory = function (category) {
             // Hapus kelas aktif dari semua item sidebar dan reset teks warna
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.classList.remove('active-sidebar-item', 'bg-wise-light-gray');
@@ -1735,15 +1735,15 @@
             // Inisialisasi formulir atau tabel jika kategori terkait
             // Khusus untuk Receipt Explorer, panggil renderReceiptTable()
             if (category === 'receiving-receipt-explorer') {
-                            // Initialize filtered data and render table on load
-            filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
+                // Initialize filtered data and render table on load
+                filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
 
-            // Langsung loncat ke halaman terakhir biar data barunya keliatan
-            const totalPages = Math.ceil(receiptData.length / rowsPerPage);
-            currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
-            renderReceiptTable();
-                        }
-            
+                // Langsung loncat ke halaman terakhir biar data barunya keliatan
+                const totalPages = Math.ceil(receiptData.length / rowsPerPage);
+                currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
+                renderReceiptTable();
+            }
+
             // Tutup sidebar di tampilan mobile setelah memilih kategori
             if (window.innerWidth < 768) {
                 sidebar.classList.add('-translate-x-full');
@@ -1756,7 +1756,7 @@
         /**
          * Mengganti visibilitas dropdown konfigurasi (DCS).
          */
-        window.toggleConfigDropdown = function() {
+        window.toggleConfigDropdown = function () {
             const configDropdown = document.getElementById('config-dropdown');
             configDropdown.classList.toggle('hidden');
             if (!configDropdown.classList.contains('hidden')) {
@@ -1770,7 +1770,7 @@
          * Memilih opsi dari dropdown konfigurasi (DCS) dan menampilkan kontennya.
          * @param {string} option - Opsi yang dipilih (misalnya, 'DCC', 'DCE').
          */
-        window.selectConfigOption = function(option) {
+        window.selectConfigOption = function (option) {
             const configDropdownToggle = document.getElementById('config-dropdown-toggle');
             configDropdownToggle.querySelector('span').textContent = option; // Update teks tombol
             document.getElementById('config-dropdown').classList.add('hidden'); // Sembunyikan dropdown
@@ -1784,7 +1784,7 @@
          * Menangani input pencarian dari header atau overlay.
          * @param {string} query - Kata kunci pencarian.
          */
-        window.handleSearch = function(query) {
+        window.handleSearch = function (query) {
             const overlay = document.getElementById('search-overlay');
             const oInput = document.getElementById('overlay-search-input');
             const q = query || '';
@@ -1802,7 +1802,7 @@
             }
         };
 
-        window.performSearch = function(query) {
+        window.performSearch = function (query) {
             const resultsPanel = document.getElementById('overlay-search-results-list-panel');
             if (!resultsPanel) return;
 
@@ -1811,13 +1811,13 @@
                 (it.title || '').toLowerCase().includes(q) ||
                 (it.category || '').toLowerCase().includes(q)
             ) : [];
-            
+
             resultsPanel.innerHTML = '';
             if (!filtered.length) {
                 resultsPanel.innerHTML = `<p class="p-3 text-wise-gray text-sm">Tidak ada hasil ditemukan.</p>`;
                 return;
             }
-            
+
             filtered.forEach(item => {
                 const el = document.createElement('div');
                 el.className = 'py-2 px-3 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 mb-2 transition-all-smooth';
@@ -1834,7 +1834,7 @@
          * Menampilkan pratinjau konten di panel detail overlay pencarian.
          * @param {string} id - ID konten yang akan dipratinjau.
          */
-        window.showPreview = function(id) {
+        window.showPreview = function (id) {
             const overlayDetailContentPanel = document.getElementById('overlay-detail-content-panel');
             const content = contentData[id];
 
@@ -1850,7 +1850,7 @@
             }
         };
 
-        window.selectSearchResult = function(id) {
+        window.selectSearchResult = function (id) {
             if (id === 'configuration') {
                 window.location.href = 'configuration.html';
             } else {
@@ -1862,7 +1862,7 @@
          * Menampilkan konten di area dashboard utama.
          * @param {string} id - ID konten yang akan ditampilkan.
          */
-        window.displayContentInMainDashboard = function(id) {
+        window.displayContentInMainDashboard = function (id) {
             const content = contentData[id];
             const defaultContentArea = document.getElementById('default-content-area');
 
@@ -1885,7 +1885,7 @@
          * Menambahkan filter ke overlay pencarian.
          * @param {string} filterName - Nama filter yang akan ditambahkan.
          */
-        window.addOverlayFilter = function(filterName) {
+        window.addOverlayFilter = function (filterName) {
             if (!activeFilters.includes(filterName.toLowerCase())) {
                 activeFilters.push(filterName.toLowerCase());
                 const filterElement = document.getElementById(`overlay-filter-${filterName.toLowerCase()}`);
@@ -1898,7 +1898,7 @@
          * Menghapus filter dari overlay pencarian.
          * @param {string} filterName - Nama filter yang akan dihapus.
          */
-        window.removeOverlayFilter = function(filterName) {
+        window.removeOverlayFilter = function (filterName) {
             activeFilters = activeFilters.filter(filter => filter !== filterName.toLowerCase());
             const filterElement = document.getElementById(`overlay-filter-${filterName.toLowerCase()}`);
             if (filterElement) filterElement.classList.add('hidden');
@@ -1908,7 +1908,7 @@
         /**
          * Menghapus semua filter dari overlay pencarian.
          */
-        window.removeAllOverlayFilters = function() {
+        window.removeAllOverlayFilters = function () {
             activeFilters = [];
             const overlayFilterArticles = document.getElementById('overlay-filter-articles');
             if (overlayFilterArticles) overlayFilterArticles.classList.add('hidden');
@@ -1922,32 +1922,32 @@
         /**
          * Menutup overlay pencarian.
          */
-        window.closeSearchOverlay = function() {
+        window.closeSearchOverlay = function () {
             if (searchOverlay) searchOverlay.classList.add('hidden');
             const searchInputHeader = document.getElementById('search-input'); // Header search input
-            if (searchInputHeader) searchInputHeader.value = ''; 
-            if (overlaySearchInput) overlaySearchInput.value = ''; 
-            activeFilters = []; 
+            if (searchInputHeader) searchInputHeader.value = '';
+            if (overlaySearchInput) overlaySearchInput.value = '';
+            activeFilters = [];
             if (overlaySearchFilters) overlaySearchFilters.classList.add('hidden');
             const filterArticles = document.getElementById('filter-articles');
             if (filterArticles) filterArticles.classList.add('hidden');
             const filterPhotography = document.getElementById('filter-photography');
             if (filterPhotography) filterPhotography.classList.add('hidden');
             const searchHistoryDropdown = document.getElementById('search-history-dropdown');
-            if (searchHistoryDropdown) searchHistoryDropdown.classList.add('hidden'); 
-            selectCategory(currentCategory); 
+            if (searchHistoryDropdown) searchHistoryDropdown.classList.add('hidden');
+            selectCategory(currentCategory);
         };
 
         /**
          * Mengganti visibilitas dropdown pengguna.
          */
-        window.toggleUserDropdown = function() {
+        window.toggleUserDropdown = function () {
             const userDropdown = document.getElementById('user-dropdown');
             if (userDropdown) userDropdown.classList.toggle('hidden');
         };
 
         // Menutup dropdown pengguna dan riwayat pencarian saat mengklik di luar area.
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const userIconContainer = document.querySelector('header .w-9.h-9.bg-wise-dark-gray.rounded-full');
             const userDropdown = document.getElementById('user-dropdown');
             const searchInput = document.getElementById('search-input');
@@ -1971,7 +1971,7 @@
         /**
          * Menangani proses logout.
          */
-        window.handleLogout = async function() {
+        window.handleLogout = async function () {
             const confirmed = await showCustomConfirm('Logout', 'Apakah Anda yakin ingin logout?');
             if (confirmed) {
                 await showCustomAlert('Logout', 'Anda berhasil logout.');
@@ -1982,14 +1982,14 @@
         /**
          * Navigasi ke halaman profil.
          */
-        window.navigateToProfile = function() {
-            window.location.href = 'profile.html'; 
+        window.navigateToProfile = function () {
+            window.location.href = 'profile.html';
         };
 
         /**
          * Menampilkan riwayat pencarian di dropdown.
          */
-        window.showSearchHistory = function() {
+        window.showSearchHistory = function () {
             const historyDropdown = document.getElementById('search-history-dropdown');
             const historyContent = document.getElementById('search-history-content');
 
@@ -2025,7 +2025,7 @@
         /**
          * Menghapus semua riwayat pencarian.
          */
-        window.clearAllSearchHistory = function() {
+        window.clearAllSearchHistory = function () {
             searchHistory = [];
             localStorage.removeItem('searchHistory');
         };
@@ -2063,7 +2063,7 @@
         /**
          * Fungsi untuk menutup paksa sidebar.
          */
-        window.closeSidebar = function() {
+        window.closeSidebar = function () {
             sidebar.classList.add('-translate-x-full');
             mainContent.classList.remove('ml-64');
             mainContent.classList.add('ml-0');
@@ -2087,12 +2087,9 @@
         });
 
         // Fungsi yang dieksekusi saat halaman dimuat
-        window.onload = function() {
+        window.onload = function () {
             selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
-
-            const username = "SuperAdmin"; // Atur nama pengguna
-            const usernameDisplay = document.getElementById('username-display');
-            if (usernameDisplay) usernameDisplay.textContent = username; // Tampilkan nama pengguna
+            // Username display is now handled by auth-guard.js
         };
 
 
@@ -2114,8 +2111,8 @@
         /**
          * MENAMBAHKAN data baru ke tabel berdasarkan input filter, bukan mem-filter.
          */
-        window.applyReceiptFilters = async function() {
-            console.log('applyReceiptFilters (Add Mode) called'); 
+        window.applyReceiptFilters = async function () {
+            console.log('applyReceiptFilters (Add Mode) called');
             const receiptId = document.getElementById('filter-receipt-id').value;
             const receiptIdType = document.getElementById('filter-receipt-id-type').value;
             const trailerId = document.getElementById('filter-trailer-id').value;
@@ -2149,13 +2146,13 @@
             console.log('New data to add:', newReceipt);
             receiptData.push(newReceipt);
             // 4. Reset filter dan render ulang tabel
-filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
+            filteredReceiptData = []; // Kosongkan data filter agar tabel menampilkan semua data
 
-// Langsung loncat ke halaman terakhir biar data barunya keliatan
-const totalPages = Math.ceil(receiptData.length / rowsPerPage);
-currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
+            // Langsung loncat ke halaman terakhir biar data barunya keliatan
+            const totalPages = Math.ceil(receiptData.length / rowsPerPage);
+            currentPage = totalPages || 1; // Jika totalPages 0, fallback ke 1
 
-renderReceiptTable();
+            renderReceiptTable();
             document.getElementById('filter-receipt-id').value = '';
             document.getElementById('filter-receipt-id-type').value = '';
             document.getElementById('filter-trailer-id').value = '';
@@ -2175,29 +2172,29 @@ renderReceiptTable();
         /**
  * Merender tabel penerimaan berdasarkan data yang difilter dan paginasi.
  */
-window.renderReceiptTable = function() {
-    const tableContainer = document.getElementById('receipt-table-container');
-    const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
-    rowsPerPage = parseInt(document.getElementById('show-entries').value);
+        window.renderReceiptTable = function () {
+            const tableContainer = document.getElementById('receipt-table-container');
+            const searchTableInput = document.getElementById('receipt-search-table').value.toLowerCase();
+            rowsPerPage = parseInt(document.getElementById('show-entries').value);
 
-    let dataToRender = filteredReceiptData.length > 0 ? [...filteredReceiptData] : [...receiptData];
+            let dataToRender = filteredReceiptData.length > 0 ? [...filteredReceiptData] : [...receiptData];
 
-    // Terapkan filter pencarian tabel
-    if (searchTableInput) {
-        dataToRender = dataToRender.filter(item => 
-            Object.values(item).some(value => 
-                String(value).toLowerCase().includes(searchTableInput)
-            )
-        );
-    }
+            // Terapkan filter pencarian tabel
+            if (searchTableInput) {
+                dataToRender = dataToRender.filter(item =>
+                    Object.values(item).some(value =>
+                        String(value).toLowerCase().includes(searchTableInput)
+                    )
+                );
+            }
 
-    const totalEntries = dataToRender.length;
-    const totalPages = Math.ceil(totalEntries / rowsPerPage);
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const paginatedData = dataToRender.slice(start, end);
+            const totalEntries = dataToRender.length;
+            const totalPages = Math.ceil(totalEntries / rowsPerPage);
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = dataToRender.slice(start, end);
 
-    let tableHtml = `
+            let tableHtml = `
         <table class="min-w-full bg-white">
             <thead>
                 <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-xs">
@@ -2220,15 +2217,15 @@ window.renderReceiptTable = function() {
             <tbody class="text-wise-gray text-sm font-light">
     `;
 
-    if (paginatedData.length === 0) {
-        tableHtml += `
+            if (paginatedData.length === 0) {
+                tableHtml += `
             <tr class="border-t border-wise-border">
                 <td colspan="14" class="py-4 px-6 text-center text-wise-gray">Tidak ada data penerimaan ditemukan.</td>
             </tr>
         `;
-    } else {
-        paginatedData.forEach((item, index) => {
-            tableHtml += `
+            } else {
+                paginatedData.forEach((item, index) => {
+                    tableHtml += `
                 <tr class="border-t border-wise-border hover:bg-gray-50 group">
                     <td class="py-3 px-4 text-left whitespace-nowrap">${start + index + 1}</td>
                     <td class="py-3 px-4 text-left whitespace-nowrap font-medium text-wise-dark-gray">${item.receiptId}</td>
@@ -2248,17 +2245,17 @@ window.renderReceiptTable = function() {
                     </td>
                 </tr>
             `;
-        });
-    }
+                });
+            }
 
-    tableHtml += `
+            tableHtml += `
             </tbody>
         </table>
     `;
-    tableContainer.innerHTML = tableHtml;
+            tableContainer.innerHTML = tableHtml;
 
-    renderReceiptPagination(totalEntries, totalPages);
-};
+            renderReceiptPagination(totalEntries, totalPages);
+        };
 
         /**
          * Merender kontrol paginasi yang lebih dinamis (sliding window).
@@ -2321,7 +2318,7 @@ window.renderReceiptTable = function() {
          * Navigasi ke halaman tertentu di tabel penerimaan.
          * @param {number} page - Nomor halaman yang akan dituju.
          */
-        window.goToReceiptPage = function(page) {
+        window.goToReceiptPage = function (page) {
             const totalEntries = filteredReceiptData.length > 0 ? filteredReceiptData.length : receiptData.length;
             const totalPages = Math.ceil(totalEntries / rowsPerPage);
 
@@ -2331,7 +2328,7 @@ window.renderReceiptTable = function() {
             }
         };
 
-        window.showReceiptDetails = async function(receiptId) {
+        window.showReceiptDetails = async function (receiptId) {
             const receipt = receiptData.find(item => item.receiptId === receiptId);
             if (receipt) {
                 let detailsHtml = `
@@ -2392,13 +2389,10 @@ window.renderReceiptTable = function() {
             }
         };
 
-        // Fungsi yang dieksekusi saat halaman dimuat
-        window.onload = function() {
+        // Fungsi yang dieksekusi saat halaman dimuat (duplicate block - kept for selectCategory only)
+        window.onload = function () {
             selectCategory('dashboard'); // Pilih kategori 'dashboard' secara default
-
-            const username = "SuperAdmin"; // Atur nama pengguna
-            const usernameDisplay = document.getElementById('username-display');
-            if (usernameDisplay) usernameDisplay.textContent = username; // Tampilkan nama pengguna
+            // Username display is now handled by auth-guard.js
         };
 
         // Event Listener baru untuk input pencarian utama di header
@@ -2406,17 +2400,17 @@ window.renderReceiptTable = function() {
         if (searchInput) { // Pastikan elemen searchInput ditemukan
             searchInput.addEventListener('focus', window.showSearchHistory);
         }
-// tambahkan cabang ini:
-else if (id === 'allocation-strategies') {
-  if (typeof window.renderAllocationStrategyList === 'function') {
-    renderAllocationStrategyList('');
-  }
-  // aktifkan pencarian
-  const inp = document.getElementById('allocation-strategy-search');
-  if (inp && typeof window.filterAllocationStrategyList === 'function') {
-    inp.addEventListener('input', (e) => filterAllocationStrategyList(e.target.value));
-  }
-}
+        // tambahkan cabang ini:
+        else if (id === 'allocation-strategies') {
+            if (typeof window.renderAllocationStrategyList === 'function') {
+                renderAllocationStrategyList('');
+            }
+            // aktifkan pencarian
+            const inp = document.getElementById('allocation-strategy-search');
+            if (inp && typeof window.filterAllocationStrategyList === 'function') {
+                inp.addEventListener('input', (e) => filterAllocationStrategyList(e.target.value));
+            }
+        }
 
     });
 })();

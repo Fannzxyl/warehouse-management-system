@@ -74,12 +74,28 @@
   };
 
   // =====================================================
-  // 4. OPTIONAL: UPDATE USERNAME IN UI
+  // 4. UPDATE USERNAME IN UI
   // =====================================================
   document.addEventListener('DOMContentLoaded', function () {
     const userLabel = document.getElementById('username-display');
     if (userLabel) {
-      userLabel.textContent = currentUser;
+      // Check for stored display name first, then fallback to extracting from email
+      let displayName = sessionStorage.getItem('authDisplayName') ||
+        localStorage.getItem('authDisplayName');
+
+      if (!displayName && currentUser) {
+        // Extract name from email (e.g., "demo@wise.com" -> "demo")
+        if (currentUser.includes('@')) {
+          displayName = currentUser.split('@')[0];
+        } else {
+          displayName = currentUser;
+        }
+        // Capitalize first letter
+        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+      }
+
+      userLabel.textContent = displayName || currentUser || 'User';
+      console.log('[AuthGuard] Username display set to:', displayName);
     }
   });
 
