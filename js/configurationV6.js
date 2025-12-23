@@ -430,14 +430,13 @@
             );
 
             let listWrapperHtml = `
-                <div class="max-h-[60vh] overflow-y-auto border border-wise-border rounded-lg shadow-md">
-                <table class="min-w-full bg-white">
+                <table class="min-w-full bg-white rounded-lg shadow-md">
                 <thead>
-                    <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-xs leading-normal">
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Company</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Name</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Active</th>
-                        <th class="py-3 px-6 text-center sticky top-0 bg-wise-light-gray">Actions</th>
+                    <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-left">Company</th>
+                        <th class="py-3 px-6 text-left">Name</th>
+                        <th class="py-3 px-6 text-left">Active</th>
+                        <th class="py-3 px-6 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-wise-gray text-sm font-light">`;
@@ -446,20 +445,20 @@
                 listWrapperHtml += `<tr><td colspan="4" class="py-3 px-6 text-center">No companies found.</td></tr>`;
             } else {
                 filteredData.forEach(c => {
-                    listWrapperHtml += `<tr class="border-b hover:bg-gray-50 cursor-pointer" onclick="window.currentSelectedCompanyId = '${c.id}'" ondblclick="showCompanyForm('edit', '${c.id}')">
-                        <td class="py-3 px-6 text-left whitespace-nowrap">${c.companyCode}</td>
+                    listWrapperHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray cursor-pointer" onclick="window.currentSelectedCompanyId = '${c.id}'" ondblclick="showCompanyForm('edit', '${c.id}')">
+                        <td class="py-3 px-6 text-left font-medium whitespace-nowrap">${c.companyCode}</td>
                         <td class="py-3 px-6 text-left">${c.companyAddress.name || 'N/A'}</td>
                         <td class="py-3 px-6 text-left">${!c.inactive ? 'Yes' : 'No'}</td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center">
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="event.stopPropagation(); showCompanyForm('edit', '${c.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="event.stopPropagation(); deleteCompany('${c.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="event.stopPropagation(); showCompanyForm('edit', '${c.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="event.stopPropagation(); deleteCompany('${c.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                             </div>
                         </td>
                     </tr>`;
                 });
             }
-            listWrapperHtml += `</tbody></table></div>`;
+            listWrapperHtml += `</tbody></table>`;
             container.innerHTML = listWrapperHtml;
         };
 
@@ -1773,17 +1772,16 @@
             );
 
             let listWrapperHtml = `
-                <div class="max-h-[60vh] overflow-y-auto border border-wise-border rounded-lg shadow-md">
-                <table class="min-w-full bg-white">
+                <table class="min-w-full bg-white rounded-lg shadow-md">
                 <thead>
                     <tr class="bg-wise-light-gray text-wise-dark-gray uppercase text-sm leading-normal">
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Customer</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Ship To</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Company</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Name</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Parent</th>
-                        <th class="py-3 px-6 text-left sticky top-0 bg-wise-light-gray">Active</th>
-                        <th class="py-3 px-6 text-center sticky top-0 bg-wise-light-gray">Actions</th>
+                        <th class="py-3 px-6 text-left">Customer</th>
+                        <th class="py-3 px-6 text-left">Ship To</th>
+                        <th class="py-3 px-6 text-left">Company</th>
+                        <th class="py-3 px-6 text-left">Name</th>
+                        <th class="py-3 px-6 text-left">Parent</th>
+                        <th class="py-3 px-6 text-left">Active</th>
+                        <th class="py-3 px-6 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-wise-gray text-sm font-light">`;
@@ -1792,8 +1790,8 @@
                 listWrapperHtml += `<tr><td colspan="7" class="py-3 px-6 text-center">No customers found.</td></tr>`;
             } else {
                 filteredData.forEach(c => {
-                    listWrapperHtml += `<tr class="border-b hover:bg-gray-50 cursor-pointer" ondblclick="showCustomerForm('edit', '${c.id}')">
-                        <td class="py-3 px-6 text-left whitespace-nowrap">${c.customer}</td>
+                    listWrapperHtml += `<tr class="border-b border-wise-border hover:bg-wise-light-gray cursor-pointer" ondblclick="showCustomerForm('edit', '${c.id}')">
+                        <td class="py-3 px-6 text-left font-medium whitespace-nowrap">${c.customer}</td>
                         <td class="py-3 px-6 text-left">${c.shipTo || 'N/A'}</td>
                         <td class="py-3 px-6 text-left">${c.company}</td>
                         <td class="py-3 px-6 text-left">${c.name}</td>
@@ -1801,14 +1799,14 @@
                         <td class="py-3 px-6 text-left">${!c.inactive ? 'Yes' : 'No'}</td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center">
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-wise-primary" onclick="event.stopPropagation(); showCustomerForm('edit', '${c.id}')" title="Edit"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
-                                <button class="w-6 h-6 p-1 mr-2 hover:text-red-500" onclick="event.stopPropagation(); deleteCustomer('${c.id}')" title="Delete"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                <button class="w-6 mr-2 transform hover:text-wise-primary hover:scale-110" onclick="event.stopPropagation(); showCustomerForm('edit', '${c.id}')" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button class="w-6 mr-2 transform hover:text-red-500 hover:scale-110" onclick="event.stopPropagation(); deleteCustomer('${c.id}')" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                             </div>
                         </td>
                     </tr>`;
                 });
             }
-            listWrapperHtml += `</tbody></table></div>`;
+            listWrapperHtml += `</tbody></table>`;
             container.innerHTML = listWrapperHtml;
         };
 
@@ -2467,22 +2465,17 @@
 
         if (!window.contentData[CUSTOMER_CATEGORY_KEY]) {
             window.contentData[CUSTOMER_CATEGORY_KEY] = {
-                // Background halaman utama Customer harus putih
                 full: `
-                    <div class="bg-white p-6 rounded-lg shadow-lg"> 
-                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
-                            <i class="fas fa-users mr-2 text-wise-primary"></i>Customer
-                        </h2>
-                        <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
-                        ${window.renderStandardListHeader({
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Customer</h2>
+                    <p class="text-wise-gray mb-4">Manage customer master data, including shipping attributes and RFID setup.</p>
+                    ${window.renderStandardListHeader({
                     createLabel: "Create New Customer",
                     onCreate: "showCustomerForm('create')",
                     searchId: "customer-search",
                     searchPlaceholder: "Search customer...",
                     onSearch: "filterCustomerList"
                 })}
-                        <div id="customer-list-container" class="overflow-x-auto"></div>
-                    </div>
+                    <div id="customer-list-container" class="overflow-x-auto"></div>
 
                     <!-- Customer Form Modal -->
                     <div id="customer-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
@@ -2528,22 +2521,17 @@
         // --- REGISTRASI KONTEN COMPANY ---
         if (!window.contentData[COMPANY_CATEGORY_KEY]) {
             window.contentData[COMPANY_CATEGORY_KEY] = {
-                // Background halaman utama Company harus putih
                 full: `
-                    <div class="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">
-                            <i class="fas fa-building mr-2 text-wise-primary"></i>Company
-                        </h2>
-                        <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
-                        ${window.renderStandardListHeader({
+                    <h2 class="text-xl md:text-2xl font-semibold text-wise-dark-gray mb-4">Company</h2>
+                    <p class="text-wise-gray mb-4">Manage company master data, including addresses and nested warehouse configurations.</p>
+                    ${window.renderStandardListHeader({
                     createLabel: "Create New Company",
                     onCreate: "showCompanyForm('create')",
                     searchId: "company-search",
                     searchPlaceholder: "Search company...",
                     onSearch: "filterCompanyList"
                 })}
-                        <div id="company-list-container" class="overflow-x-auto"></div>
-                    </div>
+                    <div id="company-list-container" class="overflow-x-auto"></div>
 
                     <!-- Company Form Modal -->
                     <div id="company-form-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40">
@@ -2726,23 +2714,10 @@
             */
         });
 
-        // --- INJECT SIDEBAR ICONS ---
-        // Karena sidebar hardcoded di HTML, kita inject icon secara manual saat script dimuat
-        const updateSidebarIcon = (key, iconClass) => {
-            const el = document.querySelector(`.sidebar-child[onclick="selectCategory('${key}')"]`);
-            if (el && !el.querySelector('i')) {
-                const icon = document.createElement('i');
-                icon.className = `${iconClass} w-5 text-center text-wise-gray mr-3 transition-colors group-hover:text-wise-dark-gray`;
-                el.insertBefore(icon, el.firstChild);
-                el.classList.add('flex', 'items-center', 'group'); // Pastikan layout flex
-            }
-        };
+        // --- SIDEBAR ICONS INJECTION REMOVED ---
+        // Icons were removed to maintain consistency with other sidebar menu items
+        // (Previously injected fa-users for Customer and fa-building for Company)
 
-        // Delay sedikit untuk memastikan DOM ready (walaupun load di body bottom)
-        setTimeout(() => {
-            updateSidebarIcon(CUSTOMER_CATEGORY_KEY, 'fas fa-users');
-            updateSidebarIcon(COMPANY_CATEGORY_KEY, 'fas fa-building');
-        }, 100);
 
     });
 })();

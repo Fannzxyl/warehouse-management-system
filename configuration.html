@@ -9,7 +9,9 @@
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="./dist/output.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style">
 
     <!-- Compiled Tailwind CSS -->
     <link rel="stylesheet" href="./dist/output.css">
@@ -1164,12 +1166,13 @@
         <script src="./js/loading.js"></script>
         <script src="./js/auth-guard.js"></script>
         <script src="./js/utils.js"></script>
-        <script src="./js/configuration.js"></script>
-        <script src="./js/configurationV2.js"></script>
-        <script src="./js/configurationV3.js"></script>
-        <script src="./js/configurationV4.js"></script>
-        <script src="./js/configurationV5.js"></script>
-        <script src="./js/configurationV6.js"></script>
+        <!-- Heavy scripts with defer for better LCP -->
+        <script src="./js/configuration.js" defer></script>
+        <script src="./js/configurationV2.js" defer></script>
+        <script src="./js/configurationV3.js" defer></script>
+        <script src="./js/configurationV4.js" defer></script>
+        <script src="./js/configurationV5.js" defer></script>
+        <script src="./js/configurationV6.js" defer></script>
         <script>
             window.addEventListener('load', () => selectCategory('configuration'));
         </script>

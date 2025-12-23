@@ -9,7 +9,9 @@
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="./dist/output.css" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" as="style">
 
     <!-- Compiled Tailwind CSS -->
     <link rel="stylesheet" href="./dist/output.css">
@@ -348,13 +350,13 @@
     </header>
 
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-[25] hidden md:hidden transition-all-smooth"
+    <div id="sidebar-overlay" class="fixed inset-0 backdrop-blur-overlay z-20 hidden md:hidden transition-all-smooth"
         onclick="closeSidebar()" aria-label="Close sidebar"></div>
 
     <div class="flex flex-1 pt-20 md:pt-24">
         <!-- Sidebar -->
         <aside id="sidebar"
-            class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-20 shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
+            class="w-64 bg-white/95 backdrop-blur-glass border-r border-wise-border overflow-y-auto fixed left-0 bottom-0 top-0 z-[25] shadow-lg transform -translate-x-full md:translate-x-0 transition-transform-smooth">
             <div class="pt-20 md:pt-24 p-6">
                 <div class="space-y-2">
                     <!-- Dashboard Button (Always visible) -->
@@ -1270,8 +1272,9 @@
     <script src="./js/loading.js"></script>
     <script src="./js/auth-guard.js"></script>
     <script src="./js/utils.js"></script>
-    <script src="./js/dashboard.js"></script>
-    <script src="./js/dashboardV2.js"></script>
+    <!-- Heavy scripts with defer for better LCP -->
+    <script src="./js/dashboard.js" defer></script>
+    <script src="./js/dashboardV2.js" defer></script>
 </body>
 
 </html>
